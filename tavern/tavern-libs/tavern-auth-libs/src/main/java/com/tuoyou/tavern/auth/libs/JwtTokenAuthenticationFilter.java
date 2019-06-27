@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtAuthenticationConfig config;
+    private final JwtAuthenticationProperty config;
 
-    public JwtTokenAuthenticationFilter(JwtAuthenticationConfig config) {
+    public JwtTokenAuthenticationFilter(JwtAuthenticationProperty config) {
         this.config = config;
     }
 

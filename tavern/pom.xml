@@ -25,7 +25,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Dependencies -->
-        <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
+        <tavern.version>1.0-SNAPSHOT</tavern.version>
+        <spring-cloud.version>Edgware.RELEASE</spring-cloud.version>
         <spring-boot.version>1.5.18.RELEASE</spring-boot.version>
         <spring-framework.version>4.3.21.RELEASE</spring-framework.version>
         <slf4j.version>1.7.25</slf4j.version>

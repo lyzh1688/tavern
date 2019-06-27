@@ -21,20 +21,21 @@ import java.util.stream.Collectors;
 
 public class JwtUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    private final JwtAuthenticationConfig config;
-    private final ObjectMapper mapper;
+    private final JwtAuthenticationProperty config;
 
-    public JwtUsernamePasswordAuthenticationFilter(JwtAuthenticationConfig config, AuthenticationManager authManager) {
+    public JwtUsernamePasswordAuthenticationFilter(JwtAuthenticationProperty config, AuthenticationManager authManager) {
         super(new AntPathRequestMatcher(config.getUrl(), "POST"));
         setAuthenticationManager(authManager);
         this.config = config;
-        this.mapper = new ObjectMapper();
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse rsp)
             throws AuthenticationException, IOException {
-        User u = mapper.readValue(req.getInputStream(), User.class);
+        String userName = req.getParameter("username");
+        String password = req.getParameter("password");
+        User u = new User(userName,password);
+
         return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(
                 u.getUsername(), u.getPassword(), Collections.emptyList()
         ));
@@ -56,7 +57,13 @@ public class JwtUsernamePasswordAuthenticationFilter extends AbstractAuthenticat
     }
 
     private static class User {
+
         private String username, password;
+
+        public User(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
 
         public String getUsername() {
             return username;

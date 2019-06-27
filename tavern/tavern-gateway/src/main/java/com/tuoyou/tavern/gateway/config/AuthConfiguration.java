@@ -1,6 +1,6 @@
 package com.tuoyou.tavern.gateway.config;
 
-import com.tuoyou.tavern.auth.libs.JwtAuthenticationConfig;
+import com.tuoyou.tavern.auth.libs.JwtAuthenticationProperty;
 import com.tuoyou.tavern.auth.libs.JwtTokenAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,15 +16,10 @@ import javax.servlet.http.HttpServletResponse;
  * Created by 刘悦之 on 2019/6/26.
  */
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class AuthConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private JwtAuthenticationConfig config;
-
-    @Bean
-    public JwtAuthenticationConfig jwtConfig() {
-        return new JwtAuthenticationConfig();
-    }
+    private JwtAuthenticationProperty config;
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
