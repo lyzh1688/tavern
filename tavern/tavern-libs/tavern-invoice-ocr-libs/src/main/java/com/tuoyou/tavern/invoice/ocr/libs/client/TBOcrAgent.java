@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Created by 刘悦之 on 2019/6/28.
  */
-public class TBOcrAgent extends OcrAgent<TBInvoiceModel> {
+public class TBOcrAgent extends AbstractOcrAgent<TBInvoiceModel> {
 
     private static String authorizationPrefix = "APPCODE ";
 
