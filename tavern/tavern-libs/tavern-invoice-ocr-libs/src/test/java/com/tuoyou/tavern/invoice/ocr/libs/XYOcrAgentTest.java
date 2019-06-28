@@ -1,0 +1,29 @@
+package com.tuoyou.tavern.invoice.ocr.libs;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.tuoyou.tavern.invoice.ocr.libs.client.TBOcrAgent;
+import com.tuoyou.tavern.invoice.ocr.libs.model.TBInvoiceModel;
+import com.tuoyou.tavern.invoice.ocr.libs.property.TBInvoiceOCRProperty;
+import com.tuoyou.tavern.invoice.ocr.libs.utils.ImageUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
+import org.junit.Test;
+
+/**
+ * Created by 刘悦之 on 2019/6/28.
+ */
+public class XYOcrAgentTest {
+    @Test
+    public void ocrTest() throws Exception {
+//        CountDownLatch latch = new CountDownLatch(1);
+        TBInvoiceOCRProperty TBInvoiceOCRProperty = new TBInvoiceOCRProperty();
+        TBInvoiceOCRProperty.setAppCode("caebcc5b40a741c1ba50cfc0fc8d9a97");
+        TBInvoiceOCRProperty.setHost("https://ocrapi-invoice.taobao.com");
+        TBInvoiceOCRProperty.setPath("/ocrservice/invoice");
+//        TBInvoiceOCRProperty.setOcrType("2009");
+        TBOcrAgent TBOcrAgent = new TBOcrAgent(TBInvoiceOCRProperty);
+        TBInvoiceModel tbInvoiceModel = TBOcrAgent.doOcr("D:\\TuoYou-Doc\\invoice_well\\2018_09_19_14_12_14.jpg");
+        System.out.print(tbInvoiceModel);
+     }
+}
