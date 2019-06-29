@@ -1,0 +1,7 @@
+tuoyou.tavern.invoice.verify.zbj.host: "https://fapiao.market.alicloudapi.com"
+tuoyou.tavern.invoice.verify.zbj.path: "/v2/invoice/query"
+tuoyou.tavern.invoice.verify.zbj.appCode: "caebcc5b40a741c1ba50cfc0fc8d9a97"
+
+tuoyou.tavern.invoice.ocr.tb.host: "https://ocrapi-invoice.taobao.com"
+tuoyou.tavern.invoice.ocr.tb.path: "/ocrservice/invoice"
+tuoyou.tavern.invoice.ocr.tb.appCode: "caebcc5b40a741c1ba50cfc0fc8d9a97"

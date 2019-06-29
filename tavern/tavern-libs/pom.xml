@@ -16,6 +16,7 @@
         <module>tavern-invoice-ocr-libs</module>
         <module>tavern-invoice-verify-libs</module>
         <module>tavern-invoice-common-libs</module>
+        <module>tavern-invoice-starter</module>
     </modules>
 
 
