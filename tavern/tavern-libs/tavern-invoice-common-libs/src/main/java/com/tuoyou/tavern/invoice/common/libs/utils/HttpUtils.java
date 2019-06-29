@@ -1,4 +1,4 @@
-package com.tuoyou.tavern.invoice.ocr.libs.utils;
+package com.tuoyou.tavern.invoice.common.libs.utils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.KeyManagementException;

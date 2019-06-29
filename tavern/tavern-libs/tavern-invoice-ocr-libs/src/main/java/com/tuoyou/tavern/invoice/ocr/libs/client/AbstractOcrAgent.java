@@ -1,9 +1,9 @@
 package com.tuoyou.tavern.invoice.ocr.libs.client;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tuoyou.tavern.invoice.ocr.libs.property.InvoiceOCRProperty;
-import com.tuoyou.tavern.invoice.ocr.libs.utils.HttpUtils;
-import com.tuoyou.tavern.invoice.ocr.libs.utils.ImageUtils;
+import com.tuoyou.tavern.invoice.common.libs.ServiceProperty;
+import com.tuoyou.tavern.invoice.common.libs.utils.HttpUtils;
+import com.tuoyou.tavern.invoice.common.libs.utils.ImageUtils;
 import org.apache.http.HttpResponse;
 
 import java.io.IOException;
@@ -15,9 +15,9 @@ import java.util.Map;
  */
 public abstract class AbstractOcrAgent<T> implements OcrAgent<T>{
 
-    InvoiceOCRProperty invoiceOCRProperty;
+    ServiceProperty invoiceOCRProperty;
 
-    public AbstractOcrAgent(InvoiceOCRProperty property) {
+    public AbstractOcrAgent(ServiceProperty property) {
         this.invoiceOCRProperty = property;
     }
 
@@ -34,9 +34,9 @@ public abstract class AbstractOcrAgent<T> implements OcrAgent<T>{
         return response;
     }
 
-    protected abstract Map<String, String> createRequestHeader(InvoiceOCRProperty invoiceOCRProperty);
+    protected abstract Map<String, String> createRequestHeader(ServiceProperty invoiceOCRProperty);
 
-    protected abstract JSONObject createRequestBody(InvoiceOCRProperty invoiceOCRProperty, String image);
+    protected abstract JSONObject createRequestBody(ServiceProperty invoiceOCRProperty, String image);
 
     protected abstract T parseResponse(HttpResponse response) throws IOException;
 

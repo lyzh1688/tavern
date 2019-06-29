@@ -1,4 +1,4 @@
-package com.tuoyou.tavern.invoice.ocr.libs.utils;
+package com.tuoyou.tavern.invoice.common.libs.utils;
 
 import sun.misc.BASE64Encoder;
 

@@ -1,14 +1,10 @@
 package com.tuoyou.tavern.invoice.ocr.libs;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tuoyou.tavern.invoice.ocr.libs.client.OcrAgent;
 import com.tuoyou.tavern.invoice.ocr.libs.client.TBOcrAgent;
 import com.tuoyou.tavern.invoice.ocr.libs.model.TBInvoiceModel;
 import com.tuoyou.tavern.invoice.ocr.libs.property.TBInvoiceOCRProperty;
-import com.tuoyou.tavern.invoice.ocr.libs.utils.ImageUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
 import org.junit.Test;
 
 /**
@@ -24,7 +20,7 @@ public class XYOcrAgentTest {
         TBInvoiceOCRProperty.setPath("/ocrservice/invoice");
 //        TBInvoiceOCRProperty.setOcrType("2009");
         OcrAgent<TBInvoiceModel> TBOcrAgent = new TBOcrAgent(TBInvoiceOCRProperty);
-        TBInvoiceModel tbInvoiceModel = TBOcrAgent.doOcr("D:\\TuoYou-Doc\\invoice_well\\2018_09_19_14_12_14.jpg");
-        System.out.print(tbInvoiceModel);
+        TBInvoiceModel tbInvoiceModel = TBOcrAgent.doOcr("D:\\TuoYou-Doc\\invoice_well\\2018_09_19_14_24_45.jpg");
+        System.out.print(JSONObject.toJSONString(tbInvoiceModel));
      }
 }

@@ -2,8 +2,8 @@ package com.tuoyou.tavern.invoice.ocr.libs.client;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.tuoyou.tavern.invoice.common.libs.ServiceProperty;
 import com.tuoyou.tavern.invoice.ocr.libs.model.TBInvoiceModel;
-import com.tuoyou.tavern.invoice.ocr.libs.property.InvoiceOCRProperty;
 import com.tuoyou.tavern.invoice.ocr.libs.property.TBInvoiceOCRProperty;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -24,7 +24,7 @@ public class TBOcrAgent extends AbstractOcrAgent<TBInvoiceModel> {
     }
 
     @Override
-    protected Map<String, String> createRequestHeader(InvoiceOCRProperty invoiceOCRProperty) {
+    protected Map<String, String> createRequestHeader(ServiceProperty invoiceOCRProperty) {
         TBInvoiceOCRProperty TBInvoiceOCRProperty = (TBInvoiceOCRProperty) invoiceOCRProperty;
         Map<String, String> headers = new HashMap<String, String>();
         //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
@@ -35,7 +35,7 @@ public class TBOcrAgent extends AbstractOcrAgent<TBInvoiceModel> {
     }
 
     @Override
-    protected JSONObject createRequestBody(InvoiceOCRProperty invoiceOCRProperty, String image) {
+    protected JSONObject createRequestBody(ServiceProperty invoiceOCRProperty, String image) {
         JSONObject jsonObj = new JSONObject();
         jsonObj.put("img", image);
         return jsonObj;
