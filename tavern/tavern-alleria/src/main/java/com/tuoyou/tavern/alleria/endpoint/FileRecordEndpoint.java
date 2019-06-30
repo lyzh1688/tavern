@@ -15,7 +15,7 @@ public class FileRecordEndpoint {
     * 文件上传列表查询
     * */
     //RESOURCE-PATH:/packages/{fileType}?page={page}&size={size}&status={status}
-    @RequestMapping(value = "/packages/{fileType}",method = RequestMethod.GET,params = {"page","size","status"})
+    @RequestMapping(value = "/alleria/packages/{fileType}",method = RequestMethod.GET,params = {"page","size","status"})
     public PackageUploadRecord queryPackages(@PathVariable String fileType, Integer  page, Integer size, String status) {
         return new PackageUploadRecord();
     }
