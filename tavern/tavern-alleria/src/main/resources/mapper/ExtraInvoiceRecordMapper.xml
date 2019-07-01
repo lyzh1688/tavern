@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.alleria.mapper.ExtraInvoiceRecordMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.alleria.domain.ExtraInvoiceRecord">
+    <id column="RECORD_ID" jdbcType="VARCHAR" property="recordId" />
+    <result column="CUSTOM_ID" jdbcType="VARCHAR" property="customId" />
+    <result column="ACCOUNT_PERIOD" jdbcType="DATE" property="accountPeriod" />
+    <result column="INVOICE_TYPE" jdbcType="VARCHAR" property="invoiceType" />
+    <result column="TOTAL_AMOUNT" jdbcType="DECIMAL" property="totalAmount" />
+    <result column="ITEM_COUNT" jdbcType="DECIMAL" property="itemCount" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ALR_EXTRA_INVOICE_RECORD
+    where RECORD_ID = #{recordId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.alleria.domain.ExtraInvoiceRecord">
+    insert into ALR_EXTRA_INVOICE_RECORD (RECORD_ID, CUSTOM_ID, ACCOUNT_PERIOD, 
+      INVOICE_TYPE, TOTAL_AMOUNT, ITEM_COUNT
+      )
+    values (#{recordId,jdbcType=VARCHAR}, #{customId,jdbcType=VARCHAR}, #{accountPeriod,jdbcType=DATE}, 
+      #{invoiceType,jdbcType=VARCHAR}, #{totalAmount,jdbcType=DECIMAL}, #{itemCount,jdbcType=DECIMAL}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.alleria.domain.ExtraInvoiceRecord">
+    update ALR_EXTRA_INVOICE_RECORD
+    set CUSTOM_ID = #{customId,jdbcType=VARCHAR},
+      ACCOUNT_PERIOD = #{accountPeriod,jdbcType=DATE},
+      INVOICE_TYPE = #{invoiceType,jdbcType=VARCHAR},
+      TOTAL_AMOUNT = #{totalAmount,jdbcType=DECIMAL},
+      ITEM_COUNT = #{itemCount,jdbcType=DECIMAL}
+    where RECORD_ID = #{recordId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select RECORD_ID, CUSTOM_ID, ACCOUNT_PERIOD, INVOICE_TYPE, TOTAL_AMOUNT, ITEM_COUNT
+    from ALR_EXTRA_INVOICE_RECORD
+    where RECORD_ID = #{recordId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select RECORD_ID, CUSTOM_ID, ACCOUNT_PERIOD, INVOICE_TYPE, TOTAL_AMOUNT, ITEM_COUNT
+    from ALR_EXTRA_INVOICE_RECORD
+  </select>
+</mapper>

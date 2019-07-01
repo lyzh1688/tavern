@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.alleria.mapper.StdInvoiceRecordMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.alleria.domain.StdInvoiceRecord">
+    <id column="FILE_ID" jdbcType="VARCHAR" property="fileId" />
+    <result column="BATCH_ID" jdbcType="VARCHAR" property="batchId" />
+    <result column="FILE_NAME" jdbcType="VARCHAR" property="fileName" />
+    <result column="ACCOUNT_PERIOD" jdbcType="DATE" property="accountPeriod" />
+    <result column="IS_VALID" jdbcType="VARCHAR" property="isValid" />
+    <result column="UPDATE_DATE" jdbcType="VARCHAR" property="updateDate" />
+    <result column="CUSTOM_ID" jdbcType="VARCHAR" property="customId" />
+    <result column="FINANCE_DISK_TYPE" jdbcType="VARCHAR" property="financeDiskType" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ALR_STD_INVOICE_RECORD
+    where FILE_ID = #{fileId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.alleria.domain.StdInvoiceRecord">
+    insert into ALR_STD_INVOICE_RECORD (FILE_ID, BATCH_ID, FILE_NAME, 
+      ACCOUNT_PERIOD, IS_VALID, UPDATE_DATE, 
+      CUSTOM_ID, FINANCE_DISK_TYPE)
+    values (#{fileId,jdbcType=VARCHAR}, #{batchId,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, 
+      #{accountPeriod,jdbcType=DATE}, #{isValid,jdbcType=VARCHAR}, #{updateDate,jdbcType=VARCHAR}, 
+      #{customId,jdbcType=VARCHAR}, #{financeDiskType,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.alleria.domain.StdInvoiceRecord">
+    update ALR_STD_INVOICE_RECORD
+    set BATCH_ID = #{batchId,jdbcType=VARCHAR},
+      FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      ACCOUNT_PERIOD = #{accountPeriod,jdbcType=DATE},
+      IS_VALID = #{isValid,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=VARCHAR},
+      CUSTOM_ID = #{customId,jdbcType=VARCHAR},
+      FINANCE_DISK_TYPE = #{financeDiskType,jdbcType=VARCHAR}
+    where FILE_ID = #{fileId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select FILE_ID, BATCH_ID, FILE_NAME, ACCOUNT_PERIOD, IS_VALID, UPDATE_DATE, CUSTOM_ID, 
+    FINANCE_DISK_TYPE
+    from ALR_STD_INVOICE_RECORD
+    where FILE_ID = #{fileId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select FILE_ID, BATCH_ID, FILE_NAME, ACCOUNT_PERIOD, IS_VALID, UPDATE_DATE, CUSTOM_ID, 
+    FINANCE_DISK_TYPE
+    from ALR_STD_INVOICE_RECORD
+  </select>
+</mapper>

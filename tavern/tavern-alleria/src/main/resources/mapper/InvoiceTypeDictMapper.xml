@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.alleria.mapper.InvoiceTypeDictMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.alleria.domain.InvoiceTypeDict">
+    <id column="INVOICE_TYPE" jdbcType="VARCHAR" property="invoiceType" />
+    <result column="INVOICE_TYPE_NAME" jdbcType="VARCHAR" property="invoiceTypeName" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ALR_INVOICE_TYPE_DICT
+    where INVOICE_TYPE = #{invoiceType,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.alleria.domain.InvoiceTypeDict">
+    insert into ALR_INVOICE_TYPE_DICT (INVOICE_TYPE, INVOICE_TYPE_NAME)
+    values (#{invoiceType,jdbcType=VARCHAR}, #{invoiceTypeName,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.alleria.domain.InvoiceTypeDict">
+    update ALR_INVOICE_TYPE_DICT
+    set INVOICE_TYPE_NAME = #{invoiceTypeName,jdbcType=VARCHAR}
+    where INVOICE_TYPE = #{invoiceType,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select INVOICE_TYPE, INVOICE_TYPE_NAME
+    from ALR_INVOICE_TYPE_DICT
+    where INVOICE_TYPE = #{invoiceType,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select INVOICE_TYPE, INVOICE_TYPE_NAME
+    from ALR_INVOICE_TYPE_DICT
+  </select>
+</mapper>
