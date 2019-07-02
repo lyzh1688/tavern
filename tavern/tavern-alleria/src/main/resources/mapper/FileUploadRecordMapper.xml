@@ -1,52 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tuoyou.tavern.alleria.mapper.FileUploadRecordMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.alleria.domain.FileUploadRecord">
-    <id column="BATCH_ID" jdbcType="VARCHAR" property="batchId" />
-    <result column="PACKAGE_NAME" jdbcType="VARCHAR" property="packageName" />
-    <result column="FILE_COUNT" jdbcType="INTEGER" property="fileCount" />
-    <result column="UPLOAD_DATE" jdbcType="DATE" property="uploadDate" />
-    <result column="STATUS" jdbcType="VARCHAR" property="status" />
-    <result column="OPERATOR" jdbcType="VARCHAR" property="operator" />
-    <result column="UPDATE_DATE" jdbcType="DATE" property="updateDate" />
-    <result column="IS_VALID" jdbcType="VARCHAR" property="isValid" />
-    <result column="PACKAGE_TYPE" jdbcType="VARCHAR" property="packageType" />
-  </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from ALR_FILE_UPLOAD_RECORD
-    where BATCH_ID = #{batchId,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.alleria.domain.FileUploadRecord">
-    insert into ALR_FILE_UPLOAD_RECORD (BATCH_ID, PACKAGE_NAME, FILE_COUNT, 
-      UPLOAD_DATE, STATUS, OPERATOR, 
-      UPDATE_DATE, IS_VALID, PACKAGE_TYPE
-      )
-    values (#{batchId,jdbcType=VARCHAR}, #{packageName,jdbcType=VARCHAR}, #{fileCount,jdbcType=INTEGER}, 
-      #{uploadDate,jdbcType=DATE}, #{status,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, 
-      #{updateDate,jdbcType=DATE}, #{isValid,jdbcType=VARCHAR}, #{packageType,jdbcType=VARCHAR}
-      )
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.alleria.domain.FileUploadRecord">
-    update ALR_FILE_UPLOAD_RECORD
-    set PACKAGE_NAME = #{packageName,jdbcType=VARCHAR},
-      FILE_COUNT = #{fileCount,jdbcType=INTEGER},
-      UPLOAD_DATE = #{uploadDate,jdbcType=DATE},
-      STATUS = #{status,jdbcType=VARCHAR},
-      OPERATOR = #{operator,jdbcType=VARCHAR},
-      UPDATE_DATE = #{updateDate,jdbcType=DATE},
-      IS_VALID = #{isValid,jdbcType=VARCHAR},
-      PACKAGE_TYPE = #{packageType,jdbcType=VARCHAR}
-    where BATCH_ID = #{batchId,jdbcType=VARCHAR}
-  </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select BATCH_ID, PACKAGE_NAME, FILE_COUNT, UPLOAD_DATE, STATUS, OPERATOR, UPDATE_DATE, 
+<mapper namespace="com.tuoyou.tavern.alleria.dao.FileUploadRecordMapper">
+    <resultMap id="BaseResultMap" type="com.tuoyou.tavern.alleria.entity.FileUploadRecord">
+        <id column="BATCH_ID" jdbcType="VARCHAR" property="batchId"/>
+        <result column="PACKAGE_NAME" jdbcType="VARCHAR" property="packageName"/>
+        <result column="FILE_COUNT" jdbcType="INTEGER" property="fileCount"/>
+        <result column="UPLOAD_DATE" jdbcType="DATE" property="uploadDate"/>
+        <result column="STATUS" jdbcType="VARCHAR" property="status"/>
+        <result column="OPERATOR" jdbcType="VARCHAR" property="operator"/>
+        <result column="UPDATE_DATE" jdbcType="DATE" property="updateDate"/>
+        <result column="IS_VALID" jdbcType="VARCHAR" property="isValid"/>
+        <result column="PACKAGE_TYPE" jdbcType="VARCHAR" property="packageType"/>
+    </resultMap>
+
+    <sql id="recodeSql">
+    BATCH_ID, PACKAGE_NAME, FILE_COUNT, UPLOAD_DATE, STATUS, OPERATOR, UPDATE_DATE,
     IS_VALID, PACKAGE_TYPE
-    from ALR_FILE_UPLOAD_RECORD
-    where BATCH_ID = #{batchId,jdbcType=VARCHAR}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select BATCH_ID, PACKAGE_NAME, FILE_COUNT, UPLOAD_DATE, STATUS, OPERATOR, UPDATE_DATE, 
-    IS_VALID, PACKAGE_TYPE
-    from ALR_FILE_UPLOAD_RECORD
-  </select>
+  </sql>
+    <select id="selectFileUploadRecordPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="recodeSql"/>
+        FROM
+        ALR_FILE_UPLOAD_RECORD
+        <where>
+            <if test="query.fileType != null and query.fileType != ''">
+                and PACKAGE_TYPE = #{query.fileType}
+            </if>
+            <if test="query.status != null and query.status != ''">
+                and STATUS = #{query.status}
+            </if>
+            ORDER BY UPDATE_DATE DESC
+        </where>
+    </select>
+
 </mapper>

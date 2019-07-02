@@ -12,38 +12,39 @@
     <artifactId>tavern-alleria</artifactId>
 
     <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.cloud</groupId>-->
-            <!--<artifactId>spring-cloud-starter-security</artifactId>-->
-        <!--</dependency>-->
+        <!--spring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!--tavern -->
         <dependency>
             <groupId>com.tuoyou.tavern</groupId>
             <artifactId>tavern-invoice-starter</artifactId>
             <version>${tavern.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.tuoyou.tavern</groupId>
+            <artifactId>tavern-common-core</artifactId>
+            <version>${tavern.version}</version>
+        </dependency>
+        <!--数据库-->
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.38</version>
+            <version>${mysql.connector.version}</version>
         </dependency>
+        <!--mybatis-->
         <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>${mybatis.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>${mybatis-spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis.generator</groupId>
-            <artifactId>mybatis-generator-core</artifactId>
-            <version>${mybatis-generator.version}</version>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-autoconfigure</artifactId>
+                </exclusion>
+            </exclusions>
+            <version>${mybatis-plus.version}</version>
         </dependency>
     </dependencies>
 
@@ -68,6 +69,11 @@
                 <version>${mybatis-generator.version}</version>
                 <dependencies>
                     <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>5.1.38</version>
+                    </dependency>
+                    <dependency>
                         <groupId>org.mybatis</groupId>
                         <artifactId>mybatis</artifactId>
                         <version>${mybatis.version}</version>
@@ -76,11 +82,6 @@
                         <groupId>org.mybatis.generator</groupId>
                         <artifactId>mybatis-generator-core</artifactId>
                         <version>${mybatis-generator.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>mysql</groupId>
-                        <artifactId>mysql-connector-java</artifactId>
-                        <version>5.1.38</version>
                     </dependency>
                 </dependencies>
                 <configuration>

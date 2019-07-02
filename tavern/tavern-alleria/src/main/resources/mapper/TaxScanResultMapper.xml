@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.alleria.dao.TaxScanResultMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.alleria.entity.TaxScanResult">
+    <id column="FILE_ID" jdbcType="VARCHAR" property="fileId" />
+    <result column="FILE_NAME" jdbcType="VARCHAR" property="fileName" />
+    <result column="IS_VALID" jdbcType="VARCHAR" property="isValid" />
+    <result column="IS_VERIFIED" jdbcType="VARCHAR" property="isVerified" />
+    <result column="IS_EMEND" jdbcType="VARCHAR" property="isEmend" />
+    <result column="INVOICE_ID" jdbcType="VARCHAR" property="invoiceId" />
+    <result column="INVOICE_CODE" jdbcType="VARCHAR" property="invoiceCode" />
+    <result column="INVOICE_DATE" jdbcType="VARCHAR" property="invoiceDate" />
+    <result column="CHECK_CODE" jdbcType="VARCHAR" property="checkCode" />
+    <result column="TAX_FREE_AMOUNT" jdbcType="VARCHAR" property="taxFreeAmount" />
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="BATCH_ID" jdbcType="VARCHAR" property="batchId" />
+    <result column="OPERATOR" jdbcType="VARCHAR" property="operator" />
+    <result column="FAILED_REASON" jdbcType="VARCHAR" property="failedReason" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ALR_VALUE_ADDED_TAX_SCAN_RESULT
+    where FILE_ID = #{fileId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.alleria.entity.TaxScanResult">
+    insert into ALR_VALUE_ADDED_TAX_SCAN_RESULT (FILE_ID, FILE_NAME, IS_VALID, 
+      IS_VERIFIED, IS_EMEND, INVOICE_ID, 
+      INVOICE_CODE, INVOICE_DATE, CHECK_CODE, 
+      TAX_FREE_AMOUNT, UPDATE_DATE, BATCH_ID, 
+      OPERATOR, FAILED_REASON)
+    values (#{fileId,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{isValid,jdbcType=VARCHAR}, 
+      #{isVerified,jdbcType=VARCHAR}, #{isEmend,jdbcType=VARCHAR}, #{invoiceId,jdbcType=VARCHAR}, 
+      #{invoiceCode,jdbcType=VARCHAR}, #{invoiceDate,jdbcType=VARCHAR}, #{checkCode,jdbcType=VARCHAR}, 
+      #{taxFreeAmount,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{batchId,jdbcType=VARCHAR}, 
+      #{operator,jdbcType=VARCHAR}, #{failedReason,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.alleria.entity.TaxScanResult">
+    update ALR_VALUE_ADDED_TAX_SCAN_RESULT
+    set FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      IS_VALID = #{isValid,jdbcType=VARCHAR},
+      IS_VERIFIED = #{isVerified,jdbcType=VARCHAR},
+      IS_EMEND = #{isEmend,jdbcType=VARCHAR},
+      INVOICE_ID = #{invoiceId,jdbcType=VARCHAR},
+      INVOICE_CODE = #{invoiceCode,jdbcType=VARCHAR},
+      INVOICE_DATE = #{invoiceDate,jdbcType=VARCHAR},
+      CHECK_CODE = #{checkCode,jdbcType=VARCHAR},
+      TAX_FREE_AMOUNT = #{taxFreeAmount,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      BATCH_ID = #{batchId,jdbcType=VARCHAR},
+      OPERATOR = #{operator,jdbcType=VARCHAR},
+      FAILED_REASON = #{failedReason,jdbcType=VARCHAR}
+    where FILE_ID = #{fileId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select FILE_ID, FILE_NAME, IS_VALID, IS_VERIFIED, IS_EMEND, INVOICE_ID, INVOICE_CODE, 
+    INVOICE_DATE, CHECK_CODE, TAX_FREE_AMOUNT, UPDATE_DATE, BATCH_ID, OPERATOR, FAILED_REASON
+    from ALR_VALUE_ADDED_TAX_SCAN_RESULT
+    where FILE_ID = #{fileId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select FILE_ID, FILE_NAME, IS_VALID, IS_VERIFIED, IS_EMEND, INVOICE_ID, INVOICE_CODE, 
+    INVOICE_DATE, CHECK_CODE, TAX_FREE_AMOUNT, UPDATE_DATE, BATCH_ID, OPERATOR, FAILED_REASON
+    from ALR_VALUE_ADDED_TAX_SCAN_RESULT
+  </select>
+</mapper>

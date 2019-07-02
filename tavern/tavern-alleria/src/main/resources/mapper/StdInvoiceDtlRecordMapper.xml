@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tuoyou.tavern.alleria.mapper.StdInvoiceDtlRecordMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.alleria.domain.StdInvoiceDtlRecord">
+<mapper namespace="com.tuoyou.tavern.alleria.dao.StdInvoiceDtlRecordMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.alleria.entity.StdInvoiceDtlRecord">
     <id column="FILE_ID" jdbcType="VARCHAR" property="fileId" />
     <id column="INVOICE_ID" jdbcType="VARCHAR" property="invoiceId" />
     <id column="INVOICE_CODE" jdbcType="VARCHAR" property="invoiceCode" />
@@ -30,7 +30,7 @@
       and INVOICE_ID = #{invoiceId,jdbcType=VARCHAR}
       and INVOICE_CODE = #{invoiceCode,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.alleria.domain.StdInvoiceDtlRecord">
+  <insert id="insert" parameterType="com.tuoyou.tavern.alleria.entity.StdInvoiceDtlRecord">
     insert into ALR_STD_INVOICE_DTL_RECORD (FILE_ID, INVOICE_ID, INVOICE_CODE, 
       BUYER_NAME, BUYER_TAX_CODE, BANK_BRANCH, 
       BANK_ACCOUNT, ADDRESS, TEL, 
@@ -48,7 +48,7 @@
       #{taxRate,jdbcType=DECIMAL}, #{tax,jdbcType=DECIMAL}, #{taxTypeCode,jdbcType=VARCHAR}
       )
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.alleria.domain.StdInvoiceDtlRecord">
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.alleria.entity.StdInvoiceDtlRecord">
     update ALR_STD_INVOICE_DTL_RECORD
     set BUYER_NAME = #{buyerName,jdbcType=VARCHAR},
       BUYER_TAX_CODE = #{buyerTaxCode,jdbcType=VARCHAR},

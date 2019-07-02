@@ -17,39 +17,15 @@
                         userId="root"
                         password="y2iaciej" />
 
-        <javaModelGenerator targetPackage="com.tuoyou.tavern.alleria.domain" targetProject="src/main/java" >
+        <javaModelGenerator targetPackage="com.tuoyou.tavern.alleria.entity" targetProject="src/main/java" >
             <property name="trimStrings" value = "true"></property>
         </javaModelGenerator>
 
         <sqlMapGenerator targetPackage="mapper/" targetProject="src/main/resources" />
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.tuoyou.tavern.alleria.mapper" targetProject="src/main/java" />
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.tuoyou.tavern.alleria.dao" targetProject="src/main/java" />
 
-        <table tableName="ALR_EXTRA_INVOICE_RECORD" domainObjectName="ExtraInvoiceRecord">
-        <property name="enableSelectByExample" value="false"/>
-        <property name="enableDeleteByExample" value="false"/>
-        <property name="enableUpdateByExample" value="false"/>
-        <property name="enableCountByExample" value="false"/>
-        </table>
-        <table tableName="ALR_FILE_UPLOAD_RECORD" domainObjectName="FileUploadRecord">
-        <property name="enableSelectByExample" value="false"/>
-        <property name="enableDeleteByExample" value="false"/>
-        <property name="enableUpdateByExample" value="false"/>
-        <property name="enableCountByExample" value="false"/>
-        </table>
-        <table tableName="ALR_INVOICE_TYPE_DICT" domainObjectName="InvoiceTypeDict">
-        <property name="enableSelectByExample" value="false"/>
-        <property name="enableDeleteByExample" value="false"/>
-        <property name="enableUpdateByExample" value="false"/>
-        <property name="enableCountByExample" value="false"/>
-        </table>
-        <table tableName="ALR_STD_INVOICE_RECORD" domainObjectName="StdInvoiceRecord">
-        <property name="enableSelectByExample" value="false"/>
-        <property name="enableDeleteByExample" value="false"/>
-        <property name="enableUpdateByExample" value="false"/>
-        <property name="enableCountByExample" value="false"/>
-        </table>
-        <table tableName="ALR_STD_INVOICE_DTL_RECORD" domainObjectName="StdInvoiceDtlRecord">
+        <table tableName="ALR_VALUE_ADDED_TAX_SCAN_RESULT" domainObjectName="TaxScanResult">
         <property name="enableSelectByExample" value="false"/>
         <property name="enableDeleteByExample" value="false"/>
         <property name="enableUpdateByExample" value="false"/>

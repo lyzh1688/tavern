@@ -1,23 +1,30 @@
 package com.tuoyou.tavern.alleria.endpoint;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tuoyou.tavern.alleria.dto.FileUploadDTO;
 import com.tuoyou.tavern.alleria.model.PackageUploadRecord;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import com.tuoyou.tavern.alleria.service.FileUploadRecordService;
+import com.tuoyou.tavern.common.core.util.RT;
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by 刘悦之 on 2019/6/29.
  */
+@AllArgsConstructor
 @RestController
+@RequestMapping("/alleria/packages")
 public class FileRecordEndpoint {
 
+    private final FileUploadRecordService fileUploadRecordService;
+
     /*
-    * 文件上传列表查询
-    * */
+     * 文件上传列表查询
+     * */
     //RESOURCE-PATH:/packages/{fileType}?page={page}&size={size}&status={status}
-    @RequestMapping(value = "/alleria/packages/{fileType}",method = RequestMethod.GET,params = {"page","size","status"})
-    public PackageUploadRecord queryPackages(@PathVariable String fileType, Integer  page, Integer size, String status) {
-        return new PackageUploadRecord();
+    @GetMapping(value = "/page")
+    public RT queryPackages(Page page, FileUploadDTO fileUploadDTO) {
+        return new RT<>(fileUploadRecordService.getRecordWithTypeAndStatusByPage(page, fileUploadDTO));
     }
 
 }
