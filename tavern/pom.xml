@@ -31,6 +31,7 @@
         <spring-boot.version>2.0.7.RELEASE</spring-boot.version>
         <spring-framework.version>4.3.21.RELEASE</spring-framework.version>
         <slf4j.version>1.7.25</slf4j.version>
+        <logback.version>1.2.3</logback.version>
         <jetty.version>9.4.12.v20180830</jetty.version>
         <!--<okhttp.version>3.6.0</okhttp.version>-->
         <httpclient.version>4.5.1</httpclient.version>
@@ -92,6 +93,29 @@
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
+
+            <!-- Log -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>log4j-over-slf4j</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
     <dependencies>

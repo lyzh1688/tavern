@@ -1,6 +1,5 @@
 package com.tuoyou.tavern.auth.libs;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,13 +31,15 @@ public class JwtUsernamePasswordAuthenticationFilter extends AbstractAuthenticat
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse rsp)
             throws AuthenticationException, IOException {
-        String userName = req.getParameter("username");
-        String password = req.getParameter("password");
-        User u = new User(userName,password);
-
-        return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(
+        String userName = req.getParameter(LoginModel.LoginField.userName);
+        String password = req.getParameter(LoginModel.LoginField.password);
+        String userType = req.getParameter(LoginModel.LoginField.userType);
+        LoginModel u = new LoginModel(userName,password,userType);
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                 u.getUsername(), u.getPassword(), Collections.emptyList()
-        ));
+        );
+        usernamePasswordAuthenticationToken.setDetails(u.getUserDetail());
+        return getAuthenticationManager().authenticate(usernamePasswordAuthenticationToken);
     }
 
     @Override
@@ -54,31 +55,5 @@ public class JwtUsernamePasswordAuthenticationFilter extends AbstractAuthenticat
                 .signWith(SignatureAlgorithm.HS256, config.getSecret().getBytes())
                 .compact();
         rsp.addHeader(config.getHeader(), config.getPrefix() + " " + token);
-    }
-
-    private static class User {
-
-        private String username, password;
-
-        public User(String username, String password) {
-            this.username = username;
-            this.password = password;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
     }
 }

@@ -1,7 +1,5 @@
 package com.tuoyou.tavern.invoice.verify.libs.model;
 
-import com.alibaba.fastjson.annotation.JSONField;
-
 /**
  * Created by 刘悦之 on 2019/6/29.
  */

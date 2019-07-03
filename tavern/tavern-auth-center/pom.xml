@@ -25,6 +25,16 @@
             <artifactId>tavern-auth-libs</artifactId>
             <version>${tavern.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.tuoyou.tavern</groupId>
+            <artifactId>tavern-hrm-spi</artifactId>
+            <version>${tavern.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tuoyou.tavern</groupId>
+            <artifactId>tavern-rpc-libs</artifactId>
+            <version>${tavern.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

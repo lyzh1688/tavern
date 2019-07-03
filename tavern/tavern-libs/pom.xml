@@ -18,6 +18,9 @@
         <module>tavern-invoice-common-libs</module>
         <module>tavern-invoice-starter</module>
         <module>tavern-common-core</module>
+        <module>tavern-rpc-libs</module>
+        <module>tavern-protocol-common</module>
+
     </modules>
 
 

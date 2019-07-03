@@ -86,9 +86,9 @@
                 </dependencies>
                 <configuration>
                     <overwrite>true</overwrite>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+            <artifactId>tavern-protocol-common</artifactId>
+            <version>${tavern.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>
