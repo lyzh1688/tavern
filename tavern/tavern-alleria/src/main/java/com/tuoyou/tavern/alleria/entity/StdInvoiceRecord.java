@@ -22,7 +22,7 @@ public class StdInvoiceRecord extends Model<StdInvoiceRecord> {
 
     private String isValid;
 
-    private String updateDate;
+    private LocalDateTime updateDate;
 
     private String customId;
 

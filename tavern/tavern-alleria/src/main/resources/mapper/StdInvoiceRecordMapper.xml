@@ -7,7 +7,7 @@
     <result column="FILE_NAME" jdbcType="VARCHAR" property="fileName" />
     <result column="ACCOUNT_PERIOD" jdbcType="DATE" property="accountPeriod" />
     <result column="IS_VALID" jdbcType="VARCHAR" property="isValid" />
-    <result column="UPDATE_DATE" jdbcType="VARCHAR" property="updateDate" />
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
     <result column="CUSTOM_ID" jdbcType="VARCHAR" property="customId" />
     <result column="FINANCE_DISK_TYPE" jdbcType="VARCHAR" property="financeDiskType" />
   </resultMap>
