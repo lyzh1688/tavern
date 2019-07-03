@@ -29,7 +29,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         JSONObject userDetail = (JSONObject) authentication.getDetails();
         String userType = userDetail.getString(LoginModel.LoginField.userType);
         try {
-            TavernResponse response = staffService.queryStaffBasicInfo(name, password);
+            StaffInfo response = staffService.queryStaffBasicInfo(name, password);
             if (response.getRetCode() == RetCode.SUCCESS) {
                 System.out.println(true);
             }

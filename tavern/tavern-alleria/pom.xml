@@ -32,7 +32,6 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.connector.version}</version>
         </dependency>
         <!--mybatis-->
         <dependency>
@@ -44,7 +43,6 @@
                     <artifactId>spring-boot-autoconfigure</artifactId>
                 </exclusion>
             </exclusions>
-            <version>${mybatis-plus.version}</version>
         </dependency>
     </dependencies>
 
@@ -86,9 +84,9 @@
                 </dependencies>
                 <configuration>
                     <overwrite>true</overwrite>
-            <artifactId>tavern-protocol-common</artifactId>
-            <version>${tavern.version}</version>
-        </dependency>
-    </dependencies>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
