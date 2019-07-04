@@ -7,4 +7,5 @@ public class RetCode {
     public final static int SUCCESS = 0;
     public final static int AUTH_FAILED = 1099;
     public final static int SYS_ERROR = -1;
+    public final static int UN_SUPPORTED_METHOD = -2;
 }

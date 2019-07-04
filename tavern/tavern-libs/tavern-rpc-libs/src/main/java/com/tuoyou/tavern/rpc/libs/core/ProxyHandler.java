@@ -19,48 +19,61 @@ import java.util.Map;
 /**
  * Created by liuyuezhi on 2017/6/22.
  */
-public class ProxyHandler<T> implements InvocationHandler{
+public class ProxyHandler<T> implements InvocationHandler, ResourceParser {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private Class<T> serviceProvider;
 
-    private Map<String,SpiDescription> spiDescriptions;
+    private Map<String, SpiDescription> spiDescriptions;
 
-    public ProxyHandler(Class<T> serviceProvider,Map<String,SpiDescription> spiDescriptions) {
+    public ProxyHandler(Class<T> serviceProvider, Map<String, SpiDescription> spiDescriptions) {
         this.serviceProvider = serviceProvider;
         this.spiDescriptions = spiDescriptions;
     }
 
-    protected String getUri(){
+    protected String getUri() {
         return "";
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         String url = this.getUri();
-        Map<String,String> header = new HashMap<>();
+        Map<String, String> header = new HashMap<>();
         header.put("Content-Type", "application/json; charset=UTF-8");
-        Map<String,String> query = new HashMap<>();
-        try{
+        Map<String, String> query = new HashMap<>();
+        Class<? extends TavernResponse> retType = (Class<? extends TavernResponse>) method.getReturnType();
+        try {
             SpiDescription spiDescription = spiDescriptions.get(method.getName());
-            String uriPath = ResourcePathParser.parse(spiDescription.getResourcePath(),method,args);
-            Class<?> retType = method.getReturnType();
-            switch (spiDescription.getRequestMethod()){
+            String uriPath = this.parseUri(spiDescription.getResourcePath(), method, args);
+            String requestBodyStr = "";
+            HttpResponse httpResponse = null;
+            switch (spiDescription.getRequestMethod()) {
                 case RequestMethods.GET:
-                    HttpResponse httpResponse = HttpUtils.doGet(url, uriPath, header, query);
-                    String retObjectString = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
-                    return JSON.toJavaObject(JSONObject.parseObject(retObjectString),retType);
+                    httpResponse = HttpUtils.doGet(url, uriPath, header, query);
+                    break;
+                case RequestMethods.DELETE:
+                    httpResponse = HttpUtils.doDelete(url, uriPath, header, query);
+                    break;
+                case RequestMethods.PUT:
+                    requestBodyStr = this.parseRequestBody(method,args);
+                    httpResponse = HttpUtils.doPut(url, uriPath, header, query,requestBodyStr);
+                    break;
+                case RequestMethods.POST:
+                    requestBodyStr = this.parseRequestBody(method,args);
+                    httpResponse = HttpUtils.doPost(url, uriPath, header, query,requestBodyStr);
+                    break;
             }
-        }
-        catch (Exception e){
+            String retObjectString = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
+            return JSON.toJavaObject(JSONObject.parseObject(retObjectString), retType);
+        } catch (Exception e) {
             logger.error(e.getMessage());
-            TavernResponse response = new TavernResponse();
+            TavernResponse response = retType.newInstance();
             response.setRetCode(RetCode.SYS_ERROR);
         }
 
-        TavernResponse response = new TavernResponse();
-        response.setRetCode(RetCode.SYS_ERROR);
+        TavernResponse response = retType.newInstance();
+        response.setRetCode(RetCode.UN_SUPPORTED_METHOD);
         return response;
     }
 }
