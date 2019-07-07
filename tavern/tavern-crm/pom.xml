@@ -11,5 +11,15 @@
 
     <artifactId>tavern-crm</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.tuoyou.tavern</groupId>
+            <artifactId>tavern-protocol-common</artifactId>
+            <version>${tavern.version}</version>
+        </dependency>
+    </dependencies>
 </project>

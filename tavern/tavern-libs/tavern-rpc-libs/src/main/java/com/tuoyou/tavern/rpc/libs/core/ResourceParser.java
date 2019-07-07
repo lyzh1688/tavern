@@ -33,6 +33,7 @@ public interface ResourceParser {
                 Object requestBody = args[i];
                 return JSON.toJSONString(requestBody);
             }
+            i++;
         }
         return "";
     }
@@ -52,6 +53,8 @@ public interface ResourceParser {
                         }
                     }
                 }
+                i++;
+
             }
             return uriPath;
         }

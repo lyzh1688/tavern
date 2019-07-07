@@ -19,10 +19,10 @@
             <artifactId>spring-boot-starter-web</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-security</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.cloud</groupId>-->
+            <!--<artifactId>spring-cloud-starter-security</artifactId>-->
+        <!--</dependency>-->
         <!--third party-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

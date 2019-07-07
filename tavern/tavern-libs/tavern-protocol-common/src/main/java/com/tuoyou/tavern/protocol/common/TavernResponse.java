@@ -7,6 +7,13 @@ public class TavernResponse {
     int retCode;
     String retMessage;
 
+    public TavernResponse(){}
+
+    public TavernResponse(int retCode, String retMessage) {
+        this.retCode = retCode;
+        this.retMessage = retMessage;
+    }
+
     public int getRetCode() {
         return retCode;
     }

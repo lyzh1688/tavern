@@ -21,7 +21,14 @@ public class HrmServiceProviderDesc {
                 .serviceApi("queryStaffBasicInfo")
                 .build();
 
+        SpiDescription staffServiceCreateStaff = new SpiDescription.Builder()
+                .serviceClass(StaffService.class)
+                .requestMethod(RequestMethods.POST)
+                .resourcePath("/hrm/staff")
+                .serviceApi("createStaff")
+                .build();
         staffServiceDescMap.put("queryStaffBasicInfo",staffServiceQueryStaffBasicInfo);
+        staffServiceDescMap.put("createStaff",staffServiceCreateStaff);
 
         serviceProviderDesc.put(StaffService.class,staffServiceDescMap);
     }

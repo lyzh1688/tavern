@@ -1,14 +1,12 @@
 package com.tuoyou.tavern.protocol.hrm.model;
 
-import com.tuoyou.tavern.protocol.common.TavernResponse;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by 刘悦之 on 2019/6/30.
+ * Created by 刘悦之 on 2019/7/5.
  */
-public class StaffInfo extends TavernResponse {
+public class StaffBasicInfo {
     String userId;
     String userAccnt;
     String userName;

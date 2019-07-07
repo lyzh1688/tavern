@@ -28,7 +28,7 @@
         <!-- Dependencies -->
         <tavern.version>1.0-SNAPSHOT</tavern.version>
         <spring-cloud.version>Edgware.RELEASE</spring-cloud.version>
-        <spring-boot.version>2.0.7.RELEASE</spring-boot.version>
+        <spring-boot.version>1.5.18.RELEASE</spring-boot.version>
         <spring-framework.version>4.3.21.RELEASE</spring-framework.version>
         <slf4j.version>1.7.25</slf4j.version>
         <logback.version>1.2.3</logback.version>
@@ -124,17 +124,14 @@
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <scope>provided</scope>
+                <version>${lombok.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-    <dependencies>
-        <!--Lombok-->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-            <version>${lombok.version}</version>
-        </dependency>
-    </dependencies>
 
     <build>
         <pluginManagement>
