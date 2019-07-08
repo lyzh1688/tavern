@@ -85,7 +85,7 @@
       width="80%">
       <div>
         <el-col :span="24">
-          <el-form ref="ruleForm" :rule = "rule" :model="formInline3" class="form-inline">
+          <el-form ref="ruleForm" :rule="rule" :model="formInline3" class="form-inline">
             <div>
               <el-form-item v-loading='uploading'
                             :element-loading-text='loadingText'
@@ -94,6 +94,8 @@
                             label-width="100px">
                 <el-upload class="upload-block"
                            action="customize"
+                           :on-remove="handleRemove"
+                           :on-change="handleChange"
                            :before-upload="beforeAvatarUpload"
                            :show-file-list='false'
                            :http-request="uploadFile">
@@ -105,7 +107,8 @@
               <el-input class="editInput" v-model="sid" readonly="true"></el-input>
             </el-form-item>
             <el-form-item v-show="showPercentage" label="完成进度" label-width="100px" class="form-item">
-              <el-progress :text-inside="true" :stroke-width="14" :percentage="percentage" status="success" class="form-progress"></el-progress>
+              <el-progress :text-inside="true" :stroke-width="14" :percentage="percentage" status="success"
+                           class="form-progress"></el-progress>
             </el-form-item>
           </el-form>
           <div class="tips-import">
@@ -120,8 +123,9 @@
         </el-col>
       </div>
       <span slot="footer" class="dialog-footer">
-		     <el-button type="warning" @click="handleStop()" :disabled="isStop" size="small" style="margin-left: 10px ">终止</el-button>
-		     <el-button type="danger" @click="handleCommit('ruleForm')" :disabled="isCommit" size="small" >确认</el-button>
+		     <el-button type="warning" @click="handleStop()" :disabled="isStop" size="small"
+                    style="margin-left: 10px ">终止</el-button>
+		     <el-button type="danger" @click="handleCommit('ruleForm')" :disabled="isCommit" size="small">确认</el-button>
 		  </span>
     </el-dialog>
   </div>
@@ -146,46 +150,15 @@
         current: 1,
         total: 0,
         size: 10,
-        showPercentage: true,
+        uploadDialogVisible: false,
+        showPercentage: false,
         isStop: true,
         isCommit: false,
-        sid: '',
-        ed_depotStatus: '',
-        add_depotStatus: '',
-        uploadDialogVisible: false,
-        add_can_retail_sale: '',
-        depotStatus: 'TRUE',
-        search: '',
-        add_sourceWhsId: '',
-        add_depotName: '',
-        add_depot_no: '',
-        //新增
-        add_oper_type: '',
-        add_pur_model: '',
-        add_depot_status: '',
-        add_depotLevel: '',
-        add_replenish_unit: '',
-        add_surgery_depot: '',
-        add_sys_replenish_rules_id: '',
-        add_unksk: '',
-        add_com_depot_type_id: '',
-        add_default_storager: '',
-        //修改
-        ed_oper_type: '',
-        ed_can_retail_sale: '',
-        ed_pur_model: '',
-        ed_depot_status: '',
-        ed_depotLevel: '',
-        ed_replenish_unit: '',
-        ed_surgery_depot: '',
-        ed_sys_replenish_rules_id: '',
-        ed_unksk: '',
-        ed_com_depot_type_id: '',
-        ed_default_storager: '',
-        canzhaoDialogVisibleFlag: '',
         uploading: false,
         loadingText: '上传进度',
-        fileList: []
+        fileList: [],
+        percentage: 0,
+        getPercent: null,
       }
     },
     created() {
@@ -197,6 +170,14 @@
         if (rowIndex === 0) {
           return 'background-color: #ecf5ff;color:#333;'
         }
+      },
+      handleRemove: function () {
+        this.fileList = []
+      },
+      handleChange: function (file, fileList) {
+        this._file = file
+        this.fileList.push(this._file)
+        if (this.fileList.length > 1) this.fileList.shift()
       },
       //查询
       queryFileUpload() {
@@ -225,207 +206,47 @@
       },
       //覆盖原有的上传action
       uploadFile(file) {
-        /* let _this = this;
-         _this.upload({
-           url: '/alleria/packages/upload',
-           data: {
-             file: file
-           },
-           success(data) {
-               _this.$message.info('获取文件上传信息成功');
-           },
-           error(err) {
-             _this.$message.error('获取文件上传遇到异常,异常为:' + err);
-           }
-         })*/
+        let _this = this;
+        _this.$message.info('请求已提交，请耐心等待处理完成！');
+        _this.showPercentage = true;
+        _this.getPercent = setInterval(_this.handlePercentage(file.name), 5000);
         console.log(file)
       },
       beforeAvatarUpload(file) {
-        const isJPGOrZip = file.type === 'image/jpeg' || 'zip';
-        const isLt30M = file.size / 1024 / 1024 < 30;
-
-        if (!isJPGOrZip) {
+        this.isCommit = true;
+        const fileName = file.name.substring(file.name.lastIndexOf('.') + 1).toUpperCase();
+        const isLt50M = file.size / 1024 / 1024 < 50;
+        if ((fileName != 'JPG') && (fileName != 'ZIP')) {
           this.$message.error('上传头像图片只能是 JPG/Zip 格式!');
+          return false;
         }
-        if (!isLt30M) {
-          this.$message.error('上传头像图片大小不能超过 30MB!');
+        if (!isLt50M) {
+          this.$message.error('上传头像图片大小不能超过 50MB!');
+          return false;
         }
-        return isJPGOrZip && isLt30M;
+        return true;
       },
       handleStop() {
       },
       handleCommit(ruleForm) {
       },
-
-      //添加
-      addSms() {
+      handlePercentage(name) {
         let _this = this;
-        _this.addDialogVisible = true;
-        var errMsg = '';
-        var flag = true;
-        if (_this.add_depotName == '') {
-          flag = false;
-          _this.$message.error('请填写仓间名称');
-        }
-        if (_this.formInline2.add_com_depot_type_id == '') {
-          flag = false;
-          _this.$message.error('请填写仓间类型');
-        }
-        if (flag) {
-          _this.ajaxPost({
-            url: '/depot/addDepot',
-            data: {
-              depotName: _this.add_depotName,
-              depotNo: _this.add_depotNo,
-              depotPostAddrName: _this.add_depot_post_addr_name,
-              sourceWhsId: _this.add_sourceWhsId,
-              operType: _this.add_oper_type,
-              canRetailSale: _this.add_can_retail_sale,
-              purModel: _this.add_pur_model,
-              depotStatus: _this.add_depot_status,
-              depotLevel: _this.add_depotLevel,
-              replenish_unit: _this.add_replenish_unit,
-              replenishUnit: _this.add_surgery_depot,
-              sysReplenishRulesId: _this.add_sys_replenish_rules_id,
-              unksk: _this.add_unksk,
-              comDepotTypeId: _this.formInline2.add_com_depot_type_id
-            },
-            success(data) {
-              if (data.code == 0) {
-                _this.$message.success(data.msg);
-                _this.queryFileUpload();
-                _this.clearaAddMsg();
-              } else {
-                _this.$message.Error(data.msg);
-              }
-            },
-            error(err) {
-              _this.$message.error('获取短信提醒设置遇到异常,异常为:' + err);
+        _this.ajaxPost({
+          url: '/depot/addDepot',
+          data: {
+            batchId: name,
+          },
+          success(data) {
+            if (data.code == 0) {
+              _this.percentage = data.data.percentage;
+            } else {
+              _this.$message.Error(data.msg);
             }
-          });
-        }
-      },
-      openDetails(row) {
-        //具体操作
-        this.$message.error(this.row.number);
-      },
-      //清空数据
-      clearaAddMsg() {
-        let _this = this;
-        _this.addDialogVisible = false;
-        _this.radio = '2001';
-      },
-      //编辑
-      editUser(row) {
-        let _this = this;
-        var radios;
-        if (row['depotStatus'] == 'TRUE') {
-          radios = 'TRUE'
-        } else {
-          radios = 'FALSE'
-        }
-        _this.ed_depotLevel = row.depotLevel.toString();
-        _this.ed_oper_type = row.operType.toString();
-        _this.ed_can_retail_sale = row.canRetailSale.toString();
-        _this.ed_pur_model = row.purModel.toString();
-        _this.ed_depot_status = row.depotStatus.toString();
-        _this.ed_replenish_unit = row.replenishUnit == null ? null : row.replenishUnit.toString();
-        _this.ed_surgery_depot = row.surgeryDepot.toString();
-        _this.ed_sys_replenish_rules_id = row.sysReplenishRulesId == null ? null : row.sysReplenishRulesId.toString();
-        _this.ed_unksk = row.unksk.toString();
-
-        _this.ed_depot_post_addr_name = row['depotPostAddrName'];
-        _this.ed_sourceWhsId = row['sourceWhsId'];
-        _this.dialogVisible = true;//弹出修改框
-        //_this.ed_depotLevel=row['depotLevel'];
-        _this.ed_depotName = row['depotName'];
-        _this.formInline3.ed_com_depot_type_id = row['comDepotTypeId'];
-        _this.ed_depotNo = row['depotNo'];
-        //_this.ed_depotStatus=radios;
-        _this.sid = row['comDepotId'];
-        _this.ed_version = row['version'];
-        ///_this.queryCusts();
-        //_this.ed_custCode=row['custcode'];
-      },
-      //保存编辑
-      editSms() {
-        let _this = this;
-        var flag = true;
-        if (_this.ed_depotName == '') {
-          flag = false;
-          _this.$message.error('请填写科室名称');
-        }
-        if (_this.formInline3.ed_com_depot_type_id == '') {
-          flag = false;
-          _this.$message.error('请填仓间类型');
-        }
-        if (flag) {
-          _this.ajaxPost({
-            url: '/depot/editSavaDepot',
-            data: {
-              comDepotId: _this.sid,
-              version: _this.ed_version,
-              depotPostAddrName: _this.ed_depot_post_addr_name,
-              depotName: _this.ed_depotName,
-              comDepotTypeId: _this.formInline3.ed_com_depot_type_id,
-              sourceWhsId: _this.ed_sourceWhsId,
-              operType: _this.ed_oper_type,
-              canRetailSale: _this.ed_can_retail_sale,
-              purModel: _this.ed_pur_model,
-              depotStatus: _this.ed_depot_status,
-              depotLevel: _this.ed_depotLevel,
-              replenish_unit: _this.ed_replenish_unit,
-              replenishUnit: _this.ed_surgery_depot,
-              sysReplenishRulesId: _this.ed_sys_replenish_rules_id,
-              unksk: _this.ed_unksk,
-            },
-            success(data) {
-              if (data.code == 0) {
-                _this.$message.success(data.msg);
-                _this.queryFileUpload();
-                _this.dialogVisible = false;
-              } else {
-                _this.$message.Error(data.msg);
-              }
-            },
-            error(err) {
-              _this.$message.error('获取短信提醒设置遇到异常,异常为:' + err);
-            }
-          });
-        }
-      },
-      //删除
-      handleClick(sid) {
-        let _this = this;
-        var sids = JSON.stringify(sid);
-
-        _this.$confirm('你确定删除吗', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          _this.ajaxPost({
-            url: '/depot/delDepot',
-            data: {
-              sid: sids
-            },
-            success(data) {
-              if (data.code == 0) {
-                _this.$message.success(data.msg);
-                _this.queryFileUpload();
-              } else {
-                _this.$message.Error(data.msg);
-              }
-            },
-            error(err) {
-              _this.$message.error('删除短信提醒设置遇到异常,异常为:' + err);
-            }
-          });
-        }).catch(() => {
-          _this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
+          },
+          error(err) {
+            _this.$message.error('获取上传进度遇到异常,异常为:' + err);
+          }
         });
       },
       handleSizeChange(val) {
@@ -547,7 +368,6 @@
   .dialog-footer button {
     padding: 9px 10px !important;
     font-size: 14px !important;
-    text-align: center;
   }
 
   .mainWrap {
@@ -557,17 +377,21 @@
     height: 100%;
     overflow-y: auto;
   }
-  .tips-import{
+
+  .tips-import {
     position: absolute;
     color: coral;
   }
-  .tips-import span{
-   font-weight: bold;
+
+  .tips-import span {
+    font-weight: bold;
     font-size: 14px;
   }
-  .tips-import li{
+
+  .tips-import li {
     font-size: 14px;
   }
+
   .form-progress {
     line-height: 40px;
     max-width: 300px;
