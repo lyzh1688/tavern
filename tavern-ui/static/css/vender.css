@@ -1,0 +1,17 @@
+.el-table .cell, .el-table th div{
+  padding:0!important;
+}
+.el-table tr td .cell{
+  padding:5px 2px !important;
+}
+.el-table .cell, .el-table th div, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell{
+  padding-left:0 !important;
+}
+.el-table .cell{
+  position:relative;
+}
+.el-table .caret-wrapper{
+  position:absolute;
+  top:2px;
+  right:0;
+}
