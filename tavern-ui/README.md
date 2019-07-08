@@ -1,4 +1,4 @@
-# spd-ui
+# tavern-ui
 
 > A Vue.js project
 

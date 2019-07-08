@@ -1,5 +1,5 @@
 {
-  "name": "spd-ui",
+  "name": "tavern-ui",
   "version": "1.0.0",
   "description": "A Vue.js project",
   "author": "",
@@ -16,7 +16,7 @@
   "dependencies": {
     "@xkeshi/vue-barcode": "^1.0.0",
     "ajv": "^6.10.0",
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "element-ui": "^2.8.2",
     "js-cookie": "^2.2.0",
     "jszip": "^3.2.2",
