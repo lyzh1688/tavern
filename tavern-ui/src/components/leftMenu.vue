@@ -20,13 +20,20 @@
                  @open="handleOpen" @close="handleClose" :collapse="!isCollapse">
           <el-submenu v-for='(role,num) in userRoles' :key="num" v-bind:index="''+num+1">
             <template slot="title">
-              <i class="el-icon-message"></i><!-- 可以使用-->
+              <i :class="role.icon"></i>
               <span slot="title">{{role.name}}</span>
             </template>
-            <el-menu-item-group v-for='(childMenu,childNum) in role.children' :key="childNum">
-              <el-menu-item :index="childMenu.href">{{childMenu.name}}</el-menu-item>
+            <el-menu-item-group v-for='(childMenu,childNum) in role.children' :key="childNum" v-bind:index="''+childNum+1">
+              <el-submenu v-if="childMenu.children && childMenu.children.length > 0" >
+                <template slot="title"><span>{{childMenu.name}}</span></template>
+                <el-menu-item-group v-for='(grandChildMenu,grandChildNum) in childMenu.children' :key="grandChildNum" v-bind:index="''+grandChildNum+1">
+                  <el-menu-item :index="grandChildMenu.href"><span slot="title">{{grandChildMenu.name}}</span></el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+              <el-menu-item v-else :index="childMenu.href">
+                 <span slot="title">{{childMenu.name}}</span>
+              </el-menu-item>
             </el-menu-item-group>
-            <!--例子-->
           </el-submenu>
         </el-menu>
       </el-col>
@@ -62,6 +69,7 @@
           _this.userRoles = data.menus.children;
           _this.loginId = data.loginId;
           _this.loginName = data.loginName;
+          console.log(JSON.stringify(_this.userRoles))
         },
         error(err) {
           console.log(err);

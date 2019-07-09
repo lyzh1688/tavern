@@ -11,6 +11,9 @@ import vatInvoiceFileDtl from '../pages/vatInvoice/vatInvoiceFileDtl'
 /* 增值税 发票修正页面展示*/
 import vatInvoiceFileAmend from '../pages/vatInvoice/vatInvoiceFileAmend'
 
+/* 银行流水*/
+import statementFileUpload from '../pages/bank/statementFileUpload'
+
 
 Vue.use(Router)
 
@@ -64,6 +67,17 @@ const routes = [
     meta: {
       keepAlive: true  //需要被缓存
     }
+  },
+
+
+  /*银行流水 */
+  {
+    path: '/bank/statementFileUpload',
+    name: 'bankStatementFileUpload',
+    component: statementFileUpload,
+    meta: {
+      keepAlive: true  //需要被缓存
+    },
   },
 ]
 const router = new Router({
