@@ -11,5 +11,8 @@ zuul:
     tavern-crm:
       path: /crm/**
       url: http://127.0.0.1:8083/
+    tavern-alleria:
+      path: /alleria/**
+      url: http://127.0.0.1:8082/
 
 tavern.security.jwt.secret: tavern

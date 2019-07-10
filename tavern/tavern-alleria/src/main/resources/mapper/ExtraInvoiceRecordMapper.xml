@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tuoyou.tavern.alleria.dao.ExtraInvoiceRecordMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.alleria.entity.ExtraInvoiceRecord">
+<mapper namespace="com.tuoyou.tavern.alleria.invoice.dao.ExtraInvoiceRecordMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.alleria.model.ExtraInvoiceRecord">
     <id column="RECORD_ID" jdbcType="VARCHAR" property="recordId" />
     <result column="CUSTOM_ID" jdbcType="VARCHAR" property="customId" />
     <result column="ACCOUNT_PERIOD" jdbcType="DATE" property="accountPeriod" />
@@ -13,7 +13,7 @@
     delete from ALR_EXTRA_INVOICE_RECORD
     where RECORD_ID = #{recordId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.alleria.entity.ExtraInvoiceRecord">
+  <insert id="insert" parameterType="com.tuoyou.tavern.protocol.alleria.model.ExtraInvoiceRecord">
     insert into ALR_EXTRA_INVOICE_RECORD (RECORD_ID, CUSTOM_ID, ACCOUNT_PERIOD, 
       INVOICE_TYPE, TOTAL_AMOUNT, ITEM_COUNT
       )
@@ -21,7 +21,7 @@
       #{invoiceType,jdbcType=VARCHAR}, #{totalAmount,jdbcType=DECIMAL}, #{itemCount,jdbcType=DECIMAL}
       )
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.alleria.entity.ExtraInvoiceRecord">
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.protocol.alleria.model.ExtraInvoiceRecord">
     update ALR_EXTRA_INVOICE_RECORD
     set CUSTOM_ID = #{customId,jdbcType=VARCHAR},
       ACCOUNT_PERIOD = #{accountPeriod,jdbcType=DATE},

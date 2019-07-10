@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.alleria.bank.dao.BankStatementRecordMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.alleria.model.BankStatementRecord">
+    <id column="FILE_ID" jdbcType="VARCHAR" property="fileId" />
+    <result column="BATCH_ID" jdbcType="VARCHAR" property="batchId" />
+    <result column="FILE_NAME" jdbcType="VARCHAR" property="fileName" />
+    <result column="ACCOUNT_PERIOD" jdbcType="DATE" property="accountPeriod" />
+    <result column="IS_VALID" jdbcType="VARCHAR" property="isValid" />
+    <result column="UPDATE_DATE" jdbcType="VARCHAR" property="updateDate" />
+    <result column="CUSTOM_ID" jdbcType="VARCHAR" property="customId" />
+    <result column="BANK_ID" jdbcType="VARCHAR" property="bankId" />
+  </resultMap>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select FILE_ID, BATCH_ID, FILE_NAME, ACCOUNT_PERIOD, IS_VALID, UPDATE_DATE, CUSTOM_ID, 
+    BANK_ID
+    from ALR_BANK_STATEMENT_RECORD
+  </select>
+</mapper>

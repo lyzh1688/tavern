@@ -28,6 +28,11 @@
             <artifactId>tavern-common-core</artifactId>
             <version>${tavern.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.tuoyou.tavern</groupId>
+            <artifactId>tavern-alleria-spi</artifactId>
+            <version>${tavern.version}</version>
+        </dependency>
         <!--数据库-->
         <dependency>
             <groupId>mysql</groupId>
@@ -43,10 +48,6 @@
                     <artifactId>spring-boot-autoconfigure</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
 

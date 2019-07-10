@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.alleria.bank.dao.BankStatementDtlCcblRecordMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.alleria.model.BankStatementDtlCcblRecord">
+    <id column="DETAIL_ID" jdbcType="VARCHAR" property="detailId" />
+    <result column="CUSTOM_ACCNT_ID" jdbcType="VARCHAR" property="customAccntId" />
+    <result column="CUSTOM_ACCNT_NAME" jdbcType="VARCHAR" property="customAccntName" />
+    <result column="TRADE_DATE" jdbcType="DATE" property="tradeDate" />
+    <result column="DEBIT_AMOUNT" jdbcType="DECIMAL" property="debitAmount" />
+    <result column="CREDIT_AMOUNT" jdbcType="DECIMAL" property="creditAmount" />
+    <result column="BALANCE" jdbcType="DECIMAL" property="balance" />
+    <result column="COIN_CODE" jdbcType="VARCHAR" property="coinCode" />
+    <result column="RECV_ACCNT_ID" jdbcType="VARCHAR" property="recvAccntId" />
+    <result column="RECV_ACCNT_NAME" jdbcType="VARCHAR" property="recvAccntName" />
+    <result column="INSTITUTION" jdbcType="VARCHAR" property="institution" />
+    <result column="ACCOUNTING_DATE" jdbcType="DATE" property="accountingDate" />
+    <result column="COMPANY_SEQ" jdbcType="VARCHAR" property="companySeq" />
+    <result column="CERTIFICATE_TYPE" jdbcType="VARCHAR" property="certificateType" />
+    <result column="CERTIFICATE_ID" jdbcType="VARCHAR" property="certificateId" />
+    <result column="FILE_ID" jdbcType="VARCHAR" property="fileId" />
+  </resultMap>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select DETAIL_ID, CUSTOM_ACCNT_ID, CUSTOM_ACCNT_NAME, TRADE_DATE, DEBIT_AMOUNT, CREDIT_AMOUNT, 
+    BALANCE, COIN_CODE, RECV_ACCNT_ID, RECV_ACCNT_NAME, INSTITUTION, ACCOUNTING_DATE, 
+    COMPANY_SEQ, CERTIFICATE_TYPE, CERTIFICATE_ID, FILE_ID
+    from ALR_BANK_STATEMENT_DTL_CCBL_RECORD
+  </select>
+</mapper>

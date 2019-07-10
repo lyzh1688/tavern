@@ -23,6 +23,12 @@
             <!--<artifactId>spring-cloud-starter-openfeign</artifactId>-->
         <!--</dependency>-->
 
+        <dependency>
+            <groupId>com.tuoyou.tavern</groupId>
+            <artifactId>tavern-protocol-common</artifactId>
+            <version>${tavern.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>

@@ -1,11 +1,10 @@
 package com.tuoyou.tavern.alleria.endpoint;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tuoyou.tavern.alleria.dto.TaxScanResultDTO;
-import com.tuoyou.tavern.alleria.dto.ZZSInvoiceKeyField;
-import com.tuoyou.tavern.alleria.model.ZZSInvoiceScanResult;
-import com.tuoyou.tavern.alleria.service.StdInvoiceDtlRecordService;
-import com.tuoyou.tavern.alleria.service.TaxScanResultService;
+import com.tuoyou.tavern.protocol.alleria.dto.TaxScanResultDTO;
+import com.tuoyou.tavern.protocol.alleria.dto.ZZSInvoiceKeyField;
+import com.tuoyou.tavern.alleria.invoice.service.StdInvoiceDtlRecordService;
+import com.tuoyou.tavern.alleria.invoice.service.TaxScanResultService;
 import com.tuoyou.tavern.common.core.util.RT;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

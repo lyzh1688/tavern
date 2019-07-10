@@ -1,9 +1,8 @@
 package com.tuoyou.tavern.alleria.endpoint;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tuoyou.tavern.alleria.dto.FileUploadDTO;
-import com.tuoyou.tavern.alleria.model.PackageUploadRecord;
-import com.tuoyou.tavern.alleria.service.FileUploadRecordService;
+import com.tuoyou.tavern.protocol.alleria.dto.FileUploadDTO;
+import com.tuoyou.tavern.alleria.common.service.FileUploadRecordService;
 import com.tuoyou.tavern.common.core.util.RT;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
