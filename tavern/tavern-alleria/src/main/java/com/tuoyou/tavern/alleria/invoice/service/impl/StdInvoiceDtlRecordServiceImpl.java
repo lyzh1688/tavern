@@ -31,7 +31,7 @@ public class StdInvoiceDtlRecordServiceImpl extends ServiceImpl<StdInvoiceDtlRec
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Boolean updateZzsInvoiceDtl(ZZSInvoiceKeyField zzsInvoiceKeyField) {
+    public void updateZzsInvoiceDtl(ZZSInvoiceKeyField zzsInvoiceKeyField) {
 
         //更改invoice
         //更改dtl
@@ -56,7 +56,6 @@ public class StdInvoiceDtlRecordServiceImpl extends ServiceImpl<StdInvoiceDtlRec
                 .eq(StdInvoiceDtlRecord::getFileId, zzsInvoiceKeyField.getFileId()));
 
 
-        return Boolean.TRUE;
     }
 
 }

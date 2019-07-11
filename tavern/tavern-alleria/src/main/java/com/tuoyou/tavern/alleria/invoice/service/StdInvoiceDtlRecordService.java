@@ -10,5 +10,5 @@ import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceDtlRecord;
  */
 public interface StdInvoiceDtlRecordService extends IService<StdInvoiceDtlRecord> {
 
-     Boolean updateZzsInvoiceDtl(ZZSInvoiceKeyField zzsInvoiceKeyField);
+     void updateZzsInvoiceDtl(ZZSInvoiceKeyField zzsInvoiceKeyField);
 }
