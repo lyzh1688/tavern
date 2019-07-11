@@ -10,4 +10,5 @@ import lombok.Data;
 public class FileUploadDTO {
     private String fileType;
     private String status;
+    private String packageName;
 }
