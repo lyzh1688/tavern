@@ -11,6 +11,8 @@ import com.tuoyou.tavern.protocol.alleria.dto.BankStatementDtlQryInfo;
 import com.tuoyou.tavern.protocol.alleria.model.BankStatementDtlCcblRecord;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Code Monkey: 何彪 <br>
  * Dev Time: 2019/07/10 <br>
@@ -20,9 +22,12 @@ public class BankStatementDtlCcblRecordServiceImpl extends ServiceImpl<BankState
 
 
     @Override
-    public IPage getBankStatementDtlRecord(Page page, BankStatementDtlQryInfo bankStatementDtlQryInfo) {
-        return this.baseMapper.selectPage(page, Wrappers.<BankStatementDtlCcblRecord>query().lambda()
-                .between(BankStatementDtlCcblRecord::getTradeDate, DateUtils.parseDateTime(bankStatementDtlQryInfo.getStartTradeDate(), DateUtils.DEFAULT_DATETIME_FORMATTER), DateUtils.parseDateTime(bankStatementDtlQryInfo.getEndTradeDate(), DateUtils.DEFAULT_DATETIME_FORMATTER))
-                .eq(BankStatementDtlCcblRecord::getRecvAccntId, bankStatementDtlQryInfo.getRecvAccntId()));
+    public IPage<BankStatementDtlCcblRecord> getBankStatementDtlRecord(Page page, BankStatementDtlQryInfo bankStatementDtlQryInfo) {
+        return this.baseMapper.selectBankStatementDtlRecord(page, bankStatementDtlQryInfo);
+    }
+
+    @Override
+    public List<String> getRecvAccntIdDict(String batchId, String recvAccntId) {
+        return this.baseMapper.selectRecvAccntIdDict(batchId, recvAccntId);
     }
 }

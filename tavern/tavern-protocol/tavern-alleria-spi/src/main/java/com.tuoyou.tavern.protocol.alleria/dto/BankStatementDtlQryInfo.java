@@ -12,6 +12,7 @@ public class BankStatementDtlQryInfo {
     private String startTradeDate;
     private String endTradeDate;
     private String recvAccntId;
+    private String batchId;
 
 
 }

@@ -18,7 +18,7 @@ public class BankStatementRecordServiceImpl extends ServiceImpl<BankStatementRec
 
 
     @Override
-    public IPage getBankStatementRecord(Page page, BankStatementRecord bankStatementRecord) {
+    public IPage<BankStatementRecord> getBankStatementRecord(Page page, BankStatementRecord bankStatementRecord) {
         return this.baseMapper.selectPage(page, Wrappers.<BankStatementRecord>query(bankStatementRecord));
     }
 

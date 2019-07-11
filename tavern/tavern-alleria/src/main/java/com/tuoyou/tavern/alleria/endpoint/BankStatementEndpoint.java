@@ -10,7 +10,10 @@ import com.tuoyou.tavern.protocol.alleria.response.BankStatementResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -30,7 +33,13 @@ public class BankStatementEndpoint {
     }
 
     @GetMapping("/dtl")
-    BankStatementDtlResponse queryBankStatementDtlRecord(Page page, BankStatementDtlQryInfo bankStatementRecord){
+    BankStatementDtlResponse queryBankStatementDtlRecord(Page page, BankStatementDtlQryInfo bankStatementRecord) {
         return new BankStatementDtlResponse(this.bankStatementDtlCcblRecordService.getBankStatementDtlRecord(page, bankStatementRecord));
+    }
+
+    @GetMapping("/recvAccntId")
+    List<String> queryRecvAccntIdDict(@RequestParam(name = "batchId", required = true) String batchId,
+                                      @RequestParam(name = "recvAccntId") String recvAccntId) {
+        return this.bankStatementDtlCcblRecordService.getRecvAccntIdDict(batchId, recvAccntId);
     }
 }

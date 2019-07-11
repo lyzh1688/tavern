@@ -10,6 +10,6 @@ import com.tuoyou.tavern.protocol.alleria.model.BankStatementRecord;
  * Dev Time: 2019/07/10 <br>
  */
 public interface BankStatementRecordService extends IService<BankStatementRecord> {
-    IPage getBankStatementRecord(Page page, BankStatementRecord bankStatementQryInfo);
+    IPage<BankStatementRecord> getBankStatementRecord(Page page, BankStatementRecord bankStatementQryInfo);
 
 }
