@@ -3,7 +3,7 @@ package com.tuoyou.tavern.alleria.endpoint;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tuoyou.tavern.alleria.bank.service.BankStatementDtlCcblRecordService;
 import com.tuoyou.tavern.alleria.bank.service.BankStatementRecordService;
-import com.tuoyou.tavern.protocol.alleria.dto.BankStatementDtlQryInfo;
+import com.tuoyou.tavern.protocol.alleria.dto.BankStatementDtlDTO;
 import com.tuoyou.tavern.protocol.alleria.model.BankStatementRecord;
 import com.tuoyou.tavern.protocol.alleria.response.BankStatementDtlResponse;
 import com.tuoyou.tavern.protocol.alleria.response.BankStatementResponse;
@@ -27,16 +27,28 @@ public class BankStatementEndpoint {
     private final BankStatementRecordService bankStatementRecordService;
     private final BankStatementDtlCcblRecordService bankStatementDtlCcblRecordService;
 
+    /*
+     * 查询银行流水
+     *
+     * */
     @GetMapping("/page")
     BankStatementResponse queryBankStatementRecord(Page page, BankStatementRecord bankStatementRecord) {
         return new BankStatementResponse(this.bankStatementRecordService.getBankStatementRecord(page, bankStatementRecord));
     }
 
+    /*
+     * 查询银行流水明细
+     *
+     * */
     @GetMapping("/dtl")
-    BankStatementDtlResponse queryBankStatementDtlRecord(Page page, BankStatementDtlQryInfo bankStatementRecord) {
+    BankStatementDtlResponse queryBankStatementDtlRecord(Page page, BankStatementDtlDTO bankStatementRecord) {
         return new BankStatementDtlResponse(this.bankStatementDtlCcblRecordService.getBankStatementDtlRecord(page, bankStatementRecord));
     }
 
+    /*
+     * 查询银行流水账户字典
+     *
+     * */
     @GetMapping("/recvAccntId")
     List<String> queryRecvAccntIdDict(@RequestParam(name = "batchId", required = true) String batchId,
                                       @RequestParam(name = "recvAccntId") String recvAccntId) {

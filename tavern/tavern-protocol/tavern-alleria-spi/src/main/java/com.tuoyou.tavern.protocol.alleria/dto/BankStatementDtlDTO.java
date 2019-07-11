@@ -7,7 +7,7 @@ import lombok.Data;
  * Dev Time: 2019/07/11 <br>
  */
 @Data
-public class BankStatementDtlQryInfo {
+public class BankStatementDtlDTO {
 
     private String startTradeDate;
     private String endTradeDate;

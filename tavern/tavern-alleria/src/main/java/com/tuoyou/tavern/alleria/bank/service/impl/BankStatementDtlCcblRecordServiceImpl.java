@@ -1,13 +1,11 @@
 package com.tuoyou.tavern.alleria.bank.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tuoyou.tavern.alleria.bank.dao.BankStatementDtlCcblRecordMapper;
 import com.tuoyou.tavern.alleria.bank.service.BankStatementDtlCcblRecordService;
-import com.tuoyou.tavern.alleria.util.DateUtils;
-import com.tuoyou.tavern.protocol.alleria.dto.BankStatementDtlQryInfo;
+import com.tuoyou.tavern.protocol.alleria.dto.BankStatementDtlDTO;
 import com.tuoyou.tavern.protocol.alleria.model.BankStatementDtlCcblRecord;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +20,8 @@ public class BankStatementDtlCcblRecordServiceImpl extends ServiceImpl<BankState
 
 
     @Override
-    public IPage<BankStatementDtlCcblRecord> getBankStatementDtlRecord(Page page, BankStatementDtlQryInfo bankStatementDtlQryInfo) {
-        return this.baseMapper.selectBankStatementDtlRecord(page, bankStatementDtlQryInfo);
+    public IPage<BankStatementDtlCcblRecord> getBankStatementDtlRecord(Page page, BankStatementDtlDTO bankStatementDtlDTO) {
+        return this.baseMapper.selectBankStatementDtlRecord(page, bankStatementDtlDTO);
     }
 
     @Override

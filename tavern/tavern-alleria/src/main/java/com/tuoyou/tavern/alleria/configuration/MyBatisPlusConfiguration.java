@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * Dev Time: 2019/07/02 <br>
  */
 @Configuration
-@MapperScan({"com.*.invoice.dao","com.*.common.dao","com.*.bank.dao"})
+@MapperScan({"com.tuoyou.tavern.alleria.invoice.dao","com.tuoyou.tavern.alleria.common.dao","com.tuoyou.tavern.alleria.bank.dao"})
 public class MyBatisPlusConfiguration {
     /**
      * 分页插件
