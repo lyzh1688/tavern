@@ -1,11 +1,12 @@
 package com.tuoyou.tavern.alleria.endpoint;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tuoyou.tavern.protocol.alleria.dto.TaxScanResultDTO;
-import com.tuoyou.tavern.protocol.alleria.dto.ZZSInvoiceKeyField;
 import com.tuoyou.tavern.alleria.invoice.service.StdInvoiceDtlRecordService;
 import com.tuoyou.tavern.alleria.invoice.service.TaxScanResultService;
-import com.tuoyou.tavern.common.core.util.RT;
+import com.tuoyou.tavern.protocol.alleria.dto.TaxScanResultDTO;
+import com.tuoyou.tavern.protocol.alleria.dto.ZZSInvoiceKeyField;
+import com.tuoyou.tavern.protocol.alleria.response.TaxScanResultResponse;
+import com.tuoyou.tavern.protocol.common.TavernResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +28,8 @@ public class ZZSInvoiceEndpoint {
      * */
     //RESOURCE-PATH:/invoice/zzs/{batchId}?page={page}&size={size}&verify={verify}&emend={emend}
     @GetMapping(value = "/scan")
-    public RT queryInvoiceScanResult(Page page, TaxScanResultDTO taxScanResultDTO) {
-        return new RT<>(taxScanResultService.getTaxScanResult(page, taxScanResultDTO));
+    public TaxScanResultResponse queryInvoiceScanResult(Page page, TaxScanResultDTO taxScanResultDTO) {
+        return new TaxScanResultResponse(taxScanResultService.getTaxScanResult(page, taxScanResultDTO));
     }
 
     /*
@@ -36,7 +37,8 @@ public class ZZSInvoiceEndpoint {
      * */
     //RESOURCE-PATH:/invoice/zzs/{fileId}
     @PutMapping(value = "/edit")
-    public RT updateZzsInvoiceKeyField(@Valid @RequestBody ZZSInvoiceKeyField zzsInvoiceKeyField) {
-        return new RT<>(this.stdInvoiceDtlRecordService.updateZzsInvoiceDtl(zzsInvoiceKeyField));
+    public TavernResponse updateZzsInvoiceKeyField(@Valid @RequestBody ZZSInvoiceKeyField zzsInvoiceKeyField) {
+        this.stdInvoiceDtlRecordService.updateZzsInvoiceDtl(zzsInvoiceKeyField);
+        return new TavernResponse();
     }
 }
