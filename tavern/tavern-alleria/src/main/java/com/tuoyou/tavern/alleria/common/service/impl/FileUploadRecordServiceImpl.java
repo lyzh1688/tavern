@@ -21,7 +21,7 @@ import java.util.List;
 public class FileUploadRecordServiceImpl extends ServiceImpl<FileUploadRecordMapper, FileUploadRecord> implements FileUploadRecordService {
 
     @Override
-    public IPage<List<FileUploadRecord>> getRecordWithTypeAndStatusByPage(Page page, FileUploadDTO fileUploadDTO) {
+    public IPage<FileUploadRecord> getRecordWithTypeAndStatusByPage(Page page, FileUploadDTO fileUploadDTO) {
         return this.baseMapper.selectFileUploadRecordPage(page, fileUploadDTO);
     }
 }

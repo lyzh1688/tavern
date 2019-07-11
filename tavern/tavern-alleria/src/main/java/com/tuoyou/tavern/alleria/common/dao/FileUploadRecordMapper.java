@@ -10,5 +10,5 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface FileUploadRecordMapper extends BaseMapper<FileUploadRecord> {
-    IPage<List<FileUploadRecord>> selectFileUploadRecordPage(Page page, @Param("query") FileUploadDTO fileUploadDTO);
+    IPage<FileUploadRecord> selectFileUploadRecordPage(Page page, @Param("query") FileUploadDTO fileUploadDTO);
 }

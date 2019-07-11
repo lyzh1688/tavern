@@ -3,7 +3,7 @@ package com.tuoyou.tavern.alleria.endpoint;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tuoyou.tavern.protocol.alleria.dto.FileUploadDTO;
 import com.tuoyou.tavern.alleria.common.service.FileUploadRecordService;
-import com.tuoyou.tavern.common.core.util.RT;
+import com.tuoyou.tavern.protocol.alleria.response.FileUploadRecordResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +22,8 @@ public class FileRecordEndpoint {
      * */
     //RESOURCE-PATH:/packages/{fileType}?page={page}&size={size}&status={status}
     @GetMapping(value = "/page")
-    public RT queryPackages(Page page, FileUploadDTO fileUploadDTO) {
-        return new RT<>(fileUploadRecordService.getRecordWithTypeAndStatusByPage(page, fileUploadDTO));
+    public FileUploadRecordResponse queryPackages(Page page, FileUploadDTO fileUploadDTO) {
+        return new FileUploadRecordResponse(fileUploadRecordService.getRecordWithTypeAndStatusByPage(page, fileUploadDTO));
     }
 
 }

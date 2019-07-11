@@ -13,5 +13,5 @@ import java.util.List;
  * Dev Time: 2019/07/03 <br>
  */
 public interface FileUploadRecordService extends IService<FileUploadRecord> {
-    IPage<List<FileUploadRecord>> getRecordWithTypeAndStatusByPage(Page page, FileUploadDTO fileUploadDTO);
+    IPage<FileUploadRecord> getRecordWithTypeAndStatusByPage(Page page, FileUploadDTO fileUploadDTO);
 }
