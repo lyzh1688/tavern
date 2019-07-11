@@ -1,6 +1,4 @@
-package com.tuoyou.tavern.alleria.util;
-
-import com.google.common.base.Strings;
+package com.tuoyou.tavern.common.core.util;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -11,7 +9,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Objects;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class DateUtils {
@@ -126,33 +123,5 @@ public final class DateUtils {
 
 	public static final String formatTimestamp(Timestamp timestamp, DateTimeFormatter formatter) {
 		return timestamp == null ? "" : timestamp.toLocalDateTime().format(formatter);
-	}
-
-	public static final String formatDate(String date, DateTimeFormatter fromPatter, DateTimeFormatter toPatter) {
-		if (!Strings.isNullOrEmpty(date) && !"0".equals(date)) {
-			try {
-				return formatDate(parseDate(date, fromPatter), toPatter);
-			} catch (Exception var4) {
-				LOGGER.log(Level.WARNING, "convert date failed!", var4);
-				return date;
-			}
-		} else {
-			return date;
-		}
-	}
-
-	public static final String formatDateTime(String date, String time, DateTimeFormatter fromPatter, String def) {
-		if (!Strings.isNullOrEmpty(date) && !"0".equals(date)) {
-			try {
-				String _part = Strings.nullToEmpty(time);
-				String _date = date.concat("000000".concat(_part).substring(_part.length()));
-				return formatDateTime(parseDateTime(_date, DateTimeFormatter.ofPattern("yyyyMMddHHmmss")), fromPatter);
-			} catch (Exception var6) {
-				LOGGER.log(Level.WARNING, "convert date failed!", var6);
-				return def;
-			}
-		} else {
-			return def;
-		}
 	}
 }
