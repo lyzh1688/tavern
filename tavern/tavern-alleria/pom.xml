@@ -25,7 +25,7 @@
         </dependency>
         <dependency>
             <groupId>com.tuoyou.tavern</groupId>
-            <artifactId>tavern-common-core</artifactId>
+            <artifactId>tavern-common-libs</artifactId>
             <version>${tavern.version}</version>
         </dependency>
         <dependency>
