@@ -7,6 +7,7 @@ import com.tuoyou.tavern.protocol.alleria.dto.BankStatementDtlDTO;
 import com.tuoyou.tavern.protocol.alleria.model.BankStatementRecord;
 import com.tuoyou.tavern.protocol.alleria.response.BankStatementDtlResponse;
 import com.tuoyou.tavern.protocol.alleria.response.BankStatementResponse;
+import com.tuoyou.tavern.protocol.alleria.response.DictResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,8 +51,8 @@ public class BankStatementEndpoint {
      *
      * */
     @GetMapping("/recvAccntId")
-    List<String> queryRecvAccntIdDict(@RequestParam(name = "batchId", required = true) String batchId,
+    DictResponse queryRecvAccntIdDict(@RequestParam(name = "batchId", required = true) String batchId,
                                       @RequestParam(name = "recvAccntId") String recvAccntId) {
-        return this.bankStatementDtlCcblRecordService.getRecvAccntIdDict(batchId, recvAccntId);
+        return new DictResponse(this.bankStatementDtlCcblRecordService.getRecvAccntIdDict(batchId, recvAccntId));
     }
 }

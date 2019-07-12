@@ -14,20 +14,4 @@ public class InvoiceTypeDict extends Model<InvoiceTypeDict> {
     private String invoiceType;
 
     private String invoiceTypeName;
-
-    public String getInvoiceType() {
-        return invoiceType;
-    }
-
-    public void setInvoiceType(String invoiceType) {
-        this.invoiceType = invoiceType;
-    }
-
-    public String getInvoiceTypeName() {
-        return invoiceTypeName;
-    }
-
-    public void setInvoiceTypeName(String invoiceTypeName) {
-        this.invoiceTypeName = invoiceTypeName;
-    }
 }
