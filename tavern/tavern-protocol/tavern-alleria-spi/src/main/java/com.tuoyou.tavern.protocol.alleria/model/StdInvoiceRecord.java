@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 public class StdInvoiceRecord extends Model<StdInvoiceRecord> {
     @TableId
     private String fileId;
-    @TableId
     private String batchId;
 
     private String fileName;

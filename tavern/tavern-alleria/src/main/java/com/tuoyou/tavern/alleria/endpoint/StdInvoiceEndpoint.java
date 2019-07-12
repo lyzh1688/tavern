@@ -7,10 +7,9 @@ import com.tuoyou.tavern.alleria.invoice.service.StdInvoiceRecordService;
 import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceDtlRecord;
 import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceRecord;
 import com.tuoyou.tavern.protocol.alleria.response.StdInvoiceRecordResponse;
+import com.tuoyou.tavern.protocol.common.TavernResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -32,6 +31,7 @@ public class StdInvoiceEndpoint {
     public StdInvoiceRecordResponse queryStdInvoiceRecord(Page page, StdInvoiceRecord stdInvoiceRecord) {
         return new StdInvoiceRecordResponse(this.stdInvoiceRecordService.page(page, Wrappers.query(stdInvoiceRecord)));
     }
+
     /*
      * 查询发票记录详情
      *
@@ -41,5 +41,15 @@ public class StdInvoiceEndpoint {
         return new StdInvoiceRecordResponse(this.stdInvoiceDtlRecordService.page(page, Wrappers.query(stdInvoiceDtlRecord)));
     }
 
+    /*
+     * 改变发票状态
+     *
+     * */
+    @PutMapping("/valid/{fileId}/{valid}")
+    public TavernResponse updateValid(@PathVariable("fileId") String fileId,
+                                      @PathVariable("valid") String valid) {
+        this.stdInvoiceRecordService.updateStatus(fileId, valid);
+        return new TavernResponse();
+    }
 
 }

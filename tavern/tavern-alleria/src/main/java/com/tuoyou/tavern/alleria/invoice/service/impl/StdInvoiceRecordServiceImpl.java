@@ -16,4 +16,8 @@ import org.springframework.stereotype.Service;
 public class StdInvoiceRecordServiceImpl extends ServiceImpl<StdInvoiceRecordMapper, StdInvoiceRecord> implements StdInvoiceRecordService {
 
 
+    @Override
+    public void updateStatus(String fileId, String valid) {
+        this.baseMapper.updateFileStatus(fileId, valid);
+    }
 }
