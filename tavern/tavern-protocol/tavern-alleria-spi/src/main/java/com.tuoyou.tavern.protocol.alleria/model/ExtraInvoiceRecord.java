@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @TableName("ALR_EXTRA_INVOICE_RECORD")
 public class ExtraInvoiceRecord extends Model<ExtraInvoiceRecord> {
 
+    @NotNull
     @TableId
     private String recordId;
 
