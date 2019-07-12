@@ -17,7 +17,7 @@ import javax.validation.Valid;
  */
 @AllArgsConstructor
 @RestController
-@RequestMapping("/alleria/exra/invoice")
+@RequestMapping("/alleria/invoice/exra")
 public class ExtraInvoiceRecordEndpoint {
     private final ExtraInvoiceRecordService extraInvoiceRecordService;
 
@@ -30,9 +30,24 @@ public class ExtraInvoiceRecordEndpoint {
         return new ExtraInvoiceRecordResponse(this.extraInvoiceRecordService.page(page, Wrappers.query(extraInvoiceRecord)));
     }
 
-    @PostMapping("save")
+    /*
+     * 新增其它补票记录
+     *
+     **/
+    @PostMapping("/save")
     public TavernResponse saveExtraInvoiceRecord(@Valid @RequestBody ExtraInvoiceRecord extraInvoiceRecord) {
         this.extraInvoiceRecordService.save(extraInvoiceRecord);
         return new TavernResponse();
     }
+
+    /*
+     * 修改其它补票记录
+     *
+     **/
+    @PutMapping("/update")
+    public TavernResponse updateExtraInvoiceRecord(@Valid @RequestBody ExtraInvoiceRecord extraInvoiceRecord) {
+        this.extraInvoiceRecordService.updateById(extraInvoiceRecord);
+        return new TavernResponse();
+    }
+
 }

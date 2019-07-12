@@ -28,4 +28,6 @@ public class ExtraInvoiceRecord extends Model<ExtraInvoiceRecord> {
 
     private Long itemCount;
 
+    private String isValid;
+
 }
