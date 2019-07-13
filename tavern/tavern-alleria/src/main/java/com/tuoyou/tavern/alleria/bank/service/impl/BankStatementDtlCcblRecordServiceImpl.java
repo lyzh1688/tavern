@@ -25,7 +25,7 @@ public class BankStatementDtlCcblRecordServiceImpl extends ServiceImpl<BankState
     }
 
     @Override
-    public List<String> getRecvAccntIdDict(String batchId, String recvAccntId) {
+    public List<BankStatementDtlCcblRecord> getRecvAccntIdDict(String batchId, String recvAccntId) {
         return this.baseMapper.selectRecvAccntIdDict(batchId, recvAccntId);
     }
 }

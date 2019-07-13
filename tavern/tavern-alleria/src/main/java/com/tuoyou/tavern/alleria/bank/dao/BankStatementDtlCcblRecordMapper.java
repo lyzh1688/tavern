@@ -13,6 +13,6 @@ public interface BankStatementDtlCcblRecordMapper extends BaseMapper<BankStateme
 
     IPage<BankStatementDtlCcblRecord> selectBankStatementDtlRecord(Page page, @Param("query") BankStatementDtlDTO bankStatementDtlDTO);
 
-    List<String> selectRecvAccntIdDict(@Param("batchId") String batchId, @Param("recvAccntId") String recvAccntId);
+    List<BankStatementDtlCcblRecord> selectRecvAccntIdDict(@Param("batchId") String batchId, @Param("recvAccntId") String recvAccntId);
 
 }

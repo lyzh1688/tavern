@@ -16,5 +16,5 @@ public interface BankStatementDtlCcblRecordService extends IService<BankStatemen
 
     IPage<BankStatementDtlCcblRecord> getBankStatementDtlRecord(Page page, BankStatementDtlDTO bankStatementDtlDTO);
 
-    List<String> getRecvAccntIdDict(String batchId, String recvAccntId);
+    List<BankStatementDtlCcblRecord> getRecvAccntIdDict(String batchId, String recvAccntId);
 }

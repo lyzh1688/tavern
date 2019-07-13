@@ -41,9 +41,11 @@
             and t1.BATCH_ID = #{query.recvAccntId}
         </if>
     </select>
-    <select id="selectRecvAccntIdDict" resultType="string">
+    <select id="selectRecvAccntIdDict" resultMap="BaseResultMap">
         select
-        t1.RECV_ACCNT_ID
+        t2.DETAIL_ID, t2.CUSTOM_ACCNT_ID, t2.CUSTOM_ACCNT_NAME, t2.TRADE_DATE, t2.DEBIT_AMOUNT, t2.CREDIT_AMOUNT,
+    t2.BALANCE, t2.COIN_CODE, t2.RECV_ACCNT_ID, t2.RECV_ACCNT_NAME, t2.INSTITUTION, t2.ACCOUNTING_DATE,
+    t2.COMPANY_SEQ, t2.CERTIFICATE_TYPE, t2.CERTIFICATE_ID, t2.FILE_ID
         from alr_bank_statement_record t1,
         ALR_BANK_STATEMENT_DTL_CCBL_RECORD t2
         where t1.FILE_ID = t2.FILE_ID

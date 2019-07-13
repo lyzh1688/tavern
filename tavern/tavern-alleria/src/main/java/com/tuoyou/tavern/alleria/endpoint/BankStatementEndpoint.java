@@ -5,6 +5,7 @@ import com.tuoyou.tavern.alleria.bank.service.BankStatementDtlCcblRecordService;
 import com.tuoyou.tavern.alleria.bank.service.BankStatementRecordService;
 import com.tuoyou.tavern.protocol.alleria.dto.BankStatementDtlDTO;
 import com.tuoyou.tavern.protocol.alleria.model.BankStatementRecord;
+import com.tuoyou.tavern.protocol.alleria.model.Dict;
 import com.tuoyou.tavern.protocol.alleria.response.BankStatementDtlResponse;
 import com.tuoyou.tavern.protocol.alleria.response.BankStatementResponse;
 import com.tuoyou.tavern.protocol.alleria.response.DictResponse;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -53,6 +55,13 @@ public class BankStatementEndpoint {
     @GetMapping("/recvAccntId")
     DictResponse queryRecvAccntIdDict(@RequestParam(name = "batchId", required = true) String batchId,
                                       @RequestParam(name = "recvAccntId") String recvAccntId) {
-        return new DictResponse(this.bankStatementDtlCcblRecordService.getRecvAccntIdDict(batchId, recvAccntId));
+        return new DictResponse(this.bankStatementDtlCcblRecordService.getRecvAccntIdDict(batchId, recvAccntId)
+                .stream()
+                .map(dtl -> {
+                    Dict dict = new Dict();
+                    dict.setId(dtl.getFileId());
+                    dict.setName(dtl.getRecvAccntName());
+                    return dict;
+                }).collect(Collectors.toList()));
     }
 }
