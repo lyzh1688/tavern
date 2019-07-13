@@ -5,12 +5,11 @@ import com.tuoyou.tavern.alleria.common.service.InvoiceTypeDictService;
 import com.tuoyou.tavern.protocol.alleria.model.Dict;
 import com.tuoyou.tavern.protocol.alleria.model.InvoiceTypeDict;
 import com.tuoyou.tavern.protocol.alleria.response.DictResponse;
+import com.tuoyou.tavern.protocol.common.TavernResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.stream.Collectors;
 
 /**
@@ -40,5 +39,39 @@ public class InvoiceTypeDictEndpoint {
                     return tmpDict;
                 }).collect(Collectors.toList()));
     }
+
+    /*
+     *
+     * 新增票据字典
+     *
+     * **/
+    @PostMapping("/save")
+    public TavernResponse saveInvoiceType(@Valid @RequestBody InvoiceTypeDict invoiceTypeDict) {
+        this.invoiceTypeDictService.save(invoiceTypeDict);
+        return new TavernResponse();
+    }
+
+    /*
+     *
+     * 修改票据字典
+     *
+     * **/
+    @PutMapping("/update")
+    public TavernResponse updateInvoiceType(@Valid @RequestBody InvoiceTypeDict invoiceTypeDict) {
+        this.invoiceTypeDictService.updateById(invoiceTypeDict);
+        return new TavernResponse();
+    }
+
+    /*
+     *
+     * 删除票据字典
+     *
+     * **/
+    @DeleteMapping
+    public TavernResponse deleteInvoiceType(@Valid @RequestBody InvoiceTypeDict invoiceTypeDict) {
+        this.invoiceTypeDictService.removeById(invoiceTypeDict);
+        return new TavernResponse();
+    }
+
 
 }
