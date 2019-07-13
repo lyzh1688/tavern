@@ -6,6 +6,7 @@ import com.tuoyou.tavern.alleria.invoice.service.StdInvoiceDtlRecordService;
 import com.tuoyou.tavern.alleria.invoice.service.StdInvoiceRecordService;
 import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceDtlRecord;
 import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceRecord;
+import com.tuoyou.tavern.protocol.alleria.response.StdInvoiceRecordDtlResponse;
 import com.tuoyou.tavern.protocol.alleria.response.StdInvoiceRecordResponse;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import lombok.AllArgsConstructor;
@@ -37,8 +38,8 @@ public class StdInvoiceEndpoint {
      *
      * */
     @GetMapping(value = "/dtl/page")
-    public StdInvoiceRecordResponse queryStdInvoiceRecordDtl(Page page, StdInvoiceDtlRecord stdInvoiceDtlRecord) {
-        return new StdInvoiceRecordResponse(this.stdInvoiceDtlRecordService.page(page, Wrappers.query(stdInvoiceDtlRecord)));
+    public StdInvoiceRecordDtlResponse queryStdInvoiceRecordDtl(Page page, StdInvoiceDtlRecord stdInvoiceDtlRecord) {
+        return new StdInvoiceRecordDtlResponse(this.stdInvoiceDtlRecordService.page(page, Wrappers.query(stdInvoiceDtlRecord)));
     }
 
     /*

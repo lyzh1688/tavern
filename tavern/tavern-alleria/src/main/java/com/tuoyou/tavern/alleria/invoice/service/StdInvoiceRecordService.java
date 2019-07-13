@@ -9,6 +9,8 @@ import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceRecord;
  */
 public interface StdInvoiceRecordService extends IService<StdInvoiceRecord> {
 
-    void updateStatus(String fileId,String valid);
+    void updateStatus(String fileId, String valid);
+
+    void parseZzsInvoice(String destLocation, String batchId);
 
 }

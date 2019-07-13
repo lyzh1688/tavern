@@ -58,4 +58,9 @@ public class StdInvoiceDtlRecordServiceImpl extends ServiceImpl<StdInvoiceDtlRec
 
     }
 
+    @Override
+    public void parseZzsInvoice(String destLocation, String batchId) {
+
+    }
+
 }
