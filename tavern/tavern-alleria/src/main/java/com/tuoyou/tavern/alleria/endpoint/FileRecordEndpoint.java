@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @AllArgsConstructor
 @RestController
-@RequestMapping("/alleria/packages")
+@RequestMapping("/alleria/file")
 public class FileRecordEndpoint {
 
     private final FileUploadRecordService fileUploadRecordService;

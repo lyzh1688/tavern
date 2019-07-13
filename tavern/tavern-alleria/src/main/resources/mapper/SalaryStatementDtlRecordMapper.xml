@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.alleria.salary.dao.SalaryStatementDtlRecordMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.alleria.model.SalaryStatementDtlRecord">
+    <id column="DETAIL_ID" jdbcType="VARCHAR" property="detailId" />
+    <result column="FILE_ID" jdbcType="VARCHAR" property="fileId" />
+    <result column="STAFF_TYPE" jdbcType="VARCHAR" property="staffType" />
+    <result column="STAFF_ID" jdbcType="VARCHAR" property="staffId" />
+    <result column="NEED_ENDOWMENT_INS" jdbcType="VARCHAR" property="needEndowmentIns" />
+    <result column="NEED_UNEMPLOY_INS" jdbcType="VARCHAR" property="needUnemployIns" />
+    <result column="NEED_MEDICAL_INS" jdbcType="VARCHAR" property="needMedicalIns" />
+    <result column="NEED_INJURY_INS" jdbcType="VARCHAR" property="needInjuryIns" />
+    <result column="NEED_BIRTH_INS" jdbcType="VARCHAR" property="needBirthIns" />
+    <result column="NEED_HABITATION_INS" jdbcType="VARCHAR" property="needHabitationIns" />
+    <result column="BASE_SALARY" jdbcType="DECIMAL" property="baseSalary" />
+    <result column="POSITION_VALUE" jdbcType="DECIMAL" property="positionValue" />
+    <result column="TRAVEL_ALLOWANCE" jdbcType="DECIMAL" property="travelAllowance" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ALR_SALARY_STATEMENT_DTL_RECORD
+    where DETAIL_ID = #{detailId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.protocol.alleria.model.SalaryStatementDtlRecord">
+    insert into ALR_SALARY_STATEMENT_DTL_RECORD (DETAIL_ID, FILE_ID, STAFF_TYPE, 
+      STAFF_ID, NEED_ENDOWMENT_INS, NEED_UNEMPLOY_INS, 
+      NEED_MEDICAL_INS, NEED_INJURY_INS, NEED_BIRTH_INS, 
+      NEED_HABITATION_INS, BASE_SALARY, POSITION_VALUE, 
+      TRAVEL_ALLOWANCE)
+    values (#{detailId,jdbcType=VARCHAR}, #{fileId,jdbcType=VARCHAR}, #{staffType,jdbcType=VARCHAR}, 
+      #{staffId,jdbcType=VARCHAR}, #{needEndowmentIns,jdbcType=VARCHAR}, #{needUnemployIns,jdbcType=VARCHAR}, 
+      #{needMedicalIns,jdbcType=VARCHAR}, #{needInjuryIns,jdbcType=VARCHAR}, #{needBirthIns,jdbcType=VARCHAR}, 
+      #{needHabitationIns,jdbcType=VARCHAR}, #{baseSalary,jdbcType=DECIMAL}, #{positionValue,jdbcType=DECIMAL}, 
+      #{travelAllowance,jdbcType=DECIMAL})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.protocol.alleria.model.SalaryStatementDtlRecord">
+    update ALR_SALARY_STATEMENT_DTL_RECORD
+    set FILE_ID = #{fileId,jdbcType=VARCHAR},
+      STAFF_TYPE = #{staffType,jdbcType=VARCHAR},
+      STAFF_ID = #{staffId,jdbcType=VARCHAR},
+      NEED_ENDOWMENT_INS = #{needEndowmentIns,jdbcType=VARCHAR},
+      NEED_UNEMPLOY_INS = #{needUnemployIns,jdbcType=VARCHAR},
+      NEED_MEDICAL_INS = #{needMedicalIns,jdbcType=VARCHAR},
+      NEED_INJURY_INS = #{needInjuryIns,jdbcType=VARCHAR},
+      NEED_BIRTH_INS = #{needBirthIns,jdbcType=VARCHAR},
+      NEED_HABITATION_INS = #{needHabitationIns,jdbcType=VARCHAR},
+      BASE_SALARY = #{baseSalary,jdbcType=DECIMAL},
+      POSITION_VALUE = #{positionValue,jdbcType=DECIMAL},
+      TRAVEL_ALLOWANCE = #{travelAllowance,jdbcType=DECIMAL}
+    where DETAIL_ID = #{detailId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select DETAIL_ID, FILE_ID, STAFF_TYPE, STAFF_ID, NEED_ENDOWMENT_INS, NEED_UNEMPLOY_INS, 
+    NEED_MEDICAL_INS, NEED_INJURY_INS, NEED_BIRTH_INS, NEED_HABITATION_INS, BASE_SALARY, 
+    POSITION_VALUE, TRAVEL_ALLOWANCE
+    from ALR_SALARY_STATEMENT_DTL_RECORD
+    where DETAIL_ID = #{detailId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select DETAIL_ID, FILE_ID, STAFF_TYPE, STAFF_ID, NEED_ENDOWMENT_INS, NEED_UNEMPLOY_INS, 
+    NEED_MEDICAL_INS, NEED_INJURY_INS, NEED_BIRTH_INS, NEED_HABITATION_INS, BASE_SALARY, 
+    POSITION_VALUE, TRAVEL_ALLOWANCE
+    from ALR_SALARY_STATEMENT_DTL_RECORD
+  </select>
+</mapper>

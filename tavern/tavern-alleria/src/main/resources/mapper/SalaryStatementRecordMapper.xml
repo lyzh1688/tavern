@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.alleria.salary.dao.SalaryStatementRecordMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.alleria.model.SalaryStatementRecord">
+    <result column="BATCH_ID" jdbcType="VARCHAR" property="batchId" />
+    <result column="FILE_ID" jdbcType="VARCHAR" property="fileId" />
+    <result column="FILE_NAME" jdbcType="VARCHAR" property="fileName" />
+    <result column="ACCOUNT_PERIOD" jdbcType="DATE" property="accountPeriod" />
+    <result column="IS_VALID" jdbcType="VARCHAR" property="isValid" />
+    <result column="UPDATE_DATE" jdbcType="VARCHAR" property="updateDate" />
+    <result column="CUSTOM_ID" jdbcType="VARCHAR" property="customId" />
+  </resultMap>
+
+  <sql id="col">
+    BATCH_ID, FILE_ID, FILE_NAME, ACCOUNT_PERIOD, IS_VALID, UPDATE_DATE, CUSTOM_ID
+  </sql>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select BATCH_ID, FILE_ID, FILE_NAME, ACCOUNT_PERIOD, IS_VALID, UPDATE_DATE, CUSTOM_ID
+    from ALR_SALARY_STATEMENT_RECORD
+  </select>
+</mapper>
