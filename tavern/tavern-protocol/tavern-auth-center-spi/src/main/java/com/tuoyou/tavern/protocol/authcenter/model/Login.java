@@ -8,6 +8,8 @@ public class Login {
     String userAccnt;
     String password;
     String userType;
+    boolean loginSuccess;
+    String token;
 
     public String getUserAccnt() {
         return userAccnt;
@@ -31,5 +33,21 @@ public class Login {
 
     public void setUserType(String userType) {
         this.userType = userType;
+    }
+
+    public boolean isLoginSuccess() {
+        return loginSuccess;
+    }
+
+    public void setLoginSuccess(boolean loginSuccess) {
+        this.loginSuccess = loginSuccess;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

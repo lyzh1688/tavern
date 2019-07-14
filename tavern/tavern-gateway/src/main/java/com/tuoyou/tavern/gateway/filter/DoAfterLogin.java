@@ -11,6 +11,7 @@ import com.tuoyou.tavern.protocol.common.RetCode;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,10 +43,9 @@ public class DoAfterLogin extends ZuulFilter {
         //从上下文获取HttpServletRequest
         HttpServletRequest request = ctx.getRequest();
         String uri = request.getRequestURI();
-        if(uri.equals(config.getUrl())){
+        if (uri.equals(config.getUrl())) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -59,27 +59,27 @@ public class DoAfterLogin extends ZuulFilter {
         try {
             String body = IOUtils.toString(stream);
             loginResponse = JSON.parseObject(body).toJavaObject(LoginResponse.class);
-            RequestContext.getCurrentContext().setResponseBody(body);
+            //登陆成功
+            AuthTokenFactor authTokenFactor = new AuthTokenFactor();
+            authTokenFactor.setUserType(loginResponse.getData().getUserType());
+            authTokenFactor.setUserAccnt(loginResponse.getData().getUserAccnt());
+            String token = TokenHelper.createToken(this.config, authTokenFactor);
+            loginResponse.getData().setToken(token);
+            RequestContext.getCurrentContext().setResponseBody(JSON.toJSONString(loginResponse));
         } catch (IOException e) {
-            ctx.setResponseBody(JSON.toJSONString(new TavernResponse(RetCode.AUTH_FAILED,"登陆失败")));
+            ctx.setResponseBody(JSON.toJSONString(new TavernResponse(RetCode.AUTH_FAILED, "登陆失败")));
             ctx.set(ContextDict.isLoginSuccess, false);
             return null;
         }
         //登陆异常
-        if(loginResponse == null){
+        if (loginResponse == null) {
             ctx.set(ContextDict.isLoginSuccess, false);
             return null;
         }
         //登陆失败
-        if(!loginResponse.isLoginSuccess()){
+        if (!loginResponse.getData().isLoginSuccess()) {
             return null;
         }
-        //登陆成功
-        AuthTokenFactor authTokenFactor = new AuthTokenFactor();
-        authTokenFactor.setUserType(loginResponse.getUserType());
-        authTokenFactor.setUserAccnt(loginResponse.getUserAccnt());
-        String token = TokenHelper.createToken(this.config,authTokenFactor);
-        ctx.getResponse().addHeader(this.config.getHeader(),token);
         return null;
     }
 }

@@ -1,8 +1,8 @@
 package com.tuoyou.tavern.auth.endpoint;
 
 import com.tuoyou.tavern.auth.libs.UserTypeDict;
-import com.tuoyou.tavern.auth.model.Login;
-import com.tuoyou.tavern.auth.model.LoginResponse;
+import com.tuoyou.tavern.protocol.authcenter.model.Login;
+import com.tuoyou.tavern.protocol.authcenter.model.LoginResponse;
 import com.tuoyou.tavern.protocol.common.RetCode;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class AuthEndpoint {
-    @RequestMapping(name = "/login",method = RequestMethod.POST)
-    public LoginResponse login(@RequestBody Login login){
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setRetCode(RetCode.SUCCESS);
-        loginResponse.setLoginSuccess(true);
-        loginResponse.setUserAccnt("liuyuezhi");
-        loginResponse.setUserType(UserTypeDict.staff);
-        loginResponse.setRetCode(0);
-        return loginResponse;
+    @RequestMapping(name = "/login", method = RequestMethod.POST)
+    public LoginResponse login(@RequestBody Login login) {
+        Login retLogin = new Login();
+        retLogin.setUserAccnt("liuyuezhi");
+        retLogin.setUserType(UserTypeDict.staff);
+        retLogin.setLoginSuccess(true);
+        LoginResponse response = new LoginResponse();
+        response.setData(retLogin);
+        return response;
     }
 }
