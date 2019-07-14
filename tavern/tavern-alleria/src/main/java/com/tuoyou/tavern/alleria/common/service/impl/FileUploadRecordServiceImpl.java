@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tuoyou.tavern.alleria.common.dao.FileUploadRecordMapper;
+import com.tuoyou.tavern.alleria.util.FileTransfer;
 import com.tuoyou.tavern.common.core.util.UUIDUtil;
 import com.tuoyou.tavern.invoice.common.libs.utils.FileUtils;
 import com.tuoyou.tavern.protocol.alleria.dto.FileUploadDTO;
@@ -13,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,21 +36,24 @@ public class FileUploadRecordServiceImpl extends ServiceImpl<FileUploadRecordMap
     }
 
     @Override
-    public void uploadFile(MultipartFile multipartFile, String destLocation, String type,
-                           BiConsumer<String, String> biConsumer) throws Exception {
+    public void uploadFile(MultipartFile multipartFile, String destLocation, String type, String batchId,
+                           BiConsumer<FileTransfer, HttpSession> biConsumer,
+                           HttpSession httpSession) throws Exception {
         //1. 文件包落地
         //2. 文件包解压
         //3. 文件解析
         FileUploadRecord fileUploadRecord = null;
         try {
+            httpSession.setAttribute(batchId, 1);
             String filePath = FileUtils.multiPartFileWriter(multipartFile, destLocation);
+            httpSession.setAttribute(batchId, 10);
             String destFileDir = FileUtils.unZip(new File(filePath), destLocation);
+            httpSession.setAttribute(batchId, 20);
             File file = new File(destFileDir);
             int cnt = file.listFiles().length;
-            String UUID = UUIDUtil.randomUUID32();
             fileUploadRecord = FileUploadRecord
                     .builder()
-                    .batchId(UUID)
+                    .batchId(batchId)
                     .packageName(multipartFile.getOriginalFilename())
                     .fileCount(cnt)
                     .uploadDate(LocalDateTime.now())
@@ -59,7 +64,11 @@ public class FileUploadRecordServiceImpl extends ServiceImpl<FileUploadRecordMap
                     .packageType(type)
                     .build();
             this.baseMapper.updateById(fileUploadRecord);
-            biConsumer.accept(destFileDir, UUID);
+            FileTransfer fileTransfer = FileTransfer.builder()
+                    .batchId(batchId)
+                    .destLocation(destFileDir)
+                    .build();
+            biConsumer.accept(fileTransfer, httpSession);
             fileUploadRecord.setStatus("2");
             this.baseMapper.updateById(fileUploadRecord);
         } catch (Exception e) {
