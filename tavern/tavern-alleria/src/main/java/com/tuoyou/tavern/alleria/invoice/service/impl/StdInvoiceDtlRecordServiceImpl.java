@@ -12,6 +12,7 @@ import com.tuoyou.tavern.alleria.invoice.service.StdInvoiceRecordService;
 import com.tuoyou.tavern.alleria.invoice.service.TaxScanResultService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +23,13 @@ import java.time.LocalDateTime;
  * Dev Time: 2019/07/03 <br>
  */
 @Service
-@AllArgsConstructor
 public class StdInvoiceDtlRecordServiceImpl extends ServiceImpl<StdInvoiceDtlRecordMapper, StdInvoiceDtlRecord> implements StdInvoiceDtlRecordService {
 
 
-    private final TaxScanResultService taxScanResultService;
-    private final StdInvoiceRecordService stdInvoiceRecordService;
+    @Autowired
+    private  TaxScanResultService taxScanResultService;
+    @Autowired
+    private  StdInvoiceRecordService stdInvoiceRecordService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -36,30 +38,25 @@ public class StdInvoiceDtlRecordServiceImpl extends ServiceImpl<StdInvoiceDtlRec
         //更改invoice
         //更改dtl
         //更改scan
-        StdInvoiceRecord stdInvoiceRecord = new StdInvoiceRecord();
+        StdInvoiceRecord stdInvoiceRecord = StdInvoiceRecord.builder().build();
         stdInvoiceRecord.setFileId(zzsInvoiceKeyField.getFileId());
         stdInvoiceRecord.setIsValid("1");
         stdInvoiceRecord.setUpdateDate(LocalDateTime.now());
         this.stdInvoiceRecordService.update(stdInvoiceRecord, Wrappers.<StdInvoiceRecord>update().lambda()
                 .eq(StdInvoiceRecord::getFileId, zzsInvoiceKeyField.getFileId()));
 
-        TaxScanResult taxScanResult = new TaxScanResult();
+        TaxScanResult taxScanResult = TaxScanResult.builder().build();
         BeanUtils.copyProperties(zzsInvoiceKeyField, taxScanResult);
         taxScanResult.setUpdateDate(LocalDateTime.now());
 
         this.taxScanResultService.update(taxScanResult, Wrappers.<TaxScanResult>update().lambda()
                 .eq(TaxScanResult::getFileId, zzsInvoiceKeyField.getFileId()));
 
-        StdInvoiceDtlRecord stdInvoiceDtlRecord = new StdInvoiceDtlRecord();
+        StdInvoiceDtlRecord stdInvoiceDtlRecord = StdInvoiceDtlRecord.builder().build();
         BeanUtils.copyProperties(zzsInvoiceKeyField, stdInvoiceDtlRecord);
         this.update(stdInvoiceDtlRecord, Wrappers.<StdInvoiceDtlRecord>update().lambda()
                 .eq(StdInvoiceDtlRecord::getFileId, zzsInvoiceKeyField.getFileId()));
 
-
-    }
-
-    @Override
-    public void parseZzsInvoice(String destLocation, String batchId) {
 
     }
 
