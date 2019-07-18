@@ -5,12 +5,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tuoyou.tavern.alleria.common.dao.FileUploadRecordMapper;
 import com.tuoyou.tavern.alleria.util.FileTransfer;
+import com.tuoyou.tavern.common.core.util.DateUtils;
 import com.tuoyou.tavern.common.core.util.UUIDUtil;
 import com.tuoyou.tavern.invoice.common.libs.utils.FileUtils;
 import com.tuoyou.tavern.protocol.alleria.dto.FileUploadDTO;
 import com.tuoyou.tavern.alleria.common.service.FileUploadRecordService;
 import com.tuoyou.tavern.protocol.alleria.model.FileUploadRecord;
+import com.tuoyou.tavern.protocol.alleria.model.FileUploadRecordVO;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +24,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -31,8 +35,24 @@ import java.util.function.Consumer;
 public class FileUploadRecordServiceImpl extends ServiceImpl<FileUploadRecordMapper, FileUploadRecord> implements FileUploadRecordService {
 
     @Override
-    public IPage<FileUploadRecord> getRecordWithTypeAndStatusByPage(Page page, FileUploadDTO fileUploadDTO) {
-        return this.baseMapper.selectFileUploadRecordPage(page, fileUploadDTO);
+    public IPage<FileUploadRecordVO> getRecordWithTypeAndStatusByPage(Page page, FileUploadDTO fileUploadDTO) {
+        IPage<FileUploadRecord> fileUploadRecordIPage = this.baseMapper.selectFileUploadRecordPage(page, fileUploadDTO);
+        List<FileUploadRecordVO> fileUploadRecordVOList = fileUploadRecordIPage.getRecords()
+                .stream()
+                .map(record -> {
+                    FileUploadRecordVO fileUploadRecordVO = new FileUploadRecordVO();
+                    BeanUtils.copyProperties(record,fileUploadRecordVO);
+                    fileUploadRecordVO.setUpdateDate(DateUtils.formatDateTime(record.getUpdateDate(),DateUtils.DEFAULT_DATETIME_FORMATTER));
+                    fileUploadRecordVO.setUploadDate(DateUtils.formatDateTime(record.getUploadDate(),DateUtils.DEFAULT_DATETIME_FORMATTER));
+                    return fileUploadRecordVO;
+                }).collect(Collectors.toList());
+        Page<FileUploadRecordVO> uploadRecordVOPage = new Page<>();
+        uploadRecordVOPage.setRecords(fileUploadRecordVOList);
+        uploadRecordVOPage.setCurrent(fileUploadRecordIPage.getCurrent());
+        uploadRecordVOPage.setSize(fileUploadRecordIPage.getSize());
+        uploadRecordVOPage.setCurrent(fileUploadRecordIPage.getCurrent());
+        uploadRecordVOPage.setTotal(fileUploadRecordIPage.getTotal());
+        return uploadRecordVOPage;
     }
 
     @Override
@@ -51,7 +71,7 @@ public class FileUploadRecordServiceImpl extends ServiceImpl<FileUploadRecordMap
             httpSession.setAttribute(batchId, 20);
             File file = new File(destFileDir);
             int cnt = file.listFiles().length;
-            fileUploadRecord = FileUploadRecord
+           /* fileUploadRecord = FileUploadRecord
                     .builder()
                     .batchId(batchId)
                     .packageName(multipartFile.getOriginalFilename())
@@ -62,7 +82,7 @@ public class FileUploadRecordServiceImpl extends ServiceImpl<FileUploadRecordMap
                     .uploadDate(LocalDateTime.now())
                     .isValid("1")
                     .packageType(type)
-                    .build();
+                    .build();*/
             this.baseMapper.updateById(fileUploadRecord);
             FileTransfer fileTransfer = FileTransfer.builder()
                     .batchId(batchId)

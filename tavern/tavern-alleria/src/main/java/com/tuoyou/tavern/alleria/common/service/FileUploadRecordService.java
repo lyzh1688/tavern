@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.tuoyou.tavern.alleria.util.FileTransfer;
 import com.tuoyou.tavern.protocol.alleria.dto.FileUploadDTO;
 import com.tuoyou.tavern.protocol.alleria.model.FileUploadRecord;
+import com.tuoyou.tavern.protocol.alleria.model.FileUploadRecordVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
@@ -20,7 +21,7 @@ import java.util.function.Supplier;
  * Dev Time: 2019/07/03 <br>
  */
 public interface FileUploadRecordService extends IService<FileUploadRecord> {
-    IPage<FileUploadRecord> getRecordWithTypeAndStatusByPage(Page page, FileUploadDTO fileUploadDTO);
+    IPage<FileUploadRecordVO> getRecordWithTypeAndStatusByPage(Page page, FileUploadDTO fileUploadDTO);
 
     void uploadFile(MultipartFile multipartFile,
                     String destLocation, String type,

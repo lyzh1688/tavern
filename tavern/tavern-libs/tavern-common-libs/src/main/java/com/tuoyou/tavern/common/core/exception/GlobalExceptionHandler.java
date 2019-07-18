@@ -2,6 +2,7 @@ package com.tuoyou.tavern.common.core.exception;
 
 import com.tuoyou.tavern.protocol.common.RetCode;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -17,6 +18,7 @@ import java.util.List;
  * Code Monkey: 何彪 <br>
  * Dev Time: 2019/07/11 <br>
  */
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     /**
@@ -25,6 +27,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public TavernResponse handleGlobalException(Exception e) {
+        log.error("INTERNAL_SERVER_ERROR: {}",e.getMessage());
         return TavernResponse.builder()
                 .retCode(RetCode.SYS_ERROR)
                 .retMessage(e.getLocalizedMessage())
@@ -38,6 +41,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public TavernResponse handleAccessDeniedException(AccessDeniedException e) {
+        log.error("AccessDeniedException: {}",e.getMessage());
         return TavernResponse.builder()
                 .retCode(RetCode.AUTH_FAILED)
                 .retMessage(e.getLocalizedMessage())
@@ -50,6 +54,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public TavernResponse handleBodyValidException(MethodArgumentNotValidException exception) {
+        log.error("HttpStatus.BAD_REQUEST: {}",exception.getMessage());
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
         return TavernResponse.builder()
                 .retCode(RetCode.UN_SUPPORTED_METHOD)

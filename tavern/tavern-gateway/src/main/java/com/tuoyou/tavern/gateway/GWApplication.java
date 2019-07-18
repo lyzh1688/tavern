@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
  */
 @SpringBootApplication
 @EnableZuulProxy
-@CrossOrigin(origins = "http://localhost:8090")
 public class GWApplication {
 
     public static void main(String[] args) {

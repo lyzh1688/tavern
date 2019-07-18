@@ -10,13 +10,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 /**
  * Created by 刘悦之 on 2019/6/29.
  */
 @AllArgsConstructor
 @RestController
-@RequestMapping("/alleria/file")
+@RequestMapping("/file")
 public class FileRecordEndpoint {
 
     private final FileUploadRecordService fileUploadRecordService;
@@ -28,6 +29,7 @@ public class FileRecordEndpoint {
     @GetMapping(value = "/page")
     public FileUploadRecordResponse queryPackages(Page page, FileUploadDTO fileUploadDTO) {
         return new FileUploadRecordResponse(fileUploadRecordService.getRecordWithTypeAndStatusByPage(page, fileUploadDTO));
+
     }
 
 

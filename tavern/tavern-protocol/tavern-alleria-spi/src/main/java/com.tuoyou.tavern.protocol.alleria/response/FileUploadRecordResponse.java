@@ -2,6 +2,7 @@ package com.tuoyou.tavern.protocol.alleria.response;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.tuoyou.tavern.protocol.alleria.model.FileUploadRecord;
+import com.tuoyou.tavern.protocol.alleria.model.FileUploadRecordVO;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,6 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 public class FileUploadRecordResponse extends TavernResponse {
 
-   private IPage<FileUploadRecord> data;
+   private IPage<FileUploadRecordVO> data;
 
 }
