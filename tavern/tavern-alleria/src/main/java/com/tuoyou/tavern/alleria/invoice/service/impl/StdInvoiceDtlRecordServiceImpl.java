@@ -38,21 +38,21 @@ public class StdInvoiceDtlRecordServiceImpl extends ServiceImpl<StdInvoiceDtlRec
         //更改invoice
         //更改dtl
         //更改scan
-        StdInvoiceRecord stdInvoiceRecord = StdInvoiceRecord.builder().build();
+        StdInvoiceRecord stdInvoiceRecord = new StdInvoiceRecord();
         stdInvoiceRecord.setFileId(zzsInvoiceKeyField.getFileId());
         stdInvoiceRecord.setIsValid("1");
         stdInvoiceRecord.setUpdateDate(LocalDateTime.now());
         this.stdInvoiceRecordService.update(stdInvoiceRecord, Wrappers.<StdInvoiceRecord>update().lambda()
                 .eq(StdInvoiceRecord::getFileId, zzsInvoiceKeyField.getFileId()));
 
-        TaxScanResult taxScanResult = TaxScanResult.builder().build();
+        TaxScanResult taxScanResult = new TaxScanResult();
         BeanUtils.copyProperties(zzsInvoiceKeyField, taxScanResult);
         taxScanResult.setUpdateDate(LocalDateTime.now());
 
         this.taxScanResultService.update(taxScanResult, Wrappers.<TaxScanResult>update().lambda()
                 .eq(TaxScanResult::getFileId, zzsInvoiceKeyField.getFileId()));
 
-        StdInvoiceDtlRecord stdInvoiceDtlRecord = StdInvoiceDtlRecord.builder().build();
+        StdInvoiceDtlRecord stdInvoiceDtlRecord = new StdInvoiceDtlRecord();
         BeanUtils.copyProperties(zzsInvoiceKeyField, stdInvoiceDtlRecord);
         this.update(stdInvoiceDtlRecord, Wrappers.<StdInvoiceDtlRecord>update().lambda()
                 .eq(StdInvoiceDtlRecord::getFileId, zzsInvoiceKeyField.getFileId()));

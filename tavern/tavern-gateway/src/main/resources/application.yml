@@ -14,6 +14,8 @@ zuul:
     tavern-alleria:
       path: /alleria/**
       url: http://127.0.0.1:8082/
-
+  host:
+    connect-timeout-millis: 10000
+    socket-timeout-millis: 60000
 
 tavern.security.jwt.secret: tavern

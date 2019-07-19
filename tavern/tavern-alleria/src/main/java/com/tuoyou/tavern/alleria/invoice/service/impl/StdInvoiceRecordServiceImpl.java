@@ -18,6 +18,7 @@ import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceRecord;
 import com.tuoyou.tavern.alleria.invoice.service.StdInvoiceRecordService;
 import com.tuoyou.tavern.protocol.alleria.model.TaxScanResult;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,6 +34,7 @@ import java.util.stream.Stream;
  * Code Monkey: 何彪 <br>
  * Dev Time: 2019/07/03 <br>
  */
+@Slf4j
 @Service
 @AllArgsConstructor
 public class StdInvoiceRecordServiceImpl extends ServiceImpl<StdInvoiceRecordMapper, StdInvoiceRecord> implements StdInvoiceRecordService {
@@ -56,12 +59,17 @@ public class StdInvoiceRecordServiceImpl extends ServiceImpl<StdInvoiceRecordMap
         String destLocation = fileTransfer.getDestLocation();
         String batchId = fileTransfer.getBatchId();
         File[] files = new File(destLocation).listFiles();
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
-            TaxScanResult taxScanResult = TaxScanResult.builder().build();
+        for (int i = 0; i < 5; i++) {
+//            File file = files[i];
+            TaxScanResult taxScanResult = new TaxScanResult();
             StdInvoiceRecord stdInvoiceRecord = null;
             StdInvoiceDtlRecord stdInvoiceDtlRecord = null;
             try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+           /* try {
                 //ocr每次都要查询
                 TBInvoiceModel tbInvoiceModel = this.ocrAgent.doOcr(file.getPath());
                 String fileId = StringUtils.join(tbInvoiceModel.getInvoiceCode(), "_", tbInvoiceModel.getInvoiceId());
@@ -71,10 +79,9 @@ public class StdInvoiceRecordServiceImpl extends ServiceImpl<StdInvoiceRecordMap
                     //说明已经执行过此发票查询
                     //修改batchId
                     scanResult.setBatchId(batchId);
-                    stdInvoiceRecord = StdInvoiceRecord.builder()
-                            .fileId(fileId)
-                            .batchId(batchId)
-                            .build();
+                    stdInvoiceRecord = new StdInvoiceRecord();
+                    stdInvoiceRecord.setFileId(fileId);
+                    stdInvoiceRecord.setBatchId(batchId);
                     this.taxScanResultService.updateById(scanResult);
                     this.baseMapper.updateById(stdInvoiceRecord);
                     continue;
@@ -87,69 +94,69 @@ public class StdInvoiceRecordServiceImpl extends ServiceImpl<StdInvoiceRecordMap
                 keyModel.setCheckCode(tbInvoiceModel.getCheckCode());
                 ZBJVerifyResult result = this.verifyAgent.doVerify(keyModel);
                 ZBJInvoiceData invoiceData = result.getInvoiceData();
-                taxScanResult = TaxScanResult.builder()
-                        .fileId(fileId)
-                        .fileName(file.getName())
-                        .isValid("1")
-                        .isVerified("1")
-                        .invoiceId(tbInvoiceModel.getInvoiceId())
-                        .invoiceCode(tbInvoiceModel.getInvoiceCode())
-                        .invoiceDate(tbInvoiceModel.getInvoiceDate())
-                        .checkCode(tbInvoiceModel.getCheckCode())
-                        .taxFreeAmount(tbInvoiceModel.getTaxFreeAmount())
-                        .updateDate(LocalDateTime.now())
-                        .batchId(batchId)
-                        .operator("admin")
-                        .build();
-                stdInvoiceRecord = StdInvoiceRecord.builder()
-                        .fileId(fileId)
-                        .batchId(batchId)
-                        .fileName(file.getName())
-                        .isValid("1")
-                        .updateDate(LocalDateTime.now())
-                        .customId(invoiceData.getBuyerID())
-                        .build();
+                taxScanResult.setFileId(fileId);
+                taxScanResult.setFileName(file.getName());
+                taxScanResult.setIsValid("1");
+                taxScanResult.setIsVerified("1");
+                taxScanResult.setInvoiceId(tbInvoiceModel.getInvoiceId());
+                taxScanResult.setInvoiceCode(tbInvoiceModel.getInvoiceCode());
+                taxScanResult.setInvoiceDate(tbInvoiceModel.getInvoiceDate());
+                taxScanResult.setCheckCode(tbInvoiceModel.getCheckCode());
+                taxScanResult.setTaxFreeAmount(tbInvoiceModel.getTaxFreeAmount());
+                taxScanResult.setUpdateDate(LocalDateTime.now());
+                taxScanResult.setBatchId(batchId);
+                taxScanResult.setOperator("admin");
+                stdInvoiceRecord = new StdInvoiceRecord();
+                stdInvoiceRecord.setFileId(fileId);
+                stdInvoiceRecord.setBatchId(batchId);
+                stdInvoiceRecord.setFileName(file.getName());
+                stdInvoiceRecord.setIsValid("1");
+                stdInvoiceRecord.setUpdateDate(LocalDateTime.now());
+                stdInvoiceRecord.setCustomId(invoiceData != null ? invoiceData.getBuyerID() : null);
                 if (result.getSuccess()) {
-                    stdInvoiceDtlRecord = StdInvoiceDtlRecord.builder()
-                            .fileId(fileId)
-                            .invoiceId(invoiceData.getInvoiceId())
-                            .invoiceCode(invoiceData.getInvoiceCode())
-                            .buyerName(invoiceData.getBuyerName())
-                            .buyerTaxCode(invoiceData.getBuyerID())
-                            .bankBranch(invoiceData.getBuyerBank())
-                            .address(StringUtils.substringBeforeLast(invoiceData.getBuyerContact(), " "))
-                            .tel(StringUtils.substringAfterLast(invoiceData.getBuyerContact(), " "))
-                            .invoiceDate(DateUtils.parseDateTime(StringUtils.join(invoiceData.getInvoiceDate(), "-00:00:00"), DateUtils.FIX_DATETIME_FORMATTER))
-                            .productVersion(invoiceData.getInvoiceType())
-                            .receiptId(invoiceData.getInvoiceMachineNum())
-                            .productName(invoiceData.getItems().isEmpty() ? null : invoiceData.getItems().get(0).getName())
-                            .productSpec(invoiceData.getItems().isEmpty() ? null : invoiceData.getItems().get(0).getSpec())
-                            .productUnit(invoiceData.getItems().isEmpty() ? null : new BigDecimal(invoiceData.getItems().get(0).getUnit()))
-                            .productCount(invoiceData.getItems().isEmpty() ? null : new BigDecimal(invoiceData.getItems().get(0).getAmount()))
-                            .productUnitPrice(invoiceData.getItems().isEmpty() ? null : new BigDecimal(invoiceData.getItems().get(0).getPriceUnit()))
-                            .totalPrice(new BigDecimal(invoiceData.getTaxAmount()))
-                            .taxRate(invoiceData.getItems().isEmpty() ? null : new BigDecimal(invoiceData.getItems().get(0).getTaxRate()))
-                            .tax(invoiceData.getItems().isEmpty() ? null : new BigDecimal(invoiceData.getItems().get(0).getTaxSum()))
-                            .taxTypeCode(invoiceData.getInvoiceType())
-                            .build();
-
+                    stdInvoiceDtlRecord = new StdInvoiceDtlRecord();
+                    stdInvoiceDtlRecord.setFileId(fileId);
+                    stdInvoiceDtlRecord.setInvoiceId(invoiceData.getInvoiceId());
+                    stdInvoiceDtlRecord.setInvoiceCode(invoiceData.getInvoiceCode());
+                    stdInvoiceDtlRecord.setBuyerName(invoiceData.getBuyerName());
+                    stdInvoiceDtlRecord.setBuyerTaxCode(invoiceData.getBuyerID());
+                    stdInvoiceDtlRecord.setBankBranch(invoiceData.getBuyerBank());
+                    stdInvoiceDtlRecord.setAddress(StringUtils.substringBeforeLast(invoiceData.getBuyerContact(), " "));
+                    stdInvoiceDtlRecord.setTel(StringUtils.substringAfterLast(invoiceData.getBuyerContact(), " "));
+                    stdInvoiceDtlRecord.setInvoiceDate(DateUtils.parseDateTime(StringUtils.join(invoiceData.getInvoiceDate(), "-00:00:00"), DateUtils.FIX_DATETIME_FORMATTER));
+                    stdInvoiceDtlRecord.setProductVersion(invoiceData.getInvoiceType());
+                    stdInvoiceDtlRecord.setReceiptId(invoiceData.getInvoiceMachineNum());
+                    stdInvoiceDtlRecord.setProductName(invoiceData.getItems().isEmpty() ? null : invoiceData.getItems().get(0).getName());
+                    stdInvoiceDtlRecord.setProductSpec(invoiceData.getItems().isEmpty() ? null : invoiceData.getItems().get(0).getSpec());
+                    stdInvoiceDtlRecord.setProductUnit(invoiceData.getItems().isEmpty() ? null : new BigDecimal(invoiceData.getItems().get(0).getUnit()));
+                    stdInvoiceDtlRecord.setProductCount(invoiceData.getItems().isEmpty() ? null : new BigDecimal(invoiceData.getItems().get(0).getAmount()));
+                    stdInvoiceDtlRecord.setProductUnitPrice(invoiceData.getItems().isEmpty() ? null : new BigDecimal(invoiceData.getItems().get(0).getPriceUnit()));
+                    stdInvoiceDtlRecord.setTotalPrice(new BigDecimal(invoiceData.getTaxAmount()));
+                    stdInvoiceDtlRecord.setTaxRate(invoiceData.getItems().isEmpty() ? null : new BigDecimal(invoiceData.getItems().get(0).getTaxRate()));
+                    stdInvoiceDtlRecord.setTax(invoiceData.getItems().isEmpty() ? null : new BigDecimal(invoiceData.getItems().get(0).getTaxSum()));
+                    stdInvoiceDtlRecord.setTaxTypeCode(invoiceData.getInvoiceType());
+                    this.stdInvoiceDtlRecordService.saveOrUpdate(stdInvoiceDtlRecord);
                 } else {
                     taxScanResult.setIsValid("0");
                     taxScanResult.setIsVerified("0");
                     taxScanResult.setFailedReason(result.getDesc());
                 }
-                this.taxScanResultService.save(taxScanResult);
-                this.baseMapper.insert(stdInvoiceRecord);
-                this.stdInvoiceDtlRecordService.save(stdInvoiceDtlRecord);
+                this.taxScanResultService.saveOrUpdate(taxScanResult);
+                this.saveOrUpdate(stdInvoiceRecord);
             } catch (Exception e) {
                 taxScanResult.setIsValid("0");
                 taxScanResult.setIsVerified("0");
                 taxScanResult.setFailedReason(e.getMessage());
-            }
+                this.taxScanResultService.saveOrUpdate(taxScanResult);
+            }*/
             httpSession.setAttribute(batchId, new BigDecimal((i + 1))
-                    .divide(new BigDecimal(files.length), 2, BigDecimal.ROUND_HALF_EVEN)
+                    .divide(new BigDecimal(5), 2, BigDecimal.ROUND_HALF_EVEN)
                     .multiply(new BigDecimal(80))
                     .add(new BigDecimal(20)));
+
+            BigDecimal bigDecimal = (BigDecimal) httpSession.getAttribute(batchId);
+            log.info("batchId: {} pt: {}",batchId,bigDecimal.toPlainString());
+
         }
 
 

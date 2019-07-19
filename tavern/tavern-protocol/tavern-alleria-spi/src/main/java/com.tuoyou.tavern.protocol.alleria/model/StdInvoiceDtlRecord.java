@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-@Builder
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("ALR_STD_INVOICE_DTL_RECORD")

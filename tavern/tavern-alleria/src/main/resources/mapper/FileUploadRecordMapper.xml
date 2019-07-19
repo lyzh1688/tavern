@@ -5,10 +5,10 @@
         <id column="BATCH_ID" jdbcType="VARCHAR" property="batchId"/>
         <result column="PACKAGE_NAME" jdbcType="VARCHAR" property="packageName"/>
         <result column="FILE_COUNT" jdbcType="INTEGER" property="fileCount"/>
-        <result column="UPLOAD_DATE" jdbcType="DATE" property="uploadDate"/>
+        <result column="UPLOAD_DATE"  property="uploadDate"/>
         <result column="STATUS" jdbcType="VARCHAR" property="status"/>
         <result column="OPERATOR" jdbcType="VARCHAR" property="operator"/>
-        <result column="UPDATE_DATE" jdbcType="DATE" property="updateDate"/>
+        <result column="UPDATE_DATE"  property="updateDate"/>
         <result column="IS_VALID" jdbcType="VARCHAR" property="isValid"/>
         <result column="PACKAGE_TYPE" jdbcType="VARCHAR" property="packageType"/>
     </resultMap>

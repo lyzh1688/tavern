@@ -10,5 +10,5 @@ import lombok.Data;
 @Data
 @Builder
 public class FileUploadProcess {
-    private String percentage;
+    private double percentage;
 }

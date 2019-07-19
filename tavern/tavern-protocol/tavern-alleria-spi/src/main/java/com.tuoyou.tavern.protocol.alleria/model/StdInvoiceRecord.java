@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("ALR_STD_INVOICE_RECORD")
-@Builder
 public class StdInvoiceRecord extends Model<StdInvoiceRecord> {
     @TableId
     private String fileId;

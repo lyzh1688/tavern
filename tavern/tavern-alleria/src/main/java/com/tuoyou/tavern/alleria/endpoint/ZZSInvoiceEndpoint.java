@@ -25,7 +25,7 @@ import java.time.LocalDate;
  * Created by 刘悦之 on 2019/6/30.
  */
 @RestController
-@RequestMapping("/alleria/invoice/zzs")
+@RequestMapping("/invoice/zzs")
 public class ZZSInvoiceEndpoint {
     @Autowired
     private TaxScanResultService taxScanResultService;

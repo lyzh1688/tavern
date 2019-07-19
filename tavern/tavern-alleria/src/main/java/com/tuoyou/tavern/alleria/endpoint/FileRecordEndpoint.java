@@ -7,14 +7,17 @@ import com.tuoyou.tavern.protocol.alleria.model.FileUploadProcess;
 import com.tuoyou.tavern.protocol.alleria.response.FileUploadProcessResponse;
 import com.tuoyou.tavern.protocol.alleria.response.FileUploadRecordResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 
 /**
  * Created by 刘悦之 on 2019/6/29.
  */
+@Slf4j
 @AllArgsConstructor
 @RestController
 @RequestMapping("/file")
@@ -38,7 +41,9 @@ public class FileRecordEndpoint {
      * */
     @GetMapping(value = "/percentage")
     public FileUploadProcessResponse queryInvoiceUploadPercentage(@RequestParam("batchId") String batchId, HttpSession httpSession) {
-        return new FileUploadProcessResponse(FileUploadProcess.builder().percentage((String) httpSession.getAttribute(batchId)).build());
+        BigDecimal pt = httpSession.getAttribute(batchId) == null ? BigDecimal.ZERO : new BigDecimal(httpSession.getAttribute(batchId).toString());
+        log.info("batchId: {} pt: {}",batchId, pt.doubleValue());
+        return new FileUploadProcessResponse(FileUploadProcess.builder().percentage(pt.doubleValue()).build());
     }
 
 }

@@ -41,9 +41,9 @@ public class FileUploadRecordServiceImpl extends ServiceImpl<FileUploadRecordMap
                 .stream()
                 .map(record -> {
                     FileUploadRecordVO fileUploadRecordVO = new FileUploadRecordVO();
-                    BeanUtils.copyProperties(record,fileUploadRecordVO);
-                    fileUploadRecordVO.setUpdateDate(DateUtils.formatDateTime(record.getUpdateDate(),DateUtils.DEFAULT_DATETIME_FORMATTER));
-                    fileUploadRecordVO.setUploadDate(DateUtils.formatDateTime(record.getUploadDate(),DateUtils.DEFAULT_DATETIME_FORMATTER));
+                    BeanUtils.copyProperties(record, fileUploadRecordVO);
+                    fileUploadRecordVO.setUpdateDate(DateUtils.formatDateTime(record.getUpdateDate(), DateUtils.DEFAULT_DATETIME_FORMATTER));
+                    fileUploadRecordVO.setUploadDate(DateUtils.formatDateTime(record.getUploadDate(), DateUtils.DEFAULT_DATETIME_FORMATTER));
                     return fileUploadRecordVO;
                 }).collect(Collectors.toList());
         Page<FileUploadRecordVO> uploadRecordVOPage = new Page<>();
@@ -71,19 +71,17 @@ public class FileUploadRecordServiceImpl extends ServiceImpl<FileUploadRecordMap
             httpSession.setAttribute(batchId, 20);
             File file = new File(destFileDir);
             int cnt = file.listFiles().length;
-           /* fileUploadRecord = FileUploadRecord
-                    .builder()
-                    .batchId(batchId)
-                    .packageName(multipartFile.getOriginalFilename())
-                    .fileCount(cnt)
-                    .uploadDate(LocalDateTime.now())
-                    .status("1")
-                    .operator("admin")
-                    .uploadDate(LocalDateTime.now())
-                    .isValid("1")
-                    .packageType(type)
-                    .build();*/
-            this.baseMapper.updateById(fileUploadRecord);
+            fileUploadRecord = new FileUploadRecord();
+            fileUploadRecord.setBatchId(batchId);
+            fileUploadRecord.setPackageName(multipartFile.getOriginalFilename());
+            fileUploadRecord.setFileCount(cnt);
+            fileUploadRecord.setUploadDate(LocalDateTime.now());
+            fileUploadRecord.setStatus("1");
+            fileUploadRecord.setOperator("admin");
+            fileUploadRecord.setUpdateDate(LocalDateTime.now());
+            fileUploadRecord.setIsValid("1");
+            fileUploadRecord.setPackageType(type);
+            this.baseMapper.insert(fileUploadRecord);
             FileTransfer fileTransfer = FileTransfer.builder()
                     .batchId(batchId)
                     .destLocation(destFileDir)

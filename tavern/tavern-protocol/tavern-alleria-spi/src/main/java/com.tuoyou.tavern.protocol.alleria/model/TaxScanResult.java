@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
-@Builder
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("ALR_VALUE_ADDED_TAX_SCAN_RESULT")
