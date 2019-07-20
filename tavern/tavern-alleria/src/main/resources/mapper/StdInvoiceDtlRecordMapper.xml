@@ -16,13 +16,14 @@
     <result column="RECEIPT_ID" jdbcType="VARCHAR" property="receiptId" />
     <result column="PRODUCT_NAME" jdbcType="VARCHAR" property="productName" />
     <result column="PRODUCT_SPEC" jdbcType="VARCHAR" property="productSpec" />
-    <result column="PRODUCT_UNIT" jdbcType="DECIMAL" property="productUnit" />
+    <result column="PRODUCT_UNIT" jdbcType="VARCHAR" property="productUnit" />
     <result column="PRODUCT_COUNT" jdbcType="DECIMAL" property="productCount" />
     <result column="PRODUCT_UNIT_PRICE" jdbcType="DECIMAL" property="productUnitPrice" />
     <result column="TOTAL_PRICE" jdbcType="DECIMAL" property="totalPrice" />
     <result column="TAX_RATE" jdbcType="DECIMAL" property="taxRate" />
     <result column="TAX" jdbcType="DECIMAL" property="tax" />
     <result column="TAX_TYPE_CODE" jdbcType="VARCHAR" property="taxTypeCode" />
+    <result column="IMAGE_URL" jdbcType="VARCHAR" property="imageUrl" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="map">
     delete from ALR_STD_INVOICE_DTL_RECORD

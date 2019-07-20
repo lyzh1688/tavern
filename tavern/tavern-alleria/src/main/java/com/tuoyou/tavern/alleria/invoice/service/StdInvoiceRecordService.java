@@ -5,6 +5,7 @@ import com.tuoyou.tavern.alleria.util.FileTransfer;
 import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceRecord;
 
 import javax.servlet.http.HttpSession;
+import java.io.FileNotFoundException;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -14,6 +15,8 @@ public interface StdInvoiceRecordService extends IService<StdInvoiceRecord> {
 
     void updateStatus(String fileId, String valid);
 
-    void parseZzsInvoice(FileTransfer fileTransfer, HttpSession httpSession);
+    void parseZzsInvoice(FileTransfer fileTransfer);
+
+    void parseStdInvoice(FileTransfer fileTransfer) ;
 
 }

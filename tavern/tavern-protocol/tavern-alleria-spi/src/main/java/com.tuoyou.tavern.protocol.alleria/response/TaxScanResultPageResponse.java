@@ -1,6 +1,7 @@
 package com.tuoyou.tavern.protocol.alleria.response;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.tuoyou.tavern.protocol.alleria.model.TaxScanResult;
 import com.tuoyou.tavern.protocol.alleria.model.TaxScanResultVO;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
-public class TaxScanResultResponse extends TavernResponse {
-    private TaxScanResultVO data;
+public class TaxScanResultPageResponse extends TavernResponse {
+    private IPage<TaxScanResultVO> data;
 }

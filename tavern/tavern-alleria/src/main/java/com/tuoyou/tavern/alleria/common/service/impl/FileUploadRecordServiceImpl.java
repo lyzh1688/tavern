@@ -1,13 +1,16 @@
 package com.tuoyou.tavern.alleria.common.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tuoyou.tavern.alleria.common.dao.FileUploadRecordMapper;
+import com.tuoyou.tavern.alleria.configuration.TTLContext;
 import com.tuoyou.tavern.alleria.util.FileTransfer;
 import com.tuoyou.tavern.common.core.util.DateUtils;
 import com.tuoyou.tavern.common.core.util.UUIDUtil;
 import com.tuoyou.tavern.invoice.common.libs.utils.FileUtils;
+import com.tuoyou.tavern.protocol.alleria.common.FileUploadStatus;
 import com.tuoyou.tavern.protocol.alleria.dto.FileUploadDTO;
 import com.tuoyou.tavern.alleria.common.service.FileUploadRecordService;
 import com.tuoyou.tavern.protocol.alleria.model.FileUploadRecord;
@@ -34,6 +37,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class FileUploadRecordServiceImpl extends ServiceImpl<FileUploadRecordMapper, FileUploadRecord> implements FileUploadRecordService {
 
+    private final TTLContext ttlContext;
+
     @Override
     public IPage<FileUploadRecordVO> getRecordWithTypeAndStatusByPage(Page page, FileUploadDTO fileUploadDTO) {
         IPage<FileUploadRecord> fileUploadRecordIPage = this.baseMapper.selectFileUploadRecordPage(page, fileUploadDTO);
@@ -57,18 +62,22 @@ public class FileUploadRecordServiceImpl extends ServiceImpl<FileUploadRecordMap
 
     @Override
     public void uploadFile(MultipartFile multipartFile, String destLocation, String type, String batchId,
-                           BiConsumer<FileTransfer, HttpSession> biConsumer,
-                           HttpSession httpSession) throws Exception {
+                           Consumer<FileTransfer> consumer) throws Exception {
         //1. 文件包落地
         //2. 文件包解压
         //3. 文件解析
         FileUploadRecord fileUploadRecord = null;
+        JSONObject fileUploadObject = new JSONObject();
         try {
-            httpSession.setAttribute(batchId, 1);
+            fileUploadObject.put("percentage",1);
+            fileUploadObject.put("status",FileUploadStatus.IN_PROCESS);
+            ttlContext.putValue(batchId, fileUploadObject);
             String filePath = FileUtils.multiPartFileWriter(multipartFile, destLocation);
-            httpSession.setAttribute(batchId, 10);
+            fileUploadObject.put("percentage",10);
+            ttlContext.putValue(batchId, fileUploadObject);
             String destFileDir = FileUtils.unZip(new File(filePath), destLocation);
-            httpSession.setAttribute(batchId, 20);
+            fileUploadObject.put("percentage",20);
+            ttlContext.putValue(batchId, fileUploadObject);
             File file = new File(destFileDir);
             int cnt = file.listFiles().length;
             fileUploadRecord = new FileUploadRecord();
@@ -86,14 +95,18 @@ public class FileUploadRecordServiceImpl extends ServiceImpl<FileUploadRecordMap
                     .batchId(batchId)
                     .destLocation(destFileDir)
                     .build();
-            biConsumer.accept(fileTransfer, httpSession);
+            consumer.accept(fileTransfer);
             fileUploadRecord.setStatus("2");
             this.baseMapper.updateById(fileUploadRecord);
+            fileUploadObject.put("status", FileUploadStatus.FINISHED);
+            ttlContext.putValue(batchId, fileUploadObject);
         } catch (Exception e) {
             if (fileUploadRecord != null) {
                 fileUploadRecord.setStatus("3");
                 this.baseMapper.updateById(fileUploadRecord);
             }
+            fileUploadObject.put("status", FileUploadStatus.FAILED);
+            ttlContext.putValue(batchId, fileUploadObject);
             throw new Exception("文件上传失败");
         }
 

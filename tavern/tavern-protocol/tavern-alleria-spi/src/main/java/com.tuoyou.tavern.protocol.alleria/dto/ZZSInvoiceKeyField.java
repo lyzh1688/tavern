@@ -12,9 +12,7 @@ public class ZZSInvoiceKeyField {
     private String invoiceCode;
     @NotNull
     private String fileId;
-    @NotNull
     private String invoiceId;
-    @NotNull
     private String invoiceDate;
     private String checkCode;
     private String taxFreeAmount;

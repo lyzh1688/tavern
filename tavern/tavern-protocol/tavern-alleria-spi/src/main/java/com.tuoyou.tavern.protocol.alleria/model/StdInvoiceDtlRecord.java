@@ -44,7 +44,7 @@ public class StdInvoiceDtlRecord extends Model<StdInvoiceDtlRecord> {
 
     private String productSpec;
 
-    private BigDecimal productUnit;
+    private String productUnit;
 
     private BigDecimal productCount;
 
@@ -57,6 +57,8 @@ public class StdInvoiceDtlRecord extends Model<StdInvoiceDtlRecord> {
     private BigDecimal tax;
 
     private String taxTypeCode;
+
+    private String imageUrl;
 
 
 

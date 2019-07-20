@@ -12,4 +12,5 @@ import lombok.Data;
 public class FileTransfer {
     private String batchId;
     private String destLocation;
+    private String financeDiskType;
 }

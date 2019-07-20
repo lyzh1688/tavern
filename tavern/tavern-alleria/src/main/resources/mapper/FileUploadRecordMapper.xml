@@ -23,6 +23,7 @@
         FROM
         ALR_FILE_UPLOAD_RECORD
         <where>
+            IS_VALID = 1
             <if test="query.fileType != null and query.fileType != ''">
                 and PACKAGE_TYPE = #{query.fileType}
             </if>

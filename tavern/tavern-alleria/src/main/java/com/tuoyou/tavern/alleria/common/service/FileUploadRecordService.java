@@ -21,11 +21,10 @@ import java.util.function.Supplier;
  * Dev Time: 2019/07/03 <br>
  */
 public interface FileUploadRecordService extends IService<FileUploadRecord> {
-    IPage<FileUploadRecordVO> getRecordWithTypeAndStatusByPage(Page page, FileUploadDTO fileUploadDTO);
-
     void uploadFile(MultipartFile multipartFile,
                     String destLocation, String type,
                     String batchId,
-                    BiConsumer<FileTransfer,HttpSession> biConsumer,
-                    HttpSession session) throws Exception;
+                    Consumer<FileTransfer> consumer) throws Exception;
+
+    IPage<FileUploadRecordVO> getRecordWithTypeAndStatusByPage(Page page, FileUploadDTO fileUploadDTO);
 }
