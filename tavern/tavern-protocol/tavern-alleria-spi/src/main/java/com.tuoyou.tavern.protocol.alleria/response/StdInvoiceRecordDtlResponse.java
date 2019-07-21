@@ -2,6 +2,7 @@ package com.tuoyou.tavern.protocol.alleria.response;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceDtlRecord;
+import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceDtlRecordVO;
 import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceRecord;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import lombok.AllArgsConstructor;
@@ -16,5 +17,5 @@ import lombok.EqualsAndHashCode;
 @Data
 @AllArgsConstructor
 public class StdInvoiceRecordDtlResponse extends TavernResponse {
-    private IPage<StdInvoiceDtlRecord> data;
+    private IPage<StdInvoiceDtlRecordVO> data;
 }

@@ -1,93 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tuoyou.tavern.alleria.invoice.dao.StdInvoiceDtlRecordMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.alleria.model.StdInvoiceDtlRecord">
-    <id column="FILE_ID" jdbcType="VARCHAR" property="fileId" />
-    <id column="INVOICE_ID" jdbcType="VARCHAR" property="invoiceId" />
-    <id column="INVOICE_CODE" jdbcType="VARCHAR" property="invoiceCode" />
-    <result column="BUYER_NAME" jdbcType="VARCHAR" property="buyerName" />
-    <result column="BUYER_TAX_CODE" jdbcType="VARCHAR" property="buyerTaxCode" />
-    <result column="BANK_BRANCH" jdbcType="VARCHAR" property="bankBranch" />
-    <result column="BANK_ACCOUNT" jdbcType="VARCHAR" property="bankAccount" />
-    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
-    <result column="TEL" jdbcType="VARCHAR" property="tel" />
-    <result column="INVOICE_DATE" jdbcType="DATE" property="invoiceDate" />
-    <result column="PRODUCT_VERSION" jdbcType="VARCHAR" property="productVersion" />
-    <result column="RECEIPT_ID" jdbcType="VARCHAR" property="receiptId" />
-    <result column="PRODUCT_NAME" jdbcType="VARCHAR" property="productName" />
-    <result column="PRODUCT_SPEC" jdbcType="VARCHAR" property="productSpec" />
-    <result column="PRODUCT_UNIT" jdbcType="VARCHAR" property="productUnit" />
-    <result column="PRODUCT_COUNT" jdbcType="DECIMAL" property="productCount" />
-    <result column="PRODUCT_UNIT_PRICE" jdbcType="DECIMAL" property="productUnitPrice" />
-    <result column="TOTAL_PRICE" jdbcType="DECIMAL" property="totalPrice" />
-    <result column="TAX_RATE" jdbcType="DECIMAL" property="taxRate" />
-    <result column="TAX" jdbcType="DECIMAL" property="tax" />
-    <result column="TAX_TYPE_CODE" jdbcType="VARCHAR" property="taxTypeCode" />
-    <result column="IMAGE_URL" jdbcType="VARCHAR" property="imageUrl" />
-  </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="map">
-    delete from ALR_STD_INVOICE_DTL_RECORD
-    where FILE_ID = #{fileId,jdbcType=VARCHAR}
-      and INVOICE_ID = #{invoiceId,jdbcType=VARCHAR}
-      and INVOICE_CODE = #{invoiceCode,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.protocol.alleria.model.StdInvoiceDtlRecord">
-    insert into ALR_STD_INVOICE_DTL_RECORD (FILE_ID, INVOICE_ID, INVOICE_CODE, 
-      BUYER_NAME, BUYER_TAX_CODE, BANK_BRANCH, 
-      BANK_ACCOUNT, ADDRESS, TEL, 
-      INVOICE_DATE, PRODUCT_VERSION, RECEIPT_ID, 
-      PRODUCT_NAME, PRODUCT_SPEC, PRODUCT_UNIT, 
-      PRODUCT_COUNT, PRODUCT_UNIT_PRICE, TOTAL_PRICE, 
+    <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.alleria.model.StdInvoiceDtlRecord">
+        <id column="FILE_ID" jdbcType="VARCHAR" property="fileId"/>
+        <id column="INVOICE_ID" jdbcType="VARCHAR" property="invoiceId"/>
+        <id column="INVOICE_CODE" jdbcType="VARCHAR" property="invoiceCode"/>
+        <result column="BUYER_NAME" jdbcType="VARCHAR" property="buyerName"/>
+        <result column="BUYER_TAX_CODE" jdbcType="VARCHAR" property="buyerTaxCode"/>
+        <result column="BANK_BRANCH" jdbcType="VARCHAR" property="bankBranch"/>
+        <result column="BANK_ACCOUNT" jdbcType="VARCHAR" property="bankAccount"/>
+        <result column="ADDRESS" jdbcType="VARCHAR" property="address"/>
+        <result column="TEL" jdbcType="VARCHAR" property="tel"/>
+        <result column="INVOICE_DATE" jdbcType="DATE" property="invoiceDate"/>
+        <result column="PRODUCT_VERSION" jdbcType="VARCHAR" property="productVersion"/>
+        <result column="RECEIPT_ID" jdbcType="VARCHAR" property="receiptId"/>
+        <result column="PRODUCT_NAME" jdbcType="VARCHAR" property="productName"/>
+        <result column="PRODUCT_SPEC" jdbcType="VARCHAR" property="productSpec"/>
+        <result column="PRODUCT_UNIT" jdbcType="VARCHAR" property="productUnit"/>
+        <result column="PRODUCT_COUNT" jdbcType="DECIMAL" property="productCount"/>
+        <result column="PRODUCT_UNIT_PRICE" jdbcType="DECIMAL" property="productUnitPrice"/>
+        <result column="TOTAL_PRICE" jdbcType="DECIMAL" property="totalPrice"/>
+        <result column="TAX_RATE" jdbcType="DECIMAL" property="taxRate"/>
+        <result column="TAX" jdbcType="DECIMAL" property="tax"/>
+        <result column="TAX_TYPE_CODE" jdbcType="VARCHAR" property="taxTypeCode"/>
+        <result column="IMAGE_URL" jdbcType="VARCHAR" property="imageUrl"/>
+    </resultMap>
+
+    <sql id="dtlSql">
+      FILE_ID, INVOICE_ID, INVOICE_CODE,
+      BUYER_NAME, BUYER_TAX_CODE, BANK_BRANCH,
+      BANK_ACCOUNT, ADDRESS, TEL,
+      INVOICE_DATE, PRODUCT_VERSION, RECEIPT_ID,
+      PRODUCT_NAME, PRODUCT_SPEC, PRODUCT_UNIT,
+      PRODUCT_COUNT, PRODUCT_UNIT_PRICE, TOTAL_PRICE,
       TAX_RATE, TAX, TAX_TYPE_CODE
-      )
-    values (#{fileId,jdbcType=VARCHAR}, #{invoiceId,jdbcType=VARCHAR}, #{invoiceCode,jdbcType=VARCHAR}, 
-      #{buyerName,jdbcType=VARCHAR}, #{buyerTaxCode,jdbcType=VARCHAR}, #{bankBranch,jdbcType=VARCHAR}, 
-      #{bankAccount,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, 
-      #{invoiceDate,jdbcType=DATE}, #{productVersion,jdbcType=VARCHAR}, #{receiptId,jdbcType=VARCHAR}, 
-      #{productName,jdbcType=VARCHAR}, #{productSpec,jdbcType=VARCHAR}, #{productUnit,jdbcType=DECIMAL}, 
-      #{productCount,jdbcType=DECIMAL}, #{productUnitPrice,jdbcType=DECIMAL}, #{totalPrice,jdbcType=DECIMAL}, 
-      #{taxRate,jdbcType=DECIMAL}, #{tax,jdbcType=DECIMAL}, #{taxTypeCode,jdbcType=VARCHAR}
-      )
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.protocol.alleria.model.StdInvoiceDtlRecord">
-    update ALR_STD_INVOICE_DTL_RECORD
-    set BUYER_NAME = #{buyerName,jdbcType=VARCHAR},
-      BUYER_TAX_CODE = #{buyerTaxCode,jdbcType=VARCHAR},
-      BANK_BRANCH = #{bankBranch,jdbcType=VARCHAR},
-      BANK_ACCOUNT = #{bankAccount,jdbcType=VARCHAR},
-      ADDRESS = #{address,jdbcType=VARCHAR},
-      TEL = #{tel,jdbcType=VARCHAR},
-      INVOICE_DATE = #{invoiceDate,jdbcType=DATE},
-      PRODUCT_VERSION = #{productVersion,jdbcType=VARCHAR},
-      RECEIPT_ID = #{receiptId,jdbcType=VARCHAR},
-      PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
-      PRODUCT_SPEC = #{productSpec,jdbcType=VARCHAR},
-      PRODUCT_UNIT = #{productUnit,jdbcType=DECIMAL},
-      PRODUCT_COUNT = #{productCount,jdbcType=DECIMAL},
-      PRODUCT_UNIT_PRICE = #{productUnitPrice,jdbcType=DECIMAL},
-      TOTAL_PRICE = #{totalPrice,jdbcType=DECIMAL},
-      TAX_RATE = #{taxRate,jdbcType=DECIMAL},
-      TAX = #{tax,jdbcType=DECIMAL},
-      TAX_TYPE_CODE = #{taxTypeCode,jdbcType=VARCHAR}
-    where FILE_ID = #{fileId,jdbcType=VARCHAR}
-      and INVOICE_ID = #{invoiceId,jdbcType=VARCHAR}
-      and INVOICE_CODE = #{invoiceCode,jdbcType=VARCHAR}
-  </update>
-  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
-    select FILE_ID, INVOICE_ID, INVOICE_CODE, BUYER_NAME, BUYER_TAX_CODE, BANK_BRANCH, 
-    BANK_ACCOUNT, ADDRESS, TEL, INVOICE_DATE, PRODUCT_VERSION, RECEIPT_ID, PRODUCT_NAME, 
-    PRODUCT_SPEC, PRODUCT_UNIT, PRODUCT_COUNT, PRODUCT_UNIT_PRICE, TOTAL_PRICE, TAX_RATE, 
-    TAX, TAX_TYPE_CODE
-    from ALR_STD_INVOICE_DTL_RECORD
-    where FILE_ID = #{fileId,jdbcType=VARCHAR}
-      and INVOICE_ID = #{invoiceId,jdbcType=VARCHAR}
-      and INVOICE_CODE = #{invoiceCode,jdbcType=VARCHAR}
+  </sql>
+
+    <select id="selectStdInvoiceDtlRecord" resultMap="BaseResultMap">
+    select
+      t1.FILE_ID, t1.INVOICE_ID, t1.INVOICE_CODE,
+      t1.BUYER_NAME, t1.BUYER_TAX_CODE, t1.BANK_BRANCH,
+      t1.BANK_ACCOUNT,t1.ADDRESS, t1.TEL,
+      t1.INVOICE_DATE, t1.PRODUCT_VERSION, t1.RECEIPT_ID,
+      t1.PRODUCT_NAME, t1.PRODUCT_SPEC, t1.PRODUCT_UNIT,
+      t1.PRODUCT_COUNT, t1.PRODUCT_UNIT_PRICE, t1.TOTAL_PRICE,
+      t1.TAX_RATE, t1.TAX, t1.TAX_TYPE_CODE
+    from ALR_STD_INVOICE_DTL_RECORD t1,ALR_STD_INVOICE_RECORD t2
+   <where>
+       t1.FILE_ID = t2.FILE_ID
+       and t2.IS_VALID = 1
+       <if test="query.batchId != null and query.batchId != ''">
+           and t2.BATCH_ID = #{query.batchId}
+       </if>
+   </where>
   </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select FILE_ID, INVOICE_ID, INVOICE_CODE, BUYER_NAME, BUYER_TAX_CODE, BANK_BRANCH, 
-    BANK_ACCOUNT, ADDRESS, TEL, INVOICE_DATE, PRODUCT_VERSION, RECEIPT_ID, PRODUCT_NAME, 
-    PRODUCT_SPEC, PRODUCT_UNIT, PRODUCT_COUNT, PRODUCT_UNIT_PRICE, TOTAL_PRICE, TAX_RATE, 
-    TAX, TAX_TYPE_CODE
-    from ALR_STD_INVOICE_DTL_RECORD
-  </select>
+
 </mapper>
