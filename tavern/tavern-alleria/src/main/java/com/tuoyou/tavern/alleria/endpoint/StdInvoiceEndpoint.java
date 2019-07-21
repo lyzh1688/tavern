@@ -7,13 +7,14 @@ import com.tuoyou.tavern.alleria.common.service.FileUploadRecordService;
 import com.tuoyou.tavern.alleria.invoice.service.StdInvoiceDtlRecordService;
 import com.tuoyou.tavern.alleria.invoice.service.StdInvoiceRecordService;
 import com.tuoyou.tavern.common.core.util.DateUtils;
+import com.tuoyou.tavern.protocol.alleria.dto.StdInvoiceRecordDTO;
 import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceDtlRecord;
-import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceRecord;
+import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceDtlRecordVO;
 import com.tuoyou.tavern.protocol.alleria.response.StdInvoiceRecordDtlResponse;
 import com.tuoyou.tavern.protocol.alleria.response.StdInvoiceRecordResponse;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
-import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -43,17 +44,26 @@ public class StdInvoiceEndpoint {
      *
      * */
     @GetMapping(value = "/record/page")
-    public StdInvoiceRecordResponse queryStdInvoiceRecord(Page page, StdInvoiceRecord stdInvoiceRecord) {
-        return new StdInvoiceRecordResponse(this.stdInvoiceRecordService.page(page, Wrappers.query(stdInvoiceRecord)));
+    public StdInvoiceRecordResponse queryStdInvoiceRecord(Page page, StdInvoiceRecordDTO stdInvoiceRecord) {
+        return new StdInvoiceRecordResponse(this.stdInvoiceRecordService.getStdInvoiceRecord(page, stdInvoiceRecord));
     }
 
-    /*
+   /* *//*
      * 查询发票记录详情
      *
-     * */
+     * *//*
     @GetMapping(value = "/dtl/page")
     public StdInvoiceRecordDtlResponse queryStdInvoiceRecordDtl(Page page, StdInvoiceDtlRecord stdInvoiceDtlRecord) {
         return new StdInvoiceRecordDtlResponse(this.stdInvoiceDtlRecordService.page(page, Wrappers.query(stdInvoiceDtlRecord)));
+    }*/
+
+    /*
+     * 根据条件发票记录详情
+     *
+     * */
+    @GetMapping(value = "/dtl/page")
+    public StdInvoiceRecordDtlResponse queryStdInvoiceRecordDtl(Page page, StdInvoiceRecordDTO stdInvoiceDtlRecord) {
+        return new StdInvoiceRecordDtlResponse(this.stdInvoiceDtlRecordService.getStdInvoiceDtlRecord(page, stdInvoiceDtlRecord));
     }
 
     /*
@@ -74,8 +84,12 @@ public class StdInvoiceEndpoint {
     @GetMapping(value = "/dtl/{fileId}")
     public StdInvoiceRecordDtlResponse queryStdInvoiceRecordDtl(@PathVariable String fileId) {
         StdInvoiceDtlRecord stdInvoiceDtlRecord = this.stdInvoiceDtlRecordService.getOne(Wrappers.<StdInvoiceDtlRecord>query().lambda().eq(StdInvoiceDtlRecord::getFileId, fileId));
-        IPage<StdInvoiceDtlRecord> invoiceDtlRecordIPage = new Page<>();
-        invoiceDtlRecordIPage.setRecords(Collections.singletonList(stdInvoiceDtlRecord));
+        StdInvoiceDtlRecordVO stdInvoiceDtlRecordVO = new StdInvoiceDtlRecordVO();
+        BeanUtils.copyProperties(stdInvoiceDtlRecord, stdInvoiceDtlRecordVO);
+        if (stdInvoiceDtlRecord.getInvoiceDate() != null)
+            stdInvoiceDtlRecordVO.setInvoiceDate(DateUtils.formatDateTime(stdInvoiceDtlRecord.getInvoiceDate(), DateUtils.DEFAULT_DATETIME_FORMATTER));
+        IPage<StdInvoiceDtlRecordVO> invoiceDtlRecordIPage = new Page<>();
+        invoiceDtlRecordIPage.setRecords(Collections.singletonList(stdInvoiceDtlRecordVO));
         return new StdInvoiceRecordDtlResponse(invoiceDtlRecordIPage);
     }
 

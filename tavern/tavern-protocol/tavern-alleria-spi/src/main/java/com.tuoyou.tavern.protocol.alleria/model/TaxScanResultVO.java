@@ -6,12 +6,12 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class TaxScanResultVO {
+public class TaxScanResultVO implements Serializable {
 
-    @TableId
     private String fileId;
 
     private String fileName;

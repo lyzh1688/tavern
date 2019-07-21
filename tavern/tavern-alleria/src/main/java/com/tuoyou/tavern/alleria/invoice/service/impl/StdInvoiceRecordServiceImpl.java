@@ -3,6 +3,9 @@ package com.tuoyou.tavern.alleria.invoice.service.impl;
 import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.tuoyou.tavern.alleria.configuration.TTLContext;
@@ -19,10 +22,12 @@ import com.tuoyou.tavern.invoice.verify.libs.model.InvoiceKeyModel;
 import com.tuoyou.tavern.invoice.verify.libs.model.ZBJInvoiceData;
 import com.tuoyou.tavern.invoice.verify.libs.model.ZBJVerifyResult;
 import com.tuoyou.tavern.protocol.alleria.common.FileUploadStatus;
+import com.tuoyou.tavern.protocol.alleria.dto.StdInvoiceRecordDTO;
 import com.tuoyou.tavern.protocol.alleria.file.InvoiceExcel;
 import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceDtlRecord;
 import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceRecord;
 import com.tuoyou.tavern.alleria.invoice.service.StdInvoiceRecordService;
+import com.tuoyou.tavern.protocol.alleria.model.StdInvoiceRecordVO;
 import com.tuoyou.tavern.protocol.alleria.model.TaxScanResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -58,7 +63,7 @@ public class StdInvoiceRecordServiceImpl extends ServiceImpl<StdInvoiceRecordMap
     private StdInvoiceDtlRecordService stdInvoiceDtlRecordService;
     @Autowired
     private TTLContext ttlContext;
-    @Value("${invoice.zzs.host:127.0.0.1:80/invoice/zzs/}")
+    @Value("${invoice.zzs.host:http://101.132.134.96:80/invoice/zzs/}")
     private String imageUrlHost;
     @Value("${invoice.zzs.dir:\\mnt\\file\\zzs\\}")
     private String zzsDir;
@@ -238,6 +243,29 @@ public class StdInvoiceRecordServiceImpl extends ServiceImpl<StdInvoiceRecordMap
         }
 
 
+    }
+
+    @Override
+    public IPage<StdInvoiceRecordVO> getStdInvoiceRecord(Page page, StdInvoiceRecordDTO stdInvoiceRecordDTO) {
+            IPage<StdInvoiceRecord> stdInvoiceRecordIPage = this.baseMapper.selectStdInvoiceRecord(page, stdInvoiceRecordDTO);
+//        IPage<StdInvoiceRecord> stdInvoiceRecordIPage = this.page(page, Wrappers.<StdInvoiceRecord>query().lambda()
+//                .eq(StdInvoiceRecord::getIsValid, "1"));
+        List<StdInvoiceRecordVO> stdInvoiceRecordVOList = stdInvoiceRecordIPage.getRecords()
+                .stream()
+                .map(record -> {
+                    StdInvoiceRecordVO stdInvoiceRecordVO = new StdInvoiceRecordVO();
+                    BeanUtils.copyProperties(record, stdInvoiceRecordVO);
+                    stdInvoiceRecordVO.setAccountPeriod(DateUtils.formatDateTime(record.getAccountPeriod(), DateUtils.DEFAULT_DATETIME_FORMATTER));
+                    stdInvoiceRecordVO.setUpdateDate(DateUtils.formatDateTime(record.getUpdateDate(), DateUtils.DEFAULT_DATETIME_FORMATTER));
+                    return stdInvoiceRecordVO;
+                }).collect(Collectors.toList());
+        Page<StdInvoiceRecordVO> stdInvoiceRecordVOPage = new Page<>();
+        stdInvoiceRecordVOPage.setRecords(stdInvoiceRecordVOList);
+        stdInvoiceRecordVOPage.setCurrent(stdInvoiceRecordIPage.getCurrent());
+        stdInvoiceRecordVOPage.setSize(stdInvoiceRecordIPage.getSize());
+        stdInvoiceRecordVOPage.setCurrent(stdInvoiceRecordIPage.getCurrent());
+        stdInvoiceRecordVOPage.setTotal(stdInvoiceRecordIPage.getTotal());
+        return stdInvoiceRecordVOPage;
     }
 
     public static void main(String[] args) {
