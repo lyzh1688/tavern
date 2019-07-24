@@ -16,6 +16,11 @@
       ACCOUNT_PERIOD, IS_VALID, UPDATE_DATE,
       CUSTOM_ID, FINANCE_DISK_TYPE
   </sql>
+  <update id="updateFileStatus" >
+    update ALR_STD_INVOICE_RECORD
+    set IS_VALID = #{valid}
+    where FILE_ID = #{fileId}
+  </update>
   <select id="selectStdInvoiceRecord" resultMap="BaseResultMap">
     select
     FILE_ID, BATCH_ID, FILE_NAME,

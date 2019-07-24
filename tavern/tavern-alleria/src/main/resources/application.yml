@@ -24,7 +24,7 @@ spring:
     min-idle: 5
     initial-size: 5
   application:
-    name: @artifactId@
+    name: tavern-alleria
 
 server:
   port: 8082

@@ -43,7 +43,7 @@ public class StdInvoiceDtlRecordVO implements Serializable {
 
     private BigDecimal totalPrice;
 
-    private BigDecimal taxRate;
+    private String taxRate;
 
     private BigDecimal tax;
 

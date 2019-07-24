@@ -52,7 +52,7 @@ public class StdInvoiceDtlRecord extends Model<StdInvoiceDtlRecord> {
 
     private BigDecimal totalPrice;
 
-    private BigDecimal taxRate;
+    private String taxRate;
 
     private BigDecimal tax;
 

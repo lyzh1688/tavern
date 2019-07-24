@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: @artifactId@
+    name: tavern-gateway
 
 zuul:
   routes:

@@ -20,7 +20,7 @@
         <result column="PRODUCT_COUNT" jdbcType="DECIMAL" property="productCount"/>
         <result column="PRODUCT_UNIT_PRICE" jdbcType="DECIMAL" property="productUnitPrice"/>
         <result column="TOTAL_PRICE" jdbcType="DECIMAL" property="totalPrice"/>
-        <result column="TAX_RATE" jdbcType="DECIMAL" property="taxRate"/>
+        <result column="TAX_RATE" jdbcType="VARCHAR" property="taxRate"/>
         <result column="TAX" jdbcType="DECIMAL" property="tax"/>
         <result column="TAX_TYPE_CODE" jdbcType="VARCHAR" property="taxTypeCode"/>
         <result column="IMAGE_URL" jdbcType="VARCHAR" property="imageUrl"/>

@@ -5,4 +5,4 @@ tavern.security.jwt.secret: tavern
 
 spring:
   application:
-    name: @artifactId@
+    name: tavern-auth-center

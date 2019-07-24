@@ -28,7 +28,7 @@ import java.util.Collections;
  * Dev Time: 2019/7/11 <br>
  */
 @RestController
-@RequestMapping("/invoice")
+@RequestMapping("/invoice/std")
 public class StdInvoiceEndpoint {
     @Autowired
     private StdInvoiceDtlRecordService stdInvoiceDtlRecordService;
@@ -97,7 +97,7 @@ public class StdInvoiceEndpoint {
      * 上传发票zip文件
      *
      * **/
-    @PostMapping("/std/upload")
+    @PostMapping("/upload")
     public TavernResponse uploadStdInvoiceFile(@RequestParam("file") MultipartFile multipartFile, @RequestParam("batchId") String batchId) throws Exception {
         String date = DateUtils.formatDate(LocalDate.now(), DateUtils.SIMPLE_8_FORMATTER);
         this.fileUploadRecordService.uploadFile(multipartFile,

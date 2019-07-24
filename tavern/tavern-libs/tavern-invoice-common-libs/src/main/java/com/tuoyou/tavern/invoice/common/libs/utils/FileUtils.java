@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -67,7 +68,7 @@ public class FileUtils {
         // 开始解压
         ZipFile zipFile = null;
         try {
-            zipFile = new ZipFile(srcFile);
+            zipFile = new ZipFile(srcFile, Charset.forName("GBK"));
             Enumeration<?> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();

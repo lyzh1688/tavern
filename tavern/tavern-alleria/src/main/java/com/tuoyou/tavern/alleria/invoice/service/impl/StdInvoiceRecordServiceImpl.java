@@ -158,7 +158,7 @@ public class StdInvoiceRecordServiceImpl extends ServiceImpl<StdInvoiceRecordMap
                     stdInvoiceDtlRecord.setProductCount(invoiceData.getItems().isEmpty() ? null : new BigDecimal(invoiceData.getItems().get(0).getAmount()));
                     stdInvoiceDtlRecord.setProductUnitPrice(invoiceData.getItems().isEmpty() ? null : new BigDecimal(invoiceData.getItems().get(0).getPriceUnit()));
                     stdInvoiceDtlRecord.setTotalPrice(new BigDecimal(invoiceData.getTaxAmount()));
-                    stdInvoiceDtlRecord.setTaxRate(invoiceData.getItems().isEmpty() ? null : new BigDecimal(invoiceData.getItems().get(0).getTaxRate()));
+                    stdInvoiceDtlRecord.setTaxRate(invoiceData.getItems().get(0).getTaxRate());
                     stdInvoiceDtlRecord.setTax(invoiceData.getItems().isEmpty() ? null : new BigDecimal(invoiceData.getItems().get(0).getTaxSum()));
                     stdInvoiceDtlRecord.setTaxTypeCode(invoiceData.getInvoiceType());
                 } else {
@@ -210,7 +210,7 @@ public class StdInvoiceRecordServiceImpl extends ServiceImpl<StdInvoiceRecordMap
             //10条一组
             List<List<InvoiceExcel>> partList = Lists.partition(invoiceExcelList, 10);
             for (int j = 0; j < partList.size(); j++) {
-                List<InvoiceExcel> list = partList.get(j);
+                List<InvoiceExcel> list = partList.get(j).stream().filter(invoiceExcel -> StringUtils.isNoneEmpty(invoiceExcel.getInvoiceCode(), invoiceExcel.getInvoiceId())).collect(Collectors.toList());
                 List<StdInvoiceRecord> stdInvoiceRecordList =
                         list.stream()
                                 .map(dtl -> {
@@ -223,11 +223,18 @@ public class StdInvoiceRecordServiceImpl extends ServiceImpl<StdInvoiceRecordMap
                                     stdInvoiceRecord.setCustomId(dtl.getBuyerTaxCode());
                                     return stdInvoiceRecord;
                                 }).collect(Collectors.toList());
-                List<StdInvoiceDtlRecord> stdInvoiceDtlRecordList = list.stream().map(dtl -> {
-                    StdInvoiceDtlRecord stdInvoiceDtlRecord = new StdInvoiceDtlRecord();
-                    BeanUtils.copyProperties(dtl, stdInvoiceDtlRecord);
-                    return stdInvoiceDtlRecord;
-                }).collect(Collectors.toList());
+                List<StdInvoiceDtlRecord> stdInvoiceDtlRecordList = list.stream()
+                        .map(dtl -> {
+                            StdInvoiceDtlRecord stdInvoiceDtlRecord = new StdInvoiceDtlRecord();
+                            BeanUtils.copyProperties(dtl, stdInvoiceDtlRecord);
+                            stdInvoiceDtlRecord.setFileId(StringUtils.join(dtl.getInvoiceCode(), "_", dtl.getInvoiceId()));
+                            stdInvoiceDtlRecord.setBankBranch(dtl.getBankAccount());
+                            stdInvoiceDtlRecord.setAddress(dtl.getTel());
+                            stdInvoiceDtlRecord.setTax(StringUtils.isEmpty(dtl.getTax()) ? null : new BigDecimal(dtl.getTax()));
+                            stdInvoiceDtlRecord.setTotalPrice(StringUtils.isEmpty(dtl.getTotalPrice()) ? null : new BigDecimal(dtl.getTotalPrice()));
+                            stdInvoiceDtlRecord.setInvoiceDate(StringUtils.isEmpty(dtl.getInvoiceDate()) ? null : DateUtils.parseDateTime(StringUtils.join(dtl.getInvoiceDate(), " 00:00:00"), DateUtils.DEFAULT_DATETIME_FORMATTER));
+                            return stdInvoiceDtlRecord;
+                        }).collect(Collectors.toList());
                 this.saveOrUpdateBatch(stdInvoiceRecordList);
                 this.stdInvoiceDtlRecordService.saveOrUpdateBatch(stdInvoiceDtlRecordList);
             }
@@ -241,13 +248,11 @@ public class StdInvoiceRecordServiceImpl extends ServiceImpl<StdInvoiceRecordMap
             ttlContext.putValue(batchId, fileUploadObject);
             log.info("batchId: {} file complete: {}", batchId, percentage);
         }
-
-
     }
 
     @Override
     public IPage<StdInvoiceRecordVO> getStdInvoiceRecord(Page page, StdInvoiceRecordDTO stdInvoiceRecordDTO) {
-            IPage<StdInvoiceRecord> stdInvoiceRecordIPage = this.baseMapper.selectStdInvoiceRecord(page, stdInvoiceRecordDTO);
+        IPage<StdInvoiceRecord> stdInvoiceRecordIPage = this.baseMapper.selectStdInvoiceRecord(page, stdInvoiceRecordDTO);
 //        IPage<StdInvoiceRecord> stdInvoiceRecordIPage = this.page(page, Wrappers.<StdInvoiceRecord>query().lambda()
 //                .eq(StdInvoiceRecord::getIsValid, "1"));
         List<StdInvoiceRecordVO> stdInvoiceRecordVOList = stdInvoiceRecordIPage.getRecords()
