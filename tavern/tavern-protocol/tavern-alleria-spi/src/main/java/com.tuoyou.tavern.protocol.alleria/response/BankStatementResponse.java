@@ -2,6 +2,7 @@ package com.tuoyou.tavern.protocol.alleria.response;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.tuoyou.tavern.protocol.alleria.model.BankStatementRecord;
+import com.tuoyou.tavern.protocol.alleria.model.BankStatementRecordVO;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,6 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 public class BankStatementResponse extends TavernResponse {
 
-    private IPage<BankStatementRecord> data;
+    private IPage<BankStatementRecordVO> data;
 
 }

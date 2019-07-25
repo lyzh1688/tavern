@@ -23,7 +23,7 @@ public class BankStatementRecord extends Model<BankStatementRecord> {
 
     private String isValid;
 
-    private String updateDate;
+    private LocalDateTime updateDate;
 
     private String customId;
 
