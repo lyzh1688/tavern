@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface StdInvoiceRecordMapper extends BaseMapper<StdInvoiceRecord> {
 
-    void updateFileStatus(@Param("fileId") String fileId, @Param("valid") String valid);
+    void updateFileStatus(@Param("batchId") String batchId, @Param("valid") String valid);
 
     IPage<StdInvoiceRecord> selectStdInvoiceRecord(Page page, @Param("query") StdInvoiceRecordDTO stdInvoiceRecordDTO);
 }

@@ -9,18 +9,16 @@ import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("ALR_BANK_STATEMENT_DTL_CCBL_RECORD")
-public class BankStatementDtlCcblRecord extends Model<BankStatementDtlCcblRecord> {
-    @TableId
+public class BankStatementDtlCcblRecordVO  {
+
     private String detailId;
 
     private String customAccntId;
 
     private String customAccntName;
 
-    private LocalDateTime tradeDate;
+    private String tradeDate;
 
     private BigDecimal debitAmount;
 
@@ -36,7 +34,7 @@ public class BankStatementDtlCcblRecord extends Model<BankStatementDtlCcblRecord
 
     private String institution;
 
-    private LocalDateTime accountingDate;
+    private String accountingDate;
 
     private String companySeq;
 

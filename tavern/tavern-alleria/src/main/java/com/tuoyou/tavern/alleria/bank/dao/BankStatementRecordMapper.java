@@ -11,4 +11,7 @@ import org.apache.ibatis.annotations.Param;
 
 public interface BankStatementRecordMapper extends BaseMapper<BankStatementRecord> {
     IPage<BankStatementRecord> selectBankStatementRecord(Page page, @Param("query") BankStatementDTO bankStatementDTO);
+
+    void updateStatus(@Param("batchId") String batchId,
+                      @Param("valid") String valid);
 }

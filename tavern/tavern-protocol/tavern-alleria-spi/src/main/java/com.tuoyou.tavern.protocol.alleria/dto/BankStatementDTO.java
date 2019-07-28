@@ -8,8 +8,11 @@ import lombok.Data;
  */
 @Data
 public class BankStatementDTO {
+    private String companyName;
+
     private String accountPeriod;
-    private String customId;
+
     private String batchId;
+
 
 }

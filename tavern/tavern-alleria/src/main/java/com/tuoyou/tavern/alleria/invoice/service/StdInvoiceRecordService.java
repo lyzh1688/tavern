@@ -19,7 +19,7 @@ import java.io.FileNotFoundException;
  */
 public interface StdInvoiceRecordService extends IService<StdInvoiceRecord> {
 
-    void updateStatus(String fileId, String valid);
+    void updateStatus(String batchId, String valid);
 
     void parseZzsInvoice(FileTransfer fileTransfer);
 

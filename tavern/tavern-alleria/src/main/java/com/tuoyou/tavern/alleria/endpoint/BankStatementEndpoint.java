@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * Dev Time: 2019/07/11 <br>
  */
 @RestController
-@RequestMapping("/alleria/bank")
+@RequestMapping("/bank")
 public class BankStatementEndpoint {
 
     @Autowired
@@ -37,7 +37,7 @@ public class BankStatementEndpoint {
     private BankStatementDtlCcblRecordService bankStatementDtlCcblRecordService;
     @Autowired
     private FileUploadRecordService fileUploadRecordService;
-    @Value("${invoice.zzs.dir:/mnt/file/bank/}")
+    @Value("${file.bank.dir:/mnt/file/bank/}")
     private String bankStatementDir;
 
     /*
@@ -47,6 +47,17 @@ public class BankStatementEndpoint {
     @GetMapping("/page")
     BankStatementResponse queryBankStatementRecord(Page page, BankStatementDTO bankStatementDTO) {
         return new BankStatementResponse(this.bankStatementRecordService.getBankStatementRecord(page, bankStatementDTO));
+    }
+
+    /*
+     * 改变银行流水状态
+     *
+     * */
+    @PutMapping("/valid/{batchId}/{valid}")
+    public TavernResponse updateValid(@PathVariable("batchId") String batchId,
+                                      @PathVariable("valid") String valid) {
+        this.bankStatementRecordService.updateStatus(batchId, valid);
+        return new TavernResponse();
     }
 
     /*

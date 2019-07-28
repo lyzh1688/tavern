@@ -1,7 +1,9 @@
 package com.tuoyou.tavern.alleria.invoice.service.impl;
 
 import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.metadata.Sheet;
+import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -69,8 +71,8 @@ public class StdInvoiceRecordServiceImpl extends ServiceImpl<StdInvoiceRecordMap
     private String zzsDir;
 
     @Override
-    public void updateStatus(String fileId, String valid) {
-        this.baseMapper.updateFileStatus(fileId, valid);
+    public void updateStatus(String batchId, String valid) {
+        this.baseMapper.updateFileStatus(batchId, valid);
     }
 
     @Override
@@ -204,7 +206,12 @@ public class StdInvoiceRecordServiceImpl extends ServiceImpl<StdInvoiceRecordMap
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            EasyExcelFactory.readBySax(inputStream, new Sheet(1, 6, InvoiceExcel.class), listener);
+            String pattern = StringUtils.substringAfterLast(file.getName(), ".");
+            if (pattern.equals("xls")) {
+                (new ExcelReader(inputStream, ExcelTypeEnum.XLS, (Object) null, listener)).read(new Sheet(1, 1, InvoiceExcel.class));
+            } else {
+                (new ExcelReader(inputStream, ExcelTypeEnum.XLSX, (Object) null, listener)).read(new Sheet(1, 1, InvoiceExcel.class));
+            }
             invoiceExcelList = listener.getDatas();
 
             //10条一组

@@ -18,6 +18,8 @@
         <result column="CERTIFICATE_TYPE" jdbcType="VARCHAR" property="certificateType"/>
         <result column="CERTIFICATE_ID" jdbcType="VARCHAR" property="certificateId"/>
         <result column="FILE_ID" jdbcType="VARCHAR" property="fileId"/>
+        <result column="ABSTRACTS" jdbcType="VARCHAR" property="abstracts"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
     </resultMap>
     <sql id="dtlSql">
     DETAIL_ID, CUSTOM_ACCNT_ID, CUSTOM_ACCNT_NAME, TRADE_DATE, DEBIT_AMOUNT, CREDIT_AMOUNT,
@@ -26,21 +28,25 @@
   </sql>
     <select id="selectBankStatementDtlRecord" resultMap="BaseResultMap">
         select
-        <include refid="dtlSql"/>
-        from alr_bank_statement_record t1,
+            t2.DETAIL_ID, t2.CUSTOM_ACCNT_ID, t2.CUSTOM_ACCNT_NAME, t2.TRADE_DATE, t2.DEBIT_AMOUNT, t2.CREDIT_AMOUNT,
+            t2.BALANCE, t2.COIN_CODE, t2.RECV_ACCNT_ID, t2.RECV_ACCNT_NAME, t2.INSTITUTION, t2.ACCOUNTING_DATE,
+            t2.COMPANY_SEQ, t2.CERTIFICATE_TYPE, t2.CERTIFICATE_ID, t2.FILE_ID,t2.ABSTRACTS,t2.REMARK
+        from ALR_BANK_STATEMENT_RECORD t1,
         ALR_BANK_STATEMENT_DTL_CCBL_RECORD t2
-        where t1.FILE_ID = t2.FILE_ID
-        and t1.BATCH_ID = #{query.batchId}
-        <if test="query.startTradeDate != null and query.startTradeDate != ''">
-            and t2.TRADE_DATE >= date_format(#{query.startTradeDate},'%Y-%m-%d %H:%i:%s')
-        </if>
-        <if test="query.endTradeDate != null and query.endTradeDate != ''">
-            and t2.TRADE_DATE <![CDATA[ <= ]]> date_format(#{query.endTradeDate},'%Y-%m-%d %H:%i:%s')
-        </if>
-        <if test="query.recvAccntId != null and query.recvAccntId != ''">
-            and t1.BATCH_ID = #{query.recvAccntId}
-        </if>
+        <where> t1.FILE_ID = t2.FILE_ID
+            and t1.BATCH_ID = #{query.batchId}
+            <if test="query.startTradeDate != null and query.startTradeDate != ''">
+                and t2.TRADE_DATE >= date_format(#{query.startTradeDate},'%Y/%m/%d %H:%i:%s')
+            </if>
+            <if test="query.endTradeDate != null and query.endTradeDate != ''">
+                and t2.TRADE_DATE <![CDATA[ <= ]]> date_format(#{query.endTradeDate},'%Y/%m/%d %H:%i:%s')
+            </if>
+            <if test="query.recvAccntId != null and query.recvAccntId != ''">
+                and t2.RECV_ACCNT_ID = #{query.recvAccntId}
+            </if>
+        </where>
     </select>
+
     <select id="selectRecvAccntIdDict" resultMap="BaseResultMap">
         select
         t2.DETAIL_ID, t2.CUSTOM_ACCNT_ID, t2.CUSTOM_ACCNT_NAME, t2.TRADE_DATE, t2.DEBIT_AMOUNT, t2.CREDIT_AMOUNT,

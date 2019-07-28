@@ -16,6 +16,8 @@ import com.tuoyou.tavern.protocol.alleria.model.BankStatementRecordVO;
 public interface BankStatementRecordService extends IService<BankStatementRecord> {
     IPage<BankStatementRecordVO> getBankStatementRecord(Page page, BankStatementDTO bankStatementDTO);
 
-    void parseBankStatement(FileTransfer fileTransfer) ;
+    void parseBankStatement(FileTransfer fileTransfer);
+
+    void updateStatus(String batchId, String valid);
 
 }

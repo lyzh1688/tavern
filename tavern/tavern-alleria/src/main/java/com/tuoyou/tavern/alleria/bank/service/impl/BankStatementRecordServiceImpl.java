@@ -1,10 +1,10 @@
 package com.tuoyou.tavern.alleria.bank.service.impl;
 
-import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.metadata.Sheet;
+import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
@@ -17,7 +17,6 @@ import com.tuoyou.tavern.common.core.util.DateUtils;
 import com.tuoyou.tavern.invoice.common.libs.excel.ExcelListener;
 import com.tuoyou.tavern.protocol.alleria.common.FileUploadStatus;
 import com.tuoyou.tavern.protocol.alleria.dto.BankStatementDTO;
-import com.tuoyou.tavern.protocol.alleria.dto.BankStatementDtlDTO;
 import com.tuoyou.tavern.protocol.alleria.file.BankStatementExcel;
 import com.tuoyou.tavern.protocol.alleria.model.BankStatementDtlCcblRecord;
 import com.tuoyou.tavern.protocol.alleria.model.BankStatementRecord;
@@ -30,7 +29,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -83,12 +81,17 @@ public class BankStatementRecordServiceImpl extends ServiceImpl<BankStatementRec
             InputStream inputStream = null;
             try {
                 inputStream = new FileInputStream(file);
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            EasyExcelFactory.readBySax(inputStream, new Sheet(1, 1, BankStatementExcel.class), listener);
-            bankStatementExcelList = listener.getDatas();
 
+            String pattern = StringUtils.substringAfterLast(file.getName(), ".");
+            if (pattern.equals("xls")) {
+                (new ExcelReader(inputStream, ExcelTypeEnum.XLS, (Object) null, listener)).read(new Sheet(1, 1, BankStatementExcel.class));
+            } else {
+                (new ExcelReader(inputStream, ExcelTypeEnum.XLSX, (Object) null, listener)).read(new Sheet(1, 1, BankStatementExcel.class));
+            }
+            bankStatementExcelList = listener.getDatas();
             //10条一组
             List<List<BankStatementExcel>> partList = Lists.partition(bankStatementExcelList, 10);
             for (int j = 0; j < partList.size(); j++) {
@@ -97,7 +100,7 @@ public class BankStatementRecordServiceImpl extends ServiceImpl<BankStatementRec
                         list.stream()
                                 .map(dtl -> {
                                     BankStatementRecord bankStatementRecord = new BankStatementRecord();
-                                    bankStatementRecord.setFileId(StringUtils.substringAfterLast(dtl.getDetailId(), "_"));
+                                    bankStatementRecord.setFileId(StringUtils.substringAfterLast(dtl.getDetailId(), "-"));
                                     bankStatementRecord.setBatchId(batchId);
                                     bankStatementRecord.setFileName(file.getName());
                                     bankStatementRecord.setIsValid("1");
@@ -110,12 +113,15 @@ public class BankStatementRecordServiceImpl extends ServiceImpl<BankStatementRec
                         .map(dtl -> {
                             BankStatementDtlCcblRecord bankStatementDtlCcblRecord = new BankStatementDtlCcblRecord();
                             BeanUtils.copyProperties(dtl, bankStatementDtlCcblRecord);
-                            bankStatementDtlCcblRecord.setFileId(StringUtils.substringAfterLast(dtl.getDetailId(), "_"));
-                            bankStatementDtlCcblRecord.setTradeDate(StringUtils.isEmpty(dtl.getTradeDate()) ? null : DateUtils.parseDateTime(StringUtils.join(dtl.getTradeDate(), " 00:00:00"), DateUtils.FIX_DATETIME_FORMATTER));
-                            bankStatementDtlCcblRecord.setDebitAmount(StringUtils.isEmpty(dtl.getDebitAmount()) ? null : new BigDecimal(dtl.getDebitAmount()));
-                            bankStatementDtlCcblRecord.setCreditAmount(StringUtils.isEmpty(dtl.getCreditAmount()) ? null : new BigDecimal(dtl.getCreditAmount()));
-                            bankStatementDtlCcblRecord.setAccountingDate(StringUtils.isEmpty(dtl.getAccountingDate()) ? null : DateUtils.parseDateTime(StringUtils.join(dtl.getAccountingDate(), " 00:00:00"), DateUtils.FIX_DATETIME_FORMATTER));
-                            bankStatementDtlCcblRecord.setBalance(StringUtils.isEmpty(dtl.getBalance()) ? null : new BigDecimal(dtl.getBalance()));
+                            String debitAmount = StringUtils.replace(dtl.getDebitAmount(), ",", "");
+                            String creditAmount = StringUtils.replace(dtl.getCreditAmount(), ",", "");
+                            String balance = StringUtils.replace(dtl.getBalance(), ",", "");
+                            bankStatementDtlCcblRecord.setFileId(StringUtils.substringAfterLast(dtl.getDetailId(), "-"));
+                            bankStatementDtlCcblRecord.setTradeDate(StringUtils.isEmpty(dtl.getTradeDate()) ? null : DateUtils.parseDateTime(dtl.getTradeDate(), DateUtils.SIMPLE_DATETIME_FORMATTER));
+                            bankStatementDtlCcblRecord.setDebitAmount(StringUtils.isEmpty(debitAmount) ? null : new BigDecimal(debitAmount));
+                            bankStatementDtlCcblRecord.setCreditAmount(StringUtils.isEmpty(creditAmount) ? null : new BigDecimal(creditAmount));
+                            bankStatementDtlCcblRecord.setAccountingDate(StringUtils.isEmpty(dtl.getAccountingDate()) ? null : DateUtils.parseDateTime(StringUtils.join(dtl.getAccountingDate(), " 00:00:00"), DateUtils.SIMPLE_DATETIME_FORMATTER));
+                            bankStatementDtlCcblRecord.setBalance(StringUtils.isEmpty(balance) ? null : new BigDecimal(balance));
                             return bankStatementDtlCcblRecord;
                         }).collect(Collectors.toList());
                 this.saveOrUpdateBatch(bankStatementRecordList);
@@ -131,6 +137,12 @@ public class BankStatementRecordServiceImpl extends ServiceImpl<BankStatementRec
             ttlContext.putValue(batchId, fileUploadObject);
             log.info("batchId: {} bank statement file complete: {}", batchId, percentage);
         }
+
+    }
+
+    @Override
+    public void updateStatus(String batchId, String valid) {
+        this.updateStatus(batchId, valid);
     }
 
 }

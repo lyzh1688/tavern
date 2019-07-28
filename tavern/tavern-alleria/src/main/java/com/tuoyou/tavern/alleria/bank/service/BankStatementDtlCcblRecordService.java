@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tuoyou.tavern.protocol.alleria.dto.BankStatementDtlDTO;
 import com.tuoyou.tavern.protocol.alleria.model.BankStatementDtlCcblRecord;
+import com.tuoyou.tavern.protocol.alleria.model.BankStatementDtlCcblRecordVO;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public interface BankStatementDtlCcblRecordService extends IService<BankStatementDtlCcblRecord> {
 
-    IPage<BankStatementDtlCcblRecord> getBankStatementDtlRecord(Page page, BankStatementDtlDTO bankStatementDtlDTO);
+    IPage<BankStatementDtlCcblRecordVO> getBankStatementDtlRecord(Page page, BankStatementDtlDTO bankStatementDtlDTO);
 
     List<BankStatementDtlCcblRecord> getRecvAccntIdDict(String batchId, String recvAccntId);
 }

@@ -15,6 +15,7 @@ public final class DateUtils {
 	static final Logger LOGGER = Logger.getLogger(DateUtils.class.getName());
 	public static final DateTimeFormatter DEFAULT_DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	public static final DateTimeFormatter FIX_DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm:ss");
+	public static final DateTimeFormatter SIMPLE_DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss");
 	public static final DateTimeFormatter DEFAULT_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
 	public static final DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	public static final DateTimeFormatter SIMPLE_8_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");

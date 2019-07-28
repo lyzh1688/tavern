@@ -48,7 +48,7 @@ public class StdInvoiceEndpoint {
         return new StdInvoiceRecordResponse(this.stdInvoiceRecordService.getStdInvoiceRecord(page, stdInvoiceRecord));
     }
 
-   /* *//*
+   /* *
      * 查询发票记录详情
      *
      * *//*
@@ -70,10 +70,10 @@ public class StdInvoiceEndpoint {
      * 改变发票状态
      *
      * */
-    @PutMapping("/valid/{fileId}/{valid}")
-    public TavernResponse updateValid(@PathVariable("fileId") String fileId,
+    @PutMapping("/valid/{batchId}/{valid}")
+    public TavernResponse updateValid(@PathVariable("batchId") String batchId,
                                       @PathVariable("valid") String valid) {
-        this.stdInvoiceRecordService.updateStatus(fileId, valid);
+        this.stdInvoiceRecordService.updateStatus(batchId, valid);
         return new TavernResponse();
     }
 
