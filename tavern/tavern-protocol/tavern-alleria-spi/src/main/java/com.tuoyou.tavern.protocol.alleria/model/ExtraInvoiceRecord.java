@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -20,7 +21,7 @@ public class ExtraInvoiceRecord extends Model<ExtraInvoiceRecord> {
 
     private String customId;
 
-    private LocalDateTime accountPeriod;
+    private LocalDate accountPeriod;
 
     private String invoiceType;
 
