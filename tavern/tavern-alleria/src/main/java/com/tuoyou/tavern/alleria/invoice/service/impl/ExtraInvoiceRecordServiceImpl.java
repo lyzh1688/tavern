@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tuoyou.tavern.alleria.invoice.dao.ExtraInvoiceRecordMapper;
 import com.tuoyou.tavern.alleria.invoice.service.ExtraInvoiceRecordService;
+import com.tuoyou.tavern.alleria.util.CommonUtils;
 import com.tuoyou.tavern.common.core.util.DateUtils;
 import com.tuoyou.tavern.protocol.alleria.dto.ExtraInvoiceDTO;
 import com.tuoyou.tavern.protocol.alleria.model.ExtraInvoiceRecord;
@@ -39,12 +40,6 @@ public class ExtraInvoiceRecordServiceImpl extends ServiceImpl<ExtraInvoiceRecor
                     extraInvoiceRecordVO.setItemCount(record.getItemCount() != null ? record.getItemCount().toString() : null);
                     return extraInvoiceRecordVO;
                 }).collect(Collectors.toList());
-        Page<ExtraInvoiceRecordVO> extraInvoiceRecordVOPage = new Page<>();
-        extraInvoiceRecordVOPage.setRecords(extraInvoiceRecordVOList);
-        extraInvoiceRecordVOPage.setCurrent(extraInvoiceRecordIPage.getCurrent());
-        extraInvoiceRecordVOPage.setSize(extraInvoiceRecordIPage.getSize());
-        extraInvoiceRecordVOPage.setCurrent(extraInvoiceRecordIPage.getCurrent());
-        extraInvoiceRecordVOPage.setTotal(extraInvoiceRecordIPage.getTotal());
-        return extraInvoiceRecordVOPage;
+        return CommonUtils.newIPage(extraInvoiceRecordIPage, extraInvoiceRecordVOList);
     }
 }

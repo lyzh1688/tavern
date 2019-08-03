@@ -13,7 +13,8 @@ import org.springframework.context.annotation.Configuration;
 @MapperScan({"com.tuoyou.tavern.alleria.invoice.dao",
             "com.tuoyou.tavern.alleria.common.dao",
             "com.tuoyou.tavern.alleria.bank.dao",
-            "com.tuoyou.tavern.alleria.salary.dao"
+            "com.tuoyou.tavern.alleria.salary.dao",
+            "com.tuoyou.tavern.alleria.zzs.dao"
 })
 public class MyBatisPlusConfiguration {
     /**

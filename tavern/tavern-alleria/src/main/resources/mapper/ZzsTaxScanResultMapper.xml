@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.alleria.zzs.dao.ZzsTaxScanResultMapper">
+    <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.alleria.model.ZzsTaxScanResult">
+        <id column="FILE_ID" jdbcType="VARCHAR" property="fileId"/>
+        <result column="FILE_NAME" jdbcType="VARCHAR" property="fileName"/>
+        <result column="IS_VALID" jdbcType="VARCHAR" property="isValid"/>
+        <result column="IS_VERIFIED" jdbcType="VARCHAR" property="isVerified"/>
+        <result column="IS_EMEND" jdbcType="VARCHAR" property="isEmend"/>
+        <result column="INVOICE_ID" jdbcType="VARCHAR" property="invoiceId"/>
+        <result column="INVOICE_CODE" jdbcType="VARCHAR" property="invoiceCode"/>
+        <result column="INVOICE_DATE" jdbcType="VARCHAR" property="invoiceDate"/>
+        <result column="CHECK_CODE" jdbcType="VARCHAR" property="checkCode"/>
+        <result column="TAX_FREE_AMOUNT" jdbcType="VARCHAR" property="taxFreeAmount"/>
+        <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="BATCH_ID" jdbcType="VARCHAR" property="batchId"/>
+        <result column="OPERATOR" jdbcType="VARCHAR" property="operator"/>
+        <result column="FAILED_REASON" jdbcType="VARCHAR" property="failedReason"/>
+        <result column="INVOICE_TYPE" jdbcType="VARCHAR" property="invoiceType"/>
+        <result column="SELLER_NAME" jdbcType="VARCHAR" property="sellerName"/>
+        <result column="SELLER_TAX_CODE" jdbcType="VARCHAR" property="sellerTaxCode"/>
+        <result column="SELLER_BANK" jdbcType="VARCHAR" property="sellerBank"/>
+        <result column="BUYER_NAME" jdbcType="VARCHAR" property="buyerName"/>
+        <result column="BUYER_ID" jdbcType="VARCHAR" property="buyerId"/>
+        <result column="BUYER_CONTACT" jdbcType="VARCHAR" property="buyerContact"/>
+        <result column="BUYER_BANK" jdbcType="VARCHAR" property="buyerBank"/>
+        <result column="INVOICE_MACHINE_NUM" jdbcType="VARCHAR" property="invoiceMachineNum"/>
+        <result column="IS_INVALID" jdbcType="VARCHAR" property="isInvalid"/>
+        <result column="TAX_AMOUNT" jdbcType="VARCHAR" property="taxAmount"/>
+        <result column="TOTAL_AMOUNT" jdbcType="VARCHAR" property="totalAmount"/>
+        <result column="QUANTITY" jdbcType="VARCHAR" property="quantity"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="VERIFY_TIMES" jdbcType="VARCHAR" property="verifyTimes"/>
+        <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime"/>
+        <result column="IMAGE_URL" jdbcType="VARCHAR" property="imageUrl"/>
+        <result column="GOODS_DATA" jdbcType="VARCHAR" property="goodsData"/>
+    </resultMap>
+
+    <sql id="scanSql">
+       FILE_ID, FILE_NAME, IS_VALID, IS_VERIFIED, IS_EMEND, INVOICE_ID, INVOICE_CODE,
+    INVOICE_DATE, CHECK_CODE, TAX_FREE_AMOUNT, UPDATE_DATE, BATCH_ID, OPERATOR, FAILED_REASON,
+    INVOICE_TYPE, SELLER_NAME, SELLER_TAX_CODE, SELLER_BANK, BUYER_NAME, BUYER_ID, BUYER_CONTACT,
+    BUYER_BANK, INVOICE_MACHINE_NUM, IS_INVALID, TAX_AMOUNT, TOTAL_AMOUNT, QUANTITY,
+    REMARK, VERIFY_TIMES, UPDATE_TIME,GOODS_DATA
+    </sql>
+
+    <select id="selectTaxScanResult" resultMap="BaseResultMap">
+        select
+        <include refid="scanSql"/>
+        from ALR_VALUE_ADDED_TAX_SCAN_RESULT
+        <where>
+            <if test="query.verify != null and query.verify != ''">
+                and IS_VERIFIED = #{query.verify}
+            </if>
+            <if test="query.emend != null and query.emend != ''">
+                and IS_EMEND = #{query.emend}
+            </if>
+            <if test="query.batchId != null and query.batchId != ''">
+                and BATCH_ID = #{query.batchId}
+            </if>
+            ORDER BY UPDATE_DATE DESC
+        </where>
+    </select>
+</mapper>
