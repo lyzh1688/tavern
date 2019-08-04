@@ -87,7 +87,7 @@ public class StdInvoiceRecordServiceImpl extends ServiceImpl<StdInvoiceRecordMap
             if (pattern.equals("xls")) {
                 (new ExcelReader(inputStream, ExcelTypeEnum.XLS, (Object) null, listener)).read(new Sheet(1, 1, InvoiceExcel.class));
             } else {
-                (new ExcelReader(inputStream, ExcelTypeEnum.XLSX, (Object) null, listener)).read(new Sheet(1, 1, InvoiceExcel.class));
+                (new ExcelReader(inputStream, (Object) null, listener)).read(new Sheet(1, 1, InvoiceExcel.class));
             }
             invoiceExcelList = listener.getDatas();
 

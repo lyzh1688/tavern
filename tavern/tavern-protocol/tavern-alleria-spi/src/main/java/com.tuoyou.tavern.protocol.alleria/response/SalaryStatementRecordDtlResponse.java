@@ -2,6 +2,7 @@ package com.tuoyou.tavern.protocol.alleria.response;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.tuoyou.tavern.protocol.alleria.model.SalaryStatementDtlRecord;
+import com.tuoyou.tavern.protocol.alleria.model.SalaryStatementDtlRecordVO;
 import com.tuoyou.tavern.protocol.alleria.model.SalaryStatementRecord;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import lombok.AllArgsConstructor;
@@ -16,5 +17,5 @@ import lombok.EqualsAndHashCode;
 @Data
 @AllArgsConstructor
 public class SalaryStatementRecordDtlResponse extends TavernResponse {
-    private IPage<SalaryStatementDtlRecord> data;
+    private IPage<SalaryStatementDtlRecordVO> data;
 }

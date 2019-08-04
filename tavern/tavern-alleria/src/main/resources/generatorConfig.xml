@@ -17,17 +17,15 @@
                         userId="root"
                         password="y2iaciej" />
 
-        <javaModelGenerator targetPackage="com.tuoyou.tavern.alleria.zzs.entity" targetProject="src/main/java" >
+        <javaModelGenerator targetPackage="com.tuoyou.tavern.alleria.salary.entity" targetProject="src/main/java" >
             <property name="trimStrings" value = "true"></property>
         </javaModelGenerator>
 
         <sqlMapGenerator targetPackage="mapper/" targetProject="src/main/resources" />
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.tuoyou.tavern.alleria.zzs.dao" targetProject="src/main/java" />
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.tuoyou.tavern.alleria.salary.dao" targetProject="src/main/java" />
 
-        <table tableName="ALR_VALUE_ADDED_TAX_SCAN_ITEMS_RESULT" domainObjectName="ZzsTaxScanItemsResult">
-        </table>
-        <table tableName="ALR_VALUE_ADDED_TAX_SCAN_RESULT" domainObjectName="ZzsTaxScanResult">
+        <table tableName="ALR_SALARY_STATEMENT_DTL_RECORD" domainObjectName="SalaryStatementDtlRecord">
         </table>
 
 

@@ -5,26 +5,25 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NonNull;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("ALR_SALARY_STATEMENT_RECORD")
 public class SalaryStatementRecord extends Model<SalaryStatementRecord> {
     private String batchId;
 
-    @NonNull
     @TableId
     private String fileId;
 
     private String fileName;
 
-    private Date accountPeriod;
+    private LocalDateTime accountPeriod;
 
     private String isValid;
 
-    private String updateDate;
+    private LocalDateTime updateDate;
 
     private String customId;
+
 }

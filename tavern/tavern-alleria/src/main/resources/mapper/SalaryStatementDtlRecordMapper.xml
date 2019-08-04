@@ -1,64 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tuoyou.tavern.alleria.salary.dao.SalaryStatementDtlRecordMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.alleria.model.SalaryStatementDtlRecord">
-    <id column="DETAIL_ID" jdbcType="VARCHAR" property="detailId" />
-    <result column="FILE_ID" jdbcType="VARCHAR" property="fileId" />
-    <result column="STAFF_TYPE" jdbcType="VARCHAR" property="staffType" />
-    <result column="STAFF_ID" jdbcType="VARCHAR" property="staffId" />
-    <result column="NEED_ENDOWMENT_INS" jdbcType="VARCHAR" property="needEndowmentIns" />
-    <result column="NEED_UNEMPLOY_INS" jdbcType="VARCHAR" property="needUnemployIns" />
-    <result column="NEED_MEDICAL_INS" jdbcType="VARCHAR" property="needMedicalIns" />
-    <result column="NEED_INJURY_INS" jdbcType="VARCHAR" property="needInjuryIns" />
-    <result column="NEED_BIRTH_INS" jdbcType="VARCHAR" property="needBirthIns" />
-    <result column="NEED_HABITATION_INS" jdbcType="VARCHAR" property="needHabitationIns" />
-    <result column="BASE_SALARY" jdbcType="DECIMAL" property="baseSalary" />
-    <result column="POSITION_VALUE" jdbcType="DECIMAL" property="positionValue" />
-    <result column="TRAVEL_ALLOWANCE" jdbcType="DECIMAL" property="travelAllowance" />
-  </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from ALR_SALARY_STATEMENT_DTL_RECORD
-    where DETAIL_ID = #{detailId,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.protocol.alleria.model.SalaryStatementDtlRecord">
-    insert into ALR_SALARY_STATEMENT_DTL_RECORD (DETAIL_ID, FILE_ID, STAFF_TYPE, 
-      STAFF_ID, NEED_ENDOWMENT_INS, NEED_UNEMPLOY_INS, 
-      NEED_MEDICAL_INS, NEED_INJURY_INS, NEED_BIRTH_INS, 
-      NEED_HABITATION_INS, BASE_SALARY, POSITION_VALUE, 
-      TRAVEL_ALLOWANCE)
-    values (#{detailId,jdbcType=VARCHAR}, #{fileId,jdbcType=VARCHAR}, #{staffType,jdbcType=VARCHAR}, 
-      #{staffId,jdbcType=VARCHAR}, #{needEndowmentIns,jdbcType=VARCHAR}, #{needUnemployIns,jdbcType=VARCHAR}, 
-      #{needMedicalIns,jdbcType=VARCHAR}, #{needInjuryIns,jdbcType=VARCHAR}, #{needBirthIns,jdbcType=VARCHAR}, 
-      #{needHabitationIns,jdbcType=VARCHAR}, #{baseSalary,jdbcType=DECIMAL}, #{positionValue,jdbcType=DECIMAL}, 
-      #{travelAllowance,jdbcType=DECIMAL})
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.protocol.alleria.model.SalaryStatementDtlRecord">
-    update ALR_SALARY_STATEMENT_DTL_RECORD
-    set FILE_ID = #{fileId,jdbcType=VARCHAR},
-      STAFF_TYPE = #{staffType,jdbcType=VARCHAR},
-      STAFF_ID = #{staffId,jdbcType=VARCHAR},
-      NEED_ENDOWMENT_INS = #{needEndowmentIns,jdbcType=VARCHAR},
-      NEED_UNEMPLOY_INS = #{needUnemployIns,jdbcType=VARCHAR},
-      NEED_MEDICAL_INS = #{needMedicalIns,jdbcType=VARCHAR},
-      NEED_INJURY_INS = #{needInjuryIns,jdbcType=VARCHAR},
-      NEED_BIRTH_INS = #{needBirthIns,jdbcType=VARCHAR},
-      NEED_HABITATION_INS = #{needHabitationIns,jdbcType=VARCHAR},
-      BASE_SALARY = #{baseSalary,jdbcType=DECIMAL},
-      POSITION_VALUE = #{positionValue,jdbcType=DECIMAL},
-      TRAVEL_ALLOWANCE = #{travelAllowance,jdbcType=DECIMAL}
-    where DETAIL_ID = #{detailId,jdbcType=VARCHAR}
-  </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select DETAIL_ID, FILE_ID, STAFF_TYPE, STAFF_ID, NEED_ENDOWMENT_INS, NEED_UNEMPLOY_INS, 
-    NEED_MEDICAL_INS, NEED_INJURY_INS, NEED_BIRTH_INS, NEED_HABITATION_INS, BASE_SALARY, 
-    POSITION_VALUE, TRAVEL_ALLOWANCE
-    from ALR_SALARY_STATEMENT_DTL_RECORD
-    where DETAIL_ID = #{detailId,jdbcType=VARCHAR}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select DETAIL_ID, FILE_ID, STAFF_TYPE, STAFF_ID, NEED_ENDOWMENT_INS, NEED_UNEMPLOY_INS, 
-    NEED_MEDICAL_INS, NEED_INJURY_INS, NEED_BIRTH_INS, NEED_HABITATION_INS, BASE_SALARY, 
-    POSITION_VALUE, TRAVEL_ALLOWANCE
-    from ALR_SALARY_STATEMENT_DTL_RECORD
-  </select>
+    <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.alleria.model.SalaryStatementDtlRecord">
+        <id column="DETAIL_ID" jdbcType="BIGINT" property="detailId"/>
+        <result column="FILE_ID" jdbcType="VARCHAR" property="fileId"/>
+        <result column="STAFF_TYPE" jdbcType="VARCHAR" property="staffType"/>
+        <result column="STAFF_ID" jdbcType="VARCHAR" property="staffId"/>
+        <result column="NEED_ENDOWMENT_INS" jdbcType="VARCHAR" property="needEndowmentIns"/>
+        <result column="NEED_UNEMPLOY_INS" jdbcType="VARCHAR" property="needUnemployIns"/>
+        <result column="NEED_MEDICAL_INS" jdbcType="VARCHAR" property="needMedicalIns"/>
+        <result column="NEED_INJURY_INS" jdbcType="VARCHAR" property="needInjuryIns"/>
+        <result column="NEED_BIRTH_INS" jdbcType="VARCHAR" property="needBirthIns"/>
+        <result column="NEED_HABITATION_INS" jdbcType="VARCHAR" property="needHabitationIns"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="HOUSEHOLD_TYPE" jdbcType="VARCHAR" property="householdType"/>
+        <result column="BASE_SALARY" jdbcType="DECIMAL" property="baseSalary"/>
+        <result column="POSITION_VALUE" jdbcType="DECIMAL" property="positionValue"/>
+        <result column="TRAVEL_ALLOWANCE" jdbcType="DECIMAL" property="travelAllowance"/>
+        <result column="BUSINESS_ALLOWANCE" jdbcType="DECIMAL" property="businessAllowance"/>
+        <result column="TELEPHONE_ALLOWANCE" jdbcType="DECIMAL" property="telephoneAllowance"/>
+        <result column="TAXI_ALLOWANCE" jdbcType="DECIMAL" property="taxiAllowance"/>
+        <result column="LUNCH_ALLOWANCE" jdbcType="DECIMAL" property="lunchAllowance"/>
+        <result column="AGE_ALLOWANCE" jdbcType="DECIMAL" property="ageAllowance"/>
+        <result column="OVERTIME_DAYS" jdbcType="DECIMAL" property="overtimeDays"/>
+        <result column="OVERTIME_PAY" jdbcType="DECIMAL" property="overtimePay"/>
+        <result column="BONUS" jdbcType="DECIMAL" property="bonus"/>
+        <result column="ABSENCE_DAYS" jdbcType="DECIMAL" property="absenceDays"/>
+        <result column="ATTENDANCE_DEDUCT" jdbcType="DECIMAL" property="attendanceDeduct"/>
+        <result column="TOTAL_WAGES" jdbcType="DECIMAL" property="totalWages"/>
+        <result column="ALLOWANCE_BASE" jdbcType="DECIMAL" property="allowanceBase"/>
+        <result column="ENDOWMENT_INS_PERS" jdbcType="DECIMAL" property="endowmentInsPers"/>
+        <result column="UNEMPLOY_INS_PERS" jdbcType="DECIMAL" property="unemployInsPers"/>
+        <result column="MEDICAL_INS_PERS" jdbcType="DECIMAL" property="medicalInsPers"/>
+        <result column="HABITATION_INS_PERS" jdbcType="DECIMAL" property="habitationInsPers"/>
+        <result column="ENDOWMENT_INS_COM" jdbcType="DECIMAL" property="endowmentInsCom"/>
+        <result column="UNEMPLOY_INS_COM" jdbcType="DECIMAL" property="unemployInsCom"/>
+        <result column="MEDICAL_INS_COM" jdbcType="DECIMAL" property="medicalInsCom"/>
+        <result column="INJURY_INS_COM" jdbcType="DECIMAL" property="injuryInsCom"/>
+        <result column="BIRTH_INS_COM" jdbcType="DECIMAL" property="birthInsCom"/>
+        <result column="HABITATION_INS_COM" jdbcType="DECIMAL" property="habitationInsCom"/>
+        <result column="INDIVIDUAL_INCOME_TAX" jdbcType="DECIMAL" property="individualIncomeTax"/>
+        <result column="NET_WAGES" jdbcType="DECIMAL" property="netWages"/>
+        <result column="BANK_CARD" jdbcType="VARCHAR" property="bankCard"/>
+    </resultMap>
+    <sql id="tSql">
+    t1.DETAIL_ID, t1.FILE_ID, t1.STAFF_TYPE, t1.STAFF_ID, t1.NEED_ENDOWMENT_INS, t1.NEED_UNEMPLOY_INS,
+    t1.NEED_MEDICAL_INS, t1.NEED_INJURY_INS, t1.NEED_BIRTH_INS, t1.NEED_HABITATION_INS, t1.HOUSEHOLD_TYPE,
+    t1.BASE_SALARY, t1.POSITION_VALUE, t1.TRAVEL_ALLOWANCE, t1.BUSINESS_ALLOWANCE, t1.TELEPHONE_ALLOWANCE,
+    t1.TAXI_ALLOWANCE,t1.LUNCH_ALLOWANCE, t1.AGE_ALLOWANCE, t1.OVERTIME_DAYS, t1.OVERTIME_PAY, t1.BONUS,
+    t1.ABSENCE_DAYS, t1.ATTENDANCE_DEDUCT, t1.TOTAL_WAGES, t1.ALLOWANCE_BASE, t1.ENDOWMENT_INS_PERS,
+    t1.UNEMPLOY_INS_PERS, t1.MEDICAL_INS_PERS,t1.HABITATION_INS_PERS, t1.ENDOWMENT_INS_COM, t1.UNEMPLOY_INS_COM,
+    t1.MEDICAL_INS_COM, t1.INJURY_INS_COM, t1.BIRTH_INS_COM, t1.HABITATION_INS_COM, t1.INDIVIDUAL_INCOME_TAX,
+    t1.NET_WAGES, t1.BANK_CARD,t1.NAME
+  </sql>
+    <select id="selectSalaryStatementDtlRecord" resultMap="BaseResultMap">
+        select
+        <include refid="tSql"/>
+        from ALR_SALARY_STATEMENT_DTL_RECORD t1,ALR_SALARY_STATEMENT_RECORD t2
+        <where>
+            t1.FILE_ID = t2.FILE_ID
+            and t2.IS_VALID = 1
+            <if test="query.batchId != null and query.batchId != ''">
+                and t2.BATCH_ID = #{query.batchId}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -5,9 +5,9 @@
     <result column="BATCH_ID" jdbcType="VARCHAR" property="batchId" />
     <result column="FILE_ID" jdbcType="VARCHAR" property="fileId" />
     <result column="FILE_NAME" jdbcType="VARCHAR" property="fileName" />
-    <result column="ACCOUNT_PERIOD" jdbcType="DATE" property="accountPeriod" />
+    <result column="ACCOUNT_PERIOD" jdbcType="TIMESTAMP" property="accountPeriod" />
     <result column="IS_VALID" jdbcType="VARCHAR" property="isValid" />
-    <result column="UPDATE_DATE" jdbcType="VARCHAR" property="updateDate" />
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
     <result column="CUSTOM_ID" jdbcType="VARCHAR" property="customId" />
   </resultMap>
 
@@ -15,8 +15,28 @@
     BATCH_ID, FILE_ID, FILE_NAME, ACCOUNT_PERIOD, IS_VALID, UPDATE_DATE, CUSTOM_ID
   </sql>
 
-  <select id="selectAll" resultMap="BaseResultMap">
-    select BATCH_ID, FILE_ID, FILE_NAME, ACCOUNT_PERIOD, IS_VALID, UPDATE_DATE, CUSTOM_ID
-    from ALR_SALARY_STATEMENT_RECORD
+  <update id="updateFileStatus" >
+    update ALR_SALARY_STATEMENT_RECORD
+    set IS_VALID = #{valid},
+    UPDATE_DATE = now()
+    where BATCH_ID = #{batchId}
+  </update>
+
+  <select id="selectSalaryStatementRecord" resultMap="BaseResultMap">
+
+    select
+    t1.BATCH_ID BATCH_ID,
+    t1.UPDATE_DATE UPDATE_DATE,
+    t2.ACCOUNT_PERIOD ACCOUNT_PERIOD,
+    t2.FILE_NAME FILE_NAME
+    from ALR_FILE_UPLOAD_RECORD t1,ALR_SALARY_STATEMENT_RECORD t2
+    <where>
+      t1.BATCH_ID = t2.BATCH_ID
+      and t1.IS_VALID = '1'
+      and t2.IS_VALID = '1'
+    </where>
+
+    GROUP BY t1.BATCH_ID,t2.FILE_NAME
+    ORDER BY t1.UPDATE_DATE desc
   </select>
 </mapper>

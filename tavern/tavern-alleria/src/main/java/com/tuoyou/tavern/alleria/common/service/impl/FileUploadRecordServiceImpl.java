@@ -16,6 +16,7 @@ import com.tuoyou.tavern.alleria.common.service.FileUploadRecordService;
 import com.tuoyou.tavern.protocol.alleria.model.FileUploadRecord;
 import com.tuoyou.tavern.protocol.alleria.model.FileUploadRecordVO;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
  * Code Monkey: 何彪 <br>
  * Dev Time: 2019/07/03 <br>
  */
+@Slf4j
 @Service
 @AllArgsConstructor
 public class FileUploadRecordServiceImpl extends ServiceImpl<FileUploadRecordMapper, FileUploadRecord> implements FileUploadRecordService {
@@ -101,6 +103,7 @@ public class FileUploadRecordServiceImpl extends ServiceImpl<FileUploadRecordMap
             fileUploadObject.put("status", FileUploadStatus.FINISHED);
             ttlContext.putValue(batchId, fileUploadObject);
         } catch (Exception e) {
+            log.error("FileUploadRecordServiceImpl-->uploadFile-->Error: {}",e.getMessage());
             if (fileUploadRecord != null) {
                 fileUploadRecord.setStatus("3");
                 this.baseMapper.updateById(fileUploadRecord);
