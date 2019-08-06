@@ -23,7 +23,7 @@ CREATE TABLE `CRM_BANK_INFO` (
   `BANK_ID` varchar(45) NOT NULL,
   `BANK_NAME` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`BANK_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='银行信息表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='银行信息表';
 
 -- ----------------------------
 -- Records of CRM_BANK_INFO
@@ -38,7 +38,7 @@ CREATE TABLE `CRM_CUSTOM_BANK_INFO` (
   `BANK_ID` varchar(45) NOT NULL COMMENT '银行代码',
   `UPDATE_DATE` date DEFAULT NULL,
   PRIMARY KEY (`CUSTOM_ID`,`BANK_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='客户银行信息表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客户银行信息表';
 
 -- ----------------------------
 -- Records of CRM_CUSTOM_BANK_INFO
@@ -58,7 +58,7 @@ CREATE TABLE `CRM_CUSTOM_BASIC_INFO` (
   `IS_VALID` varchar(1) DEFAULT NULL,
   `UPDATE_DATE` date DEFAULT NULL,
   PRIMARY KEY (`CUSTOM_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='客户基本信息表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客户基本信息表';
 
 -- ----------------------------
 -- Records of CRM_CUSTOM_BASIC_INFO
@@ -73,7 +73,7 @@ CREATE TABLE `CRM_CUSTOM_FINANCE_INFO` (
   `FINANCE_DISK_TYPE` varchar(45) DEFAULT NULL COMMENT '金税盘类型',
   `UPDATE_DATE` date DEFAULT NULL,
   PRIMARY KEY (`CUSTOM_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='客户财务信息表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客户财务信息表';
 
 -- ----------------------------
 -- Records of CRM_CUSTOM_FINANCE_INFO

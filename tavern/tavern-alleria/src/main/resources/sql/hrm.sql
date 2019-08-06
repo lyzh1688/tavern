@@ -25,7 +25,7 @@ CREATE TABLE `HRM_ROLE_AUTH` (
   `ITEM` varchar(45) NOT NULL,
   `ITEM_TYPE` varchar(45) NOT NULL COMMENT '1:MENU,2:BUTTON',
   PRIMARY KEY (`ROLE_ID`,`ITEM`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of HRM_ROLE_AUTH
@@ -40,7 +40,7 @@ CREATE TABLE `HRM_ROLE_INFO` (
   `ROLE_NAME` varchar(45) DEFAULT NULL,
   `PARENT_ROLE` varchar(45) DEFAULT NULL COMMENT '上级角色ID',
   PRIMARY KEY (`ROLE_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='角色信息表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色信息表';
 
 -- ----------------------------
 -- Records of HRM_ROLE_INFO
@@ -58,7 +58,7 @@ CREATE TABLE `HRM_USER_BASIC_INFO` (
   `IS_VALID` varchar(1) DEFAULT NULL,
   `UPDATE_DATE` date DEFAULT NULL,
   PRIMARY KEY (`USER_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of HRM_USER_BASIC_INFO
@@ -73,7 +73,7 @@ CREATE TABLE `HRM_USER_ROLE_REL` (
   `ROLE_ID` varchar(45) NOT NULL,
   `UPDATE_DATE` date DEFAULT NULL,
   PRIMARY KEY (`USER_ID`,`ROLE_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='用户角色关联表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户角色关联表';
 
 -- ----------------------------
 -- Records of HRM_USER_ROLE_REL

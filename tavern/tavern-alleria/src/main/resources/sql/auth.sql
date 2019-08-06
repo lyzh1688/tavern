@@ -24,7 +24,7 @@ CREATE TABLE `AUTH_MENU` (
   `MENU_URL` varchar(45) DEFAULT NULL,
   `MENU_NAME` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`MENU_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of AUTH_MENU
@@ -38,7 +38,7 @@ CREATE TABLE `AUTH_MENU_ROLE_REL` (
   `MENU_ID` varchar(45) NOT NULL,
   `ROLE_ID` varchar(45) NOT NULL,
   PRIMARY KEY (`MENU_ID`,`ROLE_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of AUTH_MENU_ROLE_REL
