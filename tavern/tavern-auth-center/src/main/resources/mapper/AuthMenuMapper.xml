@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.auth.dao.AuthMenuMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.auth.entity.AuthMenu">
+    <id column="MENU_ID" jdbcType="VARCHAR" property="menuId" />
+    <result column="MENU_URL" jdbcType="VARCHAR" property="menuUrl" />
+    <result column="MENU_NAME" jdbcType="VARCHAR" property="menuName" />
+    <result column="PARENT_ID" jdbcType="VARCHAR" property="parentId" />
+    <result column="PERMS" jdbcType="VARCHAR" property="perms" />
+    <result column="TYPE" jdbcType="INTEGER" property="type" />
+    <result column="ICON" jdbcType="VARCHAR" property="icon" />
+    <result column="ORDER_NUM" jdbcType="INTEGER" property="orderNum" />
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from AUTH_MENU
+    where MENU_ID = #{menuId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.auth.entity.AuthMenu">
+    insert into AUTH_MENU (MENU_ID, MENU_URL, MENU_NAME, 
+      PARENT_ID, PERMS, TYPE, 
+      ICON, ORDER_NUM, UPDATE_DATE
+      )
+    values (#{menuId,jdbcType=VARCHAR}, #{menuUrl,jdbcType=VARCHAR}, #{menuName,jdbcType=VARCHAR}, 
+      #{parentId,jdbcType=VARCHAR}, #{perms,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{icon,jdbcType=VARCHAR}, #{orderNum,jdbcType=INTEGER}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.auth.entity.AuthMenu">
+    update AUTH_MENU
+    set MENU_URL = #{menuUrl,jdbcType=VARCHAR},
+      MENU_NAME = #{menuName,jdbcType=VARCHAR},
+      PARENT_ID = #{parentId,jdbcType=VARCHAR},
+      PERMS = #{perms,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=INTEGER},
+      ICON = #{icon,jdbcType=VARCHAR},
+      ORDER_NUM = #{orderNum,jdbcType=INTEGER},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP}
+    where MENU_ID = #{menuId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select MENU_ID, MENU_URL, MENU_NAME, PARENT_ID, PERMS, TYPE, ICON, ORDER_NUM, UPDATE_DATE
+    from AUTH_MENU
+    where MENU_ID = #{menuId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select MENU_ID, MENU_URL, MENU_NAME, PARENT_ID, PERMS, TYPE, ICON, ORDER_NUM, UPDATE_DATE
+    from AUTH_MENU
+  </select>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.hrm.dao.HrmRoleAuthMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.hrm.entity.HrmRoleAuth">
+    <id column="ROLE_ID" jdbcType="VARCHAR" property="roleId" />
+    <id column="ITEM" jdbcType="VARCHAR" property="item" />
+    <result column="AUTH_TYPE" jdbcType="VARCHAR" property="authType" />
+    <result column="ITEM_TYPE" jdbcType="VARCHAR" property="itemType" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from HRM_ROLE_AUTH
+    where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+      and ITEM = #{item,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.hrm.entity.HrmRoleAuth">
+    insert into HRM_ROLE_AUTH (ROLE_ID, ITEM, AUTH_TYPE, 
+      ITEM_TYPE)
+    values (#{roleId,jdbcType=VARCHAR}, #{item,jdbcType=VARCHAR}, #{authType,jdbcType=VARCHAR}, 
+      #{itemType,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.hrm.entity.HrmRoleAuth">
+    update HRM_ROLE_AUTH
+    set AUTH_TYPE = #{authType,jdbcType=VARCHAR},
+      ITEM_TYPE = #{itemType,jdbcType=VARCHAR}
+    where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+      and ITEM = #{item,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select ROLE_ID, ITEM, AUTH_TYPE, ITEM_TYPE
+    from HRM_ROLE_AUTH
+    where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+      and ITEM = #{item,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ROLE_ID, ITEM, AUTH_TYPE, ITEM_TYPE
+    from HRM_ROLE_AUTH
+  </select>
+</mapper>

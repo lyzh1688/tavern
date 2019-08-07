@@ -3,13 +3,8 @@ package com.tuoyou.tavern.alleria.configuration;
 import java.io.Serializable;
 
 /**
- * 功能说明: <br>
- * 系统说明: <br>
- * 模块说明: <br>
- * 功能描述: <br>
- * <br>
- * 开发人员: Hebiao <br>
- * 开发时间: 2018/5/3<br>
+ * Code Monkey: 何彪 <br>
+ * Dev Time: 2019/07/02 <br>
  */
 public class BaseCache implements Serializable {
 

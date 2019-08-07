@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.hrm.dao.HrmRoleInfoMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.hrm.entity.HrmRoleInfo">
+    <id column="ROLE_ID" jdbcType="VARCHAR" property="roleId" />
+    <result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName" />
+    <result column="PARENT_ROLE" jdbcType="VARCHAR" property="parentRole" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from HRM_ROLE_INFO
+    where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.hrm.entity.HrmRoleInfo">
+    insert into HRM_ROLE_INFO (ROLE_ID, ROLE_NAME, PARENT_ROLE
+      )
+    values (#{roleId,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR}, #{parentRole,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.hrm.entity.HrmRoleInfo">
+    update HRM_ROLE_INFO
+    set ROLE_NAME = #{roleName,jdbcType=VARCHAR},
+      PARENT_ROLE = #{parentRole,jdbcType=VARCHAR}
+    where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select ROLE_ID, ROLE_NAME, PARENT_ROLE
+    from HRM_ROLE_INFO
+    where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ROLE_ID, ROLE_NAME, PARENT_ROLE
+    from HRM_ROLE_INFO
+  </select>
+</mapper>

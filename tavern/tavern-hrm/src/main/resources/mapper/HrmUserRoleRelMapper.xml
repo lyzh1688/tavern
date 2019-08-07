@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.hrm.dao.HrmUserRoleRelMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.hrm.entity.HrmUserRoleRel">
+    <id column="USER_ID" jdbcType="VARCHAR" property="userId" />
+    <id column="ROLE_ID" jdbcType="VARCHAR" property="roleId" />
+    <result column="UPDATE_DATE" jdbcType="DATE" property="updateDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from HRM_USER_ROLE_REL
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+      and ROLE_ID = #{roleId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.hrm.entity.HrmUserRoleRel">
+    insert into HRM_USER_ROLE_REL (USER_ID, ROLE_ID, UPDATE_DATE
+      )
+    values (#{userId,jdbcType=VARCHAR}, #{roleId,jdbcType=VARCHAR}, #{updateDate,jdbcType=DATE}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.hrm.entity.HrmUserRoleRel">
+    update HRM_USER_ROLE_REL
+    set UPDATE_DATE = #{updateDate,jdbcType=DATE}
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+      and ROLE_ID = #{roleId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select USER_ID, ROLE_ID, UPDATE_DATE
+    from HRM_USER_ROLE_REL
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+      and ROLE_ID = #{roleId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select USER_ID, ROLE_ID, UPDATE_DATE
+    from HRM_USER_ROLE_REL
+  </select>
+</mapper>

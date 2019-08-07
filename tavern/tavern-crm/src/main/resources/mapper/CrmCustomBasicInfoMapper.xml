@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.crm.dao.CrmCustomBasicInfoMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.CrmCustomBasicInfo">
+    <id column="CUSTOM_ID" jdbcType="VARCHAR" property="customId" />
+    <result column="CUSTOM_ACCNT" jdbcType="VARCHAR" property="customAccnt" />
+    <result column="CUSTOM_NAME" jdbcType="VARCHAR" property="customName" />
+    <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+    <result column="CONTACT_NAME" jdbcType="VARCHAR" property="contactName" />
+    <result column="CONTACK_TEL" jdbcType="VARCHAR" property="contackTel" />
+    <result column="IS_VALID" jdbcType="VARCHAR" property="isValid" />
+    <result column="UPDATE_DATE" jdbcType="DATE" property="updateDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from CRM_CUSTOM_BASIC_INFO
+    where CUSTOM_ID = #{customId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.CrmCustomBasicInfo">
+    insert into CRM_CUSTOM_BASIC_INFO (CUSTOM_ID, CUSTOM_ACCNT, CUSTOM_NAME, 
+      PASSWORD, CONTACT_NAME, CONTACK_TEL, 
+      IS_VALID, UPDATE_DATE)
+    values (#{customId,jdbcType=VARCHAR}, #{customAccnt,jdbcType=VARCHAR}, #{customName,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{contactName,jdbcType=VARCHAR}, #{contackTel,jdbcType=VARCHAR}, 
+      #{isValid,jdbcType=VARCHAR}, #{updateDate,jdbcType=DATE})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.entity.CrmCustomBasicInfo">
+    update CRM_CUSTOM_BASIC_INFO
+    set CUSTOM_ACCNT = #{customAccnt,jdbcType=VARCHAR},
+      CUSTOM_NAME = #{customName,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      CONTACT_NAME = #{contactName,jdbcType=VARCHAR},
+      CONTACK_TEL = #{contackTel,jdbcType=VARCHAR},
+      IS_VALID = #{isValid,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=DATE}
+    where CUSTOM_ID = #{customId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select CUSTOM_ID, CUSTOM_ACCNT, CUSTOM_NAME, PASSWORD, CONTACT_NAME, CONTACK_TEL, 
+    IS_VALID, UPDATE_DATE
+    from CRM_CUSTOM_BASIC_INFO
+    where CUSTOM_ID = #{customId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select CUSTOM_ID, CUSTOM_ACCNT, CUSTOM_NAME, PASSWORD, CONTACT_NAME, CONTACK_TEL, 
+    IS_VALID, UPDATE_DATE
+    from CRM_CUSTOM_BASIC_INFO
+  </select>
+</mapper>

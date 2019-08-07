@@ -1,4 +1,4 @@
-package com.tuoyou.tavern.crm.endpoint;
+package com.tuoyou.tavern.hrm.endpoint;
 
 import com.tuoyou.tavern.protocol.common.RetCode;
 import com.tuoyou.tavern.protocol.hrm.model.NewStaffInfo;

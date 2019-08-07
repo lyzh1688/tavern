@@ -13,25 +13,21 @@
         </commentGenerator>
 
        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://119.3.19.171:3306/hrm?characterEncoding=UTF-8"
+                        connectionURL="jdbc:mysql://119.3.19.171:3306/auth?characterEncoding=UTF-8"
                         userId="root"
                         password="y2iaciej" />
 
-        <javaModelGenerator targetPackage="com.tuoyou.tavern.hrm.entity" targetProject="src/main/java" >
+        <javaModelGenerator targetPackage="com.tuoyou.tavern.auth.entity" targetProject="src/main/java" >
             <property name="trimStrings" value = "true"></property>
         </javaModelGenerator>
 
         <sqlMapGenerator targetPackage="mapper/" targetProject="src/main/resources" />
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.tuoyou.tavern.hrm.dao" targetProject="src/main/java" />
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.tuoyou.tavern.auth.dao" targetProject="src/main/java" />
 
-        <table tableName="HRM_ROLE_AUTH" domainObjectName="HrmRoleAuth">
+        <table tableName="AUTH_MENU" domainObjectName="AuthMenu">
         </table>
-        <table tableName="HRM_ROLE_INFO" domainObjectName="HrmRoleInfo">
-        </table>
-        <table tableName="HRM_USER_BASIC_INFO" domainObjectName="HrmUserBasicInfo">
-        </table>
-        <table tableName="HRM_USER_ROLE_REL" domainObjectName="HrmUserRoleRel">
+        <table tableName="AUTH_MENU_ROLE_REL" domainObjectName="AuthMenuRoleRel">
         </table>
 
 
