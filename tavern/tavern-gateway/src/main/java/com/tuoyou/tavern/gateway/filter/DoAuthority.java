@@ -70,6 +70,7 @@ public class DoAuthority extends ZuulFilter {
                     ctx.set(ContextDict.isLoginSuccess, true);
                     ctx.addZuulRequestHeader(TavernRequestAuthFields.USER_ACCNT,claims.get(AuthTokenFactor.Factor.USER_ACCNT,String.class));
                     ctx.addZuulRequestHeader(TavernRequestAuthFields.USER_TYPE,claims.get(AuthTokenFactor.Factor.USER_TYPE,String.class));
+                    ctx.addZuulRequestHeader(TavernRequestAuthFields.ROLE_ID,claims.get(AuthTokenFactor.Factor.ROLE_ID,String.class));
                 }
             } catch (Exception ignore) {
                 ctx.setSendZuulResponse(false);

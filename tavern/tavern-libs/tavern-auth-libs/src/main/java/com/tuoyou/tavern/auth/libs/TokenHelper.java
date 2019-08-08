@@ -17,6 +17,7 @@ public class TokenHelper {
                 .setSubject(tokenFactor.getUserAccnt())
                 .claim(AuthTokenFactor.Factor.USER_ACCNT, tokenFactor.getUserAccnt())
                 .claim(AuthTokenFactor.Factor.USER_TYPE, tokenFactor.getUserType())
+                .claim(AuthTokenFactor.Factor.ROLE_ID, tokenFactor.getRoleId())
                 .setIssuedAt(Date.from(now))
                 .setIssuer("TUOYOU")
                 .setExpiration(Date.from(now.plusSeconds(config.getExpiration())))

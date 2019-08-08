@@ -6,4 +6,5 @@ package com.tuoyou.tavern.protocol.common;
 public class TavernRequestAuthFields {
     public static final String USER_ACCNT = "X-USER-ACCNT";
     public static final String USER_TYPE = "X-USER-TYPE";
+    public static final String ROLE_ID = "X-ROLE_ID";
 }
