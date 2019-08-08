@@ -1,16 +1,7 @@
-package com.tuoyou.tavern.hrm.dao;
+package com.tuoyou.tavern.crm.dao;
 
-import com.tuoyou.tavern.hrm.entity.HrmRoleInfo;
-import java.util.List;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.tuoyou.tavern.protocol.hrm.model.HrmRoleInfo;
 
-public interface HrmRoleInfoMapper {
-    int deleteByPrimaryKey(String roleId);
-
-    int insert(HrmRoleInfo record);
-
-    HrmRoleInfo selectByPrimaryKey(String roleId);
-
-    List<HrmRoleInfo> selectAll();
-
-    int updateByPrimaryKey(HrmRoleInfo record);
+public interface HrmRoleInfoMapper extends BaseMapper<HrmRoleInfo> {
 }

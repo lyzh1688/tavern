@@ -1,16 +1,11 @@
-package com.tuoyou.tavern.hrm.dao;
+package com.tuoyou.tavern.crm.dao;
 
-import com.tuoyou.tavern.hrm.entity.HrmUserBasicInfo;
-import java.util.List;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.tuoyou.tavern.protocol.hrm.model.HrmUserBasicInfo;
+import com.tuoyou.tavern.protocol.hrm.model.StaffBasicInfo;
+import org.apache.ibatis.annotations.Param;
 
-public interface HrmUserBasicInfoMapper {
-    int deleteByPrimaryKey(String userId);
+public interface HrmUserBasicInfoMapper extends BaseMapper<HrmUserBasicInfo> {
 
-    int insert(HrmUserBasicInfo record);
-
-    HrmUserBasicInfo selectByPrimaryKey(String userId);
-
-    List<HrmUserBasicInfo> selectAll();
-
-    int updateByPrimaryKey(HrmUserBasicInfo record);
+    StaffBasicInfo selectStaffBasicInfo(@Param("accnt") String accnt, @Param("password") String password);
 }

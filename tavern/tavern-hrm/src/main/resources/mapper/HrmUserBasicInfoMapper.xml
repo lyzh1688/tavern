@@ -1,42 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tuoyou.tavern.hrm.dao.HrmUserBasicInfoMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.hrm.entity.HrmUserBasicInfo">
-    <id column="USER_ID" jdbcType="VARCHAR" property="userId" />
-    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
-    <result column="USER_ACCNT" jdbcType="VARCHAR" property="userAccnt" />
-    <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
-    <result column="IS_VALID" jdbcType="VARCHAR" property="isValid" />
-    <result column="UPDATE_DATE" jdbcType="DATE" property="updateDate" />
-  </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from HRM_USER_BASIC_INFO
-    where USER_ID = #{userId,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.hrm.entity.HrmUserBasicInfo">
-    insert into HRM_USER_BASIC_INFO (USER_ID, USER_NAME, USER_ACCNT, 
-      PASSWORD, IS_VALID, UPDATE_DATE
-      )
-    values (#{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{userAccnt,jdbcType=VARCHAR}, 
-      #{password,jdbcType=VARCHAR}, #{isValid,jdbcType=VARCHAR}, #{updateDate,jdbcType=DATE}
-      )
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.hrm.entity.HrmUserBasicInfo">
-    update HRM_USER_BASIC_INFO
-    set USER_NAME = #{userName,jdbcType=VARCHAR},
-      USER_ACCNT = #{userAccnt,jdbcType=VARCHAR},
-      PASSWORD = #{password,jdbcType=VARCHAR},
-      IS_VALID = #{isValid,jdbcType=VARCHAR},
-      UPDATE_DATE = #{updateDate,jdbcType=DATE}
-    where USER_ID = #{userId,jdbcType=VARCHAR}
-  </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select USER_ID, USER_NAME, USER_ACCNT, PASSWORD, IS_VALID, UPDATE_DATE
-    from HRM_USER_BASIC_INFO
-    where USER_ID = #{userId,jdbcType=VARCHAR}
+<mapper namespace="com.tuoyou.tavern.crm.dao.HrmUserBasicInfoMapper">
+    <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.hrm.model.HrmUserBasicInfo">
+        <id column="USER_ID" jdbcType="VARCHAR" property="userId"/>
+        <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+        <result column="USER_ACCNT" jdbcType="VARCHAR" property="userAccnt"/>
+        <result column="PASSWORD" jdbcType="VARCHAR" property="password"/>
+        <result column="IS_VALID" jdbcType="VARCHAR" property="isValid"/>
+        <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate"/>
+    </resultMap>
+    <resultMap id="BasicInfoMap" type="com.tuoyou.tavern.protocol.hrm.model.StaffBasicInfo">
+        <result column="USER_ID" jdbcType="VARCHAR" property="userId"/>
+        <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+        <result column="USER_ACCNT" jdbcType="VARCHAR" property="userAccnt"/>
+        <result column="PASSWORD" jdbcType="VARCHAR" property="password"/>
+        <collection property="roleList" ofType="string">
+            <result column="ROLE_ID" property="roleId"></result>
+        </collection>
+    </resultMap>
+    <sql id="all">
+     USER_ID, USER_NAME, USER_ACCNT, PASSWORD, IS_VALID, UPDATE_DATE
+  </sql>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="all"/>
+        from HRM_USER_BASIC_INFO
+    </select>
+
+    <select id="selectStaffBasicInfo">
+    select T1.USER_ID,T1.USER_ACCNT,T1.USER_NAME,T3.ROLE_ID from HRM_USER_BASIC_INFO T1,HRM_USER_ROLE_REL T2,HRM_ROLE_INFO T3
+    WHERE T1.USER_ID = T2.USER_ID
+    AND T2.ROLE_ID = T3.ROLE_ID
+    and t1.USER_ACCNT = #{userId}
+    and t1.PASSWORD = #{password}
   </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select USER_ID, USER_NAME, USER_ACCNT, PASSWORD, IS_VALID, UPDATE_DATE
-    from HRM_USER_BASIC_INFO
-  </select>
+
 </mapper>

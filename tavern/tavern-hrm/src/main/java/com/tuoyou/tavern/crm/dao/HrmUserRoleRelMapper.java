@@ -1,17 +1,10 @@
-package com.tuoyou.tavern.hrm.dao;
+package com.tuoyou.tavern.crm.dao;
 
-import com.tuoyou.tavern.hrm.entity.HrmUserRoleRel;
-import java.util.List;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.tuoyou.tavern.protocol.hrm.model.HrmUserRoleRel;
 import org.apache.ibatis.annotations.Param;
 
-public interface HrmUserRoleRelMapper {
-    int deleteByPrimaryKey(@Param("userId") String userId, @Param("roleId") String roleId);
+import java.util.List;
 
-    int insert(HrmUserRoleRel record);
-
-    HrmUserRoleRel selectByPrimaryKey(@Param("userId") String userId, @Param("roleId") String roleId);
-
-    List<HrmUserRoleRel> selectAll();
-
-    int updateByPrimaryKey(HrmUserRoleRel record);
+public interface HrmUserRoleRelMapper extends BaseMapper<HrmUserRoleRel> {
 }

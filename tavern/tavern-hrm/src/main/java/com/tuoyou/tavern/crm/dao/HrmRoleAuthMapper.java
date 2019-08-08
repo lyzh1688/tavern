@@ -1,17 +1,7 @@
-package com.tuoyou.tavern.hrm.dao;
+package com.tuoyou.tavern.crm.dao;
 
-import com.tuoyou.tavern.hrm.entity.HrmRoleAuth;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.tuoyou.tavern.protocol.hrm.model.HrmRoleAuth;
 
-public interface HrmRoleAuthMapper {
-    int deleteByPrimaryKey(@Param("roleId") String roleId, @Param("item") String item);
-
-    int insert(HrmRoleAuth record);
-
-    HrmRoleAuth selectByPrimaryKey(@Param("roleId") String roleId, @Param("item") String item);
-
-    List<HrmRoleAuth> selectAll();
-
-    int updateByPrimaryKey(HrmRoleAuth record);
+public interface HrmRoleAuthMapper extends BaseMapper<HrmRoleAuth> {
 }
