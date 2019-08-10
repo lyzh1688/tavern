@@ -14,4 +14,7 @@
         <include refid="all"/>
         from HRM_USER_ROLE_REL
     </select>
+    <delete id="deleteByUserId">
+        delete from HRM_USER_ROLE_REL where USER_ID = #{userId}
+    </delete>
 </mapper>

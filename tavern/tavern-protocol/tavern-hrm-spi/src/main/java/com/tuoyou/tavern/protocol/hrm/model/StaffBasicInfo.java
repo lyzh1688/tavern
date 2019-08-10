@@ -10,9 +10,13 @@ import java.util.List;
  */
 @Data
 public class StaffBasicInfo {
-    String userId;
-    String userAccnt;
-    String userName;
-    List<String> roleList = new ArrayList<>();
+    private String userId;
+    private String userAccnt;
+    private String userName;
+    private String password;
+    private String salt;
+    private String roleNames;
+    private String updateDate;
+    private List<HrmUserRoleRel> roleList = new ArrayList<>();
 
 }

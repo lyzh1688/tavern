@@ -25,6 +25,11 @@
             <artifactId>tavern-hrm-spi</artifactId>
             <version>${tavern.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.tuoyou.tavern</groupId>
+            <artifactId>tavern-auth-libs</artifactId>
+            <version>${tavern.version}</version>
+        </dependency>
         <!--mybatis-->
         <dependency>
             <groupId>com.baomidou</groupId>

@@ -7,4 +7,5 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface HrmUserRoleRelMapper extends BaseMapper<HrmUserRoleRel> {
+    int deleteByUserId(String userId);
 }

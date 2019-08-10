@@ -6,6 +6,7 @@
         <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
         <result column="USER_ACCNT" jdbcType="VARCHAR" property="userAccnt"/>
         <result column="PASSWORD" jdbcType="VARCHAR" property="password"/>
+        <result column="SALT" jdbcType="VARCHAR" property="salt"/>
         <result column="IS_VALID" jdbcType="VARCHAR" property="isValid"/>
         <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate"/>
     </resultMap>
@@ -13,13 +14,16 @@
         <result column="USER_ID" jdbcType="VARCHAR" property="userId"/>
         <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
         <result column="USER_ACCNT" jdbcType="VARCHAR" property="userAccnt"/>
+        <result column="SALT" jdbcType="VARCHAR" property="salt"/>
         <result column="PASSWORD" jdbcType="VARCHAR" property="password"/>
+        <result column="UPDATE_DATE" jdbcType="VARCHAR" property="updateDate"/>
         <collection property="roleList" ofType="string">
+            <result column="USER_ID_REL" property="userId"></result>
             <result column="ROLE_ID" property="roleId"></result>
         </collection>
     </resultMap>
     <sql id="all">
-     USER_ID, USER_NAME, USER_ACCNT, PASSWORD, IS_VALID, UPDATE_DATE
+     USER_ID, USER_NAME, USER_ACCNT, PASSWORD,SALT, IS_VALID, UPDATE_DATE
   </sql>
     <select id="selectAll" resultMap="BaseResultMap">
         select
@@ -27,12 +31,24 @@
         from HRM_USER_BASIC_INFO
     </select>
 
-    <select id="selectStaffBasicInfo">
-    select T1.USER_ID,T1.USER_ACCNT,T1.USER_NAME,T3.ROLE_ID from HRM_USER_BASIC_INFO T1,HRM_USER_ROLE_REL T2,HRM_ROLE_INFO T3
+    <select id="selectStaffBasicInfo" resultMap="BasicInfoMap">
+    select T1.USER_ID,T1.USER_ACCNT,T1.USER_NAME,T3.ROLE_ID,T2.USER_ID USER_ID_REL from HRM_USER_BASIC_INFO T1,HRM_USER_ROLE_REL T2,HRM_ROLE_INFO T3
     WHERE T1.USER_ID = T2.USER_ID
     AND T2.ROLE_ID = T3.ROLE_ID
     and t1.USER_ACCNT = #{userId}
     and t1.PASSWORD = #{password}
+    and t1.IS_VALID = "1"
   </select>
+    <select id="selectStaffPage" resultMap="BasicInfoMap">
+        select T1.USER_ID,T1.USER_ACCNT,T1.USER_NAME,T1.PASSWORD,DATE_FORMAT(T1.UPDATE_DATE,'%Y-%m-%d %H:%i:%s') UPDATE_DATE,
+        T3.ROLE_ID,T2.USER_ID USER_ID_REL from HRM_USER_BASIC_INFO
+        T1,HRM_USER_ROLE_REL T2,HRM_ROLE_INFO T3
+        WHERE T1.USER_ID = T2.USER_ID
+        AND T2.ROLE_ID = T3.ROLE_ID
+        <if test="query.userName != null and query.userName != ''">
+            T1.USER_NAME like concat("%",#{query.userName},"%")
+        </if>
+        and t1.IS_VALID = "1"
+    </select>
 
 </mapper>

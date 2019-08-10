@@ -1,50 +1,75 @@
 package com.tuoyou.tavern.crm.endpoint;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tuoyou.tavern.auth.libs.utils.PwdUtils;
 import com.tuoyou.tavern.crm.service.HrmUserBasicInfoService;
 import com.tuoyou.tavern.protocol.common.RetCode;
-import com.tuoyou.tavern.protocol.hrm.model.NewStaffInfo;
-import com.tuoyou.tavern.protocol.hrm.response.NewStaffResponse;
+import com.tuoyou.tavern.protocol.common.TavernResponse;
+import com.tuoyou.tavern.protocol.hrm.constants.HrmUserConstant;
+import com.tuoyou.tavern.protocol.hrm.dto.StaffInfoDTO;
+import com.tuoyou.tavern.protocol.hrm.model.HrmUserBasicInfo;
 import com.tuoyou.tavern.protocol.hrm.model.StaffBasicInfo;
+import com.tuoyou.tavern.protocol.hrm.response.StaffInfoPageResponse;
 import com.tuoyou.tavern.protocol.hrm.response.StaffInfoResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * Created by 刘悦之 on 2019/6/30.
  */
 @RestController
 @AllArgsConstructor
+@RequestMapping("/hrm")
 public class StaffEndpoint {
     private HrmUserBasicInfoService hrmUserBasicInfoService;
-
 
     /*
      * 创建用户
      * */
-    @RequestMapping(value = "/hrm/staff", method = RequestMethod.POST)
-    public NewStaffResponse createStaff(@RequestBody StaffBasicInfo staffBasicInfo) {
-        NewStaffInfo newStaffInfo = new NewStaffInfo();
-        BeanUtils.copyProperties(staffBasicInfo, newStaffInfo);
-        newStaffInfo.setDefaultPassword(UUID.randomUUID().toString());
-        NewStaffResponse newStaffResponse = new NewStaffResponse();
-        newStaffResponse.setRetCode(RetCode.SUCCESS);
-        newStaffResponse.setStaffInfo(newStaffInfo);
-        return newStaffResponse;
+    @PostMapping(value = "/staff")
+    public TavernResponse createStaff(@RequestBody StaffBasicInfo staffBasicInfo) {
+        HrmUserBasicInfo hrmUserBasicInfo = this.hrmUserBasicInfoService.getById(staffBasicInfo.getUserId());
+        if (hrmUserBasicInfo != null) {
+            //修改
+            if (staffBasicInfo.getUserName().equals(HrmUserConstant.ADMIN)) {
+                return new TavernResponse(RetCode.SYS_ERROR, "系统管理员不允许修改");
+            }
+        }
+        if (staffBasicInfo.getPassword() != null) {
+            String salt = PwdUtils.getSalt();
+            if (hrmUserBasicInfo == null) {
+                // 新增用户
+                HrmUserBasicInfo newInfo = this.hrmUserBasicInfoService.getOne(Wrappers.<HrmUserBasicInfo>query().lambda()
+                        .eq(HrmUserBasicInfo::getUserAccnt, staffBasicInfo.getUserAccnt()));
+                if (newInfo != null) {
+                    return new TavernResponse(RetCode.SYS_ERROR, "用户名已存在");
+                }
+                String password = PwdUtils.encode(hrmUserBasicInfo.getPassword(), salt);
+                staffBasicInfo.setSalt(salt);
+                staffBasicInfo.setPassword(password);
+            } else {
+                // 修改用户, 且修改了密码
+                if (!staffBasicInfo.getPassword().equals(hrmUserBasicInfo.getPassword())) {
+                    String password = PwdUtils.encode(staffBasicInfo.getPassword(), salt);
+                    staffBasicInfo.setSalt(salt);
+                    staffBasicInfo.setPassword(password);
+                }
+            }
+        }
+        this.hrmUserBasicInfoService.saveStaffBasicInfo(staffBasicInfo);
+        return new TavernResponse();
     }
 
     /*
      * 查询用户基本信息
      * */
     //RESOURCE-PATH:/hrm/staff?accnt=${accnt}&password=${password}
-    @RequestMapping(value = "/hrm/staff", method = RequestMethod.GET, params = {"accnt", "password"})
-    public StaffInfoResponse queryStaffBasicInfo(String accnt, String password) {
+    @GetMapping(value = "/staff")
+    public StaffInfoResponse queryStaffBasicInfo(@PathVariable("accnt") String accnt, @PathVariable("password") String password) {
         StaffBasicInfo staffBasicInfo = this.hrmUserBasicInfoService.queryStaffBasicInfo(accnt, password);
         StaffInfoResponse staffInfoResponse = new StaffInfoResponse();
         if (Objects.isNull(staffBasicInfo)) {
@@ -55,5 +80,14 @@ public class StaffEndpoint {
             staffInfoResponse.setData(staffBasicInfo);
             return staffInfoResponse;
         }
+    }
+
+    /*
+     * 查询用户
+     *
+     * */
+    @GetMapping(value = "/page")
+    public StaffInfoPageResponse queryStaffInfo(Page page, StaffInfoDTO staffInfoDTO) {
+        return new StaffInfoPageResponse(this.hrmUserBasicInfoService.page(page, staffInfoDTO));
     }
 }

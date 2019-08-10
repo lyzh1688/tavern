@@ -1,8 +1,8 @@
 package com.tuoyou.tavern.protocol.hrm.spi;
 
 import com.tuoyou.tavern.protocol.common.annotation.PathParam;
-import com.tuoyou.tavern.protocol.hrm.response.NewStaffResponse;
 import com.tuoyou.tavern.protocol.hrm.model.StaffBasicInfo;
+import com.tuoyou.tavern.protocol.hrm.response.NewStaffResponse;
 import com.tuoyou.tavern.protocol.hrm.response.StaffInfoResponse;
 
 /**
