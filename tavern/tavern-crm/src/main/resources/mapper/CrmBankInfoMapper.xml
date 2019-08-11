@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tuoyou.tavern.crm.dao.CrmBankInfoMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.CrmBankInfo">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.crm.model.CrmBankInfo">
     <id column="BANK_ID" jdbcType="VARCHAR" property="bankId" />
     <result column="BANK_NAME" jdbcType="VARCHAR" property="bankName" />
   </resultMap>
@@ -9,11 +9,11 @@
     delete from CRM_BANK_INFO
     where BANK_ID = #{bankId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.CrmBankInfo">
+  <insert id="insert" parameterType="com.tuoyou.tavern.protocol.crm.model.CrmBankInfo">
     insert into CRM_BANK_INFO (BANK_ID, BANK_NAME)
     values (#{bankId,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.entity.CrmBankInfo">
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.protocol.crm.model.CrmBankInfo">
     update CRM_BANK_INFO
     set BANK_NAME = #{bankName,jdbcType=VARCHAR}
     where BANK_ID = #{bankId,jdbcType=VARCHAR}

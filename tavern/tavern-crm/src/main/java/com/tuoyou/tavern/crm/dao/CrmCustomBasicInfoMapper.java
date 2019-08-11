@@ -1,16 +1,16 @@
 package com.tuoyou.tavern.crm.dao;
 
-import com.tuoyou.tavern.crm.entity.CrmCustomBasicInfo;
-import java.util.List;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tuoyou.tavern.protocol.crm.dto.CustomQueryDTO;
+import com.tuoyou.tavern.protocol.crm.model.CrmCustomBasicInfo;
+import com.tuoyou.tavern.protocol.crm.model.CustomBasicInfoVO;
+import org.apache.ibatis.annotations.Param;
 
-public interface CrmCustomBasicInfoMapper {
-    int deleteByPrimaryKey(String customId);
+public interface CrmCustomBasicInfoMapper extends BaseMapper<CrmCustomBasicInfo> {
 
-    int insert(CrmCustomBasicInfo record);
+    IPage<CustomBasicInfoVO> selectBasicInfoPage(Page page, @Param("query") CustomQueryDTO customQueryDTO);
 
-    CrmCustomBasicInfo selectByPrimaryKey(String customId);
-
-    List<CrmCustomBasicInfo> selectAll();
-
-    int updateByPrimaryKey(CrmCustomBasicInfo record);
+    CustomBasicInfoVO selectBasicInfo(@Param("accnt") String accnt, @Param("password") String password);
 }

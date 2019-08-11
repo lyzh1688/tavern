@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tuoyou.tavern.crm.dao.CrmCustomBankInfoMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.CrmCustomBankInfo">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.crm.model.CrmCustomBankInfo">
     <id column="CUSTOM_ID" jdbcType="VARCHAR" property="customId" />
     <id column="BANK_ID" jdbcType="VARCHAR" property="bankId" />
     <result column="UPDATE_DATE" jdbcType="DATE" property="updateDate" />
@@ -11,13 +11,13 @@
     where CUSTOM_ID = #{customId,jdbcType=VARCHAR}
       and BANK_ID = #{bankId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.CrmCustomBankInfo">
+  <insert id="insert" parameterType="com.tuoyou.tavern.protocol.crm.model.CrmCustomBankInfo">
     insert into CRM_CUSTOM_BANK_INFO (CUSTOM_ID, BANK_ID, UPDATE_DATE
       )
     values (#{customId,jdbcType=VARCHAR}, #{bankId,jdbcType=VARCHAR}, #{updateDate,jdbcType=DATE}
       )
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.entity.CrmCustomBankInfo">
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.protocol.crm.model.CrmCustomBankInfo">
     update CRM_CUSTOM_BANK_INFO
     set UPDATE_DATE = #{updateDate,jdbcType=DATE}
     where CUSTOM_ID = #{customId,jdbcType=VARCHAR}

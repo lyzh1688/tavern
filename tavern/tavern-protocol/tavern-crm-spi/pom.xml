@@ -10,6 +10,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>tavern-crm-spi</artifactId>
-
+    <dependencies>
+        <dependency>
+            <groupId>com.tuoyou.tavern</groupId>
+            <artifactId>tavern-protocol-common</artifactId>
+            <version>${tavern.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>

@@ -37,7 +37,7 @@
     AND T2.ROLE_ID = T3.ROLE_ID
     and t1.USER_ACCNT = #{userId}
     and t1.PASSWORD = #{password}
-    and t1.IS_VALID = "1"
+    and t1.IS_VALID = '1'
   </select>
     <select id="selectStaffPage" resultMap="BasicInfoMap">
         select T1.USER_ID,T1.USER_ACCNT,T1.USER_NAME,T1.PASSWORD,DATE_FORMAT(T1.UPDATE_DATE,'%Y-%m-%d %H:%i:%s') UPDATE_DATE,
@@ -48,7 +48,7 @@
         <if test="query.userName != null and query.userName != ''">
             T1.USER_NAME like concat("%",#{query.userName},"%")
         </if>
-        and t1.IS_VALID = "1"
+        and t1.IS_VALID = '1'
     </select>
 
 </mapper>

@@ -16,8 +16,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by 刘悦之 on 2019/6/30.
@@ -105,7 +107,16 @@ public class StaffEndpoint {
             }
         }
         if (!userList.isEmpty()) {
-            this.hrmUserBasicInfoService.removeByIds(userList);
+            List<HrmUserBasicInfo> hrmUserBasicInfoList = userList
+                    .stream()
+                    .map(info -> {
+                        HrmUserBasicInfo tmpInfo = new HrmUserBasicInfo();
+                        tmpInfo.setUserAccnt(info);
+                        tmpInfo.setIsValid("0");
+                        tmpInfo.setUpdateDate(LocalDateTime.now());
+                        return tmpInfo;
+                    }).collect(Collectors.toList());
+            this.hrmUserBasicInfoService.updateBatchById(hrmUserBasicInfoList);
         }
         return new TavernResponse();
     }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tuoyou.tavern.crm.dao.CrmCustomFinanceInfoMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.CrmCustomFinanceInfo">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.crm.model.CrmCustomFinanceInfo">
     <id column="CUSTOM_ID" jdbcType="VARCHAR" property="customId" />
     <result column="FINANCE_DISK_TYPE" jdbcType="VARCHAR" property="financeDiskType" />
     <result column="UPDATE_DATE" jdbcType="DATE" property="updateDate" />
@@ -10,13 +10,13 @@
     delete from CRM_CUSTOM_FINANCE_INFO
     where CUSTOM_ID = #{customId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.CrmCustomFinanceInfo">
+  <insert id="insert" parameterType="com.tuoyou.tavern.protocol.crm.model.CrmCustomFinanceInfo">
     insert into CRM_CUSTOM_FINANCE_INFO (CUSTOM_ID, FINANCE_DISK_TYPE, UPDATE_DATE
       )
     values (#{customId,jdbcType=VARCHAR}, #{financeDiskType,jdbcType=VARCHAR}, #{updateDate,jdbcType=DATE}
       )
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.entity.CrmCustomFinanceInfo">
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.protocol.crm.model.CrmCustomFinanceInfo">
     update CRM_CUSTOM_FINANCE_INFO
     set FINANCE_DISK_TYPE = #{financeDiskType,jdbcType=VARCHAR},
       UPDATE_DATE = #{updateDate,jdbcType=DATE}

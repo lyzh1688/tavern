@@ -10,5 +10,4 @@ import lombok.Data;
 @Data
 public class StaffInfoResponse extends TavernResponse {
     private StaffBasicInfo data;
-
 }
