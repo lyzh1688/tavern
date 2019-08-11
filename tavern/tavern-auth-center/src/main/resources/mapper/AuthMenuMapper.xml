@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tuoyou.tavern.auth.dao.AuthMenuMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.auth.entity.AuthMenu">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.authcenter.model.AuthMenu">
     <id column="MENU_ID" jdbcType="VARCHAR" property="menuId" />
     <result column="MENU_URL" jdbcType="VARCHAR" property="menuUrl" />
     <result column="MENU_NAME" jdbcType="VARCHAR" property="menuName" />
@@ -16,7 +16,7 @@
     delete from AUTH_MENU
     where MENU_ID = #{menuId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.auth.entity.AuthMenu">
+  <insert id="insert" parameterType="com.tuoyou.tavern.protocol.authcenter.model.AuthMenu">
     insert into AUTH_MENU (MENU_ID, MENU_URL, MENU_NAME, 
       PARENT_ID, PERMS, TYPE, 
       ICON, ORDER_NUM, UPDATE_DATE
@@ -26,7 +26,7 @@
       #{icon,jdbcType=VARCHAR}, #{orderNum,jdbcType=INTEGER}, #{updateDate,jdbcType=TIMESTAMP}
       )
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.auth.entity.AuthMenu">
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.protocol.authcenter.model.AuthMenu">
     update AUTH_MENU
     set MENU_URL = #{menuUrl,jdbcType=VARCHAR},
       MENU_NAME = #{menuName,jdbcType=VARCHAR},

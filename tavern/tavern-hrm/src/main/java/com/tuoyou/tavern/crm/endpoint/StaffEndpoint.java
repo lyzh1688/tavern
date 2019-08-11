@@ -33,7 +33,7 @@ public class StaffEndpoint {
     /*
      * 创建用户
      * */
-    @PostMapping(value = "/staff")
+    @PostMapping("/save")
     public TavernResponse createStaff(@RequestBody StaffBasicInfo staffBasicInfo) {
         HrmUserBasicInfo hrmUserBasicInfo = this.hrmUserBasicInfoService.getById(staffBasicInfo.getUserId());
         if (hrmUserBasicInfo != null) {
@@ -71,8 +71,8 @@ public class StaffEndpoint {
      * 查询用户基本信息
      * */
     //RESOURCE-PATH:/hrm/staff?accnt=${accnt}&password=${password}
-    @GetMapping(value = "/staff")
-    public StaffInfoResponse queryStaffBasicInfo(@PathVariable("accnt") String accnt, @PathVariable("password") String password) {
+    @GetMapping("/staff")
+    public StaffInfoResponse queryStaffBasicInfo(@RequestParam(name = "accnt") String accnt, @RequestParam(name = "password") String password) {
         StaffBasicInfo staffBasicInfo = this.hrmUserBasicInfoService.queryStaffBasicInfo(accnt, password);
         StaffInfoResponse staffInfoResponse = new StaffInfoResponse();
         if (Objects.isNull(staffBasicInfo)) {
@@ -89,7 +89,7 @@ public class StaffEndpoint {
      * 查询用户
      *
      * */
-    @GetMapping(value = "/page")
+    @GetMapping("/page")
     public StaffInfoPageResponse queryStaffInfo(Page page, StaffInfoDTO staffInfoDTO) {
         return new StaffInfoPageResponse(this.hrmUserBasicInfoService.page(page, staffInfoDTO));
     }
@@ -97,7 +97,7 @@ public class StaffEndpoint {
     /**
      * 删除用户
      */
-    @DeleteMapping(value = "/delete")
+    @DeleteMapping("/delete")
     public TavernResponse deleteStaff(@RequestBody List<String> userList) {
         for (String userId : userList) {
             HrmUserBasicInfo hrmUserBasicInfo = this.hrmUserBasicInfoService.getOne(Wrappers.<HrmUserBasicInfo>query().lambda()

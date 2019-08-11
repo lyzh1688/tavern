@@ -61,7 +61,7 @@ public class CustomInfoEndpoint {
     /**
      * 查询客户
      */
-    @GetMapping(value = "/page")
+    @GetMapping("/page")
     public CustomInfoPageResponse getCustomInfoPage(Page page, CustomQueryDTO customQueryDTO) {
         return new CustomInfoPageResponse(this.crmCustomBasicInfoService.getBasicInfoPage(page, customQueryDTO));
     }
@@ -69,7 +69,7 @@ public class CustomInfoEndpoint {
     /**
      * 登录查询用户
      */
-    @GetMapping(value = "/info")
+    @GetMapping("/info")
     public CustomInfoResponse getCustomInfo(@PathVariable("accnt") String accnt, @PathVariable("password") String password) {
         CustomBasicInfoVO customBasicInfoVO = this.crmCustomBasicInfoService.getBasicInfo(accnt, password);
         CustomInfoResponse customInfoResponse = new CustomInfoResponse();

@@ -1,6 +1,6 @@
 package com.tuoyou.tavern.auth.dao;
 
-import com.tuoyou.tavern.auth.entity.AuthMenu;
+import com.tuoyou.tavern.protocol.authcenter.model.AuthMenu;
 import java.util.List;
 
 public interface AuthMenuMapper {

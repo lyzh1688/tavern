@@ -1,9 +1,8 @@
-package com.tuoyou.tavern.crm.config;
+package com.tuoyou.tavern.auth.config;
 
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -11,8 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * Dev Time: 2019/07/02 <br>
  */
 @Configuration
-@MapperScan("com.tuoyou.tavern.crm.dao")
-@ComponentScan("com.tuoyou.tavern.common.core.exception")
+@MapperScan("com.tuoyou.tavern.auth.dao")
 public class MyBatisPlusConfiguration {
     /**
      * 分页插件

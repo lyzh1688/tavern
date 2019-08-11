@@ -1,4 +1,4 @@
-package com.tuoyou.tavern.auth.entity;
+package com.tuoyou.tavern.protocol.authcenter.model;
 
 import java.util.Date;
 

@@ -6,7 +6,7 @@ import com.netflix.zuul.context.RequestContext;
 import com.tuoyou.tavern.auth.libs.AuthTokenFactor;
 import com.tuoyou.tavern.auth.libs.JwtAuthenticationProperty;
 import com.tuoyou.tavern.auth.libs.TokenHelper;
-import com.tuoyou.tavern.protocol.authcenter.model.LoginResponse;
+import com.tuoyou.tavern.protocol.authcenter.reponse.LoginResponse;
 import com.tuoyou.tavern.protocol.common.RetCode;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import org.apache.commons.io.IOUtils;
@@ -63,6 +63,7 @@ public class DoAfterLogin extends ZuulFilter {
             AuthTokenFactor authTokenFactor = new AuthTokenFactor();
             authTokenFactor.setUserType(loginResponse.getData().getUserType());
             authTokenFactor.setUserAccnt(loginResponse.getData().getUserAccnt());
+            authTokenFactor.setRoleId(loginResponse.getData().getRoles());
             String token = TokenHelper.createToken(this.config, authTokenFactor);
             loginResponse.getData().setToken(token);
             RequestContext.getCurrentContext().setResponseBody(JSON.toJSONString(loginResponse));

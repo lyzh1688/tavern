@@ -1,6 +1,6 @@
 package com.tuoyou.tavern.auth.dao;
 
-import com.tuoyou.tavern.auth.entity.AuthMenuRoleRel;
+import com.tuoyou.tavern.protocol.authcenter.model.AuthMenuRoleRel;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
