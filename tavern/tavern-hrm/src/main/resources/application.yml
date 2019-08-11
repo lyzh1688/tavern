@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8084
 
 mybatis-plus:
   # MyBatis Mapper所对应的XML文件位置

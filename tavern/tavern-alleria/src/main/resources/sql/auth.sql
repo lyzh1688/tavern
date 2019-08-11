@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50560
 File Encoding         : 65001
 
-Date: 2019-08-08 00:07:30
+Date: 2019-08-12 00:39:43
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,7 +30,7 @@ CREATE TABLE `AUTH_MENU` (
   `ORDER_NUM` int(11) DEFAULT NULL COMMENT '排序',
   `UPDATE_DATE` datetime DEFAULT NULL,
   PRIMARY KEY (`MENU_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of AUTH_MENU
@@ -45,7 +45,7 @@ CREATE TABLE `AUTH_MENU_ROLE_REL` (
   `ROLE_ID` varchar(45) CHARACTER SET utf8 NOT NULL,
   `UPDATE_DATE` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`MENU_ID`,`ROLE_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of AUTH_MENU_ROLE_REL

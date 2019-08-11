@@ -20,6 +20,6 @@ public class ProxyConfiguration {
     }
     @Bean
     public CustomService customService(){
-        return new HttpProxy<CustomService>("http://127.0.0.1:8083",CustomService.class, CrmServiceProviderDesc.serviceProviderDesc.get(CustomService.class)).getProxy();
+        return new HttpProxy<CustomService>("http://127.0.0.1:8084",CustomService.class, CrmServiceProviderDesc.serviceProviderDesc.get(CustomService.class)).getProxy();
     }
 }
