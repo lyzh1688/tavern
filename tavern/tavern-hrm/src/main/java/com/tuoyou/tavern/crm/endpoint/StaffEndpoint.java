@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -90,4 +91,23 @@ public class StaffEndpoint {
     public StaffInfoPageResponse queryStaffInfo(Page page, StaffInfoDTO staffInfoDTO) {
         return new StaffInfoPageResponse(this.hrmUserBasicInfoService.page(page, staffInfoDTO));
     }
+
+    /**
+     * 删除用户
+     */
+    @DeleteMapping(value = "/delete")
+    public TavernResponse deleteStaff(@RequestBody List<String> userList) {
+        for (String userId : userList) {
+            HrmUserBasicInfo hrmUserBasicInfo = this.hrmUserBasicInfoService.getOne(Wrappers.<HrmUserBasicInfo>query().lambda()
+                    .eq(HrmUserBasicInfo::getUserId, userId));
+            if (hrmUserBasicInfo != null && hrmUserBasicInfo.getUserAccnt().equals(HrmUserConstant.ADMIN)) {
+                return new TavernResponse(RetCode.SYS_ERROR, "系统管理员不允许删除");
+            }
+        }
+        if (!userList.isEmpty()) {
+            this.hrmUserBasicInfoService.removeByIds(userList);
+        }
+        return new TavernResponse();
+    }
+
 }
