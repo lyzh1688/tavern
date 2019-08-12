@@ -36,7 +36,7 @@ public class AuthMenuServiceImpl extends ServiceImpl<AuthMenuMapper, AuthMenu> i
         if (Objects.isNull(userAccnt)) {
             this.list();
         }
-        List<AuthMenu> authMenuList = this.
+//        List<AuthMenu> authMenuList = this.
         return null;
     }
 

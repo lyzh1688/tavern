@@ -14,20 +14,20 @@ import java.util.stream.Collectors;
 /**
  * Created by 刘悦之 on 2019/7/7.
  */
-@AllArgsConstructor
 @RestController
+@AllArgsConstructor
 @RequestMapping("/menu")
 public class AuthMenuEndpoint {
 
     private final AuthMenuService authMenuService;
 
-    @PostMapping(name = "/save")
+    @PostMapping("/save")
     public TavernResponse save(@Valid @RequestBody AuthMenu authMenu) {
         this.authMenuService.saveOrUpdate(authMenu);
         return new TavernResponse();
     }
 
-    @PostMapping(name = "/delete")
+    @PostMapping("/delete")
     public TavernResponse delete(@Valid @RequestBody List<AuthMenu> authMenu) {
         this.authMenuService.removeByIds(authMenu.stream().map(AuthMenu::getMenuId).collect(Collectors.toList()));
         return new TavernResponse();
