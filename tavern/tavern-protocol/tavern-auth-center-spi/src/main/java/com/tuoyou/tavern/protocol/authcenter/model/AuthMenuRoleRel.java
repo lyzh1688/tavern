@@ -1,35 +1,20 @@
 package com.tuoyou.tavern.protocol.authcenter.model;
 
-import java.util.Date;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-public class AuthMenuRoleRel {
+import java.time.LocalDateTime;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@TableName("AUTH_MENU_ROLE_REL")
+public class AuthMenuRoleRel extends Model<AuthMenuRoleRel> {
     private String menuId;
 
     private String roleId;
 
-    private Date updateDate;
+    private LocalDateTime updateDate;
 
-    public String getMenuId() {
-        return menuId;
-    }
-
-    public void setMenuId(String menuId) {
-        this.menuId = menuId == null ? null : menuId.trim();
-    }
-
-    public String getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(String roleId) {
-        this.roleId = roleId == null ? null : roleId.trim();
-    }
-
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
 }

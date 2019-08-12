@@ -102,7 +102,7 @@ public class StaffEndpoint {
         for (String userId : userList) {
             HrmUserBasicInfo hrmUserBasicInfo = this.hrmUserBasicInfoService.getOne(Wrappers.<HrmUserBasicInfo>query().lambda()
                     .eq(HrmUserBasicInfo::getUserId, userId));
-            if (hrmUserBasicInfo != null && hrmUserBasicInfo.getUserAccnt().equals(HrmUserConstant.ADMIN)) {
+            if (hrmUserBasicInfo != null && hrmUserBasicInfo.getUserAccnt().toLowerCase().equals(HrmUserConstant.ADMIN)) {
                 return new TavernResponse(RetCode.SYS_ERROR, "系统管理员不允许删除");
             }
         }

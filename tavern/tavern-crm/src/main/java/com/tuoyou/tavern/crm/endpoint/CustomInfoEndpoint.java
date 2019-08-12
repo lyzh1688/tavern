@@ -42,7 +42,7 @@ public class CustomInfoEndpoint {
     /**
      * 删除客户
      */
-    @DeleteMapping("delete")
+    @DeleteMapping("/delete")
     public TavernResponse deleteCustom(List<String> customIdList) {
         if (!customIdList.isEmpty()) {
             List<CrmCustomBasicInfo> crmCustomBasicInfoList = customIdList.stream()

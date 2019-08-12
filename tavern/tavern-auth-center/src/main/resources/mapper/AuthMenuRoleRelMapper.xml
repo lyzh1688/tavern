@@ -6,29 +6,6 @@
     <id column="ROLE_ID" jdbcType="VARCHAR" property="roleId" />
     <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="map">
-    delete from AUTH_MENU_ROLE_REL
-    where MENU_ID = #{menuId,jdbcType=VARCHAR}
-      and ROLE_ID = #{roleId,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.protocol.authcenter.model.AuthMenuRoleRel">
-    insert into AUTH_MENU_ROLE_REL (MENU_ID, ROLE_ID, UPDATE_DATE
-      )
-    values (#{menuId,jdbcType=VARCHAR}, #{roleId,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.protocol.authcenter.model.AuthMenuRoleRel">
-    update AUTH_MENU_ROLE_REL
-    set UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP}
-    where MENU_ID = #{menuId,jdbcType=VARCHAR}
-      and ROLE_ID = #{roleId,jdbcType=VARCHAR}
-  </update>
-  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
-    select MENU_ID, ROLE_ID, UPDATE_DATE
-    from AUTH_MENU_ROLE_REL
-    where MENU_ID = #{menuId,jdbcType=VARCHAR}
-      and ROLE_ID = #{roleId,jdbcType=VARCHAR}
-  </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select MENU_ID, ROLE_ID, UPDATE_DATE
     from AUTH_MENU_ROLE_REL

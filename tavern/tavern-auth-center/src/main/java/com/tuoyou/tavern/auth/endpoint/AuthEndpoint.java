@@ -1,12 +1,12 @@
 package com.tuoyou.tavern.auth.endpoint;
 
-import com.tuoyou.tavern.auth.libs.UserTypeDict;
 import com.tuoyou.tavern.auth.service.LoginService;
 import com.tuoyou.tavern.protocol.authcenter.dto.LoginDTO;
-import com.tuoyou.tavern.protocol.authcenter.model.LoginVO;
 import com.tuoyou.tavern.protocol.authcenter.reponse.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
