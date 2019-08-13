@@ -17,6 +17,7 @@ import SalaryQuery from '@/views/Salary/Query'
 import SalaryDtl from '@/views/Salary/Dtl'
 import CustomerDtl from '@/views/PreSales/CustomerDtl'
 import CompanyDtl from '@/views/PreSales/CompanyDtl'
+import OrderDtl from '@/views/PreSales/OrderDtl'
 import {getIFramePath, getIFrameUrl} from '@/utils/iframe'
 
 Vue.use(Router)
@@ -157,7 +158,7 @@ const router = new Router({
       children: [
         {
           path: '/preSales/customerDtl',
-          name: '客户信息',
+          name: '客户详情',
           component: CustomerDtl,
           meta: {
             icon: 'fa fa-file-text ',
@@ -172,8 +173,23 @@ const router = new Router({
       children: [
         {
           path: '/preSales/companyDtl',
-          name: '公司信息',
+          name: '公司详情',
           component: CompanyDtl,
+          meta: {
+            icon: 'fa fa-file-text ',
+            index: 0
+          }
+        }
+      ]
+    },
+    {
+      path: '/',
+      component: Home,
+      children: [
+        {
+          path: '/preSales/orderDtl',
+          name: '订单详情',
+          component: OrderDtl,
           meta: {
             icon: 'fa fa-file-text ',
             index: 0

@@ -374,7 +374,7 @@ export const findNavTree = (params) => {
             "lastUpdateTime": null,
             "parentId": 8,
             "name": "订单管理",
-            "url": "/sys/user",
+            "url": "/preSales/order",
             "perms": null,
             "type": 1,
             "icon": "el-icon-s-order",

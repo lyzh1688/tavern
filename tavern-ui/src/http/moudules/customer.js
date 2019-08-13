@@ -7,7 +7,7 @@ import axios from '../axios'
 // 保存
 export const save = (data) => {
     return axios({
-        url: '/user/save',
+        url: '/user/customer/save',
         method: 'post',
         data
     })
@@ -15,7 +15,7 @@ export const save = (data) => {
 // 删除
 export const batchDelete = (data) => {
     return axios({
-        url: '/user/delete',
+        url: '/user/customer/delete',
         method: 'post',
         data
     })
@@ -23,7 +23,7 @@ export const batchDelete = (data) => {
 // 分页查询
 export const findPage = (data) => {
     return axios({
-        url: '/user/findPage',
+        url: '/user/customer/findPage',
         method: 'post',
         data
     })
@@ -31,7 +31,7 @@ export const findPage = (data) => {
 // 分页查询
 export const findCustomerPage = (data) => {
   return axios({
-    url: '/user/findCustomerPage',
+    url: '/user/customer/findCustomerPage',
     method: 'post',
     data
   })
@@ -39,7 +39,7 @@ export const findCustomerPage = (data) => {
 // 分页查询
 export const findCompanyPage = (data) => {
     return axios({
-        url: '/user/findCompanyPage',
+        url: '/user/customer/findCompanyPage',
         method: 'post',
         data
     })
@@ -47,7 +47,7 @@ export const findCompanyPage = (data) => {
 // 查找用户的菜单权限标识集合
 export const findPermissions = (params) => {
     return axios({
-        url: '/user/findPermissions',
+        url: '/user/customer/findPermissions',
         method: 'get',
         params
     })
