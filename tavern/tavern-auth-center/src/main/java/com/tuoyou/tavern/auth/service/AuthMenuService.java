@@ -12,8 +12,8 @@ import java.util.List;
  */
 public interface AuthMenuService extends IService<AuthMenu> {
 
-    List<AuthMenu> getAuthMenuList(String userAccnt,String menuType);
+    List<AuthMenu> getAuthMenuList(String roles,int menuType);
 
-    List<AuthMenu> getAuthMenuByAccnt(String userAccnt);
+    List<AuthMenu> getAuthMenuByRoles(String roles);
 
 }

@@ -3,6 +3,7 @@ package com.tuoyou.tavern.auth.endpoint;
 import com.tuoyou.tavern.auth.service.AuthMenuService;
 import com.tuoyou.tavern.protocol.authcenter.model.AuthMenu;
 import com.tuoyou.tavern.protocol.authcenter.reponse.AuthMenuResponse;
+import com.tuoyou.tavern.protocol.common.TavernRequestAuthFields;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,9 @@ public class AuthMenuEndpoint {
 
     @PostMapping("/save")
     public TavernResponse save(@Valid @RequestBody AuthMenu authMenu) {
+        if (authMenu.getParentId() == null) {
+            authMenu.setParentId("0");
+        }
         this.authMenuService.saveOrUpdate(authMenu);
         return new TavernResponse();
     }
@@ -34,14 +38,14 @@ public class AuthMenuEndpoint {
     }
 
     @GetMapping("/findNavTree")
-    public AuthMenuResponse getNavTree(@RequestParam String userAccnt) {
-        List<AuthMenu> authMenuList = this.authMenuService.getAuthMenuList(userAccnt, "1");
+    public AuthMenuResponse getNavTree(@RequestHeader(value = TavernRequestAuthFields.ROLE_ID) String roles) {
+        List<AuthMenu> authMenuList = this.authMenuService.getAuthMenuList(roles, 1);
         return new AuthMenuResponse(authMenuList);
     }
 
     @GetMapping("/findMenuTree")
     public AuthMenuResponse getMenuTree() {
-        List<AuthMenu> authMenuList = this.authMenuService.getAuthMenuList(null, "1");
+        List<AuthMenu> authMenuList = this.authMenuService.getAuthMenuList(null, 1);
         return new AuthMenuResponse(authMenuList);
     }
 }

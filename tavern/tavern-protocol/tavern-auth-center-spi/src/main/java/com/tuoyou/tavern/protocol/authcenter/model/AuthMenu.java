@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -32,4 +33,11 @@ public class AuthMenu extends Model<AuthMenu> {
     private Integer orderNum;
 
     private LocalDateTime updateDate;
+
+    // 非数据库字段
+    private String parentName;
+    // 非数据库字段
+    private Integer level;
+    // 非数据库字段
+    private List<AuthMenu> children;
 }
