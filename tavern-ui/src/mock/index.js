@@ -21,7 +21,7 @@ import * as order from './modules/order'
 // 3. 开启/关闭[业务模块中某个请求]拦截, 通过函数返回对象中的[isOpen属性]设置.
 // let openMock = true
 let openMock = false
-fnCreate(login, false)
+fnCreate(login, true)
 fnCreate(user, true)
 fnCreate(role, true)
 fnCreate(dept, openMock)

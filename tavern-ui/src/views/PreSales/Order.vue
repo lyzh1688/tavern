@@ -161,7 +161,7 @@
         this.$router.push({path: '/preSales/orderDtl'})
       },
       handleDtl: function () {
-        this.$router.push({path: '/preSales/orderDtl'})
+        this.$router.push({path: '/preSales/workFlow'})
       },
      /* handleAdd: function () {
         this.dialogVisible = true
