@@ -18,6 +18,7 @@ import SalaryDtl from '@/views/Salary/Dtl'
 import CustomerDtl from '@/views/PreSales/CustomerDtl'
 import CompanyDtl from '@/views/PreSales/CompanyDtl'
 import OrderDtl from '@/views/PreSales/OrderDtl'
+import Order from '@/views/PreSales/Order'
 import WorkFlow from '@/views/PreSales/WorkFlow'
 import {getIFramePath, getIFrameUrl} from '@/utils/iframe'
 
@@ -193,6 +194,21 @@ const router = new Router({
           component: OrderDtl,
           meta: {
             icon: 'fa fa-file-text ',
+            index: 0
+          }
+        }
+      ]
+    },
+    {
+      path: '/',
+      component: Home,
+      children: [
+        {
+          path: '/preSales/order',
+          name: '订单管理',
+          component: Order,
+          meta: {
+            icon: 'fa fa-shopping-cart ',
             index: 0
           }
         }

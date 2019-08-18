@@ -18,6 +18,7 @@ import * as fileManager from './moudules/fileManager'
 import * as salary from './moudules/salary'
 import * as customer from './moudules/customer'
 import * as order from './moudules/order'
+import * as outer from './moudules/outer'
 
 
 // 默认全部导出
@@ -38,5 +39,6 @@ export default {
   fileManager,
   salary,
   customer,
-  order
+  order,
+  outer,
 }

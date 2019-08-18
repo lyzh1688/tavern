@@ -15,6 +15,7 @@ import * as invoice from './modules/invoice'
 import * as extrainvoice from './modules/extrainvoice'
 import * as customer from './modules/customer'
 import * as order from './modules/order'
+import * as outer from './modules/outer'
 
 // 1. 开启/关闭[所有模块]拦截, 通过调[openMock参数]设置.
 // 2. 开启/关闭[业务模块]拦截, 通过调用fnCreate方法[isOpen参数]设置.
@@ -36,6 +37,7 @@ fnCreate(invoice, openMock)
 fnCreate(extrainvoice, openMock)
 fnCreate(customer, true)
 fnCreate(order, true)
+fnCreate(outer, true)
 
 /**
  * 创建mock模拟数据

@@ -17,18 +17,6 @@
           <kt-button icon="fa fa-plus" label="新增客户" perms="sys:user:add" type="primary"
                      @click="handleAdd"/>
         </el-form-item>
-        <el-form-item>
-          <kt-button icon="fa fa-edit" label="修改客户" perms="sys:user:add" type="primary"
-                     @click="handleEdit"/>
-        </el-form-item>
-        <el-form-item>
-          <kt-button icon="fa fa-retweet" label="客户详情" perms="sys:user:add" type="primary"
-                     @click="handleDtl"/>
-        </el-form-item>
-        <el-form-item>
-          <kt-button icon="fa fa-shopping-cart" label="客户订单" perms="sys:user:add" type="primary"
-                     @click="handleOrder"/>
-        </el-form-item>
       </el-form>
     </div>
     <div class="toolbar" style="float:right;padding-top:10px;padding-right:15px;">
@@ -52,11 +40,43 @@
                                   @handleFilterColumns="handleFilterColumns">
       </table-column-filter-dialog>
     </div>
-    <!--表格内容栏-->
-    <kt-table :height="600" permsEdit="sys:user:edit" permsDelete="sys:user:delete"
-              :data="pageResult" :columns="filterColumns"
-              @findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete">
-    </kt-table>
+
+    <el-table :data="pageResult.content" stripe stripe height="600" size="mini" style="width: 100%;" v-loading="loading">
+      <el-table-column prop="id" header-align="center" align="center" label="客户ID">
+      </el-table-column>
+      <el-table-column prop="name" label="客户姓名" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="aliAccnt" label="旺旺账号" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="wechatAccnt" label="微信账号" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="wechatName" label="微信昵称" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="mobile" label="联系电话" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="createTime" label="创建时间" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column fixed="right"label="操作" header-align="center" align="center" width="500">
+        <template slot-scope="scope">
+          <kt-button icon="fa fa-edit" label="修改客户" perms="sys:user:add" type="primary"
+                     @click="handleEdit"/>
+          <kt-button icon="fa fa-retweet" label="客户详情" perms="sys:user:add" type="primary"
+                     @click="handleDtl"/>
+          <kt-button icon="fa fa-shopping-cart" label="客户订单" perms="sys:user:add" type="primary"
+                     @click="handleOrder"/>
+          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
+                     @click="handleDelete(scope.row)" />
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="toolbar" style="padding:10px;">
+      <el-pagination layout="total, prev, pager, next, jumper"
+                     @current-change="handleCurrentChange"
+                     :current-page="pageRequest.pageNum"
+                     :page-size="pageRequest.pageSize"
+                     :total="totalSize" style="float:right;">
+      </el-pagination>
+    </div>
     <!--新增编辑界面-->
     <el-dialog :title="operation?'新增':'编辑'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
       <el-form :model="dataForm" label-width="80px" :rules="dataFormRules" ref="dataForm" :size="size"
@@ -124,6 +144,7 @@
         filters: {
           name: ''
         },
+        loading:false,
         columns: [],
         filterColumns: [],
         pageRequest: {pageNum: 1, pageSize: 10},
@@ -157,6 +178,9 @@
         roles: []
       }
     },
+    created() {
+      this.findPage(null);
+    },
     methods: {
       // 获取分页数据
       findPage: function (data) {
@@ -166,6 +190,9 @@
         this.pageRequest.columnFilters = {name: {name: 'name', value: this.filters.name}}
         this.$api.customer.findPage(this.pageRequest).then((res) => {
           this.pageResult = res.data
+          this.pageRequest.pageNum = res.data.pageNum
+          this.pageRequest.pageSize = res.data.pageSize
+          this.totalSize = res.data.totalSize
         }).then(data != null ? data.callback : '')
       },
       // 加载用户角色信息
@@ -189,7 +216,7 @@
         this.$router.push({path: '/preSales/customerDtl'})
       },
       handleOrder: function () {
-        this.$router.push({path: '/preSales/orderDtl'})
+        this.$router.push({path: '/preSales/order'})
       },
 
 
@@ -287,7 +314,12 @@
           {prop: "createTime", label: "创建时间", minWidth: 70},
         ]
         this.filterColumns = JSON.parse(JSON.stringify(this.columns));
-      }
+      },
+      handleCurrentChange(val) {
+        let _this = this;
+        _this.pageRequest.pageNum = val;
+        _this.findPage(_this.pageRequest);
+      },
     },
     mounted() {
       // this.findDeptTree()

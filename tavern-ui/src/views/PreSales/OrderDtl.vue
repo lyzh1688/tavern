@@ -98,6 +98,24 @@
           <el-input v-model="filters.name" placeholder="请输入费用"></el-input>
         </el-form-item>
       </el-form>
+      <el-form :inline="true" :model="filters"  align="left" >
+        <el-form-item label="前置任务" label-width="100px">
+          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择">
+            <el-option label="任务一" value='0'></el-option>
+            <el-option label="任务二" value='1'></el-option>
+            <el-option label="任务三" value='2'></el-option>
+            <el-option label="任务四" value='3'></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="业务标签" label-width="150px">
+          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择">
+            <el-option label="标签一" value='0'></el-option>
+            <el-option label="标签二" value='1'></el-option>
+            <el-option label="标签三" value='2'></el-option>
+            <el-option label="标签四" value='3'></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
       <el-form :inline="true" :model="filters" align="left">
         <el-form-item label="服务内容/备注" prop="bak" label-width="100px">
           <el-input v-model="filters.name" auto-complete="off" style="width: 550px" placeholder="输入内容"></el-input>

@@ -61,7 +61,7 @@ export function getCompanyContent(pageNum, pageSize) {
     obj.id = index
     obj.name = name[index]
     obj.startTime= '2018-08-14 11:11:11'
-    obj.endTime= '2020-08-14 11:11:11'
+    obj.endTime= '202044-08-14 11:11:11'
     content.push(obj)
   }
   return content

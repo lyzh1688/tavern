@@ -4,14 +4,12 @@
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
       <el-form :inline="true" :model="filters" :size="size">
         <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary" @click="findPage(null)"/>
+          <kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary"
+                     @click="findPage(null)"/>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-plus" :label="$t('action.add')" perms="sys:user:add" type="primary" @click="handleAdd" />
-        </el-form-item>
-        <el-form-item>
-          <kt-button icon="fa fa-retweet" label="客户详情" perms="sys:user:add" type="primary"
-                     @click="handleDtl"/>
+          <kt-button icon="fa fa-plus" :label="$t('action.add')" perms="sys:user:add" type="primary"
+                     @click="handleAdd"/>
         </el-form-item>
       </el-form>
     </div>
@@ -37,10 +35,47 @@
       </table-column-filter-dialog>
     </div>
     <!--表格内容栏-->
-    <kt-table :height="600" permsEdit="sys:user:edit" permsDelete="sys:user:delete"
-              :data="pageResult" :columns="filterColumns"
-              @findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete">
-    </kt-table>
+    <!-- <kt-table :height="600" permsEdit="sys:user:edit" permsDelete="sys:user:delete"
+               :data="pageResult" :columns="filterColumns"
+               @findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete">
+     </kt-table>-->
+
+    <!--{prop: "id", label: "订单号", minWidth: 50},
+    {prop: "orderTime", label: "订单时间", minWidth: 120},
+    {prop: "pay", label: "应付金额", minWidth: 120},
+    {prop: "actualPay", label: "实付金额", minWidth: 100},
+    {prop: "bizName", label: "关联业务", minWidth: 120},-->
+    <el-table :data="pageResult.content" stripe stripe height="600" size="mini" style="width: 100%;"
+              v-loading="loading">
+      <el-table-column prop="id" header-align="center" align="center" label="订单号">
+      </el-table-column>
+      <el-table-column prop="orderTime" label="订单时间" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="pay" label="应付金额" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="actualPay" label="实付金额" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="bizName" label="关联业务" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
+        <template slot-scope="scope">
+          <kt-button icon="fa fa-edit" label="修改订单" perms="sys:user:add" type="primary"
+                     @click="handleEdit"/>
+          <kt-button icon="fa fa-retweet" label="订单详情" perms="sys:user:add" type="primary"
+                     @click="handleDtl"/>
+          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
+                     @click="handleDelete(scope.row)"/>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="toolbar" style="padding:10px;">
+      <el-pagination layout="total, prev, pager, next, jumper"
+                     @current-change="handleCurrentChange"
+                     :current-page="pageRequest.pageNum"
+                     :page-size="pageRequest.pageSize"
+                     :total="totalSize" style="float:right;">
+      </el-pagination>
+    </div>
     <!--新增编辑界面-->
     <el-dialog :title="operation?'新增':'编辑'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
       <el-form :model="dataForm" label-width="80px" :rules="dataFormRules" ref="dataForm" :size="size"
@@ -80,7 +115,9 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button :size="size" @click.native="dialogVisible = false">{{$t('action.cancel')}}</el-button>
-        <el-button :size="size" type="primary" @click.native="submitForm" :loading="editLoading">{{$t('action.submit')}}</el-button>
+        <el-button :size="size" type="primary" @click.native="submitForm" :loading="editLoading">
+          {{$t('action.submit')}}
+        </el-button>
       </div>
     </el-dialog>
   </div>
@@ -91,9 +128,10 @@
   import KtTable from "@/views/Core/KtTable"
   import KtButton from "@/views/Core/KtButton"
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
-  import { format } from "@/utils/datetime"
+  import {format} from "@/utils/datetime"
+
   export default {
-    components:{
+    components: {
       PopupTreeInput,
       KtTable,
       KtButton,
@@ -107,7 +145,7 @@
         },
         columns: [],
         filterColumns: [],
-        pageRequest: { pageNum: 1, pageSize: 10 },
+        pageRequest: {pageNum: 1, pageSize: 10},
         pageResult: {},
 
         operation: false, // true:新增, false:编辑
@@ -115,7 +153,7 @@
         editLoading: false,
         dataFormRules: {
           name: [
-            { required: true, message: '请输入用户名', trigger: 'blur' }
+            {required: true, message: '请输入用户名', trigger: 'blur'}
           ]
         },
         // 新增编辑界面数据
@@ -138,20 +176,26 @@
         roles: []
       }
     },
+  created() {
+    this.findPage(null);
+  },
     methods: {
       // 获取分页数据
       findPage: function (data) {
-        if(data !== null) {
+        if (data !== null) {
           this.pageRequest = data.pageRequest
         }
-        this.pageRequest.columnFilters = {name: {name:'name', value:this.filters.name}}
+        this.pageRequest.columnFilters = {name: {name: 'name', value: this.filters.name}}
         this.$api.order.findPage(this.pageRequest).then((res) => {
           this.pageResult = res.data
-        }).then(data!=null?data.callback:'')
+          this.pageRequest.pageNum = res.data.pageNum
+          this.pageRequest.pageSize = res.data.pageSize
+          this.totalSize = res.data.totalSize
+        }).then(data != null ? data.callback : '')
       },
       // 批量删除
       handleDelete: function (data) {
-        this.$api.order.batchDelete(data.params).then(data!=null?data.callback:'')
+        this.$api.order.batchDelete(data.params).then(data != null ? data.callback : '')
       },
       // 显示新增界面
       handleAdd: function () {
@@ -161,34 +205,34 @@
         this.$router.push({path: '/preSales/orderDtl'})
       },
       handleDtl: function () {
-        this.$router.push({path: '/preSales/workFlow'})
+        this.$router.push({path: '/preSales/orderDtl'})
       },
-     /* handleAdd: function () {
-        this.dialogVisible = true
-        this.operation = true
-        this.dataForm = {
-          id: 0,
-          name: '',
-          password: '',
-          deptId: 1,
-          deptName: '',
-          email: 'test@qq.com',
-          mobile: '13889700023',
-          status: 1,
-          userRoles: []
-        }
-      },
-      // 显示编辑界面
-      handleEdit: function (params) {
-        this.dialogVisible = true
-        this.operation = false
-        this.dataForm = Object.assign({}, params.row)
-        let userRoles = []
-        for(let i=0,len=params.row.userRoles.length; i<len; i++) {
-          userRoles.push(params.row.userRoles[i].roleId)
-        }
-        this.dataForm.userRoles = userRoles
-      },*/
+      /* handleAdd: function () {
+         this.dialogVisible = true
+         this.operation = true
+         this.dataForm = {
+           id: 0,
+           name: '',
+           password: '',
+           deptId: 1,
+           deptName: '',
+           email: 'test@qq.com',
+           mobile: '13889700023',
+           status: 1,
+           userRoles: []
+         }
+       },
+       // 显示编辑界面
+       handleEdit: function (params) {
+         this.dialogVisible = true
+         this.operation = false
+         this.dataForm = Object.assign({}, params.row)
+         let userRoles = []
+         for(let i=0,len=params.row.userRoles.length; i<len; i++) {
+           userRoles.push(params.row.userRoles[i].roleId)
+         }
+         this.dataForm.userRoles = userRoles
+       },*/
       // 编辑
       submitForm: function () {
         this.$refs.dataForm.validate((valid) => {
@@ -197,7 +241,7 @@
               this.editLoading = true
               let params = Object.assign({}, this.dataForm)
               let userRoles = []
-              for(let i=0,len=params.userRoles.length; i<len; i++) {
+              for (let i = 0, len = params.userRoles.length; i < len; i++) {
                 let userRole = {
                   userId: params.id,
                   roleId: params.userRoles[i]
@@ -207,8 +251,8 @@
               params.userRoles = userRoles
               this.$api.user.save(params).then((res) => {
                 this.editLoading = false
-                if(res.code == 200) {
-                  this.$message({ message: '操作成功', type: 'success' })
+                if (res.code == 200) {
+                  this.$message({message: '操作成功', type: 'success'})
                   this.dialogVisible = false
                   this.$refs['dataForm'].resetFields()
                 } else {
@@ -227,12 +271,12 @@
         })
       },
       // 菜单树选中
-      deptTreeCurrentChangeHandle (data, node) {
+      deptTreeCurrentChangeHandle(data, node) {
         this.dataForm.deptId = data.id
         this.dataForm.deptName = data.name
       },
       // 时间格式化
-      dateFormat: function (row, column, cellValue, index){
+      dateFormat: function (row, column, cellValue, index) {
         return format(row[column.property])
       },
       // 处理表格列过滤显示
@@ -247,14 +291,18 @@
       // 处理表格列过滤显示
       initColumns: function () {
         this.columns = [
-          {prop:"id", label:"订单号", minWidth:50},
-          {prop:"orderTime", label:"订单时间", minWidth:120},
-          {prop:"pay", label:"应付金额", minWidth:120},
-          {prop:"actualPay", label:"实付金额", minWidth:100},
-          {prop:"bizName", label:"关联业务", minWidth:120},
+          {prop: "id", label: "订单号", minWidth: 50},
+          {prop: "orderTime", label: "订单时间", minWidth: 120},
+          {prop: "pay", label: "应付金额", minWidth: 120},
+          {prop: "actualPay", label: "实付金额", minWidth: 100},
+          {prop: "bizName", label: "关联业务", minWidth: 120},
         ]
         this.filterColumns = JSON.parse(JSON.stringify(this.columns));
-      }
+      }, handleCurrentChange(val) {
+        let _this = this;
+        _this.pageRequest.pageNum = val;
+        _this.findPage(_this.pageRequest);
+      },
     },
     mounted() {
       this.initColumns()
