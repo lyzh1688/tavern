@@ -1,7 +1,7 @@
 export default {
     state: {
         appName: "拓佑财务平台",  // 应用名称
-        themeColor: "#14889A",  // 主题颜色
+        themeColor: "#409EFF",  // 主题颜色
         oldThemeColor: "#14889A",   // 上一次主题颜色
         collapse:false,  // 导航栏收缩状态
         menuRouteLoaded:false    // 菜单和路由是否已经加载
