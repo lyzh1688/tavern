@@ -21,17 +21,33 @@
             <property name="trimStrings" value = "true"></property>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="mapper/" targetProject="src/main/resources" />
+        <sqlMapGenerator targetPackage="mapper/new" targetProject="src/main/resources" />
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.tuoyou.tavern.crm.dao" targetProject="src/main/java" />
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.tuoyou.tavern.crm.mapper" targetProject="src/main/java" />
 
         <table tableName="CRM_BANK_INFO" domainObjectName="CrmBankInfo">
         </table>
-        <table tableName="CRM_CUSTOM_BANK_INFO" domainObjectName="CrmCustomBankInfo">
+        <table tableName="CRM_BUSINESS_DICT" domainObjectName="CrmBusinessDict">
+        </table>
+        <table tableName="CRM_COMPANY_BANK_REL" domainObjectName="CrmCompanyBankRel">
+        </table>
+        <table tableName="CRM_COMPANY_BUSINESS" domainObjectName="CrmCompanyBusiness">
+        </table>
+        <table tableName="CRM_COMPANY_INFO" domainObjectName="CrmCompanyInfo">
         </table>
         <table tableName="CRM_CUSTOM_BASIC_INFO" domainObjectName="CrmCustomBasicInfo">
         </table>
-        <table tableName="CRM_CUSTOM_FINANCE_INFO" domainObjectName="CrmCustomFinanceInfo">
+        <table tableName="CRM_CUSTOM_COMPANY_REL" domainObjectName="CrmCustomCompanyRel">
+        </table>
+        <table tableName="CRM_CUSTOM_ORDER_INFO" domainObjectName="CrmCustomOrderInfo">
+        </table>
+        <table tableName="CRM_ORDER_BUSINESS_REL" domainObjectName="CrmOrderBusinessRel">
+        </table>
+        <table tableName="CRM_ORDER_DLJZ_DETAIL" domainObjectName="CrmOrderDljzDetail">
+        </table>
+        <table tableName="CRM_ORDER_GJJSBDJ_DETAIL" domainObjectName="CrmOrderGjjsbdjDetail">
+        </table>
+        <table tableName="CRM_ORDER_GSZC_DETAIL" domainObjectName="CrmOrderGszcDetail">
         </table>
 
 

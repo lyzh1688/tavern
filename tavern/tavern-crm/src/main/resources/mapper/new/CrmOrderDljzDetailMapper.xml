@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.crm.mapper.CrmOrderDljzDetailMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.CrmOrderDljzDetail">
+    <id column="EVENT_ID" jdbcType="VARCHAR" property="eventId" />
+    <result column="ORDER_ID" jdbcType="VARCHAR" property="orderId" />
+    <result column="BEGIN_DATE" jdbcType="DATE" property="beginDate" />
+    <result column="END_DATE" jdbcType="DATE" property="endDate" />
+    <result column="IS_BEGIN" jdbcType="VARCHAR" property="isBegin" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from CRM_ORDER_DLJZ_DETAIL
+    where EVENT_ID = #{eventId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.CrmOrderDljzDetail">
+    insert into CRM_ORDER_DLJZ_DETAIL (EVENT_ID, ORDER_ID, BEGIN_DATE, 
+      END_DATE, IS_BEGIN)
+    values (#{eventId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{beginDate,jdbcType=DATE}, 
+      #{endDate,jdbcType=DATE}, #{isBegin,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.entity.CrmOrderDljzDetail">
+    update CRM_ORDER_DLJZ_DETAIL
+    set ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      BEGIN_DATE = #{beginDate,jdbcType=DATE},
+      END_DATE = #{endDate,jdbcType=DATE},
+      IS_BEGIN = #{isBegin,jdbcType=VARCHAR}
+    where EVENT_ID = #{eventId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select EVENT_ID, ORDER_ID, BEGIN_DATE, END_DATE, IS_BEGIN
+    from CRM_ORDER_DLJZ_DETAIL
+    where EVENT_ID = #{eventId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select EVENT_ID, ORDER_ID, BEGIN_DATE, END_DATE, IS_BEGIN
+    from CRM_ORDER_DLJZ_DETAIL
+  </select>
+</mapper>

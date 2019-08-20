@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.crm.mapper.CrmCustomBasicInfoMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.CrmCustomBasicInfo">
+    <id column="CUSTOM_ID" jdbcType="VARCHAR" property="customId" />
+    <result column="WEIXIN_ACCNT" jdbcType="VARCHAR" property="weixinAccnt" />
+    <result column="WANGWANG_ACCNT" jdbcType="VARCHAR" property="wangwangAccnt" />
+    <result column="CONTACT_PERSON" jdbcType="VARCHAR" property="contactPerson" />
+    <result column="CONTACT_NUMBER" jdbcType="VARCHAR" property="contactNumber" />
+    <result column="CORPORATION" jdbcType="VARCHAR" property="corporation" />
+    <result column="CORPORATION_NUMBER" jdbcType="VARCHAR" property="corporationNumber" />
+    <result column="CUSTOM_LEVEL" jdbcType="VARCHAR" property="customLevel" />
+    <result column="CUSTOM_NAME" jdbcType="VARCHAR" property="customName" />
+    <result column="UPDATE_DATE" jdbcType="DATE" property="updateDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from CRM_CUSTOM_BASIC_INFO
+    where CUSTOM_ID = #{customId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.CrmCustomBasicInfo">
+    insert into CRM_CUSTOM_BASIC_INFO (CUSTOM_ID, WEIXIN_ACCNT, WANGWANG_ACCNT, 
+      CONTACT_PERSON, CONTACT_NUMBER, CORPORATION, 
+      CORPORATION_NUMBER, CUSTOM_LEVEL, CUSTOM_NAME, 
+      UPDATE_DATE)
+    values (#{customId,jdbcType=VARCHAR}, #{weixinAccnt,jdbcType=VARCHAR}, #{wangwangAccnt,jdbcType=VARCHAR}, 
+      #{contactPerson,jdbcType=VARCHAR}, #{contactNumber,jdbcType=VARCHAR}, #{corporation,jdbcType=VARCHAR}, 
+      #{corporationNumber,jdbcType=VARCHAR}, #{customLevel,jdbcType=VARCHAR}, #{customName,jdbcType=VARCHAR}, 
+      #{updateDate,jdbcType=DATE})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.entity.CrmCustomBasicInfo">
+    update CRM_CUSTOM_BASIC_INFO
+    set WEIXIN_ACCNT = #{weixinAccnt,jdbcType=VARCHAR},
+      WANGWANG_ACCNT = #{wangwangAccnt,jdbcType=VARCHAR},
+      CONTACT_PERSON = #{contactPerson,jdbcType=VARCHAR},
+      CONTACT_NUMBER = #{contactNumber,jdbcType=VARCHAR},
+      CORPORATION = #{corporation,jdbcType=VARCHAR},
+      CORPORATION_NUMBER = #{corporationNumber,jdbcType=VARCHAR},
+      CUSTOM_LEVEL = #{customLevel,jdbcType=VARCHAR},
+      CUSTOM_NAME = #{customName,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=DATE}
+    where CUSTOM_ID = #{customId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select CUSTOM_ID, WEIXIN_ACCNT, WANGWANG_ACCNT, CONTACT_PERSON, CONTACT_NUMBER, CORPORATION, 
+    CORPORATION_NUMBER, CUSTOM_LEVEL, CUSTOM_NAME, UPDATE_DATE
+    from CRM_CUSTOM_BASIC_INFO
+    where CUSTOM_ID = #{customId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select CUSTOM_ID, WEIXIN_ACCNT, WANGWANG_ACCNT, CONTACT_PERSON, CONTACT_NUMBER, CORPORATION, 
+    CORPORATION_NUMBER, CUSTOM_LEVEL, CUSTOM_NAME, UPDATE_DATE
+    from CRM_CUSTOM_BASIC_INFO
+  </select>
+</mapper>

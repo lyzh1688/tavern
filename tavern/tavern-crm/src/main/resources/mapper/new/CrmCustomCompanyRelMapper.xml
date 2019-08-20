@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.crm.mapper.CrmCustomCompanyRelMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.CrmCustomCompanyRel">
+    <id column="CUSTOM_ID" jdbcType="VARCHAR" property="customId" />
+    <id column="COMPANY_ID" jdbcType="VARCHAR" property="companyId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from CRM_CUSTOM_COMPANY_REL
+    where CUSTOM_ID = #{customId,jdbcType=VARCHAR}
+      and COMPANY_ID = #{companyId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.CrmCustomCompanyRel">
+    insert into CRM_CUSTOM_COMPANY_REL (CUSTOM_ID, COMPANY_ID)
+    values (#{customId,jdbcType=VARCHAR}, #{companyId,jdbcType=VARCHAR})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select CUSTOM_ID, COMPANY_ID
+    from CRM_CUSTOM_COMPANY_REL
+  </select>
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.crm.mapper.CrmBusinessDictMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.CrmBusinessDict">
+    <id column="BUSINESS_ID" jdbcType="VARCHAR" property="businessId" />
+    <result column="BUSINESS_NAME" jdbcType="VARCHAR" property="businessName" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from CRM_BUSINESS_DICT
+    where BUSINESS_ID = #{businessId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.CrmBusinessDict">
+    insert into CRM_BUSINESS_DICT (BUSINESS_ID, BUSINESS_NAME)
+    values (#{businessId,jdbcType=VARCHAR}, #{businessName,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.entity.CrmBusinessDict">
+    update CRM_BUSINESS_DICT
+    set BUSINESS_NAME = #{businessName,jdbcType=VARCHAR}
+    where BUSINESS_ID = #{businessId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select BUSINESS_ID, BUSINESS_NAME
+    from CRM_BUSINESS_DICT
+    where BUSINESS_ID = #{businessId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select BUSINESS_ID, BUSINESS_NAME
+    from CRM_BUSINESS_DICT
+  </select>
+</mapper>
