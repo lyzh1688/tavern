@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.crm.dao.CrmCustomBasicMapper">
+    <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.crm.model.CrmCustomBasicInfo">
+        <id column="CUSTOM_ID" jdbcType="VARCHAR" property="customId"/>
+        <result column="CUSTOM_ACCNT" jdbcType="VARCHAR" property="customAccnt"/>
+        <result column="CUSTOM_NAME" jdbcType="VARCHAR" property="customName"/>
+        <result column="PASSWORD" jdbcType="VARCHAR" property="password"/>
+        <result column="CONTACT_NAME" jdbcType="VARCHAR" property="contactName"/>
+        <result column="CONTACT_TEL" jdbcType="VARCHAR" property="contackTel"/>
+        <result column="IS_VALID" jdbcType="VARCHAR" property="isValid"/>
+        <result column="UPDATE_DATE" jdbcType="DATE" property="updateDate"/>
+    </resultMap>
+    <select id="selectBasicInfoPage" resultType="com.tuoyou.tavern.protocol.crm.model.CustomBasicInfoVO">
+        select t1.CUSTOM_ID customId,
+        t1.CUSTOM_ACCNT customAccnt,
+        t1.CUSTOM_NAME customName,
+        t1.PASSWORD password,
+        'C001' roleId,
+        t1.CONTACT_NAME contactName,
+        t1.CONTACT_TEL contactTel,
+        t3.BANK_ID bankId,
+        t3.BANK_NAME bankName,
+        t4.FINANCE_DISK_TYPE financeDiskType,
+        DATE_FORMAT(t1.UPDATE_DATE,'%Y-%m-%d %H:%i:%s') updateDate
+
+        from CRM_CUSTOM_BASIC_INFO t1 LEFT JOIN CRM_CUSTOM_BANK_INFO t2 on t1.CUSTOM_ID = t2.CUSTOM_ID
+        LEFT JOIN CRM_BANK_INFO t3 on t2.BANK_ID = t3.BANK_ID LEFT JOIN CRM_CUSTOM_FINANCE_INFO t4
+        on t1.CUSTOM_ID = t4.CUSTOM_ID
+        where t1.IS_VALID = '1'
+        <if test="query.customName != null and query.customName != ''">
+            and t1.CUSTOM_NAME = #{query.customName}
+        </if>
+    </select>
+    <select id="selectBasicInfo" resultType="com.tuoyou.tavern.protocol.crm.model.CustomBasicInfoVO">
+        select t1.CUSTOM_ID customId,
+        t1.CUSTOM_ACCNT customAccnt,
+        t1.CUSTOM_NAME customName,
+        t1.PASSWORD password,
+        'C001' roleId,
+        t1.CONTACT_NAME contactName,
+        t1.CONTACT_TEL contactTel,
+        t3.BANK_ID bankId,
+        t3.BANK_NAME bankName,
+        t4.FINANCE_DISK_TYPE financeDiskType,
+        DATE_FORMAT(t1.UPDATE_DATE,'%Y-%m-%d %H:%i:%s') updateDate
+
+        from CRM_CUSTOM_BASIC_INFO t1 LEFT JOIN CRM_CUSTOM_BANK_INFO t2 on t1.CUSTOM_ID = t2.CUSTOM_ID
+        LEFT JOIN CRM_BANK_INFO t3 on t2.BANK_ID = t3.BANK_ID LEFT JOIN CRM_CUSTOM_FINANCE_INFO t4
+        on t1.CUSTOM_ID = t4.CUSTOM_ID
+        where t1.IS_VALID = '1'
+        and t1.CUSTOM_ACCNT = #{accnt}
+        and t1.PASSWORD = #{password}
+    </select>
+</mapper>

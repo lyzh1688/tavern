@@ -12,24 +12,26 @@ import javax.validation.constraints.NotNull;
 public class CustomInfoDTO {
     @NotNull
     private String customId;
-
     @NotNull
-    private String customAccnt;
+    private String weixinAccnt;
 
+    private String weixinName;
+    @NotNull
+    private String wangwangAccnt;
+    @NotNull
+    private String contactPerson;
+    @NotNull
+    private String contactNumber;
+
+    private String corporation;
+
+    private String corporationNumber;
+    @NotNull
+    private String customLevel;
+    @NotNull
     private String customName;
 
-    @NotNull
-    private String password;
-
-    private String contactName;
-
-    private String contactTel;
-
-    private String bankId;
-
-    private String bankName;
-
-    private String financeDiskType;
+    private String updateDate;
 
 
 

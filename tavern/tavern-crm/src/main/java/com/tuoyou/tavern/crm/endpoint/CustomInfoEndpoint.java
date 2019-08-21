@@ -49,7 +49,6 @@ public class CustomInfoEndpoint {
                     .map(info -> {
                         CrmCustomBasicInfo crmCustomBasicInfo = new CrmCustomBasicInfo();
                         crmCustomBasicInfo.setCustomId(info);
-                        crmCustomBasicInfo.setIsValid("0");
                         crmCustomBasicInfo.setUpdateDate(LocalDateTime.now());
                         return crmCustomBasicInfo;
                     }).collect(Collectors.toList());

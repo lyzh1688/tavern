@@ -3,6 +3,7 @@ package com.tuoyou.tavern.protocol.crm.model;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -12,23 +13,23 @@ import javax.validation.constraints.NotNull;
 public class CustomBasicInfoVO {
     private String customId;
 
-    private String customAccnt;
+    private String weixinAccnt;
+
+    private String weixinName;
+
+    private String wangwangAccnt;
+
+    private String contactPerson;
+
+    private String contactNumber;
+
+    private String corporation;
+
+    private String corporationNumber;
+
+    private String customLevel;
 
     private String customName;
-
-    private String password;
-
-    private String roleId;
-
-    private String contactName;
-
-    private String contactTel;
-
-    private String bankId;
-
-    private String bankName;
-
-    private String financeDiskType;
 
     private String updateDate;
 

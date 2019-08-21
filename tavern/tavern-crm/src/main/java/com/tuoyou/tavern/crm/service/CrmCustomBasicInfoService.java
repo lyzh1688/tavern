@@ -15,6 +15,8 @@ import com.tuoyou.tavern.protocol.crm.model.CustomBasicInfoVO;
 public interface CrmCustomBasicInfoService extends IService<CrmCustomBasicInfo> {
 
     void createCustom(CustomInfoDTO customInfoDTO);
+
     IPage<CustomBasicInfoVO> getBasicInfoPage(Page page, CustomQueryDTO customQueryDTO);
-    CustomBasicInfoVO getBasicInfo(String accnt,String password);
+
+    CustomBasicInfoVO getBasicInfo(String accnt, String password);
 }

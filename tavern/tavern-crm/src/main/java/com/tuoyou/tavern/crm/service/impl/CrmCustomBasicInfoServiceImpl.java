@@ -3,11 +3,9 @@ package com.tuoyou.tavern.crm.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.tuoyou.tavern.crm.dao.CrmCustomBasicInfoMapper;
-import com.tuoyou.tavern.crm.service.CrmBankInfoService;
+import com.tuoyou.tavern.crm.dao.CrmCustomBasicMapper;
 import com.tuoyou.tavern.crm.service.CrmCustomBankInfoService;
 import com.tuoyou.tavern.crm.service.CrmCustomBasicInfoService;
-import com.tuoyou.tavern.crm.service.CrmCustomFinanceInfoService;
 import com.tuoyou.tavern.protocol.crm.dto.CustomInfoDTO;
 import com.tuoyou.tavern.protocol.crm.dto.CustomQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.*;
@@ -24,11 +22,10 @@ import java.time.LocalDateTime;
  */
 @AllArgsConstructor
 @Service
-public class CrmCustomBasicInfoServiceImpl extends ServiceImpl<CrmCustomBasicInfoMapper, CrmCustomBasicInfo> implements CrmCustomBasicInfoService {
+public class CrmCustomBasicInfoServiceImpl extends ServiceImpl<CrmCustomBasicMapper, CrmCustomBasicInfo> implements CrmCustomBasicInfoService {
 
     private final CrmCustomBankInfoService crmCustomBankInfoService;
-    private final CrmCustomFinanceInfoService crmCustomFinanceInfoService;
-    private final CrmBankInfoService crmBankInfoService;
+    private final CrmCustomBankInfoService crmBankInfoService;
 
 
     @Transactional
@@ -38,7 +35,7 @@ public class CrmCustomBasicInfoServiceImpl extends ServiceImpl<CrmCustomBasicInf
         BeanUtils.copyProperties(customInfoDTO, crmCustomBasicInfo);
         crmCustomBasicInfo.setIsValid("1");
         crmCustomBasicInfo.setUpdateDate(LocalDateTime.now());
-        CrmCustomBankInfo crmCustomBankInfo = new CrmCustomBankInfo();
+        CrmBankInfo crmCustomBankInfo = new CrmBankInfo();
         BeanUtils.copyProperties(customInfoDTO, crmCustomBankInfo);
         crmCustomBankInfo.setUpdateDate(LocalDateTime.now());
         CrmBankInfo crmBankInfo = new CrmBankInfo();

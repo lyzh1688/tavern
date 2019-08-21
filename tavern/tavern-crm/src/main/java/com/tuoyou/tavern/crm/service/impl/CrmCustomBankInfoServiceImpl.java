@@ -1,9 +1,9 @@
 package com.tuoyou.tavern.crm.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.tuoyou.tavern.crm.dao.CrmCustomBankInfoMapper;
+import com.tuoyou.tavern.crm.dao.CrmBankInfoMapper;
 import com.tuoyou.tavern.crm.service.CrmCustomBankInfoService;
-import com.tuoyou.tavern.protocol.crm.model.CrmCustomBankInfo;
+import com.tuoyou.tavern.protocol.crm.model.CrmBankInfo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,5 +13,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @AllArgsConstructor
-public class CrmCustomBankInfoServiceImpl extends ServiceImpl<CrmCustomBankInfoMapper, CrmCustomBankInfo> implements CrmCustomBankInfoService {
+public class CrmCustomBankInfoServiceImpl extends ServiceImpl<CrmBankInfoMapper, CrmBankInfo> implements CrmCustomBankInfoService {
 }

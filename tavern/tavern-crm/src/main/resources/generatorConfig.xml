@@ -25,7 +25,7 @@
 
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.tuoyou.tavern.crm.mapper" targetProject="src/main/java" />
 
-        <table tableName="CRM_BANK_INFO" domainObjectName="CrmBankInfo">
+        <!--<table tableName="CRM_BANK_INFO" domainObjectName="CrmBankInfo">
         </table>
         <table tableName="CRM_BUSINESS_DICT" domainObjectName="CrmBusinessDict">
         </table>
@@ -34,10 +34,10 @@
         <table tableName="CRM_COMPANY_BUSINESS" domainObjectName="CrmCompanyBusiness">
         </table>
         <table tableName="CRM_COMPANY_INFO" domainObjectName="CrmCompanyInfo">
-        </table>
+        </table>-->
         <table tableName="CRM_CUSTOM_BASIC_INFO" domainObjectName="CrmCustomBasicInfo">
         </table>
-        <table tableName="CRM_CUSTOM_COMPANY_REL" domainObjectName="CrmCustomCompanyRel">
+       <!-- <table tableName="CRM_CUSTOM_COMPANY_REL" domainObjectName="CrmCustomCompanyRel">
         </table>
         <table tableName="CRM_CUSTOM_ORDER_INFO" domainObjectName="CrmCustomOrderInfo">
         </table>
@@ -48,7 +48,7 @@
         <table tableName="CRM_ORDER_GJJSBDJ_DETAIL" domainObjectName="CrmOrderGjjsbdjDetail">
         </table>
         <table tableName="CRM_ORDER_GSZC_DETAIL" domainObjectName="CrmOrderGszcDetail">
-        </table>
+        </table>-->
 
 
 

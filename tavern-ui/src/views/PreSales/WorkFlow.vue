@@ -110,12 +110,13 @@
     },
     methods: {
       initG6() {
+        let _this = this;
         const data = {
           nodes: [{
             id: 'node1',
             label: '流程开始',
-            x: 100,
-            y: 100,
+            x: 200,
+            y: 300,
             labelCfg: {
               position: 'right',
               offset: 5
@@ -136,8 +137,8 @@
           }, {
             id: 'node3',
             label: '李四同意',
-            x: 100,
-            y: 300,
+            x: 200,
+            y: 200,
             labelCfg: {
               position: 'right',
               offset: 5
@@ -147,8 +148,8 @@
           }, {
             id: 'node4',
             label: '王五代缴社保',
-            x: 100,
-            y: 400,
+            x: 300,
+            y: 200,
             labelCfg: {
               position: 'right',
               offset: 5
@@ -158,8 +159,8 @@
           }, {
             id: 'node5',
             label: '流程结束',
-            x: 100,
-            y: 500,
+            x: 300,
+            y: 300,
             labelCfg: {
               position: 'right',
               offset: 5
@@ -168,18 +169,18 @@
             }
           },],
           edges: [{
-            target: 'node2',
-            source: 'node1'
+            source: 'node1',
+            target: 'node2'
           },
             {
-              target: 'node3',
-              source: 'node2'
+              source: 'node1',
+              target: 'node3'
             }, {
-              target: 'node4',
-              source: 'node3'
+              source: 'node1',
+              target: 'node4'
             }, {
-              target: 'node5',
-              source: 'node4'
+              source: 'node4',
+              target: 'node5'
             }]
         };
         const graph = new G6.Graph({
@@ -197,9 +198,11 @@
         });
         graph.read(data);
         graph.on('click', function (ev) {
-          this.handleBak(null)
+          _this.handleBak(null)
         });
-      },
+      },handleBak() {
+        this.dialogVisible = true
+      }
     }
   }
 </script>
