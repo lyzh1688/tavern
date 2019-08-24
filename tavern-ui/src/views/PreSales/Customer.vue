@@ -3,11 +3,11 @@
     <!--工具栏-->
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
       <el-form :inline="true" :model="filters" :size="size">
-        <el-form-item label="旺旺账号" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入旺旺账号"></el-input>
+        <el-form-item label="旺旺账号" label-width="100px" prop="wangwangAccnt">
+          <el-input v-model="filters.wangwangAccnt" placeholder="请输入旺旺账号"></el-input>
         </el-form-item>
-        <el-form-item label="客户姓名" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入客户姓名"></el-input>
+        <el-form-item label="客户姓名" label-width="100px" prop="customName">
+          <el-input v-model="filters.customName" placeholder="请输入客户姓名"></el-input>
         </el-form-item>
         <el-form-item>
           <kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary"
@@ -29,9 +29,6 @@
             <el-tooltip content="列显示" placement="top">
               <el-button icon="fa fa-filter" @click="displayFilterColumnsDialog"></el-button>
             </el-tooltip>
-            <el-tooltip content="导出" placement="top">
-              <el-button icon="fa fa-file-excel-o"></el-button>
-            </el-tooltip>
           </el-button-group>
         </el-form-item>
       </el-form>
@@ -41,80 +38,83 @@
       </table-column-filter-dialog>
     </div>
 
-    <el-table :data="pageResult.content" stripe stripe height="600" size="mini" style="width: 100%;" v-loading="loading">
-      <el-table-column prop="id" header-align="center" align="center" label="客户ID">
+    <el-table :data="tableData" stripe stripe height="600" size="mini" style="width: 100%;"
+              v-loading="loading">
+      <el-table-column prop="customId" header-align="center" align="center" label="客户ID" v-if="false">
       </el-table-column>
-      <el-table-column prop="name" label="客户姓名" header-align="center" align="center">
+      <el-table-column prop="customName" label="客户姓名" header-align="center" align="center">
       </el-table-column>
-      <el-table-column prop="aliAccnt" label="旺旺账号" header-align="center" align="center">
+      <el-table-column prop="wangwangAccnt" label="旺旺账号" header-align="center" align="center">
       </el-table-column>
-      <el-table-column prop="wechatAccnt" label="微信账号" header-align="center" align="center">
+      <el-table-column prop="weixinAccnt" label="微信账号" header-align="center" align="center">
       </el-table-column>
-      <el-table-column prop="wechatName" label="微信昵称" header-align="center" align="center">
+      <el-table-column prop="weixinName" label="微信昵称" header-align="center" align="center">
       </el-table-column>
-      <el-table-column prop="mobile" label="联系电话" header-align="center" align="center">
+      <el-table-column prop="contactNumber" label="联系电话" header-align="center" align="center">
       </el-table-column>
-      <el-table-column prop="createTime" label="创建时间" header-align="center" align="center">
+      <el-table-column prop="updateDate" label="创建时间" header-align="center" align="center">
       </el-table-column>
-      <el-table-column fixed="right"label="操作" header-align="center" align="center" width="500">
+      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
         <template slot-scope="scope">
           <kt-button icon="fa fa-edit" label="修改客户" perms="sys:user:add" type="primary"
-                     @click="handleEdit"/>
+                     @click="handleEdit(scope.row)"/>
           <kt-button icon="fa fa-retweet" label="客户详情" perms="sys:user:add" type="primary"
-                     @click="handleDtl"/>
+                     @click="handleDtl(scope.row)"/>
           <kt-button icon="fa fa-shopping-cart" label="客户订单" perms="sys:user:add" type="primary"
                      @click="handleOrder"/>
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
-                     @click="handleDelete(scope.row)" />
+                     @click="handleDelete(scope.row)"/>
         </template>
       </el-table-column>
     </el-table>
     <div class="toolbar" style="padding:10px;">
-      <el-pagination layout="total, prev, pager, next, jumper"
-                     @current-change="handleCurrentChange"
-                     :current-page="pageRequest.pageNum"
-                     :page-size="pageRequest.pageSize"
-                     :total="totalSize" style="float:right;">
+      <el-pagination layout="total, prev, pager, next, jumper" @current-change="handleCurrentChange"
+                     :current-page="pageRequest.current" :page-size="pageRequest.size" :total="total"
+                     style="float:right;">
       </el-pagination>
     </div>
     <!--新增编辑界面-->
     <el-dialog :title="operation?'新增':'编辑'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
       <el-form :model="dataForm" label-width="80px" :rules="dataFormRules" ref="dataForm" :size="size"
                label-position="right">
-        <el-form-item label="ID" prop="id" v-if="false">
-          <el-input v-model="dataForm.id" :disabled="true" auto-complete="off"></el-input>
+        <el-form-item label="客户ID" label-width="100px" prop="customId" v-if="editShow">
+          <el-input v-model="dataForm.customId" disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="用户名" prop="name">
-          <el-input v-model="dataForm.name" auto-complete="off"></el-input>
+        <el-form-item label="法人姓名" label-width="100px" prop="corporation">
+          <el-input v-model="dataForm.corporation" placeholder="请输入法人姓名"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="dataForm.password" type="password" auto-complete="off"></el-input>
+        <el-form-item label="法人电话" label-width="100px" prop="corporationNumber">
+          <el-input v-model="dataForm.corporationNumber" placeholder="请输入法人电话"></el-input>
         </el-form-item>
-        <el-form-item label="机构" prop="deptName">
-          <popup-tree-input
-            :data="deptData"
-            :props="deptTreeProps"
-            :prop="dataForm.deptName"
-            :nodeKey="''+dataForm.deptId"
-            :currentChangeHandle="deptTreeCurrentChangeHandle">
-          </popup-tree-input>
+        <el-form-item label="旺旺账号" label-width="100px" prop="wangwangAccnt">
+          <el-input v-model="dataForm.wangwangAccnt" placeholder="请输入旺旺账号"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="dataForm.email" auto-complete="off"></el-input>
+        <el-form-item label="微信账号" label-width="100px" prop="weixinAccnt">
+          <el-input v-model="dataForm.weixinAccnt" placeholder="请输入微信账号"></el-input>
         </el-form-item>
-        <el-form-item label="手机" prop="mobile">
-          <el-input v-model="dataForm.mobile" auto-complete="off"></el-input>
+        <el-form-item label="微信昵称" label-width="100px" prop="weixinName">
+          <el-input v-model="dataForm.weixinName" placeholder="请输入微信昵称"></el-input>
         </el-form-item>
-        <el-form-item label="角色" prop="userRoles" v-if="!operation">
-          <el-select v-model="dataForm.userRoles" multiple placeholder="请选择"
-                     style="width: 100%;">
-            <el-option v-for="item in roles" :key="item.id"
-                       :label="item.remark" :value="item.id">
-            </el-option>
+        <el-form-item label="联系人姓名" label-width="100px" prop="contactPerson">
+          <el-input v-model="dataForm.contactPerson" placeholder="请输入联系人姓名"></el-input>
+        </el-form-item>
+        <el-form-item label="联系人电话" label-width="100px" prop="contactNumber">
+          <el-input v-model="dataForm.contactNumber" placeholder="请输入联系人电话"></el-input>
+        </el-form-item>
+        <el-form-item label="客户姓名" label-width="100px" prop="customName">
+          <el-input v-model="dataForm.customName" placeholder="请输入客户姓名"></el-input>
+        </el-form-item>
+        <el-form-item label="客户等级" label-width="100px" prop="customLevel">
+          <el-select v-model="dataForm.customLevel" clearable auto-complete="off" placeholder="请选择客户等级"
+                     style="float: left">
+            <el-option label="VVIP" value='VVIP'></el-option>
+            <el-option label="VIP" value='VIP'></el-option>
+            <el-option label="高级客户" value='高级客户'></el-option>
+            <el-option label="普通客户" value='普通客户'></el-option>
           </el-select>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer" align="center">
         <el-button :size="size" @click.native="dialogVisible = false">{{$t('action.cancel')}}</el-button>
         <el-button :size="size" type="primary" @click.native="submitForm" :loading="editLoading">
           {{$t('action.submit')}}
@@ -142,40 +142,58 @@
       return {
         size: 'small',
         filters: {
-          name: ''
+          wangwangAccnt: '',
+          customName: ''
         },
-        loading:false,
+        tableData: [],
+        loading: false,
         columns: [],
         filterColumns: [],
-        pageRequest: {pageNum: 1, pageSize: 10},
+        pageRequest: {
+          current: 1,
+          size: 20,
+        },
+        total: 0,
         pageResult: {},
 
         operation: false, // true:新增, false:编辑
         dialogVisible: false, // 新增编辑界面是否显示
         editLoading: false,
+        editShow: false,
         dataFormRules: {
-          name: [
-            {required: true, message: '请输入用户名', trigger: 'blur'}
+          weixinAccnt: [
+            {required: true, message: '请输入微信号', trigger: 'blur'}
+          ],
+          wangwangAccnt: [
+            {required: true, message: '请输入旺旺号', trigger: 'blur'}
+          ],
+          contactPerson: [
+            {required: true, message: '请输入联系人', trigger: 'blur'}
+          ],
+          contactNumber: [
+            {required: true, message: '请输入联系电话', trigger: 'blur'}
+          ],
+          customLevel: [
+            {required: true, message: '请输入客户等级', trigger: 'blur'}
+          ],
+          customName: [
+            {required: true, message: '请输入客户名称', trigger: 'blur'}
           ]
         },
         // 新增编辑界面数据
         dataForm: {
-          id: 0,
-          name: '',
-          password: '123456',
-          deptId: 1,
-          deptName: '',
-          email: 'test@qq.com',
-          mobile: '13889700023',
-          status: 1,
-          userRoles: []
+          customId: '',
+          weixinAccnt: '',
+          weixinName: '',
+          wangwangAccnt: '',
+          contactPerson: '',
+          contactNumber: '',
+          corporation: '',
+          corporationNumber: '',
+          customLevel: '',
+          customName: '',
+          updateDate: ''
         },
-        deptData: [],
-        deptTreeProps: {
-          label: 'name',
-          children: 'children'
-        },
-        roles: []
       }
     },
     created() {
@@ -187,33 +205,48 @@
         if (data !== null) {
           this.pageRequest = data.pageRequest
         }
-        this.pageRequest.columnFilters = {name: {name: 'name', value: this.filters.name}}
+        this.pageRequest.wangwangAccnt = this.filters.wangwangAccnt;
+        this.pageRequest.customName = this.filters.customName;
         this.$api.customer.findPage(this.pageRequest).then((res) => {
-          this.pageResult = res.data
-          this.pageRequest.pageNum = res.data.pageNum
-          this.pageRequest.pageSize = res.data.pageSize
-          this.totalSize = res.data.totalSize
+          this.tableData = res.data.records;
+          this.total = res.data.total;
+          this.pageRequest.current = res.data.current;
+          this.pageRequest.size = res.data.size;
         }).then(data != null ? data.callback : '')
+          .catch((res) => {
+            this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
+          })
       },
-      // 加载用户角色信息
-      findUserRoles: function () {
-        this.$api.role.findAll().then((res) => {
-          // 加载角色集合
-          this.roles = res.data
-        })
-      },
+      /*// 批量删除
+      handleDelete: function (data) {
+        alert(JSON.stringify(data))
+        this.$api.customer.batchDelete(data.params).then(data != null ? data.callback : '')
+      },*/
       // 批量删除
       handleDelete: function (data) {
-        this.$api.customer.batchDelete(data.params).then(data != null ? data.callback : '')
+        this.$confirm('确认删除选中记录吗？', '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.loading = true
+          let callback = res => {
+            if (res.retCode == 0) {
+              this.$message({message: '删除成功', type: 'success'})
+              this.findPage(null)
+            } else {
+              this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
+            }
+            this.loading = false
+          }
+          let ids =[]
+          ids.push(data.customId)
+          this.$api.customer.batchDelete(ids).then(data != null ? callback : '').catch((res) => {
+            this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'});
+            this.loading = false
+          })
+        })
       },
-      handleAdd: function () {
-        this.$router.push({path: '/preSales/customerDtl'})
-      },
-      handleEdit: function () {
-        this.$router.push({path: '/preSales/customerDtl'})
-      },
-      handleDtl: function () {
-        this.$router.push({path: '/preSales/customerDtl'})
+      handleDtl: function (params) {
+        this.$router.push({name: '客户详情',params:params})
       },
       handleOrder: function () {
         this.$router.push({path: '/preSales/order'})
@@ -221,32 +254,17 @@
 
 
       // 显示新增界面
-     /* handleAdd: function () {
+      handleAdd: function () {
         this.dialogVisible = true
         this.operation = true
-        this.dataForm = {
-          id: 0,
-          name: '',
-          password: '',
-          deptId: 1,
-          deptName: '',
-          email: 'test@qq.com',
-          mobile: '13889700023',
-          status: 1,
-          userRoles: []
-        }
       },
       // 显示编辑界面
       handleEdit: function (params) {
         this.dialogVisible = true
         this.operation = false
-        this.dataForm = Object.assign({}, params.row)
-        let userRoles = []
-        for (let i = 0, len = params.row.userRoles.length; i < len; i++) {
-          userRoles.push(params.row.userRoles[i].roleId)
-        }
-        this.dataForm.userRoles = userRoles
-      },*/
+        this.editShow = true
+        this.dataForm = Object.assign({}, params)
+      },
       // 编辑
       submitForm: function () {
         this.$refs.dataForm.validate((valid) => {
@@ -254,44 +272,20 @@
             this.$confirm('确认提交吗？', '提示', {}).then(() => {
               this.editLoading = true
               let params = Object.assign({}, this.dataForm)
-              let userRoles = []
-              for (let i = 0, len = params.userRoles.length; i < len; i++) {
-                let userRole = {
-                  userId: params.id,
-                  roleId: params.userRoles[i]
-                }
-                userRoles.push(userRole)
-              }
-              params.userRoles = userRoles
               this.$api.customer.save(params).then((res) => {
                 this.editLoading = false
-                if (res.code == 200) {
+                if (res.retCode == 0) {
                   this.$message({message: '操作成功', type: 'success'})
                   this.dialogVisible = false
                   this.$refs['dataForm'].resetFields()
                 } else {
-                  this.$message({message: '操作失败, ' + res.msg, type: 'error'})
+                  this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
                 }
                 this.findPage(null)
               })
             })
           }
         })
-      },
-      // 获取部门列表
-      findDeptTree: function () {
-        this.$api.dept.findDeptTree().then((res) => {
-          this.deptData = res.data
-        })
-      },
-      // 菜单树选中
-      deptTreeCurrentChangeHandle(data, node) {
-        this.dataForm.deptId = data.id
-        this.dataForm.deptName = data.name
-      },
-      // 时间格式化
-      dateFormat: function (row, column, cellValue, index) {
-        return format(row[column.property])
       },
       // 处理表格列过滤显示
       displayFilterColumnsDialog: function () {
@@ -302,28 +296,13 @@
         this.filterColumns = data.filterColumns
         this.$refs.tableColumnFilterDialog.setDialogVisible(false)
       },
-      // 处理表格列过滤显示
-      initColumns: function () {
-        this.columns = [
-          {prop: "id", label: "客户ID", minWidth: 50},
-          {prop: "name", label: "客户姓名", minWidth: 120},
-          {prop: "aliAccnt", label: "旺旺账号", minWidth: 120},
-          {prop: "wechatAccnt", label: "微信账号", minWidth: 100},
-          {prop: "wechatName", label: "微信昵称", minWidth: 120},
-          {prop: "mobile", label: "联系电话", minWidth: 100},
-          {prop: "createTime", label: "创建时间", minWidth: 70},
-        ]
-        this.filterColumns = JSON.parse(JSON.stringify(this.columns));
-      },
       handleCurrentChange(val) {
         let _this = this;
-        _this.pageRequest.pageNum = val;
+        _this.pageRequest.current = val;
         _this.findPage(_this.pageRequest);
-      },
+      }
     },
     mounted() {
-      // this.findDeptTree()
-      this.initColumns()
     }
   }
 </script>

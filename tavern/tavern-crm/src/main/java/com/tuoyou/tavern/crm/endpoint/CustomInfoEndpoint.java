@@ -2,21 +2,17 @@ package com.tuoyou.tavern.crm.endpoint;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tuoyou.tavern.crm.service.CrmCustomBasicInfoService;
-import com.tuoyou.tavern.protocol.common.RetCode;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import com.tuoyou.tavern.protocol.crm.dto.CustomInfoDTO;
 import com.tuoyou.tavern.protocol.crm.dto.CustomQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCustomBasicInfo;
-import com.tuoyou.tavern.protocol.crm.model.CustomBasicInfoVO;
 import com.tuoyou.tavern.protocol.crm.response.CustomInfoPageResponse;
-import com.tuoyou.tavern.protocol.crm.response.CustomInfoResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -25,7 +21,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/crm")
+@RequestMapping("/info")
 public class CustomInfoEndpoint {
 
     private final CrmCustomBasicInfoService crmCustomBasicInfoService;
@@ -43,13 +39,14 @@ public class CustomInfoEndpoint {
      * 删除客户
      */
     @DeleteMapping("/delete")
-    public TavernResponse deleteCustom(List<String> customIdList) {
+    public TavernResponse deleteCustom(@RequestBody List<String> customIdList) {
         if (!customIdList.isEmpty()) {
             List<CrmCustomBasicInfo> crmCustomBasicInfoList = customIdList.stream()
                     .map(info -> {
                         CrmCustomBasicInfo crmCustomBasicInfo = new CrmCustomBasicInfo();
                         crmCustomBasicInfo.setCustomId(info);
                         crmCustomBasicInfo.setUpdateDate(LocalDateTime.now());
+                        crmCustomBasicInfo.setIsValid("0");
                         return crmCustomBasicInfo;
                     }).collect(Collectors.toList());
             this.crmCustomBasicInfoService.updateBatchById(crmCustomBasicInfoList);
@@ -67,7 +64,7 @@ public class CustomInfoEndpoint {
 
     /**
      * 登录查询用户
-     */
+     *//*
     @GetMapping("/info")
     public CustomInfoResponse getCustomInfo(@PathVariable("accnt") String accnt, @PathVariable("password") String password) {
         CustomBasicInfoVO customBasicInfoVO = this.crmCustomBasicInfoService.getBasicInfo(accnt, password);
@@ -80,7 +77,7 @@ public class CustomInfoEndpoint {
             customInfoResponse.setData(customBasicInfoVO);
             return customInfoResponse;
         }
-    }
+    }*/
 
 
 }

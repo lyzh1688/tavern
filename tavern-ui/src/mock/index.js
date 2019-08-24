@@ -35,7 +35,7 @@ fnCreate(accountant, true)
 fnCreate(bank, openMock)
 fnCreate(invoice, openMock)
 fnCreate(extrainvoice, openMock)
-fnCreate(customer, true)
+fnCreate(customer, openMock)
 fnCreate(order, true)
 fnCreate(outer, true)
 

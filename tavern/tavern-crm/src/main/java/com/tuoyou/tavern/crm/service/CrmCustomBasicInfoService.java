@@ -18,5 +18,4 @@ public interface CrmCustomBasicInfoService extends IService<CrmCustomBasicInfo> 
 
     IPage<CustomBasicInfoVO> getBasicInfoPage(Page page, CustomQueryDTO customQueryDTO);
 
-    CustomBasicInfoVO getBasicInfo(String accnt, String password);
 }

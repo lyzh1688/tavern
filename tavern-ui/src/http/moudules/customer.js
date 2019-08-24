@@ -1,13 +1,13 @@
 import axios from '../axios'
 
 /*
- * 用户管理模块
+ * 客户管理模块
  */
 
 // 保存
 export const save = (data) => {
     return axios({
-        url: '/user/customer/save',
+        url: '/crm/info/save',
         method: 'post',
         data
     })
@@ -15,17 +15,17 @@ export const save = (data) => {
 // 删除
 export const batchDelete = (data) => {
     return axios({
-        url: '/user/customer/delete',
-        method: 'post',
+        url: '/crm/info/delete',
+        method: 'delete',
         data
     })
 }
 // 分页查询
-export const findPage = (data) => {
+export const findPage = (params) => {
     return axios({
-        url: '/user/customer/findPage',
-        method: 'post',
-        data
+        url: '/crm/info/page',
+        method: 'get',
+        params
     })
 }
 // 分页查询

@@ -12,7 +12,8 @@ import com.tuoyou.tavern.alleria.configuration.TTLContext;
 import com.tuoyou.tavern.alleria.invoice.dao.StdInvoiceRecordMapper;
 import com.tuoyou.tavern.alleria.invoice.service.StdInvoiceDtlRecordService;
 import com.tuoyou.tavern.alleria.invoice.service.StdInvoiceRecordService;
-import com.tuoyou.tavern.alleria.util.CommonUtils;
+import com.tuoyou.tavern.alleria.util.FileUtils;
+import com.tuoyou.tavern.common.core.util.CommonUtils;
 import com.tuoyou.tavern.alleria.util.FileTransfer;
 import com.tuoyou.tavern.alleria.zzs.service.ZzsTaxScanResultService;
 import com.tuoyou.tavern.common.core.util.DateUtils;
@@ -122,7 +123,7 @@ public class StdInvoiceRecordServiceImpl extends ServiceImpl<StdInvoiceRecordMap
                 this.saveOrUpdateBatch(stdInvoiceRecordList);
                 this.stdInvoiceDtlRecordService.saveOrUpdateBatch(stdInvoiceDtlRecordList);
             }
-            JSONObject fileUploadObject = CommonUtils.percentageRecord(i, files.length);
+            JSONObject fileUploadObject = FileUtils.percentageRecord(i, files.length);
             ttlContext.putValue(batchId, fileUploadObject);
             log.info("stdInvoice upload batchId: {} file complete: {}", batchId, fileUploadObject.getDouble("percentage"));
         }

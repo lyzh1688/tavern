@@ -31,6 +31,9 @@
         <if test="query.customName != null and query.customName != ''">
             and t1.CUSTOM_NAME = #{query.customName}
         </if>
+        <if test="query.wangwangAccnt != null and query.wangwangAccnt != ''">
+            and t1.CUSTOM_NAME = #{query.customName}
+        </if>
     </select>
     <select id="selectBasicInfo" resultType="com.tuoyou.tavern.protocol.crm.model.CustomBasicInfoVO">
         select t1.CUSTOM_ID customId,

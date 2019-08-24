@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 public class CustomInfoDTO {
-    @NotNull
     private String customId;
     @NotNull
     private String weixinAccnt;

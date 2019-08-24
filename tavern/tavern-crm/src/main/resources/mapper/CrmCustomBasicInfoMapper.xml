@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tuoyou.tavern.crm.dao.CrmCustomBasicInfoMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.CrmCustomBasicInfo">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.crm.model.CrmCustomBasicInfo">
     <id column="CUSTOM_ID" jdbcType="VARCHAR" property="customId" />
     <result column="WEIXIN_ACCNT" jdbcType="VARCHAR" property="weixinAccnt" />
     <result column="WEIXIN_NAME" jdbcType="VARCHAR" property="weixinName" />
@@ -15,46 +15,18 @@
     <result column="IS_VALID" jdbcType="VARCHAR" property="isValid" />
     <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from CRM_CUSTOM_BASIC_INFO
-    where CUSTOM_ID = #{customId,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.CrmCustomBasicInfo">
-    insert into CRM_CUSTOM_BASIC_INFO (CUSTOM_ID, WEIXIN_ACCNT, WEIXIN_NAME, 
-      WANGWANG_ACCNT, CONTACT_PERSON, CONTACT_NUMBER, 
-      CORPORATION, CORPORATION_NUMBER, CUSTOM_LEVEL, 
-      CUSTOM_NAME, IS_VALID, UPDATE_DATE
-      )
-    values (#{customId,jdbcType=VARCHAR}, #{weixinAccnt,jdbcType=VARCHAR}, #{weixinName,jdbcType=VARCHAR}, 
-      #{wangwangAccnt,jdbcType=VARCHAR}, #{contactPerson,jdbcType=VARCHAR}, #{contactNumber,jdbcType=VARCHAR}, 
-      #{corporation,jdbcType=VARCHAR}, #{corporationNumber,jdbcType=VARCHAR}, #{customLevel,jdbcType=VARCHAR}, 
-      #{customName,jdbcType=VARCHAR}, #{isValid,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.entity.CrmCustomBasicInfo">
-    update CRM_CUSTOM_BASIC_INFO
-    set WEIXIN_ACCNT = #{weixinAccnt,jdbcType=VARCHAR},
-      WEIXIN_NAME = #{weixinName,jdbcType=VARCHAR},
-      WANGWANG_ACCNT = #{wangwangAccnt,jdbcType=VARCHAR},
-      CONTACT_PERSON = #{contactPerson,jdbcType=VARCHAR},
-      CONTACT_NUMBER = #{contactNumber,jdbcType=VARCHAR},
-      CORPORATION = #{corporation,jdbcType=VARCHAR},
-      CORPORATION_NUMBER = #{corporationNumber,jdbcType=VARCHAR},
-      CUSTOM_LEVEL = #{customLevel,jdbcType=VARCHAR},
-      CUSTOM_NAME = #{customName,jdbcType=VARCHAR},
-      IS_VALID = #{isValid,jdbcType=VARCHAR},
-      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP}
-    where CUSTOM_ID = #{customId,jdbcType=VARCHAR}
-  </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select CUSTOM_ID, WEIXIN_ACCNT, WEIXIN_NAME, WANGWANG_ACCNT, CONTACT_PERSON, CONTACT_NUMBER, 
+
+  <select id="selectBasicInfoPage" resultMap="BaseResultMap">
+    select CUSTOM_ID, WEIXIN_ACCNT, WEIXIN_NAME, WANGWANG_ACCNT, CONTACT_PERSON, CONTACT_NUMBER,
     CORPORATION, CORPORATION_NUMBER, CUSTOM_LEVEL, CUSTOM_NAME, IS_VALID, UPDATE_DATE
     from CRM_CUSTOM_BASIC_INFO
-    where CUSTOM_ID = #{customId,jdbcType=VARCHAR}
+    where IS_VALID = '1'
+    <if test="query.customName != null and query.customName != ''">
+      and CUSTOM_NAME like concat('%',  #{query.customName}, '%')
+    </if>
+    <if test="query.wangwangAccnt != null and query.wangwangAccnt != ''">
+      and WANGWANG_ACCNT like concat('%',  #{query.wangwangAccnt}, '%')
+    </if>
   </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select CUSTOM_ID, WEIXIN_ACCNT, WEIXIN_NAME, WANGWANG_ACCNT, CONTACT_PERSON, CONTACT_NUMBER, 
-    CORPORATION, CORPORATION_NUMBER, CUSTOM_LEVEL, CUSTOM_NAME, IS_VALID, UPDATE_DATE
-    from CRM_CUSTOM_BASIC_INFO
-  </select>
+
 </mapper>

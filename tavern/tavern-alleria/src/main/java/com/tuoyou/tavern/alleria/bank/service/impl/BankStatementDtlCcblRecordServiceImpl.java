@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tuoyou.tavern.alleria.bank.dao.BankStatementDtlCcblRecordMapper;
 import com.tuoyou.tavern.alleria.bank.service.BankStatementDtlCcblRecordService;
-import com.tuoyou.tavern.alleria.util.CommonUtils;
+import com.tuoyou.tavern.common.core.util.CommonUtils;
 import com.tuoyou.tavern.common.core.util.DateUtils;
 import com.tuoyou.tavern.protocol.alleria.dto.BankStatementDtlDTO;
 import com.tuoyou.tavern.protocol.alleria.model.BankStatementDtlCcblRecord;

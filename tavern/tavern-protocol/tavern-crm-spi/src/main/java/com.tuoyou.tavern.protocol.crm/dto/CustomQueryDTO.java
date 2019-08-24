@@ -9,4 +9,5 @@ import lombok.Data;
 @Data
 public class CustomQueryDTO {
     private String customName;
+    private String wangwangAccnt;
 }

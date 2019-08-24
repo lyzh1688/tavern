@@ -2,40 +2,47 @@
   <div class="page-container">
     <!--工具栏-->
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
-      <el-form :inline="true" :model="filters" :size="size">
-        <el-form-item label="客户姓名" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入客户姓名"></el-input>
+      <el-form :inline="true" :model="dtlFrom" :size="size" align="left">
+        <el-form-item label="法人姓名" label-width="100px">
+          <el-input v-model="dtlFrom.corporation" placeholder="请输入法人姓名" disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="旺旺账号" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入旺旺账号"></el-input>
+        <el-form-item label="法人电话" label-width="100px">
+          <el-input v-model="dtlFrom.corporationNumber" placeholder="请输入法人电话" disabled="true"></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" :size="size">
+      <el-form :inline="true" :model="dtlFrom" :size="size" align="left">
+        <el-form-item label="旺旺账号" label-width="100px">
+          <el-input v-model="dtlFrom.wangwangAccnt" placeholder="请输入旺旺账号" disabled="true"></el-input>
+        </el-form-item>
         <el-form-item label="微信账号" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入微信账号"></el-input>
+          <el-input v-model="dtlFrom.weixinAccnt" placeholder="请输入微信账号" disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="微信昵称" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入微信昵称"></el-input>
+          <el-input v-model="dtlFrom.weixinName" placeholder="请输入微信昵称" disabled="true"></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" :size="size">
+      <el-form :inline="true" :model="dtlFrom" :size="size" align="left">
+        <el-form-item label="联系人姓名" label-width="100px">
+          <el-input v-model="dtlFrom.contactPerson" placeholder="请输入联系人姓名" disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="联系人电话" label-width="100px">
+          <el-input v-model="dtlFrom.contactNumber" placeholder="请输入联系人电话" disabled="true"></el-input>
+        </el-form-item>
+      </el-form>
+      <el-form :inline="true" :model="dtlFrom" :size="size" align="left">
+        <el-form-item label="客户姓名" label-width="100px" prop="customName">
+          <el-input v-model="dtlFrom.customName" placeholder="请输入客户姓名" disabled="true"></el-input>
+        </el-form-item>
         <el-form-item label="客户等级" label-width="100px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择客户等级" >
-            <el-option label="VVIP" value='0'></el-option>
-            <el-option label="VIP" value='1'></el-option>
-            <el-option label="高级客户" value='2'></el-option>
-            <el-option label="普通客户" value='3'></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="联系方式" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入联系方式"></el-input>
+          <el-input v-model="dtlFrom.customLevel" clearable auto-complete="off" placeholder="请选择客户等级" disabled="true">
+          </el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" :size="size" align="left">
-        <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary"
-                     @click="findPage(null)"/>
-        </el-form-item>
+      <el-form :inline="true" :model="dtlFrom" :size="size" align="left">
+        <!--  <el-form-item>
+            <kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary"
+                       @click="findPage(null)"/>
+          </el-form-item>-->
         <el-form-item>
           <kt-button icon="fa fa-plus" label="新增公司信息" perms="sys:user:add" type="primary"
                      @click="handleAdd"/>
@@ -51,9 +58,6 @@
             </el-tooltip>
             <el-tooltip content="列显示" placement="top">
               <el-button icon="fa fa-filter" @click="displayFilterColumnsDialog"></el-button>
-            </el-tooltip>
-            <el-tooltip content="导出" placement="top">
-              <el-button icon="fa fa-file-excel-o"></el-button>
             </el-tooltip>
           </el-button-group>
         </el-form-item>
@@ -132,14 +136,24 @@
     data() {
       return {
         size: 'small',
-        filters: {
-          name: ''
+        dtlFrom: {
+          customId: '',
+          weixinAccnt: '',
+          weixinName: '',
+          wangwangAccnt: '',
+          contactPerson: '',
+          contactNumber: '',
+          corporation: '',
+          corporationNumber: '',
+          customLevel: '',
+          customName: '',
+          updateDate: ''
         },
         columns: [],
         filterColumns: [],
         pageRequest: {pageNum: 1, pageSize: 10},
         pageResult: {},
-
+        dtlParams: {},
         operation: false, // true:新增, false:编辑
         dialogVisible: false, // 新增编辑界面是否显示
         editLoading: false,
@@ -167,6 +181,19 @@
         },
         roles: []
       }
+    }, created() {
+      this.dtlFrom = this.$route.params;
+      let tmpInfo = JSON.parse(localStorage.getItem("customerDtl"));
+      if (this.dtlFrom.customId == undefined || this.dtlFrom.customId == null) {
+        if (tmpInfo.customId == undefined || tmpInfo.customId == null) {
+          this.$router.push({name: "客户信息"})
+          return
+        } else {
+          this.dtlFrom = tmpInfo;
+        }
+      }
+      localStorage.setItem("customerDtl", JSON.stringify(this.dtlFrom));
+
     },
     methods: {
       // 获取分页数据
@@ -174,7 +201,7 @@
         if (data !== null) {
           this.pageRequest = data.pageRequest
         }
-        this.pageRequest.columnFilters = {name: {name: 'name', value: this.filters.name}}
+        this.pageRequest.columndtlFrom = {name: {name: 'name', value: this.dtlFrom.name}}
         this.$api.customer.findCustomerPage(this.pageRequest).then((res) => {
           this.pageResult = res.data
         }).then(data != null ? data.callback : '')
@@ -278,7 +305,7 @@
       // 处理表格列过滤显示
       initColumns: function () {
         this.columns = [
-          {prop: "id", label: "公司ID", minWidth: 50,hidden: true},
+          {prop: "id", label: "公司ID", minWidth: 50, hidden: true},
           {prop: "name", label: "公司名称", minWidth: 120},
           {prop: "city", label: "所在市", minWidth: 120},
           {prop: "district", label: "所在区", minWidth: 100},

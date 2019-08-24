@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tuoyou.tavern.alleria.salary.dao.SalaryStatementDtlRecordMapper;
 import com.tuoyou.tavern.alleria.salary.service.SalaryStatementDtlRecordService;
-import com.tuoyou.tavern.alleria.util.CommonUtils;
+import com.tuoyou.tavern.common.core.util.CommonUtils;
 import com.tuoyou.tavern.protocol.alleria.dto.SalaryStatementRecordDTO;
 import com.tuoyou.tavern.protocol.alleria.model.SalaryStatementDtlRecord;
 import com.tuoyou.tavern.protocol.alleria.model.SalaryStatementDtlRecordVO;

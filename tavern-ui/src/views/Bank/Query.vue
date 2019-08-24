@@ -174,7 +174,7 @@
       handleCurrentChange(val) {
         let _this = this;
         _this.pageRequest.current = val;
-        _this.findPage(null);
+        _this.findPage(_this.pageRequest);
       },
     },
     mounted() {

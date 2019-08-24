@@ -263,8 +263,9 @@
         this.filterColumns = JSON.parse(JSON.stringify(this.columns));
       },
       handleCurrentChange(val) {
-        this.pageRequest.current = val;
-        this.findPage(null);
+        let _this = this;
+        _this.pageRequest.pageNum = val;
+        _this.findPage(_this.pageRequest);
       },
     },
     mounted() {

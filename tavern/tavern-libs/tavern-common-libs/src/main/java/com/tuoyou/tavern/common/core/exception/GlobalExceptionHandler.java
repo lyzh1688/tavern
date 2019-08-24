@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
         return TavernResponse.builder()
                 .retCode(RetCode.UN_SUPPORTED_METHOD)
-                .retMessage(fieldErrors.get(0).getDefaultMessage())
+                .retMessage(exception.getLocalizedMessage())
                 .build();
     }
     

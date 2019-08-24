@@ -1,20 +1,28 @@
 package com.tuoyou.tavern.crm.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.tuoyou.tavern.common.core.util.CommonUtils;
+import com.tuoyou.tavern.common.core.util.DateUtils;
+import com.tuoyou.tavern.common.core.util.UUIDUtil;
+import com.tuoyou.tavern.crm.dao.CrmCustomBasicInfoMapper;
 import com.tuoyou.tavern.crm.dao.CrmCustomBasicMapper;
 import com.tuoyou.tavern.crm.service.CrmCustomBankInfoService;
 import com.tuoyou.tavern.crm.service.CrmCustomBasicInfoService;
 import com.tuoyou.tavern.protocol.crm.dto.CustomInfoDTO;
 import com.tuoyou.tavern.protocol.crm.dto.CustomQueryDTO;
-import com.tuoyou.tavern.protocol.crm.model.*;
+import com.tuoyou.tavern.protocol.crm.model.CrmCustomBasicInfo;
+import com.tuoyou.tavern.protocol.crm.model.CustomBasicInfoVO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -22,40 +30,35 @@ import java.time.LocalDateTime;
  */
 @AllArgsConstructor
 @Service
-public class CrmCustomBasicInfoServiceImpl extends ServiceImpl<CrmCustomBasicMapper, CrmCustomBasicInfo> implements CrmCustomBasicInfoService {
+public class CrmCustomBasicInfoServiceImpl extends ServiceImpl<CrmCustomBasicInfoMapper, CrmCustomBasicInfo> implements CrmCustomBasicInfoService {
 
     private final CrmCustomBankInfoService crmCustomBankInfoService;
     private final CrmCustomBankInfoService crmBankInfoService;
 
 
-    @Transactional
     @Override
     public void createCustom(CustomInfoDTO customInfoDTO) {
         CrmCustomBasicInfo crmCustomBasicInfo = new CrmCustomBasicInfo();
         BeanUtils.copyProperties(customInfoDTO, crmCustomBasicInfo);
+        crmCustomBasicInfo.setCustomId(StringUtils.isEmpty(customInfoDTO.getCustomId()) ? UUIDUtil.randomUUID32() : customInfoDTO.getCustomId());
         crmCustomBasicInfo.setIsValid("1");
         crmCustomBasicInfo.setUpdateDate(LocalDateTime.now());
-        CrmBankInfo crmCustomBankInfo = new CrmBankInfo();
-        BeanUtils.copyProperties(customInfoDTO, crmCustomBankInfo);
-        crmCustomBankInfo.setUpdateDate(LocalDateTime.now());
-        CrmBankInfo crmBankInfo = new CrmBankInfo();
-        BeanUtils.copyProperties(customInfoDTO, crmBankInfo);
-        CrmCustomFinanceInfo crmCustomFinanceInfo = new CrmCustomFinanceInfo();
-        BeanUtils.copyProperties(customInfoDTO, crmCustomFinanceInfo);
-        crmCustomFinanceInfo.setUpdateDate(LocalDateTime.now());
         this.saveOrUpdate(crmCustomBasicInfo);
-        this.crmCustomBankInfoService.saveOrUpdate(crmCustomBankInfo);
-        this.crmBankInfoService.saveOrUpdate(crmBankInfo);
-        this.crmCustomFinanceInfoService.saveOrUpdate(crmCustomFinanceInfo);
     }
 
     @Override
     public IPage<CustomBasicInfoVO> getBasicInfoPage(Page page, CustomQueryDTO customQueryDTO) {
-        return this.baseMapper.selectBasicInfoPage(page, customQueryDTO);
+        IPage<CrmCustomBasicInfo> infoIPage = this.baseMapper.selectBasicInfoPage(page, customQueryDTO);
+        List<CustomBasicInfoVO> customBasicInfoVOList = infoIPage.getRecords()
+                .stream()
+                .map(record -> {
+                    CustomBasicInfoVO customBasicInfoVO = new CustomBasicInfoVO();
+                    BeanUtils.copyProperties(record, customBasicInfoVO);
+                    customBasicInfoVO.setUpdateDate(DateUtils.formatDateTime(record.getUpdateDate(), DateUtils.DEFAULT_DATETIME_FORMATTER));
+                    return customBasicInfoVO;
+                }).collect(Collectors.toList());
+        IPage<CustomBasicInfoVO> page1=  CommonUtils.newIPage(infoIPage, customBasicInfoVOList);
+        return page1;
     }
 
-    @Override
-    public CustomBasicInfoVO getBasicInfo(String accnt, String password) {
-        return this.baseMapper.selectBasicInfo(accnt, password);
-    }
 }

@@ -34,6 +34,8 @@ public class CrmCustomBasicInfo  extends Model<CrmCustomBasicInfo> {
 
     private String customName;
 
+    private String isValid;
+
     private LocalDateTime updateDate;
 
 }

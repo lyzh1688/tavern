@@ -439,7 +439,7 @@
       },
       handleCurrentChange(val) {
         let _this = this;
-        _this.pageRequest.pageNum = val;
+        _this.pageRequest.current = val;
         _this.findPage(_this.pageRequest);
       },
     },

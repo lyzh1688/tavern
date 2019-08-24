@@ -12,7 +12,8 @@ import com.tuoyou.tavern.alleria.configuration.TTLContext;
 import com.tuoyou.tavern.alleria.salary.dao.SalaryStatementRecordMapper;
 import com.tuoyou.tavern.alleria.salary.service.SalaryStatementDtlRecordService;
 import com.tuoyou.tavern.alleria.salary.service.SalaryStatementRecordService;
-import com.tuoyou.tavern.alleria.util.CommonUtils;
+import com.tuoyou.tavern.alleria.util.FileUtils;
+import com.tuoyou.tavern.common.core.util.CommonUtils;
 import com.tuoyou.tavern.alleria.util.FileTransfer;
 import com.tuoyou.tavern.common.core.util.DateUtils;
 import com.tuoyou.tavern.common.core.util.UUIDUtil;
@@ -132,7 +133,7 @@ public class SalaryStatementRecordServiceImpl extends ServiceImpl<SalaryStatemen
                     this.salaryStatementDtlRecordService.saveOrUpdateBatch(salaryStatementDtlRecordList);
                 }
             }
-            JSONObject fileUploadObject = CommonUtils.percentageRecord(i, files.length);
+            JSONObject fileUploadObject = FileUtils.percentageRecord(i, files.length);
             ttlContext.putValue(batchId, fileUploadObject);
             log.info("salary excel upload batchId: {} file complete: {}", batchId, fileUploadObject.getDouble("percentage"));
         }

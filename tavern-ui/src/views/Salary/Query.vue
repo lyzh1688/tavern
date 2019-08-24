@@ -116,7 +116,6 @@
         if (_this.filters.accountPeriod != '') {
           _this.pageRequest.accountPeriod = _this.dateFormat(_this.filters.accountPeriod)
         }
-        console.log(JSON.stringify(_this.pageRequest))
         this.$api.salary.findPage(_this.pageRequest).then((res) => {
           _this.tableData = res.data.records;
           _this.total = res.data.total;
@@ -135,13 +134,14 @@
               this.$message({message: '删除成功', type: 'success'})
               this.findPage(null)
             } else {
-              this.$message({message: '操作失败, ' + res.msg, type: 'error'})
+              this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
             }
             this.loading = false
           }
           this.$api.salary.batchDelete(data.batchId,'0').then(data != null ? callback : '')
         }).catch((res) => {
-          this.$message({message: '操作失败, ' + res.msg, type: 'error'})
+          this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
+          this.loading = false
         })
       },
       // 时间格式化
@@ -170,7 +170,7 @@
       handleCurrentChange(val) {
         let _this = this;
         _this.pageRequest.current = val;
-        _this.findPage(null);
+        _this.findPage(_this.pageRequest);
       },
     },
     mounted() {

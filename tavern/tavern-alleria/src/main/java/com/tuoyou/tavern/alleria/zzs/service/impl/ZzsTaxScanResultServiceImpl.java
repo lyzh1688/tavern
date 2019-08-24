@@ -8,7 +8,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.tuoyou.tavern.alleria.configuration.TTLContext;
-import com.tuoyou.tavern.alleria.util.CommonUtils;
+import com.tuoyou.tavern.alleria.util.FileUtils;
+import com.tuoyou.tavern.common.core.util.CommonUtils;
 import com.tuoyou.tavern.alleria.util.FileTransfer;
 import com.tuoyou.tavern.alleria.zzs.dao.ZzsTaxScanResultMapper;
 import com.tuoyou.tavern.alleria.zzs.service.ZzsTaxScanItemsResultService;
@@ -23,7 +24,6 @@ import com.tuoyou.tavern.invoice.verify.libs.model.ZBJVerifyResult;
 import com.tuoyou.tavern.protocol.alleria.dto.TaxScanResultDTO;
 import com.tuoyou.tavern.protocol.alleria.dto.ZZSInvoiceKeyField;
 import com.tuoyou.tavern.protocol.alleria.model.ZBJInvoiceItemVO;
-import com.tuoyou.tavern.protocol.alleria.model.ZzsTaxScanItemsResult;
 import com.tuoyou.tavern.protocol.alleria.model.ZzsTaxScanResult;
 import com.tuoyou.tavern.protocol.alleria.model.ZzsTaxScanResultVO;
 import lombok.extern.slf4j.Slf4j;
@@ -36,10 +36,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -117,7 +115,7 @@ public class ZzsTaxScanResultServiceImpl extends ServiceImpl<ZzsTaxScanResultMap
                 this.saveOrUpdate(taxScanResult);
 
             }
-            JSONObject fileUploadObject = CommonUtils.percentageRecord(i, files.length);
+            JSONObject fileUploadObject = FileUtils.percentageRecord(i, files.length);
             ttlContext.putValue(batchId, fileUploadObject);
             log.info("zzs invoice upload batchId: {} file complete: {}", batchId, fileUploadObject.getDouble("percentage"));
         }
