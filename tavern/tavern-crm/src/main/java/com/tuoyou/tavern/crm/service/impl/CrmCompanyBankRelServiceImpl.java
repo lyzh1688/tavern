@@ -2,12 +2,13 @@ package com.tuoyou.tavern.crm.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tuoyou.tavern.crm.dao.CrmBankInfoMapper;
+import com.tuoyou.tavern.crm.dao.CrmCompanyBankRelMapper;
+import com.tuoyou.tavern.crm.service.CrmCompanyBankRelService;
 import com.tuoyou.tavern.crm.service.CrmCustomBankInfoService;
 import com.tuoyou.tavern.protocol.crm.model.CrmBankInfo;
+import com.tuoyou.tavern.protocol.crm.model.CrmCompanyBankRel;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -15,10 +16,5 @@ import java.util.List;
  */
 @Service
 @AllArgsConstructor
-public class CrmCustomBankInfoServiceImpl extends ServiceImpl<CrmBankInfoMapper, CrmBankInfo> implements CrmCustomBankInfoService {
-
-    @Override
-    public List<CrmBankInfo> getCrmBankInfoByCompanyId(String companyId) {
-        return this.baseMapper.selectCrmBankInfoByCompanyId(companyId);
-    }
+public class CrmCompanyBankRelServiceImpl extends ServiceImpl<CrmCompanyBankRelMapper, CrmCompanyBankRel> implements CrmCompanyBankRelService {
 }

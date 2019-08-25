@@ -1,23 +1,18 @@
 package com.tuoyou.tavern.protocol.crm.model;
 
-public class CrmCompanyBankRel {
-    private String companyId;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
+@Data
+@TableName("CRM_COMPANY_BANK_REL")
+public class CrmCompanyBankRel extends Model<CrmCompanyBankRel> {
+    @TableId
+    private String companyId;
+    @TableId
     private String bankId;
 
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId == null ? null : companyId.trim();
-    }
-
-    public String getBankId() {
-        return bankId;
-    }
-
-    public void setBankId(String bankId) {
-        this.bankId = bankId == null ? null : bankId.trim();
-    }
 }

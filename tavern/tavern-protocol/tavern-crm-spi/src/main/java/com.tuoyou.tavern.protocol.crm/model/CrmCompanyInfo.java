@@ -1,75 +1,33 @@
 package com.tuoyou.tavern.protocol.crm.model;
 
-import java.util.Date;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-public class CrmCompanyInfo {
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@TableName("CRM_COMPANY_INFO")
+public class CrmCompanyInfo extends Model<CrmCompanyInfo> {
+    @TableId
     private String companyId;
+
+    private String companyName;
 
     private String taxType;
 
+    private String province;
     private String city;
 
     private String district;
 
     private String financeDiskType;
 
-    private Long taxRate;
+    private BigDecimal taxRate;
 
-    private Date updateDate;
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId == null ? null : companyId.trim();
-    }
-
-    public String getTaxType() {
-        return taxType;
-    }
-
-    public void setTaxType(String taxType) {
-        this.taxType = taxType == null ? null : taxType.trim();
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city == null ? null : city.trim();
-    }
-
-    public String getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district == null ? null : district.trim();
-    }
-
-    public String getFinanceDiskType() {
-        return financeDiskType;
-    }
-
-    public void setFinanceDiskType(String financeDiskType) {
-        this.financeDiskType = financeDiskType == null ? null : financeDiskType.trim();
-    }
-
-    public Long getTaxRate() {
-        return taxRate;
-    }
-
-    public void setTaxRate(Long taxRate) {
-        this.taxRate = taxRate;
-    }
-
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
+    private LocalDateTime updateDate;
 }

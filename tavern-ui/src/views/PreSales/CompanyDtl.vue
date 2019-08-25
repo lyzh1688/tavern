@@ -2,53 +2,44 @@
   <div class="page-container">
     <!--工具栏-->
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
-      <el-form :inline="true" :model="filters" :size="size" align="left">
+      <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="公司名称" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入公司名称"></el-input>
+          <el-input v-model="dtlForm.companyName"  :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="纳税类型" label-width="100px" prop="taxType">
+          <el-input v-model="dataForm.taxType" clearable auto-complete="off" style="float: left"  :disabled="true">
+          </el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" :size="size" align="left">
-        <el-form-item label="所在市" label-width="100px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择所在城市">
-            <el-option label="上海" value='0'></el-option>
-            <el-option label="镇江" value='1'></el-option>
-            <el-option label="无锡" value='2'></el-option>
-            <el-option label="苏州" value='3'></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="所在区县" label-width="100px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择所在区县">
-            <el-option label="浦东新区" value='0'></el-option>
-            <el-option label="宝山区" value='1'></el-option>
-            <el-option label="黄浦区" value='2'></el-option>
-            <el-option label="嘉定区" value='3'></el-option>
-          </el-select>
+      <el-form :inline="true" :model="dtlForm" :size="size" align="left">
+          <el-form-item label="所在地区" label-width="100px" prop="area">
+            <el-cascader
+              ref="cascaderAddr"
+              v-model="dtlForm.area"
+              :props="{ expandTrigger: 'hover' }"
+              :options="areaData"
+              style="float: left"
+              :disabled="true"
+            >
+            </el-cascader>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" :size="size" align="left">
+      <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="金税盘种类" label-width="100px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择金税盘种类">
-            <el-option label="金税1" value='0'></el-option>
-            <el-option label="金税2" value='1'></el-option>
-            <el-option label="金税3" value='2'></el-option>
-            <el-option label="金税4" value='3'></el-option>
-          </el-select>
+          <el-input v-model="dtlForm.financeDiskType" clearable auto-complete="off"  :disabled="true">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="税率" label-width="100px" prop="taxRate">
+          <el-input v-model="dataForm.taxRate"  :disabled="true"></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="false" :model="filters" :size="size" align="left">
-        <el-form-item label="银行列表" label-width="100px">
-          <el-checkbox v-model="checked">工商银行</el-checkbox>
+      <el-form :inline="false" :model="dtlForm" :size="size" align="left">
+        <el-form-item label="银行列表" label-width="100px" prop="banks">
+          <el-checkbox-group v-model="dataForm.banks" @change="handleCheckedBanksChange"  :disabled="true">
+            <el-checkbox v-for="bank in dataForm.allBanks" :label="bank" :key="bank" style="float: left">{{bank}}
+            </el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
-        <el-form-item  label-width="100px">
-          <el-checkbox v-model="checked">招商银行</el-checkbox>
-        </el-form-item>
-        <el-form-item  label-width="100px">
-          <el-checkbox v-model="checked">建设银行</el-checkbox>
-        </el-form-item>
-        <el-form-item  label-width="100px">
-          <el-checkbox v-model="checked">民生银行</el-checkbox>
-        </el-form-item>
-
       </el-form>
     </div>
     <div class="toolbar" style="float:right;padding-top:10px;padding-right:15px;">
@@ -141,8 +132,18 @@
     data() {
       return {
         size: 'small',
-        filters: {
-          name: ''
+        dtlForm: {
+          customId: '',
+          weixinAccnt: '',
+          weixinName: '',
+          wangwangAccnt: '',
+          contactPerson: '',
+          contactNumber: '',
+          corporation: '',
+          corporationNumber: '',
+          customLevel: '',
+          customName: '',
+          updateDate: ''
         },
         columns: [],
         filterColumns: [],
@@ -183,7 +184,7 @@
         if (data !== null) {
           this.pageRequest = data.pageRequest
         }
-        this.pageRequest.columnFilters = {name: {name: 'name', value: this.filters.name}}
+        this.pageRequest.columndtlForm = {name: {name: 'name', value: this.dtlForm.name}}
         this.$api.customer.findCompanyPage(this.pageRequest).then((res) => {
           this.pageResult = res.data
         }).then(data != null ? data.callback : '')

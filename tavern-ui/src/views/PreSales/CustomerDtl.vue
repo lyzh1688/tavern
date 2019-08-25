@@ -2,47 +2,43 @@
   <div class="page-container">
     <!--工具栏-->
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
-      <el-form :inline="true" :model="dtlFrom" :size="size" align="left">
+      <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="法人姓名" label-width="100px">
-          <el-input v-model="dtlFrom.corporation" placeholder="请输入法人姓名" disabled="true"></el-input>
+          <el-input v-model="dtlForm.corporation" placeholder="请输入法人姓名" :disabled=true></el-input>
         </el-form-item>
         <el-form-item label="法人电话" label-width="100px">
-          <el-input v-model="dtlFrom.corporationNumber" placeholder="请输入法人电话" disabled="true"></el-input>
+          <el-input v-model="dtlForm.corporationNumber" placeholder="请输入法人电话" :disabled=true></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="dtlFrom" :size="size" align="left">
+      <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="旺旺账号" label-width="100px">
-          <el-input v-model="dtlFrom.wangwangAccnt" placeholder="请输入旺旺账号" disabled="true"></el-input>
+          <el-input v-model="dtlForm.wangwangAccnt" placeholder="请输入旺旺账号" :disabled=true></el-input>
         </el-form-item>
         <el-form-item label="微信账号" label-width="100px">
-          <el-input v-model="dtlFrom.weixinAccnt" placeholder="请输入微信账号" disabled="true"></el-input>
+          <el-input v-model="dtlForm.weixinAccnt" placeholder="请输入微信账号" :disabled=true></el-input>
         </el-form-item>
         <el-form-item label="微信昵称" label-width="100px">
-          <el-input v-model="dtlFrom.weixinName" placeholder="请输入微信昵称" disabled="true"></el-input>
+          <el-input v-model="dtlForm.weixinName" placeholder="请输入微信昵称" :disabled=true></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="dtlFrom" :size="size" align="left">
+      <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="联系人姓名" label-width="100px">
-          <el-input v-model="dtlFrom.contactPerson" placeholder="请输入联系人姓名" disabled="true"></el-input>
+          <el-input v-model="dtlForm.contactPerson" placeholder="请输入联系人姓名" :disabled=true></el-input>
         </el-form-item>
         <el-form-item label="联系人电话" label-width="100px">
-          <el-input v-model="dtlFrom.contactNumber" placeholder="请输入联系人电话" disabled="true"></el-input>
+          <el-input v-model="dtlForm.contactNumber" placeholder="请输入联系人电话" :disabled=true></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="dtlFrom" :size="size" align="left">
+      <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="客户姓名" label-width="100px" prop="customName">
-          <el-input v-model="dtlFrom.customName" placeholder="请输入客户姓名" disabled="true"></el-input>
+          <el-input v-model="dtlForm.customName" placeholder="请输入客户姓名" :disabled=true></el-input>
         </el-form-item>
         <el-form-item label="客户等级" label-width="100px">
-          <el-input v-model="dtlFrom.customLevel" clearable auto-complete="off" placeholder="请选择客户等级" disabled="true">
+          <el-input v-model="dtlForm.customLevel" clearable auto-complete="off" placeholder="请选择客户等级" :disabled=true>
           </el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="dtlFrom" :size="size" align="left">
-        <!--  <el-form-item>
-            <kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary"
-                       @click="findPage(null)"/>
-          </el-form-item>-->
+      <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item>
           <kt-button icon="fa fa-plus" label="新增公司信息" perms="sys:user:add" type="primary"
                      @click="handleAdd"/>
@@ -68,48 +64,90 @@
       </table-column-filter-dialog>
     </div>
     <!--表格内容栏-->
-    <kt-table :height="300" permsEdit="sys:user:edit" permsDelete="sys:user:delete"
-              :data="pageResult" :columns="filterColumns"
-              @findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete">
-    </kt-table>
+    <el-table :data="tableData" stripe stripe height="400" size="mini" style="width: 100%;"
+              v-loading="loading">
+      <el-table-column prop="companyId" header-align="center" align="center" label="公司ID" v-if="false">
+      </el-table-column>
+      <el-table-column prop="companyName" label="公司名称" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="province" label="所在省份" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="city" label="所在市" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="district" label="所在区" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="updateDate" label="创建时间" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
+        <template slot-scope="scope">
+          <kt-button icon="fa fa-edit" label="修改公司信息" perms="sys:user:add" type="primary"
+                     @click="handleEdit(scope.row)"/>
+          <kt-button icon="fa fa-retweet" label="公司信息详情" perms="sys:user:add" type="primary"
+                     @click="handleDtl(scope.row)"/>
+          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
+                     @click="handleDelete(scope.row)"/>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="toolbar" style="padding:10px;">
+      <el-pagination layout="total, prev, pager, next, jumper" @current-change="handleCurrentChange"
+                     :current-page="pageRequest.current" :page-size="pageRequest.size" :total="total"
+                     style="float:right;">
+      </el-pagination>
+    </div>
     <!--新增编辑界面-->
-    <el-dialog :title="operation?'新增':'编辑'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
+    <el-dialog :title="operation?'新增':'编辑'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false" :before-close="handleDialogClose">
       <el-form :model="dataForm" label-width="80px" :rules="dataFormRules" ref="dataForm" :size="size"
                label-position="right">
-        <el-form-item label="ID" prop="id" v-if="false">
-          <el-input v-model="dataForm.id" :disabled="true" auto-complete="off"></el-input>
+        <el-form-item label="客户ID" label-width="100px" v-if="editShow" prop="customId">
+          <el-input v-model="dataForm.customId"></el-input>
         </el-form-item>
-        <el-form-item label="用户名" prop="name">
-          <el-input v-model="dataForm.name" auto-complete="off"></el-input>
+        <el-form-item label="公司ID" label-width="100px" v-if="editShow" prop="companyId">
+          <el-input v-model="dataForm.companyId"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="dataForm.password" type="password" auto-complete="off"></el-input>
+        <el-form-item label="公司名称" label-width="100px" prop="companyName">
+          <el-input v-model="dataForm.companyName" placeholder="请输入公司名称"></el-input>
         </el-form-item>
-        <el-form-item label="机构" prop="deptName">
-          <popup-tree-input
-            :data="deptData"
-            :props="deptTreeProps"
-            :prop="dataForm.deptName"
-            :nodeKey="''+dataForm.deptId"
-            :currentChangeHandle="deptTreeCurrentChangeHandle">
-          </popup-tree-input>
-        </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="dataForm.email" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="手机" prop="mobile">
-          <el-input v-model="dataForm.mobile" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="角色" prop="userRoles" v-if="!operation">
-          <el-select v-model="dataForm.userRoles" multiple placeholder="请选择"
-                     style="width: 100%;">
-            <el-option v-for="item in roles" :key="item.id"
-                       :label="item.remark" :value="item.id">
-            </el-option>
+        <el-form-item label="纳税类型" label-width="100px" prop="taxType">
+          <el-select v-model="dataForm.taxType" clearable auto-complete="off" placeholder="请选择纳税类型" style="float: left">
+            <el-option label="纳税类型1" value='0'></el-option>
+            <el-option label="纳税类型2" value='1'></el-option>
+            <el-option label="纳税类型3" value='2'></el-option>
+            <el-option label="纳税类型4" value='3'></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="请选择地区" label-width="100px" prop="area">
+          <el-cascader
+            ref="cascaderAddr"
+            v-model="dataForm.area"
+            placeholder="请选择地区"
+            :props="{ expandTrigger: 'hover' }"
+            :options="areaData"
+            style="float: left"
+            @change="handleItemChange"
+          >
+          </el-cascader>
+        </el-form-item>
+        <el-form-item label="金税盘种类" label-width="100px" prop="financeDiskType">
+          <el-select v-model="dataForm.financeDiskType" clearable auto-complete="off" placeholder="请选择金税盘种类"
+                     style="float: left">
+            <el-option label="金税1" value='0'></el-option>
+            <el-option label="金税2" value='1'></el-option>
+            <el-option label="金税3" value='2'></el-option>
+            <el-option label="金税4" value='3'></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="税率" label-width="100px" prop="taxRate">
+          <el-input v-model="dataForm.taxRate" placeholder="请输入税率"></el-input>
+        </el-form-item>
+        <el-form-item label="银行列表" label-width="100px" prop="banks">
+          <el-checkbox-group v-model="dataForm.banks" @change="handleCheckedBanksChange">
+            <el-checkbox v-for="bank in dataForm.allBanks" :label="bank" :key="bank" style="float: left">{{bank}}
+            </el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer" align="center">
         <el-button :size="size" @click.native="dialogVisible = false">{{$t('action.cancel')}}</el-button>
         <el-button :size="size" type="primary" @click.native="submitForm" :loading="editLoading">
           {{$t('action.submit')}}
@@ -125,18 +163,21 @@
   import KtButton from "@/views/Core/KtButton"
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
   import {format} from "@/utils/datetime"
+  import AreaJson from "@/utils/area.json"
 
+  const bankOptions = ['工商银行', '招商银行', '建设银行', '中国银行', '农业银行', '交通银行', '中信银行', '光大银行', '民生银行','上海银行']
   export default {
     components: {
       PopupTreeInput,
       KtTable,
       KtButton,
-      TableColumnFilterDialog
+      TableColumnFilterDialog,
+      AreaJson
     },
     data() {
       return {
         size: 'small',
-        dtlFrom: {
+        dtlForm: {
           customId: '',
           weixinAccnt: '',
           weixinName: '',
@@ -149,51 +190,70 @@
           customName: '',
           updateDate: ''
         },
+        areaData: [],
         columns: [],
         filterColumns: [],
-        pageRequest: {pageNum: 1, pageSize: 10},
-        pageResult: {},
+        pageRequest: {
+          current: 1,
+          size: 20,
+        },
+        total: 0,
+        tableData: [],
         dtlParams: {},
         operation: false, // true:新增, false:编辑
         dialogVisible: false, // 新增编辑界面是否显示
         editLoading: false,
         dataFormRules: {
-          name: [
-            {required: true, message: '请输入用户名', trigger: 'blur'}
-          ]
+          companyName: [
+            {required: true, message: '请填写公司名称', trigger: 'blur'}
+          ],
+          taxType: [
+            {required: true, message: '请选择纳税类型', trigger: 'blur'}
+          ],
+          area: [
+            {required: true, message: '请选择区域信息', trigger: 'blur'}
+          ],
         },
+        loading: false,
+        editShow: false,
         // 新增编辑界面数据
         dataForm: {
-          id: 0,
-          name: '',
-          password: '123456',
-          deptId: 1,
-          deptName: '',
-          email: 'test@qq.com',
-          mobile: '13889700023',
-          status: 1,
-          userRoles: []
+          customId: '',
+          companyId: '',
+          companyName: '',
+          taxType: '',
+          area: '',
+          financeDiskType: '',
+          taxRate: '',
+          banks: [],
+          allBanks: bankOptions
         },
-        deptData: [],
-        deptTreeProps: {
-          label: 'name',
-          children: 'children'
-        },
-        roles: []
+        cascaderAddr: [],
+        editAreaLabel: '',
+        areaLabel: ''
+
       }
     }, created() {
-      this.dtlFrom = this.$route.params;
+      //初始化客户信息
+      this.dtlForm = this.$route.params;
       let tmpInfo = JSON.parse(localStorage.getItem("customerDtl"));
-      if (this.dtlFrom.customId == undefined || this.dtlFrom.customId == null) {
+      if (this.dtlForm.customId == undefined || this.dtlForm.customId == null) {
         if (tmpInfo.customId == undefined || tmpInfo.customId == null) {
           this.$router.push({name: "客户信息"})
           return
         } else {
-          this.dtlFrom = tmpInfo;
+          this.dtlForm = tmpInfo;
         }
       }
-      localStorage.setItem("customerDtl", JSON.stringify(this.dtlFrom));
+      localStorage.setItem("customerDtl", JSON.stringify(this.dtlForm));
 
+      //初始化区域信息
+      this.areaData = AreaJson
+      for (let i = 0; i < this.areaData.length; i++) {
+        if (this.areaData[i].children == undefined ||this.areaData[i].children.length == 0) {
+          delete this.areaData[i].children //解决因为省级区域没有下级市的BUG
+        }
+      }
     },
     methods: {
       // 获取分页数据
@@ -201,52 +261,69 @@
         if (data !== null) {
           this.pageRequest = data.pageRequest
         }
-        this.pageRequest.columndtlFrom = {name: {name: 'name', value: this.dtlFrom.name}}
-        this.$api.customer.findCustomerPage(this.pageRequest).then((res) => {
-          this.pageResult = res.data
-        }).then(data != null ? data.callback : '')
-      },
-      // 加载用户角色信息
-      findUserRoles: function () {
-        this.$api.role.findAll().then((res) => {
-          // 加载角色集合
-          this.roles = res.data
+        this.pageRequest.customId = this.dtlForm.customId;
+        this.loading = true
+        let callback = res => {
+          this.loading = false
+        }
+        this.$api.customer.findCompanyPage(this.pageRequest).then((res) => {
+          this.tableData = res.data.records;
+          this.total = res.data.total;
+          this.pageRequest.current = res.data.current;
+          this.pageRequest.size = res.data.size;
+          callback(res)
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+          callback(res)
         })
       },
       // 批量删除
       handleDelete: function (data) {
-        this.$api.customer.batchDelete(data.params).then(data != null ? data.callback : '')
+        this.$confirm('确认删除选中记录吗？', '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.loading = true
+          let callback = res => {
+            if (res.retCode == 0) {
+              this.$message({message: '删除成功', type: 'success'})
+              this.findPage(null)
+            } else {
+              this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
+            }
+            this.loading = false
+          }
+          let customCompanyRel = {};
+          customCompanyRel.companyId = data.companyId;
+          customCompanyRel.customId = data.customId;
+          let rels = []
+          rels.push(customCompanyRel)
+          this.$api.customer.batchDeleteCompany(rels).then(data != null ? callback : '').catch((res) => {
+            this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'});
+            this.loading = false
+          })
+        })
       },
-      // 显示新增界面
+      handleDialogClose:function(){
+        this.$refs['dataForm'].resetFields()
+        this.dialogVisible = false
+      },
       handleAdd: function () {
-        this.$router.push({path: '/preSales/companyDtl'})
-      },
-      /*handleAdd: function () {
         this.dialogVisible = true
         this.operation = true
-        this.dataForm = {
-          id: 0,
-          name: '',
-          password: '',
-          deptId: 1,
-          deptName: '',
-          email: 'test@qq.com',
-          mobile: '13889700023',
-          status: 1,
-          userRoles: []
-        }
+
+      },
+      handleDtl: function (params) {
+        this.$router.push({name: '公司详情', params: params})
       },
       // 显示编辑界面
       handleEdit: function (params) {
-        this.dialogVisible = true
         this.operation = false
-        this.dataForm = Object.assign({}, params.row)
-        let userRoles = []
-        for (let i = 0, len = params.row.userRoles.length; i < len; i++) {
-          userRoles.push(params.row.userRoles[i].roleId)
-        }
-        this.dataForm.userRoles = userRoles
-      },*/
+        this.dataForm = Object.assign({}, params)
+        this.getTargetArea(params.district, this.areaData)
+        this.dataForm.area = this.editAreaLabel;
+        this.dataForm.allBanks = bankOptions;
+        this.dialogVisible = true
+      },
       // 编辑
       submitForm: function () {
         this.$refs.dataForm.validate((valid) => {
@@ -254,40 +331,23 @@
             this.$confirm('确认提交吗？', '提示', {}).then(() => {
               this.editLoading = true
               let params = Object.assign({}, this.dataForm)
-              let userRoles = []
-              for (let i = 0, len = params.userRoles.length; i < len; i++) {
-                let userRole = {
-                  userId: params.id,
-                  roleId: params.userRoles[i]
-                }
-                userRoles.push(userRole)
-              }
-              params.userRoles = userRoles
-              this.$api.customer.save(params).then((res) => {
+              params.customId = this.dtlForm.customId;
+              params.area = this.$refs.cascaderAddr.getCheckedNodes()[0].pathLabels;
+              this.$api.customer.saveCompany(params).then((res) => {
                 this.editLoading = false
-                if (res.code == 200) {
-                  this.$message({message: '操作成功', type: 'success'})
-                  this.dialogVisible = false
-                  this.$refs['dataForm'].resetFields()
-                } else {
-                  this.$message({message: '操作失败, ' + res.msg, type: 'error'})
-                }
+                this.$message({message: '操作成功', type: 'success'})
+                this.dialogVisible = false
+                this.$refs['dataForm'].resetFields()
                 this.findPage(null)
+              }).catch(res => {
+                this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+                this.editLoading = false
+                this.dialogVisible = false
+                this.$refs['dataForm'].resetFields()
               })
             })
           }
         })
-      },
-      // 获取部门列表
-      findDeptTree: function () {
-        this.$api.dept.findDeptTree().then((res) => {
-          this.deptData = res.data
-        })
-      },
-      // 菜单树选中
-      deptTreeCurrentChangeHandle(data, node) {
-        this.dataForm.deptId = data.id
-        this.dataForm.deptName = data.name
       },
       // 时间格式化
       dateFormat: function (row, column, cellValue, index) {
@@ -302,21 +362,36 @@
         this.filterColumns = data.filterColumns
         this.$refs.tableColumnFilterDialog.setDialogVisible(false)
       },
-      // 处理表格列过滤显示
-      initColumns: function () {
-        this.columns = [
-          {prop: "id", label: "公司ID", minWidth: 50, hidden: true},
-          {prop: "name", label: "公司名称", minWidth: 120},
-          {prop: "city", label: "所在市", minWidth: 120},
-          {prop: "district", label: "所在区", minWidth: 100},
-          {prop: "createTime", label: "创建时间", minWidth: 70},
-        ]
-        this.filterColumns = JSON.parse(JSON.stringify(this.columns));
+      handleItemChange() {
+        this.areaLabel = this.$refs.cascaderAddr.getCheckedNodes()[0].pathLabels
+      },
+      getTargetArea(district, options) {
+        for (let i = 0; i < options.length; i++) {
+          if (options[i].children == undefined || options[i].children.length == 0) {
+            continue
+          }
+          let secLevel = options[i].children;
+          for (let j = 0; j < secLevel.length; j++) {
+            let thirdLevel = secLevel[j].children
+            for (let k = 0; k < thirdLevel.length; k++) {
+              let thirdItem = thirdLevel[k]
+              if (district === thirdItem.label) {
+                this.editAreaLabel = thirdItem.value;
+                return
+              }
+            }
+          }
+        }
+      },
+      handleCurrentChange(val) {
+        let _this = this;
+        _this.pageRequest.current = val;
+        _this.findPage(_this.pageRequest);
+      },handleCheckedBanksChange(val){
       }
     },
     mounted() {
-      // this.findDeptTree()
-      this.initColumns()
+      this.findPage(null)
     }
   }
 </script>

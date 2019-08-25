@@ -214,7 +214,7 @@
           this.pageRequest.size = res.data.size;
         }).then(data != null ? data.callback : '')
           .catch((res) => {
-            this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
+            this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
           })
       },
       /*// 批量删除
@@ -237,7 +237,7 @@
             }
             this.loading = false
           }
-          let ids =[]
+          let ids = []
           ids.push(data.customId)
           this.$api.customer.batchDelete(ids).then(data != null ? callback : '').catch((res) => {
             this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'});
@@ -246,7 +246,7 @@
         })
       },
       handleDtl: function (params) {
-        this.$router.push({name: '客户详情',params:params})
+        this.$router.push({name: '客户详情', params: params})
       },
       handleOrder: function () {
         this.$router.push({path: '/preSales/order'})
@@ -274,14 +274,13 @@
               let params = Object.assign({}, this.dataForm)
               this.$api.customer.save(params).then((res) => {
                 this.editLoading = false
-                if (res.retCode == 0) {
-                  this.$message({message: '操作成功', type: 'success'})
-                  this.dialogVisible = false
-                  this.$refs['dataForm'].resetFields()
-                } else {
-                  this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
-                }
+                this.$message({message: '操作成功', type: 'success'})
+                this.dialogVisible = false
+                this.$refs['dataForm'].resetFields()
                 this.findPage(null)
+              }).catch((res) => {
+                this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'});
+                this.loading = false
               })
             })
           }

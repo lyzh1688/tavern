@@ -7,4 +7,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface CrmCustomCompanyRelMapper extends BaseMapper<CrmCustomCompanyRel> {
+
+    int deleteByPrimaryKey(String customId,String companyId);
 }

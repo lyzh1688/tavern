@@ -1,44 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tuoyou.tavern.crm.dao.CrmCompanyInfoMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.crm.model.CrmCompanyInfo">
-    <id column="COMPANY_ID" jdbcType="VARCHAR" property="companyId" />
-    <result column="TAX_TYPE" jdbcType="VARCHAR" property="taxType" />
-    <result column="CITY" jdbcType="VARCHAR" property="city" />
-    <result column="DISTRICT" jdbcType="VARCHAR" property="district" />
-    <result column="FINANCE_DISK_TYPE" jdbcType="VARCHAR" property="financeDiskType" />
-    <result column="TAX_RATE" jdbcType="DECIMAL" property="taxRate" />
-    <result column="UPDATE_DATE" jdbcType="DATE" property="updateDate" />
-  </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from CRM_COMPANY_INFO
-    where COMPANY_ID = #{companyId,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.protocol.crm.model.CrmCompanyInfo">
-    insert into CRM_COMPANY_INFO (COMPANY_ID, TAX_TYPE, CITY, 
-      DISTRICT, FINANCE_DISK_TYPE, TAX_RATE, 
-      UPDATE_DATE)
-    values (#{companyId,jdbcType=VARCHAR}, #{taxType,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
-      #{district,jdbcType=VARCHAR}, #{financeDiskType,jdbcType=VARCHAR}, #{taxRate,jdbcType=DECIMAL}, 
-      #{updateDate,jdbcType=DATE})
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.protocol.crm.model.CrmCompanyInfo">
-    update CRM_COMPANY_INFO
-    set TAX_TYPE = #{taxType,jdbcType=VARCHAR},
-      CITY = #{city,jdbcType=VARCHAR},
-      DISTRICT = #{district,jdbcType=VARCHAR},
-      FINANCE_DISK_TYPE = #{financeDiskType,jdbcType=VARCHAR},
-      TAX_RATE = #{taxRate,jdbcType=DECIMAL},
-      UPDATE_DATE = #{updateDate,jdbcType=DATE}
-    where COMPANY_ID = #{companyId,jdbcType=VARCHAR}
-  </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select COMPANY_ID, TAX_TYPE, CITY, DISTRICT, FINANCE_DISK_TYPE, TAX_RATE, UPDATE_DATE
-    from CRM_COMPANY_INFO
-    where COMPANY_ID = #{companyId,jdbcType=VARCHAR}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select COMPANY_ID, TAX_TYPE, CITY, DISTRICT, FINANCE_DISK_TYPE, TAX_RATE, UPDATE_DATE
-    from CRM_COMPANY_INFO
-  </select>
+    <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.crm.model.CrmCompanyInfo">
+        <id column="COMPANY_ID" jdbcType="VARCHAR" property="companyId"/>
+        <result column="COMPANY_NAME" jdbcType="VARCHAR" property="companyName"/>
+        <result column="TAX_TYPE" jdbcType="VARCHAR" property="taxType"/>
+        <result column="PROVINCE" jdbcType="VARCHAR" property="province"/>
+        <result column="CITY" jdbcType="VARCHAR" property="city"/>
+        <result column="DISTRICT" jdbcType="VARCHAR" property="district"/>
+        <result column="FINANCE_DISK_TYPE" jdbcType="VARCHAR" property="financeDiskType"/>
+        <result column="TAX_RATE" jdbcType="DECIMAL" property="taxRate"/>
+        <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate"/>
+    </resultMap>
+    <select id="selectCompanyInfoPage" resultMap="BaseResultMap">
+        select t1.COMPANY_ID,t1.COMPANY_NAME, t1.TAX_TYPE,t1.PROVINCE, t1.CITY, t1.DISTRICT, t1.FINANCE_DISK_TYPE, t1.TAX_RATE, t1.UPDATE_DATE
+        from CRM_COMPANY_INFO t1,CRM_CUSTOM_COMPANY_REL t2
+        where t1.COMPANY_ID = t2.COMPANY_ID
+        <if test="query.customId != null and query.customId != ''">
+            and t2.CUSTOM_ID like concat('%', #{query.customId}, '%')
+        </if>
+    </select>
 </mapper>

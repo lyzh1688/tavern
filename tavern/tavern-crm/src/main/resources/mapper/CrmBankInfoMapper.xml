@@ -5,26 +5,10 @@
     <id column="BANK_ID" jdbcType="VARCHAR" property="bankId" />
     <result column="BANK_NAME" jdbcType="VARCHAR" property="bankName" />
   </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from CRM_BANK_INFO
-    where BANK_ID = #{bankId,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.protocol.crm.model.CrmBankInfo">
-    insert into CRM_BANK_INFO (BANK_ID, BANK_NAME)
-    values (#{bankId,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR})
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.protocol.crm.model.CrmBankInfo">
-    update CRM_BANK_INFO
-    set BANK_NAME = #{bankName,jdbcType=VARCHAR}
-    where BANK_ID = #{bankId,jdbcType=VARCHAR}
-  </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select BANK_ID, BANK_NAME
-    from CRM_BANK_INFO
-    where BANK_ID = #{bankId,jdbcType=VARCHAR}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select BANK_ID, BANK_NAME
-    from CRM_BANK_INFO
+  <select id="selectCrmBankInfoByCompanyId" resultMap="BaseResultMap">
+    select t1.BANK_ID, t1.BANK_NAME
+    from CRM_BANK_INFO t1,CRM_COMPANY_BANK_REL t2
+    where t1.BANK_ID = t2.BANK_ID
+    and t2.COMPANY_ID = #{companyId,jdbcType=VARCHAR}
   </select>
 </mapper>

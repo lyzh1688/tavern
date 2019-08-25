@@ -35,8 +35,8 @@
         </table>
         <table tableName="CRM_COMPANY_INFO" domainObjectName="CrmCompanyInfo">
         </table>-->
-        <table tableName="CRM_CUSTOM_BASIC_INFO" domainObjectName="CrmCustomBasicInfo">
-        </table>
+        <!--<table tableName="CRM_CUSTOM_BASIC_INFO" domainObjectName="CrmCustomBasicInfo">
+        </table>-->
        <!-- <table tableName="CRM_CUSTOM_COMPANY_REL" domainObjectName="CrmCustomCompanyRel">
         </table>
         <table tableName="CRM_CUSTOM_ORDER_INFO" domainObjectName="CrmCustomOrderInfo">
@@ -49,6 +49,10 @@
         </table>
         <table tableName="CRM_ORDER_GSZC_DETAIL" domainObjectName="CrmOrderGszcDetail">
         </table>-->
+        <table tableName="CRM_COMPANY_STAFF_INFO" domainObjectName="CrmCompanyStaffInfo">
+        </table>
+        <table tableName="CRM_COMPANY_STAFF_REL" domainObjectName="CrmCompanyStaffRel">
+        </table>
 
 
 

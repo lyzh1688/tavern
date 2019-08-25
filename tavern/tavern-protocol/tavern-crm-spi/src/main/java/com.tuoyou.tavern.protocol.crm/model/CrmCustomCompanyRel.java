@@ -1,23 +1,18 @@
 package com.tuoyou.tavern.protocol.crm.model;
 
-public class CrmCustomCompanyRel {
-    private String customId;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
+@Data
+@TableName("CRM_CUSTOM_COMPANY_REL")
+public class CrmCustomCompanyRel extends Model<CrmCustomCompanyRel> {
+    @TableId
+    private String customId;
+    @TableId
     private String companyId;
 
-    public String getCustomId() {
-        return customId;
-    }
-
-    public void setCustomId(String customId) {
-        this.customId = customId == null ? null : customId.trim();
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId == null ? null : companyId.trim();
-    }
 }

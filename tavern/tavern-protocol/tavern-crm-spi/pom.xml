@@ -16,6 +16,10 @@
             <artifactId>tavern-protocol-common</artifactId>
             <version>${tavern.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

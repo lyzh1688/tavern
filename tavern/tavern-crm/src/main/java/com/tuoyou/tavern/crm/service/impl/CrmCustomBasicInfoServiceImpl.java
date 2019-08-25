@@ -57,8 +57,7 @@ public class CrmCustomBasicInfoServiceImpl extends ServiceImpl<CrmCustomBasicInf
                     customBasicInfoVO.setUpdateDate(DateUtils.formatDateTime(record.getUpdateDate(), DateUtils.DEFAULT_DATETIME_FORMATTER));
                     return customBasicInfoVO;
                 }).collect(Collectors.toList());
-        IPage<CustomBasicInfoVO> page1=  CommonUtils.newIPage(infoIPage, customBasicInfoVOList);
-        return page1;
+        return CommonUtils.newIPage(infoIPage, customBasicInfoVOList);
     }
 
 }
