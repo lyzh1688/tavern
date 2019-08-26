@@ -96,7 +96,8 @@
       </el-pagination>
     </div>
     <!--新增编辑界面-->
-    <el-dialog :title="operation?'新增':'编辑'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false" :before-close="handleDialogClose">
+    <el-dialog :title="operation?'新增':'编辑'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false"
+               :before-close="handleDialogClose">
       <el-form :model="dataForm" label-width="80px" :rules="dataFormRules" ref="dataForm" :size="size"
                label-position="right">
         <el-form-item label="客户ID" label-width="100px" v-if="editShow" prop="customId">
@@ -165,7 +166,7 @@
   import {format} from "@/utils/datetime"
   import AreaJson from "@/utils/area.json"
 
-  const bankOptions = ['工商银行', '招商银行', '建设银行', '中国银行', '农业银行', '交通银行', '中信银行', '光大银行', '民生银行','上海银行']
+  const bankOptions = ['工商银行', '招商银行', '建设银行', '中国银行', '农业银行', '交通银行', '中信银行', '光大银行', '民生银行', '上海银行']
   export default {
     components: {
       PopupTreeInput,
@@ -230,7 +231,8 @@
         },
         cascaderAddr: [],
         editAreaLabel: '',
-        areaLabel: ''
+        areaLabel: '',
+        taxTypeRef: ''
 
       }
     }, created() {
@@ -250,7 +252,7 @@
       //初始化区域信息
       this.areaData = AreaJson
       for (let i = 0; i < this.areaData.length; i++) {
-        if (this.areaData[i].children == undefined ||this.areaData[i].children.length == 0) {
+        if (this.areaData[i].children == undefined || this.areaData[i].children.length == 0) {
           delete this.areaData[i].children //解决因为省级区域没有下级市的BUG
         }
       }
@@ -303,7 +305,7 @@
           })
         })
       },
-      handleDialogClose:function(){
+      handleDialogClose: function () {
         this.$refs['dataForm'].resetFields()
         this.dialogVisible = false
       },
@@ -313,6 +315,12 @@
 
       },
       handleDtl: function (params) {
+        params.allBanks = this.dataForm.allBanks;
+        this.getTargetArea(params.district, this.areaData)
+        params.area = this.editAreaLabel;
+        params.taxType = this.handleTaxType(params.taxType)
+        params.financeDiskType = this.handleFinanceDisType(params.financeDiskType)
+        alert(JSON.stringify(params))
         this.$router.push({name: '公司详情', params: params})
       },
       // 显示编辑界面
@@ -387,7 +395,29 @@
         let _this = this;
         _this.pageRequest.current = val;
         _this.findPage(_this.pageRequest);
-      },handleCheckedBanksChange(val){
+      }, handleCheckedBanksChange(val) {
+      }, handleTaxType(val) {
+        switch (val) {
+          case '0':
+            return '纳税类型1';
+          case '1':
+            return '纳税类型2';
+          case '2':
+            return '纳税类型3';
+          case '3':
+            return '纳税类型4';
+        }
+      }, handleFinanceDisType(val) {
+        switch (val) {
+          case '0':
+            return '金税1';
+          case '1':
+            return '金税2';
+          case '2':
+            return '金税3';
+          case '3':
+            return '金税4';
+        }
       }
     },
     mounted() {

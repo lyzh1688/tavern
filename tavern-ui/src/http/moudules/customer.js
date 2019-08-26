@@ -53,6 +53,46 @@ export const batchDeleteCompany = (data) => {
     data
   })
 }
+// 分页查询公司业务
+export const findCompanyBusinessPage = (params) => {
+  return axios({
+    url: '/crm/business/page',
+    method: 'get',
+    params
+  })
+}
+// 删除公司信息
+export const batchDeleteCompanyBusiness = (data) => {
+  return axios({
+    url: '/crm/business/delete',
+    method: 'delete',
+    data
+  })
+}
+// 分页查询
+export const findStaffPage = (params) => {
+  return axios({
+    url: '/crm/staff/page',
+    method: 'get',
+    params
+  })
+}
+// 保存员工信息
+export const saveStaff = (data) => {
+  return axios({
+    url: '/crm/staff/save',
+    method: 'post',
+    data
+  })
+}
+// 删除公司信息
+export const batchDeleteStaff = (data) => {
+  return axios({
+    url: '/crm/staff/delete',
+    method: 'delete',
+    data
+  })
+}
 // 查找用户的菜单权限标识集合
 export const findPermissions = (params) => {
   return axios({

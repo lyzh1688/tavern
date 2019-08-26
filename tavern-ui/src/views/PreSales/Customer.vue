@@ -217,11 +217,6 @@
             this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
           })
       },
-      /*// 批量删除
-      handleDelete: function (data) {
-        alert(JSON.stringify(data))
-        this.$api.customer.batchDelete(data.params).then(data != null ? data.callback : '')
-      },*/
       // 批量删除
       handleDelete: function (data) {
         this.$confirm('确认删除选中记录吗？', '提示', {
