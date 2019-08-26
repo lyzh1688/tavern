@@ -43,7 +43,9 @@ public class CrmCustomStaffInfoServiceImpl extends ServiceImpl<CrmCompanyStaffIn
         CrmCompanyStaffRel crmCompanyStaffRel = new CrmCompanyStaffRel();
         BeanUtils.copyProperties(crmCompanyStaffInfoDTO, crmCompanyStaffRel);
         crmCompanyStaffRel.setStaffId(staffId);
-        this.crmCustomStaffRelService.saveOrUpdate(crmCompanyStaffRel);
+        if(StringUtils.isEmpty(crmCompanyStaffInfoDTO.getStaffId())){
+            this.crmCustomStaffRelService.save(crmCompanyStaffRel);
+        }
 
     }
 
