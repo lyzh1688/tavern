@@ -320,7 +320,6 @@
         params.area = this.editAreaLabel;
         params.taxType = this.handleTaxType(params.taxType)
         params.financeDiskType = this.handleFinanceDisType(params.financeDiskType)
-        alert(JSON.stringify(params))
         this.$router.push({name: '公司详情', params: params})
       },
       // 显示编辑界面

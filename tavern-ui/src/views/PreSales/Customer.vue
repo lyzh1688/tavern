@@ -26,16 +26,9 @@
             <el-tooltip content="刷新" placement="top">
               <el-button icon="fa fa-refresh" @click="findPage(null)"></el-button>
             </el-tooltip>
-            <el-tooltip content="列显示" placement="top">
-              <el-button icon="fa fa-filter" @click="displayFilterColumnsDialog"></el-button>
-            </el-tooltip>
           </el-button-group>
         </el-form-item>
       </el-form>
-      <!--表格显示列界面-->
-      <table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns"
-                                  @handleFilterColumns="handleFilterColumns">
-      </table-column-filter-dialog>
     </div>
 
     <el-table :data="tableData" stripe stripe height="600" size="mini" style="width: 100%;"
@@ -205,6 +198,10 @@
         if (data !== null) {
           this.pageRequest = data.pageRequest
         }
+        this.loading = true
+        let callback = res => {
+          this.loading = false
+        }
         this.pageRequest.wangwangAccnt = this.filters.wangwangAccnt;
         this.pageRequest.customName = this.filters.customName;
         this.$api.customer.findPage(this.pageRequest).then((res) => {
@@ -212,9 +209,11 @@
           this.total = res.data.total;
           this.pageRequest.current = res.data.current;
           this.pageRequest.size = res.data.size;
+          callback(res)
         }).then(data != null ? data.callback : '')
           .catch((res) => {
             this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+            callback(res)
           })
       },
       // 批量删除
@@ -250,8 +249,22 @@
 
       // 显示新增界面
       handleAdd: function () {
+        this.editShow = false
         this.dialogVisible = true
         this.operation = true
+        this.dataForm = {
+          customId: '',
+          weixinAccnt: '',
+          weixinName: '',
+          wangwangAccnt: '',
+          contactPerson: '',
+          contactNumber: '',
+          corporation: '',
+          corporationNumber: '',
+          customLevel: '',
+          customName: '',
+          updateDate: ''
+        }
       },
       // 显示编辑界面
       handleEdit: function (params) {

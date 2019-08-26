@@ -42,10 +42,6 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="toolbar" style="float:right;padding-top:10px;padding-right:15px;">
-      <kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary"
-                 @click="handleReFreshPage(null)"/>
-    </div>
     <el-row>
       <el-col :span="24" class="main-top">
         <p><span class="short-line"></span>在办业务
@@ -111,8 +107,8 @@
       </el-table-column>
       <el-table-column prop="needHabitationServer" label="公积金代缴" header-align="center" align="center">
         <template slot-scope="scope">
-          <span v-if="scope.row.needSocialServer == '0'">不需要</span>
-          <span v-if="scope.row.needSocialServer == '1'">需要</span>
+          <span v-if="scope.row.needHabitationServer == '0'">不需要</span>
+          <span v-if="scope.row.needHabitationServer == '1'">需要</span>
           <span v-if="scope.row.needHabitationServer == '2'">代开中</span>
         </template>
       </el-table-column>
@@ -380,8 +376,20 @@
       },
       // 显示新增界面
       handleStaffAdd: function () {
+        this.editShow = false
         this.dialogVisible = true
         this.operation = true
+        this.dataForm = {
+          companyId: this.dtlForm.companyId,
+          staffId: '',
+          name: '',
+          idCard: '',
+          contactNumber: '',
+          needSocialIns: '',
+          needHabitationIns: '',
+          needSocialServer: '',
+          needHabitationServer: '',
+        }
       },
       // 显示编辑界面
       handleStaffEdit: function (params) {
@@ -398,15 +406,19 @@
               this.editLoading = true
               let params = Object.assign({}, this.dataForm)
               params.companyId = this.dtlForm.companyId
+              alert(JSON.stringify(params))
               this.$api.customer.saveStaff(params).then((res) => {
                 this.editLoading = false
                 this.$message({message: '操作成功', type: 'success'})
                 this.dialogVisible = false
                 this.$refs['dataForm'].resetFields()
                 this.findStaffPage(null)
+                this.editShow = false
               }).catch((res) => {
                 this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'});
-                this.loading = false
+                this.staffLoading = false
+                this.editShow = false
+                this.$refs['dataForm'].resetFields()
               })
             })
           }
@@ -420,10 +432,6 @@
         this.staffPageRequest.current = val;
         this.findStaffPage(this.staffPageRequest);
       },
-      handleReFreshPage(val) {
-        this.findBizPage(null)
-        this.findStaffPage(null)
-      }
     },
     mounted() {
       this.findBizPage(null)
