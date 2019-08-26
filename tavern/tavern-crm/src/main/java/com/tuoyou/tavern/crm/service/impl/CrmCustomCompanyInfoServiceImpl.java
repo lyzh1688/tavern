@@ -44,7 +44,7 @@ public class CrmCustomCompanyInfoServiceImpl extends ServiceImpl<CrmCompanyInfoM
 
     @Transactional
     @Override
-    public void creatCrmCompanyInfo(CrmCompanyInfoDTO crmCompanyInfoDTO) {
+    public void createCrmCompanyInfo(CrmCompanyInfoDTO crmCompanyInfoDTO) {
         String companyId = StringUtils.isEmpty(crmCompanyInfoDTO.getCompanyId()) ? UUIDUtil.randomUUID32() : crmCompanyInfoDTO.getCompanyId();
         CrmCompanyInfo crmCompanyInfo = new CrmCompanyInfo();
         BeanUtils.copyProperties(crmCompanyInfoDTO, crmCompanyInfo);

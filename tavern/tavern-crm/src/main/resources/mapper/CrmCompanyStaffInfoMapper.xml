@@ -1,26 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tuoyou.tavern.crm.mapper.CrmCompanyStaffInfoMapper">
+<mapper namespace="com.tuoyou.tavern.crm.dao.CrmCompanyStaffInfoMapper">
   <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.crm.model.CrmCompanyStaffInfo">
-    <result column="STAFF_ID" jdbcType="VARCHAR" property="staffId" />
+    <id column="STAFF_ID" jdbcType="VARCHAR" property="staffId" />
     <result column="ID_CARD" jdbcType="VARCHAR" property="idCard" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="CONTACT_NUMBER" jdbcType="VARCHAR" property="contactNumber" />
     <result column="NEED_SOCIAL_INS" jdbcType="VARCHAR" property="needSocialIns" />
     <result column="NEED_HABITATION_INS" jdbcType="VARCHAR" property="needHabitationIns" />
     <result column="NEED_SOCIAL_SERVER" jdbcType="VARCHAR" property="needSocialServer" />
     <result column="NEED_HABITATION_SERVER" jdbcType="VARCHAR" property="needHabitationServer" />
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
-  <insert id="insert" parameterType="com.tuoyou.tavern.protocol.crm.model.CrmCompanyStaffInfo">
-    insert into CRM_COMPANY_STAFF_INFO (STAFF_ID, ID_CARD, CONTACT_NUMBER, 
-      NEED_SOCIAL_INS, NEED_HABITATION_INS, NEED_SOCIAL_SERVER, 
-      NEED_HABITATION_SERVER)
-    values (#{staffId,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, #{contactNumber,jdbcType=VARCHAR}, 
-      #{needSocialIns,jdbcType=VARCHAR}, #{needHabitationIns,jdbcType=VARCHAR}, #{needSocialServer,jdbcType=VARCHAR}, 
-      #{needHabitationServer,jdbcType=VARCHAR})
-  </insert>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select STAFF_ID, ID_CARD, CONTACT_NUMBER, NEED_SOCIAL_INS, NEED_HABITATION_INS, NEED_SOCIAL_SERVER, 
-    NEED_HABITATION_SERVER
-    from CRM_COMPANY_STAFF_INFO
+
+
+  <select id="selectCrmStaffPage" resultType="com.tuoyou.tavern.protocol.crm.model.CrmCompanyStaffInfoVO">
+    select
+      t2.COMPANY_ID companyId,
+      t1.STAFF_ID staffId,
+      t1.NAME name,
+      t1.ID_CARD idCard,
+      t1.CONTACT_NUMBER contactNumber,
+      t1.NEED_SOCIAL_INS needSocialIns,
+      t1.NEED_HABITATION_INS needHabitationIns,
+      t1.NEED_SOCIAL_SERVER needSocialServer,
+      t1.NEED_HABITATION_SERVER needHabitationServer,
+      DATE_FORMAT(t1.UPDATE_DATE,'%Y-%m-%d %H:%i:%s') updateDate
+    from CRM_COMPANY_STAFF_INFO t1,CRM_COMPANY_STAFF_REL t2
+    where t1.STAFF_ID = t2.STAFF_ID
+    and t2.COMPANY_ID = #{query.companyId}
   </select>
 </mapper>

@@ -28,8 +28,8 @@ public class CustomCompanyInfoEndpoint {
 
 
     @PostMapping("/save")
-    public TavernResponse creatCrmCompanyInfo(@RequestBody @Valid CrmCompanyInfoDTO crmCompanyInfoDTO) {
-        this.crmCustomCompanyInfoService.creatCrmCompanyInfo(crmCompanyInfoDTO);
+    public TavernResponse createCrmCompanyInfo(@RequestBody @Valid CrmCompanyInfoDTO crmCompanyInfoDTO) {
+        this.crmCustomCompanyInfoService.createCrmCompanyInfo(crmCompanyInfoDTO);
         return new TavernResponse();
     }
 

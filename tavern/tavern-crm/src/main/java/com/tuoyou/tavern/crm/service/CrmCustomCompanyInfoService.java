@@ -14,7 +14,7 @@ import com.tuoyou.tavern.protocol.crm.model.CrmCompanyInfoVO;
  */
 public interface CrmCustomCompanyInfoService extends IService<CrmCompanyInfo> {
 
-    void creatCrmCompanyInfo(CrmCompanyInfoDTO crmCompanyInfoDTO);
+    void createCrmCompanyInfo(CrmCompanyInfoDTO crmCompanyInfoDTO);
 
     IPage<CrmCompanyInfoVO> getCompanyInfoPage(Page page, CustomCompanyQueryDTO customCompanyQueryDTO);
 

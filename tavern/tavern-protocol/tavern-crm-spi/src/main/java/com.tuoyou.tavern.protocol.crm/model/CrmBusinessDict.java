@@ -1,23 +1,16 @@
 package com.tuoyou.tavern.protocol.crm.model;
 
-public class CrmBusinessDict {
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@TableName("CRM_BUSINESS_DICT")
+public class CrmBusinessDict extends Model<CrmBusinessDict> {
     private String businessId;
 
     private String businessName;
 
-    public String getBusinessId() {
-        return businessId;
-    }
-
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId == null ? null : businessId.trim();
-    }
-
-    public String getBusinessName() {
-        return businessName;
-    }
-
-    public void setBusinessName(String businessName) {
-        this.businessName = businessName == null ? null : businessName.trim();
-    }
 }
