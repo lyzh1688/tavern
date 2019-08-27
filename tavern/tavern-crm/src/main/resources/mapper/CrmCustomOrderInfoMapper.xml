@@ -8,7 +8,7 @@
         <result column="RECEIVABLE_AMT" jdbcType="DECIMAL" property="receivableAmt"/>
         <result column="PAYABLE_AMT" jdbcType="DECIMAL" property="payableAmt"/>
     </resultMap>
-    <select id="selectAll" resultMap="BaseResultMap">
+    <select id="selectCrmOrderPage" resultMap="BaseResultMap">
         select ORDER_ID, CUSTOM_ID, ORDER_DATE, RECEIVABLE_AMT, PAYABLE_AMT
         from CRM_CUSTOM_ORDER_INFO
         <where>
