@@ -2,23 +2,23 @@
   <div class="page-container">
     <!--工具栏-->
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
-      <el-form :inline="true" :model="filters" :size="size" align="left">
+      <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="订单号" label-width="100px">
-          <el-input v-model="filters.orderId" placeholder="请输入订单号"></el-input>
+          <el-input v-model="dtlForm.orderId" :disabled=true></el-input>
         </el-form-item>
         <el-form-item label="订单日期" label-width="100px">
-          <el-date-picker v-model="filters.accountPeriod" type="datetime" placeholder="选择日期时间"></el-date-picker>
+          <el-date-picker v-model="dtlForm.orderDate" type="datetime" :disabled=true></el-date-picker>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" :size="size" align="left">
+      <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="应付金额" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入应付金额"></el-input>
+          <el-input v-model="dtlForm.receivableAmt" :disabled=true></el-input>
         </el-form-item>
         <el-form-item label="实付金额" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入实付金额"></el-input>
+          <el-input v-model="dtlForm.payableAmt" :disabled=true></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" :size="size" align="left" >
+      <el-form :inline="true" :model="dtlForm" :size="size" align="left" >
         <el-form-item>
           <kt-button icon="fa fa-search" label="添加关联业务" perms="sys:role:view" type="primary" @click="handleEdit(null)"/>
         </el-form-item>
@@ -34,9 +34,6 @@
             <el-tooltip content="列显示" placement="top">
               <el-button icon="fa fa-filter" @click="displayFilterColumnsDialog"></el-button>
             </el-tooltip>
-            <el-tooltip content="导出" placement="top">
-              <el-button icon="fa fa-file-excel-o"></el-button>
-            </el-tooltip>
           </el-button-group>
         </el-form-item>
       </el-form>
@@ -46,13 +43,41 @@
       </table-column-filter-dialog>
     </div>
     <!--表格内容栏-->
-    <kt-table :height="300" permsEdit="sys:user:edit" permsDelete="sys:user:delete"
-              :data="pageResult" :columns="filterColumns"
-              @findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete">
-    </kt-table>
+    <!--表格内容栏-->
+    <el-table :data="tableData" stripe stripe height="400" size="mini" style="width: 100%;"
+              v-loading="loading">
+      <el-table-column prop="customId" header-align="center" align="center" label="客户ID" v-if="false">
+      </el-table-column>
+      <el-table-column prop="businessName" label="业务类型" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="owner" label="对接人员" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="companyId" label="关联公司ID" header-align="center" align="center" v-if="false">
+      </el-table-column>
+      <el-table-column prop="companyName" label="关联公司" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="remark" label="备注" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="updateDate" label="创建时间" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
+        <template slot-scope="scope">
+          <kt-button icon="fa fa-edit" :label="$t('action.delete')" perms="sys:user:add" type="primary"
+                     @click="handleEdit(scope.row)"/>
+          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
+                     @click="handleDelete(scope.row)"/>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="toolbar" style="padding:10px;">
+      <el-pagination layout="total, prev, pager, next, jumper" @current-change="handleCurrentChange"
+                     :current-page="pageRequest.current" :page-size="pageRequest.size" :total="total"
+                     style="float:right;">
+      </el-pagination>
+    </div>
     <!--新增编辑界面-->
     <el-dialog title="添加关联业务" width="50%" center :visible.sync="dialogVisible" :close-on-click-modal="false">
-      <el-form :inline="true" :model="filters"  align="left">
+      <el-form :inline="true" :model="dtlForm"  align="left">
         <el-form-item label="业务类型" label-width="100px">
           <el-select v-model="name" clearable auto-complete="off" placeholder="请选择" @change="selectBiz">
             <el-option label="代理记账" value='0'></el-option>
@@ -61,7 +86,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="关联公司" label-width="150px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择">
+          <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
             <el-option label="微软" value='0'></el-option>
             <el-option label="空客" value='1'></el-option>
             <el-option label="洛克希德马丁" value='2'></el-option>
@@ -69,9 +94,9 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters"  align="left">
+      <el-form :inline="true" :model="dtlForm"  align="left">
         <el-form-item label="对接人员" label-width="100px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择">
+          <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
             <el-option label="张三丰" value='0'></el-option>
             <el-option label="李连杰" value='1'></el-option>
             <el-option label="萧敬腾" value='2'></el-option>
@@ -79,15 +104,15 @@
           </el-select>
         </el-form-item>
         <el-form-item label="是否需要合作方" label-width="150px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择">
+          <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
             <el-option label="是" value='1'></el-option>
             <el-option label="否" value='2'></el-option>
           </el-select>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters"  align="left" >
+      <el-form :inline="true" :model="dtlForm"  align="left" >
         <el-form-item label="合作方" label-width="100px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择">
+          <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
             <el-option label="张三丰" value='0'></el-option>
             <el-option label="李连杰" value='1'></el-option>
             <el-option label="萧敬腾" value='2'></el-option>
@@ -95,12 +120,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="支付合作方费用" label-width="150px">
-          <el-input v-model="filters.name" placeholder="请输入费用"></el-input>
+          <el-input v-model="dtlForm.name" placeholder="请输入费用"></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters"  align="left" >
+      <el-form :inline="true" :model="dtlForm"  align="left" >
         <el-form-item label="前置任务" label-width="100px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择">
+          <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
             <el-option label="任务一" value='0'></el-option>
             <el-option label="任务二" value='1'></el-option>
             <el-option label="任务三" value='2'></el-option>
@@ -108,7 +133,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="业务标签" label-width="150px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择">
+          <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
             <el-option label="标签一" value='0'></el-option>
             <el-option label="标签二" value='1'></el-option>
             <el-option label="标签三" value='2'></el-option>
@@ -116,63 +141,63 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" align="left">
+      <el-form :inline="true" :model="dtlForm" align="left">
         <el-form-item label="服务内容/备注" prop="bak" label-width="100px">
-          <el-input v-model="filters.name" auto-complete="off" style="width: 550px" placeholder="输入内容"></el-input>
+          <el-input v-model="dtlForm.name" auto-complete="off" style="width: 550px" placeholder="输入内容"></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters"  align="left" v-if="showHelpBookKeeping">
-        <el-form :inline="true" :model="filters" align="left">
+      <el-form :inline="true" :model="dtlForm"  align="left" v-if="showHelpBookKeeping">
+        <el-form :inline="true" :model="dtlForm" align="left">
           <el-form-item label="代理记账" prop="bak" label-width="100px">
           </el-form-item>
         </el-form>
-        <el-form :inline="true" :model="filters"  align="left" >
+        <el-form :inline="true" :model="dtlForm"  align="left" >
           <el-form-item label="应付金额" label-width="100px">
-            <el-input v-model="filters.name" placeholder="请输入应付金额"></el-input>
+            <el-input v-model="dtlForm.name" placeholder="请输入应付金额"></el-input>
           </el-form-item>
           <el-form-item label="实付金额" label-width="100px">
-            <el-input v-model="filters.name" placeholder="请输入实付金额"></el-input>
+            <el-input v-model="dtlForm.name" placeholder="请输入实付金额"></el-input>
           </el-form-item>
         </el-form>
       </el-form>
-      <el-form :model="filters"  align="left" v-if="showHelpPay">
-        <el-form :inline="true" :model="filters" align="left">
+      <el-form :model="dtlForm"  align="left" v-if="showHelpPay">
+        <el-form :inline="true" :model="dtlForm" align="left">
           <el-form-item label="公积金代缴/社保代缴" prop="bak" label-width="200px">
           </el-form-item>
         </el-form>
-        <el-form :inline="true" :model="filters"  align="left" style="margin-left: 50px">
+        <el-form :inline="true" :model="dtlForm"  align="left" style="margin-left: 50px">
           <el-form-item label="服务开始时间" label-width="100px">
-            <el-date-picker v-model="filters.accountPeriod" type="datetime" placeholder="选择日期时间"></el-date-picker>
+            <el-date-picker v-model="dtlForm.accountPeriod" type="datetime" placeholder="选择日期时间"></el-date-picker>
           </el-form-item>
           <el-form-item label="服务期限(月)" label-width="100px">
-            <el-input v-model="filters.name" placeholder="请输入服务期限(月)"></el-input>
+            <el-input v-model="dtlForm.name" placeholder="请输入服务期限(月)"></el-input>
           </el-form-item>
         </el-form>
-        <el-form :inline="true" :model="filters" align="left" style="margin-left: 50px">
+        <el-form :inline="true" :model="dtlForm" align="left" style="margin-left: 50px">
           <el-form-item label="缴款人数" label-width="100px">
-            <el-input v-model="filters.name" placeholder="请输入缴款人数"></el-input>
+            <el-input v-model="dtlForm.name" placeholder="请输入缴款人数"></el-input>
           </el-form-item>
           <el-form-item label="服务结束时间" label-width="100px">
-            <el-date-picker v-model="filters.accountPeriod" type="datetime" placeholder="选择日期时间"></el-date-picker>
+            <el-date-picker v-model="dtlForm.accountPeriod" type="datetime" placeholder="选择日期时间"></el-date-picker>
           </el-form-item>
         </el-form>
       </el-form>
-      <el-form :model="filters"  align="left" v-if="showHelpRegister">
-        <el-form :inline="true" :model="filters" align="left">
+      <el-form :model="dtlForm"  align="left" v-if="showHelpRegister">
+        <el-form :inline="true" :model="dtlForm" align="left">
           <el-form-item label="公司注册" prop="bak" label-width="100px">
           </el-form-item>
         </el-form>
-        <el-form :inline="true" :model="filters"  align="left" >
+        <el-form :inline="true" :model="dtlForm"  align="left" >
           <el-form-item label="银行开户是否需要到场" label-width="200px">
-            <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择">
+            <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
               <el-option label="是" value='0'></el-option>
               <el-option label="否" value='1'></el-option>
             </el-select>
           </el-form-item>
         </el-form>
-        <el-form :inline="true" :model="filters"  align="left" >
+        <el-form :inline="true" :model="dtlForm"  align="left" >
           <el-form-item label="注册地类型" label-width="200px">
-            <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择">
+            <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
               <el-option label="大陆" value='0'></el-option>
               <el-option label="香港" value='1'></el-option>
             </el-select>
@@ -206,45 +231,66 @@
     data() {
       return {
         size: 'small',
-        filters: {
+        dtlForm: {
+          customId: '',
           orderId: '',
-          name: ''
+          orderDate: '',
+          receivableAmt: '',
+          payableAmt: '',
         },
         columns: [],
         filterColumns: [],
-        pageRequest: {pageNum: 1, pageSize: 10},
-        pageResult: {},
-
+        pageRequest: {
+          current: 1,
+          size: 20,
+        },
+        total: 0,
+        tableData: [],
+        dtlParams: {},
         operation: false, // true:新增, false:编辑
         dialogVisible: false, // 新增编辑界面是否显示
         editLoading: false,
         dataFormRules: {
-          orderId: [
-            {required: true, message: '请输入订单号', trigger: 'blur'}
-          ]
+          companyName: [
+            {required: true, message: '请填写公司名称', trigger: 'blur'}
+          ],
+          taxType: [
+            {required: true, message: '请选择纳税类型', trigger: 'blur'}
+          ],
+          area: [
+            {required: true, message: '请选择区域信息', trigger: 'blur'}
+          ],
         },
+        loading: false,
+        editShow: false,
         // 新增编辑界面数据
         dataForm: {
-          id: 0,
-          name: '',
-          password: '123456',
-          deptId: 1,
-          deptName: '',
-          email: 'test@qq.com',
-          mobile: '13889700023',
-          status: 1,
-          userRoles: []
+          customId: '',
+          companyId: '',
+          companyName: '',
+          taxType: '',
+          area: '',
+          financeDiskType: '',
+          taxRate: '',
         },
-        deptData: [],
-        deptTreeProps: {
-          label: 'name',
-          children: 'children'
-        },
-        roles: [],
         showHelpBookKeeping: false,
         showHelpPay: false,
         showHelpRegister: false
       }
+    }, created() {
+      //初始化客户信息
+      this.dtlForm = this.$route.params;
+      let tmpInfo = JSON.parse(localStorage.getItem("orderDtlInfo"));
+      if (this.dtlForm.orderId == undefined || this.dtlForm.orderId == null) {
+        if (tmpInfo.orderId == undefined || tmpInfo.orderId == null) {
+          this.$router.push({name: "订单管理"})
+          return
+        } else {
+          this.dtlForm = tmpInfo;
+        }
+      }
+      localStorage.setItem("orderDtlInfo", JSON.stringify(this.dtlForm));
+      this.findPage(null);
     },
     methods: {
       // 获取分页数据
@@ -252,7 +298,7 @@
         if (data !== null) {
           this.pageRequest = data.pageRequest
         }
-        this.pageRequest.columnFilters = {name: {name: 'name', value: this.filters.name}}
+        this.pageRequest.columndtlForm = {name: {name: 'name', value: this.dtlForm.name}}
         this.$api.order.findDtlPage(this.pageRequest).then((res) => {
           this.pageResult = res.data
         }).then(data != null ? data.callback : '')
@@ -326,21 +372,6 @@
           }
         })
       },
-      // 获取部门列表
-      findDeptTree: function () {
-        this.$api.dept.findDeptTree().then((res) => {
-          this.deptData = res.data
-        })
-      },
-      // 菜单树选中
-      deptTreeCurrentChangeHandle(data, node) {
-        this.dataForm.deptId = data.id
-        this.dataForm.deptName = data.name
-      },
-      // 时间格式化
-      dateFormat: function (row, column, cellValue, index) {
-        return format(row[column.property])
-      },
       // 处理表格列过滤显示
       displayFilterColumnsDialog: function () {
         this.$refs.tableColumnFilterDialog.setDialogVisible(true)
@@ -378,7 +409,6 @@
       }
     },
     mounted() {
-      // this.findDeptTree()
       this.initColumns()
     }
   }

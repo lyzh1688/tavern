@@ -54,7 +54,7 @@
           <kt-button icon="fa fa-retweet" label="客户详情" perms="sys:user:add" type="primary"
                      @click="handleDtl(scope.row)"/>
           <kt-button icon="fa fa-shopping-cart" label="客户订单" perms="sys:user:add" type="primary"
-                     @click="handleOrder"/>
+                     @click="handleOrder(scope.row)"/>
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
                      @click="handleDelete(scope.row)"/>
         </template>
@@ -242,8 +242,8 @@
       handleDtl: function (params) {
         this.$router.push({name: '客户详情', params: params})
       },
-      handleOrder: function () {
-        this.$router.push({path: '/preSales/order'})
+      handleOrder: function (params) {
+        this.$router.push({name: '订单管理', params: params})
       },
 
 

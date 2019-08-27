@@ -93,6 +93,22 @@ export const batchDeleteStaff = (data) => {
     data
   })
 }
+// 分页查询订单
+export const findOrderPage = (params) => {
+  return axios({
+    url: '/crm/order/page',
+    method: 'get',
+    params
+  })
+}
+// 保存订单信息
+export const saveOrder = (data) => {
+  return axios({
+    url: '/crm/order/save',
+    method: 'post',
+    data
+  })
+}
 // 查找用户的菜单权限标识集合
 export const findPermissions = (params) => {
   return axios({

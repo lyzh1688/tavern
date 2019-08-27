@@ -312,6 +312,17 @@
       handleAdd: function () {
         this.dialogVisible = true
         this.operation = true
+        this.dataForm = {
+          customId: '',
+          companyId: '',
+          companyName: '',
+          taxType: '',
+          area: '',
+          financeDiskType: '',
+          taxRate: '',
+          banks: [],
+          allBanks: bankOptions
+        }
 
       },
       handleDtl: function (params) {
