@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tuoyou.tavern.auth.libs.utils.PwdUtils;
 import com.tuoyou.tavern.crm.service.HrmUserBasicInfoService;
 import com.tuoyou.tavern.protocol.common.RetCode;
+import com.tuoyou.tavern.protocol.common.TavernDictResponse;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
+import com.tuoyou.tavern.protocol.common.model.Dict;
 import com.tuoyou.tavern.protocol.hrm.constants.HrmUserConstant;
 import com.tuoyou.tavern.protocol.hrm.dto.StaffInfoDTO;
 import com.tuoyou.tavern.protocol.hrm.model.HrmUserBasicInfo;
@@ -120,5 +122,6 @@ public class StaffEndpoint {
         }
         return new TavernResponse();
     }
+
 
 }

@@ -13,11 +13,19 @@
         <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate"/>
     </resultMap>
     <select id="selectCompanyInfoPage" resultMap="BaseResultMap">
-        select t1.COMPANY_ID,t1.COMPANY_NAME, t1.TAX_TYPE,t1.PROVINCE, t1.CITY, t1.DISTRICT, t1.FINANCE_DISK_TYPE, t1.TAX_RATE, t1.UPDATE_DATE
+        select t1.COMPANY_ID,t1.COMPANY_NAME, t1.TAX_TYPE,t1.PROVINCE, t1.CITY, t1.DISTRICT, t1.FINANCE_DISK_TYPE,
+        t1.TAX_RATE, t1.UPDATE_DATE
         from CRM_COMPANY_INFO t1,CRM_CUSTOM_COMPANY_REL t2
         where t1.COMPANY_ID = t2.COMPANY_ID
         <if test="query.customId != null and query.customId != ''">
             and t2.CUSTOM_ID like concat('%', #{query.customId}, '%')
         </if>
+    </select>
+    <select id="selectCompanyByCustomId" resultMap="BaseResultMap">
+        select t1.COMPANY_ID,t1.COMPANY_NAME, t1.TAX_TYPE,t1.PROVINCE, t1.CITY, t1.DISTRICT, t1.FINANCE_DISK_TYPE,
+        t1.TAX_RATE, t1.UPDATE_DATE
+        from CRM_COMPANY_INFO t1,CRM_CUSTOM_COMPANY_REL t2
+        where t1.COMPANY_ID = t2.COMPANY_ID
+        and t2.CUSTOM_ID= #{customId}
     </select>
 </mapper>

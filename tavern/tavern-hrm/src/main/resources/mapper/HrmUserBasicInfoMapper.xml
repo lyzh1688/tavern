@@ -23,8 +23,8 @@
         </collection>
     </resultMap>
     <sql id="all">
-     USER_ID, USER_NAME, USER_ACCNT, PASSWORD,SALT, IS_VALID, UPDATE_DATE
-  </sql>
+        USER_ID, USER_NAME, USER_ACCNT, PASSWORD,SALT, IS_VALID, UPDATE_DATE
+    </sql>
     <select id="selectAll" resultMap="BaseResultMap">
         select
         <include refid="all"/>
@@ -32,15 +32,17 @@
     </select>
 
     <select id="selectStaffBasicInfo" resultMap="BasicInfoMap">
-    select T1.USER_ID,T1.USER_ACCNT,T1.USER_NAME,T3.ROLE_ID,T2.USER_ID USER_ID_REL from HRM_USER_BASIC_INFO T1,HRM_USER_ROLE_REL T2,HRM_ROLE_INFO T3
-    WHERE T1.USER_ID = T2.USER_ID
-    AND T2.ROLE_ID = T3.ROLE_ID
-    and T1.USER_ACCNT = #{accnt}
-    and T1.PASSWORD = #{password}
-    and T1.IS_VALID = '1'
-  </select>
+        select T1.USER_ID,T1.USER_ACCNT,T1.USER_NAME,T3.ROLE_ID,T2.USER_ID USER_ID_REL from HRM_USER_BASIC_INFO
+        T1,HRM_USER_ROLE_REL T2,HRM_ROLE_INFO T3
+        WHERE T1.USER_ID = T2.USER_ID
+        AND T2.ROLE_ID = T3.ROLE_ID
+        and T1.USER_ACCNT = #{accnt}
+        and T1.PASSWORD = #{password}
+        and T1.IS_VALID = '1'
+    </select>
     <select id="selectStaffPage" resultMap="BasicInfoMap">
-        select T1.USER_ID,T1.USER_ACCNT,T1.USER_NAME,T1.PASSWORD,DATE_FORMAT(T1.UPDATE_DATE,'%Y-%m-%d %H:%i:%s') UPDATE_DATE,
+        select T1.USER_ID,T1.USER_ACCNT,T1.USER_NAME,T1.PASSWORD,DATE_FORMAT(T1.UPDATE_DATE,'%Y-%m-%d %H:%i:%s')
+        UPDATE_DATE,
         T3.ROLE_ID,T2.USER_ID USER_ID_REL from HRM_USER_BASIC_INFO
         T1,HRM_USER_ROLE_REL T2,HRM_ROLE_INFO T3
         WHERE T1.USER_ID = T2.USER_ID
@@ -49,6 +51,13 @@
             T1.USER_NAME like concat("%",#{query.userName},"%")
         </if>
         and T1.IS_VALID = '1'
+    </select>
+    <select id="selectStaffByRole" resultMap="BaseResultMap">
+        select
+        t1.USER_ID, t1.USER_NAME, t1.USER_ACCNT, t1.PASSWORD,SALT, t1.IS_VALID, t1.UPDATE_DATE
+        from HRM_USER_BASIC_INFO t1,HRM_USER_ROLE_REL t2
+        where t1.USER_ID = t2.USER_ID
+        and t2.ROLE_ID = #{roleId}
     </select>
 
 </mapper>

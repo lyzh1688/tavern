@@ -18,7 +18,7 @@
           <el-input v-model="dtlForm.payableAmt" :disabled=true></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="dtlForm" :size="size" align="left" >
+      <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item>
           <kt-button icon="fa fa-search" label="添加关联业务" perms="sys:role:view" type="primary" @click="handleEdit(null)"/>
         </el-form-item>
@@ -77,12 +77,20 @@
     </div>
     <!--新增编辑界面-->
     <el-dialog title="添加关联业务" width="50%" center :visible.sync="dialogVisible" :close-on-click-modal="false">
-      <el-form :inline="true" :model="dtlForm"  align="left">
+      <el-form :inline="true" :model="dataForm" align="left">
         <el-form-item label="业务类型" label-width="100px">
-          <el-select v-model="name" clearable auto-complete="off" placeholder="请选择" @change="selectBiz">
-            <el-option label="代理记账" value='0'></el-option>
-            <el-option label="公积金代缴/社保代缴" value='1'></el-option>
-            <el-option label="公司注册" value='2'></el-option>
+          <el-select v-model="dataForm.bussiness"
+                     filterable
+                     remote
+                     clearable
+                     :remote-method="remoteBusinessDict"
+                     placeholder="请输入关键字"
+                     no-data-text="无匹配数据"
+                     :loading="remoteBusinessDictLoding">
+            <el-option v-for="item in selectedBizDict"
+                       :key="item.id"
+                       :value="item.id"
+                       :label="item.name"/>
           </el-select>
         </el-form-item>
         <el-form-item label="关联公司" label-width="150px">
@@ -94,7 +102,7 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="dtlForm"  align="left">
+      <el-form :inline="true" :model="dtlForm" align="left">
         <el-form-item label="对接人员" label-width="100px">
           <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
             <el-option label="张三丰" value='0'></el-option>
@@ -110,7 +118,7 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="dtlForm"  align="left" >
+      <el-form :inline="true" :model="dtlForm" align="left">
         <el-form-item label="合作方" label-width="100px">
           <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
             <el-option label="张三丰" value='0'></el-option>
@@ -123,7 +131,7 @@
           <el-input v-model="dtlForm.name" placeholder="请输入费用"></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="dtlForm"  align="left" >
+      <el-form :inline="true" :model="dtlForm" align="left">
         <el-form-item label="前置任务" label-width="100px">
           <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
             <el-option label="任务一" value='0'></el-option>
@@ -146,12 +154,12 @@
           <el-input v-model="dtlForm.name" auto-complete="off" style="width: 550px" placeholder="输入内容"></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="dtlForm"  align="left" v-if="showHelpBookKeeping">
+      <el-form :inline="true" :model="dtlForm" align="left" v-if="showHelpBookKeeping">
         <el-form :inline="true" :model="dtlForm" align="left">
           <el-form-item label="代理记账" prop="bak" label-width="100px">
           </el-form-item>
         </el-form>
-        <el-form :inline="true" :model="dtlForm"  align="left" >
+        <el-form :inline="true" :model="dtlForm" align="left">
           <el-form-item label="应付金额" label-width="100px">
             <el-input v-model="dtlForm.name" placeholder="请输入应付金额"></el-input>
           </el-form-item>
@@ -160,12 +168,12 @@
           </el-form-item>
         </el-form>
       </el-form>
-      <el-form :model="dtlForm"  align="left" v-if="showHelpPay">
+      <el-form :model="dtlForm" align="left" v-if="showHelpPay">
         <el-form :inline="true" :model="dtlForm" align="left">
           <el-form-item label="公积金代缴/社保代缴" prop="bak" label-width="200px">
           </el-form-item>
         </el-form>
-        <el-form :inline="true" :model="dtlForm"  align="left" style="margin-left: 50px">
+        <el-form :inline="true" :model="dtlForm" align="left" style="margin-left: 50px">
           <el-form-item label="服务开始时间" label-width="100px">
             <el-date-picker v-model="dtlForm.accountPeriod" type="datetime" placeholder="选择日期时间"></el-date-picker>
           </el-form-item>
@@ -182,12 +190,12 @@
           </el-form-item>
         </el-form>
       </el-form>
-      <el-form :model="dtlForm"  align="left" v-if="showHelpRegister">
+      <el-form :model="dtlForm" align="left" v-if="showHelpRegister">
         <el-form :inline="true" :model="dtlForm" align="left">
           <el-form-item label="公司注册" prop="bak" label-width="100px">
           </el-form-item>
         </el-form>
-        <el-form :inline="true" :model="dtlForm"  align="left" >
+        <el-form :inline="true" :model="dtlForm" align="left">
           <el-form-item label="银行开户是否需要到场" label-width="200px">
             <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
               <el-option label="是" value='0'></el-option>
@@ -195,7 +203,7 @@
             </el-select>
           </el-form-item>
         </el-form>
-        <el-form :inline="true" :model="dtlForm"  align="left" >
+        <el-form :inline="true" :model="dtlForm" align="left">
           <el-form-item label="注册地类型" label-width="200px">
             <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
               <el-option label="大陆" value='0'></el-option>
@@ -265,7 +273,7 @@
         editShow: false,
         // 新增编辑界面数据
         dataForm: {
-          customId: '',
+          bussiness: '',
           companyId: '',
           companyName: '',
           taxType: '',
@@ -275,7 +283,13 @@
         },
         showHelpBookKeeping: false,
         showHelpPay: false,
-        showHelpRegister: false
+        showHelpRegister: false,
+        //字典对象
+        bizDict: [],
+        selectedBizDict: [],
+        remoteBusinessDictLoding: false,
+
+
       }
     }, created() {
       //初始化客户信息
@@ -406,10 +420,42 @@
         if (e == 2) {
           this.showHelpRegister = true
         }
+      }, initBusinessDict: function () {
+        this.$api.customer.findBizDict(null).then((res) => {
+          this.bizDict = res.data;
+          this.selectedBizDict = res.data;
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+        })
+      }, remoteBusinessDict: function (param) {
+        if (param != '') {
+          this.remoteBusinessDictLoding = true;
+          setTimeout(() => {
+            this.remoteBusinessDictLoding = false;
+            this.selectedBizDict = this.bizDict.filter(item => {
+              return item.name.toLowerCase()
+                .indexOf(param.toLowerCase()) > -1;
+            });
+          }, 200);
+        } else {
+          this.selectedBizDict = [];
+        }
+      },
+      initDict: function () {
+        //1. 初始化业务类型
+        this.initBusinessDict();
+
+        //1. 初始化业务角色
+        //2. 初始化关联公司/customId
+        //3. 初始化对接人员/role->过滤人员
+        //4. 初始化前置任务/orderId
+
+
       }
     },
     mounted() {
       this.initColumns()
+      this.initDict()
     }
   }
 </script>

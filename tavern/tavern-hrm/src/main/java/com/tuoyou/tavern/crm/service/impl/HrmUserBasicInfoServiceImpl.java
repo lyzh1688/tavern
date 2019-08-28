@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -49,5 +50,10 @@ public class HrmUserBasicInfoServiceImpl extends ServiceImpl<HrmUserBasicInfoMap
     @Override
     public IPage<StaffBasicInfo> page(Page page, StaffInfoDTO staffInfoDTO) {
         return this.baseMapper.selectStaffPage(page, staffInfoDTO);
+    }
+
+    @Override
+    public List<HrmUserBasicInfo> getStaffByRole(String roleId) {
+        return this.baseMapper.selectStaffByRole(roleId);
     }
 }

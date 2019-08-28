@@ -5,4 +5,11 @@
     <id column="BUSINESS_ID" jdbcType="VARCHAR" property="businessId" />
     <result column="BUSINESS_NAME" jdbcType="VARCHAR" property="businessName" />
   </resultMap>
+
+  <select id="selectCrmOrderBusinessByOrderId" resultMap="BaseResultMap">
+    select t1.BUSINESS_ID,t1.BUSINESS_NAME
+    from crm_business_dict t1,crm_order_business_rel t2
+    where t1.BUSINESS_ID = t2.BUSINESS_ID
+    and t2.ORDER_ID = #{orderId}
+  </select>
 </mapper>

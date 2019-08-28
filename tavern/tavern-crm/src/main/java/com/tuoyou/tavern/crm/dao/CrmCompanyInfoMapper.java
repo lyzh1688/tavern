@@ -7,8 +7,12 @@ import com.tuoyou.tavern.protocol.crm.dto.CustomCompanyQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCompanyInfo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface CrmCompanyInfoMapper extends BaseMapper<CrmCompanyInfo> {
 
     IPage<CrmCompanyInfo> selectCompanyInfoPage(Page page, @Param("query") CustomCompanyQueryDTO customCompanyQueryDTO);
+
+    List<CrmCompanyInfo> selectCompanyByCustomId(@Param("customId") String customId);
 
 }

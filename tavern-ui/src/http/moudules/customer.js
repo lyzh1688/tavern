@@ -109,6 +109,16 @@ export const saveOrder = (data) => {
     data
   })
 }
+// 查询业务字典
+export const findBizDict = (params) => {
+  return axios({
+    url: '/crm/dict/business',
+    method: 'get',
+    params
+  })
+}
+
+
 // 查找用户的菜单权限标识集合
 export const findPermissions = (params) => {
   return axios({

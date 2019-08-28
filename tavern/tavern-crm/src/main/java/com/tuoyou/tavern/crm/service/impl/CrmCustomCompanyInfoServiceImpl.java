@@ -119,13 +119,18 @@ public class CrmCustomCompanyInfoServiceImpl extends ServiceImpl<CrmCompanyInfoM
                     BeanUtils.copyProperties(record, crmCompanyInfoVO);
                     crmCompanyInfoVO.setCustomId(customCompanyQueryDTO.getCustomId());
                     crmCompanyInfoVO.setUpdateDate(DateUtils.formatDateTime(record.getUpdateDate(), DateUtils.DEFAULT_DATETIME_FORMATTER));
-                   List<String> banks = this.crmCustomBankInfoService.getCrmBankInfoByCompanyId(record.getCompanyId())
-                           .parallelStream()
-                           .map(CrmBankInfo::getBankName)
-                           .collect(Collectors.toList());
+                    List<String> banks = this.crmCustomBankInfoService.getCrmBankInfoByCompanyId(record.getCompanyId())
+                            .parallelStream()
+                            .map(CrmBankInfo::getBankName)
+                            .collect(Collectors.toList());
                     crmCompanyInfoVO.setBanks(banks);
                     return crmCompanyInfoVO;
                 }).collect(Collectors.toList());
         return CommonUtils.newIPage(infoIPage, crmCompanyInfoVOList);
+    }
+
+    @Override
+    public List<CrmCompanyInfo> getCompanyByCustomId(String customId) {
+        return this.baseMapper.selectCompanyByCustomId(customId);
     }
 }
