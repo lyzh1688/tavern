@@ -117,6 +117,14 @@ export const findBizDict = (params) => {
     params
   })
 }
+// 查询业务字典
+export const findCompanyDict = (params) => {
+  return axios({
+    url: '/crm/dict/company',
+    method: 'get',
+    params
+  })
+}
 
 
 // 查找用户的菜单权限标识集合

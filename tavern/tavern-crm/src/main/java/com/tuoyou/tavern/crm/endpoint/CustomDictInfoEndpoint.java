@@ -68,7 +68,7 @@ public class CustomDictInfoEndpoint {
      * 对接人员
      */
     @GetMapping("/owner")
-    public TavernDictResponse getCrmFlowPointOperator(@RequestParam(name = "roleId") String roleId) {
+    public TavernDictResponse getCrmFlowPointOperator(@RequestParam(name = "businessName") String businessName) {
         //添加关联业务后，即发起一个流程，根据节点角色进行选择
         //1.graph代表UML
         //2.edge代表分支
@@ -77,6 +77,9 @@ public class CustomDictInfoEndpoint {
         //1.传入节点角色
         //2.根据角色进行查询人员
         //3.rpc到hrm查询相关人员
+
+
+
 
         return this.hrmUserDictService.queryStaffByRole(roleId);
     }

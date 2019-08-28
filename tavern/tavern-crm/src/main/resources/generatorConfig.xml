@@ -13,7 +13,7 @@
         </commentGenerator>
 
        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1:3306/crm?characterEncoding=UTF-8"
+                        connectionURL="jdbc:mysql://119.3.19.171:3306/workflow?characterEncoding=UTF-8"
                         userId="root"
                         password="y2iaciej" />
 
@@ -21,9 +21,9 @@
             <property name="trimStrings" value = "true"></property>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="mapper/new" targetProject="src/main/resources" />
+        <sqlMapGenerator targetPackage="mapper/workflow" targetProject="src/main/resources" />
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.tuoyou.tavern.crm.mapper" targetProject="src/main/java" />
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.tuoyou.tavern.crm.mapper.workflow" targetProject="src/main/java" />
 
         <!--<table tableName="CRM_BANK_INFO" domainObjectName="CrmBankInfo">
         </table>
@@ -49,11 +49,30 @@
         </table>
         <table tableName="CRM_ORDER_GSZC_DETAIL" domainObjectName="CrmOrderGszcDetail">
         </table>-->
-        <table tableName="CRM_COMPANY_STAFF_INFO" domainObjectName="CrmCompanyStaffInfo">
+       <!-- <table tableName="CRM_COMPANY_STAFF_INFO" domainObjectName="CrmCompanyStaffInfo">
         </table>
         <table tableName="CRM_COMPANY_STAFF_REL" domainObjectName="CrmCompanyStaffRel">
+        </table>-->
+        <table tableName="workflow_def_edge" domainObjectName="WorkFlowDefEdge">
         </table>
-
+        <table tableName="workflow_def_graph" domainObjectName="WorkFlowDefGraph">
+        </table>
+        <table tableName="workflow_def_node" domainObjectName="WorkFlowDefNode">
+        </table>
+        <table tableName="workflow_def_node_ext_attr" domainObjectName="WorkFlowDefNodeExtAttr">
+        </table>
+        <table tableName="workflow_event" domainObjectName="WorkFlowEvent">
+        </table>
+        <table tableName="workflow_event_dependency" domainObjectName="WorkFlowEventDependency">
+        </table>
+        <table tableName="workflow_event_dependency_his" domainObjectName="WorkFlowEventDependencyHis">
+        </table>
+        <table tableName="workflow_event_history" domainObjectName="WorkFlowEventHistory">
+        </table>
+        <table tableName="workflow_log_attatchment" domainObjectName="WorkFlowLogAttachment">
+        </table>
+        <table tableName="workflow_log_message" domainObjectName="WorkFlowLogMessage">
+        </table>
 
 
 

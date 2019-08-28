@@ -84,21 +84,28 @@
                      remote
                      clearable
                      :remote-method="remoteBusinessDict"
-                     placeholder="请输入关键字"
+                     placeholder="请输入业务类型"
                      no-data-text="无匹配数据"
-                     :loading="remoteBusinessDictLoding">
+                     :loading="remoteBusinessDictLoading">
             <el-option v-for="item in selectedBizDict"
                        :key="item.id"
                        :value="item.id"
                        :label="item.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="关联公司" label-width="150px">
-          <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
-            <el-option label="微软" value='0'></el-option>
-            <el-option label="空客" value='1'></el-option>
-            <el-option label="洛克希德马丁" value='2'></el-option>
-            <el-option label="休斯顿火箭" value='3'></el-option>
+        <el-form-item label="关联公司" label-width="100px">
+          <el-select v-model="dataForm.company"
+                     filterable
+                     remote
+                     clearable
+                     :remote-method="remoteCompanyDict"
+                     placeholder="请输入关联公司"
+                     no-data-text="无匹配数据"
+                     :loading="remoteCompanyDictLoading">
+            <el-option v-for="item in selectedCompanyDict"
+                       :key="item.id"
+                       :value="item.id"
+                       :label="item.name"/>
           </el-select>
         </el-form-item>
       </el-form>
@@ -274,7 +281,7 @@
         // 新增编辑界面数据
         dataForm: {
           bussiness: '',
-          companyId: '',
+          company: '',
           companyName: '',
           taxType: '',
           area: '',
@@ -287,7 +294,10 @@
         //字典对象
         bizDict: [],
         selectedBizDict: [],
-        remoteBusinessDictLoding: false,
+        companyDict: [],
+        selectedCompanyDict: [],
+        remoteBusinessDictLoading: false,
+        remoteCompanyDictLoading: false,
 
 
       }
@@ -429,9 +439,9 @@
         })
       }, remoteBusinessDict: function (param) {
         if (param != '') {
-          this.remoteBusinessDictLoding = true;
+          this.remoteBusinessDictLoading = true;
           setTimeout(() => {
-            this.remoteBusinessDictLoding = false;
+            this.remoteBusinessDictLoading = false;
             this.selectedBizDict = this.bizDict.filter(item => {
               return item.name.toLowerCase()
                 .indexOf(param.toLowerCase()) > -1;
@@ -441,9 +451,33 @@
           this.selectedBizDict = [];
         }
       },
+      initCompanyDict: function () {
+        let param = {};
+        param.customId = this.dtlForm.customId;
+        this.$api.customer.findCompanyDict(param).then((res) => {
+          this.companyDict = res.data;
+          this.selectedCompanyDict = res.data;
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+        })
+      }, remoteCompanyDict: function (param) {
+        if (param != '') {
+          this.remoteCompanyDictLoading = true;
+          setTimeout(() => {
+            this.remoteCompanyDictLoading = false;
+            this.selectedCompanyDict = this.companyDict.filter(item => {
+              return item.name.toLowerCase()
+                .indexOf(param.toLowerCase()) > -1;
+            });
+          }, 200);
+        } else {
+          this.selectedCompanyDict = [];
+        }
+      },
       initDict: function () {
         //1. 初始化业务类型
         this.initBusinessDict();
+        this.initCompanyDict();
 
         //1. 初始化业务角色
         //2. 初始化关联公司/customId
