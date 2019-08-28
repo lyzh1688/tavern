@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.crm.dao.workflow.WorkFlowEventMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.WorkFlowEvent">
+    <id column="event_id" jdbcType="VARCHAR" property="eventId" />
+    <result column="graph_id" jdbcType="VARCHAR" property="graphId" />
+    <result column="cur_node_id" jdbcType="VARCHAR" property="curNodeId" />
+    <result column="event_owner" jdbcType="VARCHAR" property="eventOwner" />
+    <result column="cur_operator" jdbcType="VARCHAR" property="curOperator" />
+    <result column="begin_date" jdbcType="DATE" property="beginDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from workflow_event
+    where event_id = #{eventId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.WorkFlowEvent">
+    insert into workflow_event (event_id, graph_id, cur_node_id, 
+      event_owner, cur_operator, begin_date
+      )
+    values (#{eventId,jdbcType=VARCHAR}, #{graphId,jdbcType=VARCHAR}, #{curNodeId,jdbcType=VARCHAR}, 
+      #{eventOwner,jdbcType=VARCHAR}, #{curOperator,jdbcType=VARCHAR}, #{beginDate,jdbcType=DATE}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.entity.WorkFlowEvent">
+    update workflow_event
+    set graph_id = #{graphId,jdbcType=VARCHAR},
+      cur_node_id = #{curNodeId,jdbcType=VARCHAR},
+      event_owner = #{eventOwner,jdbcType=VARCHAR},
+      cur_operator = #{curOperator,jdbcType=VARCHAR},
+      begin_date = #{beginDate,jdbcType=DATE}
+    where event_id = #{eventId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select event_id, graph_id, cur_node_id, event_owner, cur_operator, begin_date
+    from workflow_event
+    where event_id = #{eventId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select event_id, graph_id, cur_node_id, event_owner, cur_operator, begin_date
+    from workflow_event
+  </select>
+</mapper>

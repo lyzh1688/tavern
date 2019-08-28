@@ -13,7 +13,7 @@
         </commentGenerator>
 
        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://119.3.19.171:3306/workflow?characterEncoding=UTF-8"
+                        connectionURL="jdbc:mysql://119.3.19.171:3306/work_flow?characterEncoding=UTF-8"
                         userId="root"
                         password="y2iaciej" />
 

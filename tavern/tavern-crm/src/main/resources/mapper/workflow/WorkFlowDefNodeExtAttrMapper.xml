@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.crm.dao.workflow.WorkFlowDefNodeExtAttrMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.WorkFlowDefNodeExtAttr">
+    <id column="node_id" jdbcType="VARCHAR" property="nodeId" />
+    <result column="rest_days" jdbcType="VARCHAR" property="restDays" />
+    <result column="next_node_trigger_handler" jdbcType="VARCHAR" property="nextNodeTriggerHandler" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from workflow_def_node_ext_attr
+    where node_id = #{nodeId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.WorkFlowDefNodeExtAttr">
+    insert into workflow_def_node_ext_attr (node_id, rest_days, next_node_trigger_handler
+      )
+    values (#{nodeId,jdbcType=VARCHAR}, #{restDays,jdbcType=VARCHAR}, #{nextNodeTriggerHandler,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.entity.WorkFlowDefNodeExtAttr">
+    update workflow_def_node_ext_attr
+    set rest_days = #{restDays,jdbcType=VARCHAR},
+      next_node_trigger_handler = #{nextNodeTriggerHandler,jdbcType=VARCHAR}
+    where node_id = #{nodeId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select node_id, rest_days, next_node_trigger_handler
+    from workflow_def_node_ext_attr
+    where node_id = #{nodeId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select node_id, rest_days, next_node_trigger_handler
+    from workflow_def_node_ext_attr
+  </select>
+</mapper>

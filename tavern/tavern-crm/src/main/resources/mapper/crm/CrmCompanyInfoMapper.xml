@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tuoyou.tavern.crm.dao.CrmCompanyInfoMapper">
+<mapper namespace="com.tuoyou.tavern.crm.dao.crm.CrmCompanyInfoMapper">
     <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.crm.model.CrmCompanyInfo">
         <id column="COMPANY_ID" jdbcType="VARCHAR" property="companyId"/>
         <result column="COMPANY_NAME" jdbcType="VARCHAR" property="companyName"/>

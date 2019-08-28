@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tuoyou.tavern.common.core.util.UUIDUtil;
-import com.tuoyou.tavern.crm.dao.CrmCompanyStaffInfoMapper;
+import com.tuoyou.tavern.crm.dao.crm.CrmCompanyStaffInfoMapper;
 import com.tuoyou.tavern.crm.service.CrmCustomStaffInfoService;
 import com.tuoyou.tavern.crm.service.CrmCustomStaffRelService;
 import com.tuoyou.tavern.protocol.crm.dto.CrmCompanyStaffInfoDTO;

@@ -2,7 +2,7 @@ package com.tuoyou.tavern.crm.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.tuoyou.tavern.crm.dao.CrmCustomCompanyRelMapper;
+import com.tuoyou.tavern.crm.dao.crm.CrmCustomCompanyRelMapper;
 import com.tuoyou.tavern.crm.service.CrmCustomCompanyRelService;
 import com.tuoyou.tavern.protocol.crm.dto.CrmCompanyRelDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCustomCompanyRel;

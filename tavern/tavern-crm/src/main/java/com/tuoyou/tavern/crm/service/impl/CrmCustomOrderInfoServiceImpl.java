@@ -3,7 +3,7 @@ package com.tuoyou.tavern.crm.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.tuoyou.tavern.crm.dao.CrmCustomOrderInfoMapper;
+import com.tuoyou.tavern.crm.dao.crm.CrmCustomOrderInfoMapper;
 import com.tuoyou.tavern.crm.service.CrmCustomOrderInfoService;
 import com.tuoyou.tavern.protocol.crm.dto.CustomCompanyOrderQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCustomOrderInfo;

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.crm.dao.workflow.WorkFlowEventHistoryMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.WorkFlowEventHistory">
+    <id column="event_id" jdbcType="VARCHAR" property="eventId" />
+    <result column="graph_id" jdbcType="VARCHAR" property="graphId" />
+    <result column="node_id" jdbcType="VARCHAR" property="nodeId" />
+    <result column="begin_date" jdbcType="DATE" property="beginDate" />
+    <result column="end_date" jdbcType="DATE" property="endDate" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from workflow_event_history
+    where event_id = #{eventId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.WorkFlowEventHistory">
+    insert into workflow_event_history (event_id, graph_id, node_id, 
+      begin_date, end_date, operator
+      )
+    values (#{eventId,jdbcType=VARCHAR}, #{graphId,jdbcType=VARCHAR}, #{nodeId,jdbcType=VARCHAR}, 
+      #{beginDate,jdbcType=DATE}, #{endDate,jdbcType=DATE}, #{operator,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.entity.WorkFlowEventHistory">
+    update workflow_event_history
+    set graph_id = #{graphId,jdbcType=VARCHAR},
+      node_id = #{nodeId,jdbcType=VARCHAR},
+      begin_date = #{beginDate,jdbcType=DATE},
+      end_date = #{endDate,jdbcType=DATE},
+      operator = #{operator,jdbcType=VARCHAR}
+    where event_id = #{eventId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select event_id, graph_id, node_id, begin_date, end_date, operator
+    from workflow_event_history
+    where event_id = #{eventId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select event_id, graph_id, node_id, begin_date, end_date, operator
+    from workflow_event_history
+  </select>
+</mapper>

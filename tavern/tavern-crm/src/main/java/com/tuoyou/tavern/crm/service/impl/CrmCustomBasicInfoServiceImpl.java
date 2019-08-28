@@ -1,14 +1,12 @@
 package com.tuoyou.tavern.crm.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tuoyou.tavern.common.core.util.CommonUtils;
 import com.tuoyou.tavern.common.core.util.DateUtils;
 import com.tuoyou.tavern.common.core.util.UUIDUtil;
-import com.tuoyou.tavern.crm.dao.CrmCustomBasicInfoMapper;
-import com.tuoyou.tavern.crm.dao.CrmCustomBasicMapper;
+import com.tuoyou.tavern.crm.dao.crm.CrmCustomBasicInfoMapper;
 import com.tuoyou.tavern.crm.service.CrmCustomBankInfoService;
 import com.tuoyou.tavern.crm.service.CrmCustomBasicInfoService;
 import com.tuoyou.tavern.protocol.crm.dto.CustomInfoDTO;

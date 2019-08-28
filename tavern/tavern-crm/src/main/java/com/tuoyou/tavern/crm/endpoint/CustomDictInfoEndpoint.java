@@ -79,9 +79,8 @@ public class CustomDictInfoEndpoint {
         //3.rpc到hrm查询相关人员
 
 
-
-
-        return this.hrmUserDictService.queryStaffByRole(roleId);
+//        return this.hrmUserDictService.queryStaffByRole(roleId);
+        return null;
     }
 
     /**

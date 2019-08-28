@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.crm.dao.workflow.WorkFlowEventDependencyHisMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.WorkFlowEventDependencyHis">
+    <id column="pre_event" jdbcType="VARCHAR" property="preEvent" />
+    <result column="next_event" jdbcType="VARCHAR" property="nextEvent" />
+    <result column="create_time" jdbcType="DATE" property="createTime" />
+    <result column="finish_time" jdbcType="DATE" property="finishTime" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from workflow_event_dependency_his
+    where pre_event = #{preEvent,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.WorkFlowEventDependencyHis">
+    insert into workflow_event_dependency_his (pre_event, next_event, create_time, 
+      finish_time)
+    values (#{preEvent,jdbcType=VARCHAR}, #{nextEvent,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, 
+      #{finishTime,jdbcType=DATE})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.entity.WorkFlowEventDependencyHis">
+    update workflow_event_dependency_his
+    set next_event = #{nextEvent,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=DATE},
+      finish_time = #{finishTime,jdbcType=DATE}
+    where pre_event = #{preEvent,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select pre_event, next_event, create_time, finish_time
+    from workflow_event_dependency_his
+    where pre_event = #{preEvent,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select pre_event, next_event, create_time, finish_time
+    from workflow_event_dependency_his
+  </select>
+</mapper>

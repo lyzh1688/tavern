@@ -3,16 +3,13 @@ package com.tuoyou.tavern.crm.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.tuoyou.tavern.crm.dao.CrmCompanyBusinessMapper;
+import com.tuoyou.tavern.crm.dao.crm.CrmCompanyBusinessMapper;
 import com.tuoyou.tavern.crm.service.CrmCompanyBusinessInfoService;
-import com.tuoyou.tavern.protocol.crm.dto.CrmCompanyBusinessRelDTO;
 import com.tuoyou.tavern.protocol.crm.dto.CustomCompanyBusinessQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCompanyBusiness;
 import com.tuoyou.tavern.protocol.crm.model.CrmCompanyBusinessVO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Code Monkey: 何彪 <br>

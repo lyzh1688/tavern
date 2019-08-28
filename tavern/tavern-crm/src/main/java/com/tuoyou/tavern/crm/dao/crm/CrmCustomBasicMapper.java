@@ -1,4 +1,4 @@
-package com.tuoyou.tavern.crm.dao;
+package com.tuoyou.tavern.crm.dao.crm;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;

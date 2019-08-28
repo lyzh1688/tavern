@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.crm.dao.workflow.WorkFlowDefGraphMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.WorkFlowDefGraph">
+    <id column="graph_id" jdbcType="VARCHAR" property="graphId" />
+    <id column="root_node" jdbcType="VARCHAR" property="rootNode" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from workflow_def_graph
+    where graph_id = #{graphId,jdbcType=VARCHAR}
+      and root_node = #{rootNode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.WorkFlowDefGraph">
+    insert into workflow_def_graph (graph_id, root_node, name
+      )
+    values (#{graphId,jdbcType=VARCHAR}, #{rootNode,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.entity.WorkFlowDefGraph">
+    update workflow_def_graph
+    set name = #{name,jdbcType=VARCHAR}
+    where graph_id = #{graphId,jdbcType=VARCHAR}
+      and root_node = #{rootNode,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select graph_id, root_node, name
+    from workflow_def_graph
+    where graph_id = #{graphId,jdbcType=VARCHAR}
+      and root_node = #{rootNode,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select graph_id, root_node, name
+    from workflow_def_graph
+  </select>
+</mapper>

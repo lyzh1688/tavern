@@ -1,4 +1,4 @@
-package com.tuoyou.tavern.crm.dao;
+package com.tuoyou.tavern.crm.dao.crm;
 
 import com.tuoyou.tavern.protocol.crm.model.CrmOrderGjjsbdjDetail;
 import java.util.List;
