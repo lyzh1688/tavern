@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50560
 File Encoding         : 65001
 
-Date: 2019-08-27 15:59:07
+Date: 2019-08-29 01:03:17
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -31,6 +31,12 @@ CREATE TABLE `workflow_def_edge` (
 -- ----------------------------
 -- Records of workflow_def_edge
 -- ----------------------------
+INSERT INTO `workflow_def_edge` VALUES ('g_dlzj', 'g_dlzj_edge_cn_end', 'g_dljz_node_cn', 'g_dljz_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_dlzj', 'g_dlzj_edge_cwzg_khjl', 'g_dljz_node_cwzg', 'g_dljz_node_khjl', '客户服务');
+INSERT INTO `workflow_def_edge` VALUES ('g_dlzj', 'g_dlzj_edge_cwzg_sczg', 'g_dljz_node_cwzg', 'g_dljz_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_dlzj', 'g_dlzj_edge_khjl_end', 'g_dljz_node_khjl', 'g_dljz_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_dlzj', 'g_dlzj_edge_sczg_cn', 'g_dljz_node_sczg', 'g_dljz_node_cn', '退款');
+INSERT INTO `workflow_def_edge` VALUES ('g_dlzj', 'g_dlzj_edge_sq_cwzg', 'g_dljz_node_sq', 'g_dljz_node_cwzg', '代理记账');
 
 -- ----------------------------
 -- Table structure for workflow_def_graph
@@ -39,12 +45,15 @@ DROP TABLE IF EXISTS `workflow_def_graph`;
 CREATE TABLE `workflow_def_graph` (
   `graph_id` varchar(45) NOT NULL,
   `name` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`graph_id`)
+  `root_node` varchar(45) NOT NULL,
+  PRIMARY KEY (`graph_id`,`root_node`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工作流定义';
 
 -- ----------------------------
 -- Records of workflow_def_graph
 -- ----------------------------
+INSERT INTO `workflow_def_graph` VALUES ('g_dljz', '代理记账', 'g_dljz_node_sq');
+INSERT INTO `workflow_def_graph` VALUES ('g_dljz', '代理记账', 'g_dljz_node_sys');
 
 -- ----------------------------
 -- Table structure for workflow_def_node
@@ -52,15 +61,21 @@ CREATE TABLE `workflow_def_graph` (
 DROP TABLE IF EXISTS `workflow_def_node`;
 CREATE TABLE `workflow_def_node` (
   `graph_id` varchar(45) NOT NULL,
-  `node_id` varchar(45) DEFAULT NULL,
+  `node_id` varchar(45) NOT NULL,
   `name` varchar(45) DEFAULT NULL,
   `role` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`graph_id`)
+  PRIMARY KEY (`node_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工作流节点定义';
 
 -- ----------------------------
 -- Records of workflow_def_node
 -- ----------------------------
+INSERT INTO `workflow_def_node` VALUES ('g_dljz', 'g_dljz_node_cn', '退款', 'r_cn');
+INSERT INTO `workflow_def_node` VALUES ('g_dljz', 'g_dljz_node_cwzg', '代理记账', 'r_cwzg');
+INSERT INTO `workflow_def_node` VALUES ('g_dljz', 'g_dljz_node_end', '结束', '');
+INSERT INTO `workflow_def_node` VALUES ('g_dljz', 'g_dljz_node_khjl', '客户服务', 'r_khjl');
+INSERT INTO `workflow_def_node` VALUES ('g_dljz', 'g_dljz_node_sczg', '退款审批', 'r_sczg');
+INSERT INTO `workflow_def_node` VALUES ('g_dljz', 'g_dljz_node_sq', '客户登记', 'r_sq');
 
 -- ----------------------------
 -- Table structure for workflow_def_node_ext_attr
@@ -145,10 +160,10 @@ CREATE TABLE `workflow_event_history` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for workflow_log_attatchment
+-- Table structure for workflow_log_attachment
 -- ----------------------------
-DROP TABLE IF EXISTS `workflow_log_attatchment`;
-CREATE TABLE `workflow_log_attatchment` (
+DROP TABLE IF EXISTS `workflow_log_attachment`;
+CREATE TABLE `workflow_log_attachment` (
   `file_id` varchar(45) NOT NULL,
   `log_id` varchar(45) DEFAULT NULL,
   `create_time` varchar(45) DEFAULT NULL,
@@ -157,7 +172,7 @@ CREATE TABLE `workflow_log_attatchment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='流程日志附件表';
 
 -- ----------------------------
--- Records of workflow_log_attatchment
+-- Records of workflow_log_attachment
 -- ----------------------------
 
 -- ----------------------------

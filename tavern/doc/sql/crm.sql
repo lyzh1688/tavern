@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50560
 File Encoding         : 65001
 
-Date: 2019-08-26 07:09:33
+Date: 2019-08-29 01:04:33
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -51,6 +51,13 @@ CREATE TABLE `CRM_BUSINESS_DICT` (
 -- ----------------------------
 -- Records of CRM_BUSINESS_DICT
 -- ----------------------------
+INSERT INTO `CRM_BUSINESS_DICT` VALUES ('biz_dljz', '代理记账');
+INSERT INTO `CRM_BUSINESS_DICT` VALUES ('biz_gsbg', '工商变更');
+INSERT INTO `CRM_BUSINESS_DICT` VALUES ('biz_gszc', '公司注册');
+INSERT INTO `CRM_BUSINESS_DICT` VALUES ('biz_gszx', '公司注销');
+INSERT INTO `CRM_BUSINESS_DICT` VALUES ('biz_sbdk', '社保代开');
+INSERT INTO `CRM_BUSINESS_DICT` VALUES ('biz_sbzc', '商标注册');
+INSERT INTO `CRM_BUSINESS_DICT` VALUES ('biz_xkzbl', '许可证办理');
 
 -- ----------------------------
 -- Table structure for CRM_COMPANY_BANK_REL
@@ -122,7 +129,7 @@ CREATE TABLE `CRM_COMPANY_INFO` (
 -- ----------------------------
 INSERT INTO `CRM_COMPANY_INFO` VALUES ('9e93aa78df7242b18c980650763973c0', '盒马生鲜', '1', '上海市', '上海市', '嘉定区', '1', '12.90000', '2019-08-25 22:03:36');
 INSERT INTO `CRM_COMPANY_INFO` VALUES ('a5b24848e32d47fd9472de4323d61da2', '阿里妈妈', '0', '海南省', '省直辖县级行政单位', '儋州市', '0', '1111.33400', '2019-08-26 00:13:48');
-INSERT INTO `CRM_COMPANY_INFO` VALUES ('edcb87477e24482da98d0acce3bdb341', '天猫商城', '0', '浙江省', '杭州市', '拱墅区', '1', '2.00000', '2019-08-25 22:07:13');
+INSERT INTO `CRM_COMPANY_INFO` VALUES ('edcb87477e24482da98d0acce3bdb341', '天猫商城', '0', '浙江省', '杭州市', '拱墅区', '1', '2.00000', '2019-08-26 21:41:54');
 
 -- ----------------------------
 -- Table structure for CRM_COMPANY_STAFF_INFO
@@ -130,17 +137,23 @@ INSERT INTO `CRM_COMPANY_INFO` VALUES ('edcb87477e24482da98d0acce3bdb341', '天�
 DROP TABLE IF EXISTS `CRM_COMPANY_STAFF_INFO`;
 CREATE TABLE `CRM_COMPANY_STAFF_INFO` (
   `STAFF_ID` varchar(45) NOT NULL,
+  `NAME` varchar(45) NOT NULL,
   `ID_CARD` varchar(100) DEFAULT NULL,
   `CONTACT_NUMBER` varchar(45) DEFAULT NULL,
-  `NEED_SOCIAL_INS` varchar(10) DEFAULT NULL,
-  `NEED_HABITATION_INS` varchar(10) DEFAULT NULL,
-  `NEED_SOCIAL_SERVER` varchar(10) DEFAULT NULL,
-  `NEED_HABITATION_SERVER` varchar(10) DEFAULT NULL
+  `NEED_SOCIAL_INS` varchar(10) DEFAULT '0',
+  `NEED_HABITATION_INS` varchar(10) DEFAULT '0',
+  `NEED_SOCIAL_SERVER` varchar(10) DEFAULT '0',
+  `NEED_HABITATION_SERVER` varchar(10) DEFAULT '0',
+  `UPDATE_DATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`STAFF_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of CRM_COMPANY_STAFF_INFO
 -- ----------------------------
+INSERT INTO `CRM_COMPANY_STAFF_INFO` VALUES ('8020dd4460064084a2c6d661a38ed4a9', '蔡崇信', '343', '14124', '1', '1', '0', '1', '2019-08-26 23:46:22');
+INSERT INTO `CRM_COMPANY_STAFF_INFO` VALUES ('b7c00c107daa411bbb035c50fe699ce5', '张勇', '1234', '414', '1', '1', '0', '2', '2019-08-26 23:48:38');
+INSERT INTO `CRM_COMPANY_STAFF_INFO` VALUES ('c0c6e3ad58304087a17801e74fe0f770', '马云', '324', '32332', '1', '1', '1', '1', '2019-08-26 23:44:00');
 
 -- ----------------------------
 -- Table structure for CRM_COMPANY_STAFF_REL
@@ -155,6 +168,8 @@ CREATE TABLE `CRM_COMPANY_STAFF_REL` (
 -- ----------------------------
 -- Records of CRM_COMPANY_STAFF_REL
 -- ----------------------------
+INSERT INTO `CRM_COMPANY_STAFF_REL` VALUES ('a5b24848e32d47fd9472de4323d61da2', '8020dd4460064084a2c6d661a38ed4a9');
+INSERT INTO `CRM_COMPANY_STAFF_REL` VALUES ('a5b24848e32d47fd9472de4323d61da2', 'c0c6e3ad58304087a17801e74fe0f770');
 
 -- ----------------------------
 -- Table structure for CRM_CUSTOM_BANK_INFO_OLD
@@ -194,7 +209,7 @@ CREATE TABLE `CRM_CUSTOM_BASIC_INFO` (
 -- ----------------------------
 -- Records of CRM_CUSTOM_BASIC_INFO
 -- ----------------------------
-INSERT INTO `CRM_CUSTOM_BASIC_INFO` VALUES ('3c3478c65dc0403fa68eb0d24c93969b', '马化腾是我小弟', '我对钱没有兴趣', '我是马云', '马爸爸', '888888', '张勇', '8888888', 'VVIP', '张勇', '1', '2019-08-25 00:35:58');
+INSERT INTO `CRM_CUSTOM_BASIC_INFO` VALUES ('3c3478c65dc0403fa68eb0d24c93969b', '马化腾是我小弟', '我对钱没有兴趣', '我是马云', '马爸爸', '888888', '马云', '8888888', 'VVIP', '马云', '1', '2019-08-26 23:52:49');
 
 -- ----------------------------
 -- Table structure for CRM_CUSTOM_BASIC_INFO_OLD
@@ -255,14 +270,15 @@ CREATE TABLE `CRM_CUSTOM_ORDER_INFO` (
   `CUSTOM_ID` varchar(45) NOT NULL,
   `ORDER_ID` varchar(45) NOT NULL,
   `ORDER_DATE` varchar(45) NOT NULL COMMENT '订单日期',
-  `RECEIVABLE_AMT` decimal(10,0) NOT NULL COMMENT '应收金额',
-  `PAYABLE_AMT` decimal(10,0) NOT NULL COMMENT '应付金额',
+  `RECEIVABLE_AMT` decimal(20,5) NOT NULL COMMENT '应收金额',
+  `PAYABLE_AMT` decimal(20,5) NOT NULL COMMENT '应付金额',
   PRIMARY KEY (`ORDER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of CRM_CUSTOM_ORDER_INFO
 -- ----------------------------
+INSERT INTO `CRM_CUSTOM_ORDER_INFO` VALUES ('3c3478c65dc0403fa68eb0d24c93969b', '123456', '2019/08/28 21:51:57', '1235.00000', '1235.00000');
 
 -- ----------------------------
 -- Table structure for CRM_ORDER_BUSINESS_REL
