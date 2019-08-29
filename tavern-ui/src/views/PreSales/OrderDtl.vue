@@ -86,6 +86,7 @@
                      :remote-method="remoteBusinessDict"
                      placeholder="请输入业务类型"
                      no-data-text="无匹配数据"
+                     @change="linkChange"
                      :loading="remoteBusinessDictLoading">
             <el-option v-for="item in selectedBizDict"
                        :key="item.id"
@@ -111,7 +112,7 @@
       </el-form>
       <el-form :inline="true" :model="dtlForm" align="left">
         <el-form-item label="对接人员" label-width="100px">
-          <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
+          <el-select v-model="dtlForm.owner" clearable auto-complete="off" placeholder="请选择对接人员" :disabled="ownerShow">
             <el-option label="张三丰" value='0'></el-option>
             <el-option label="李连杰" value='1'></el-option>
             <el-option label="萧敬腾" value='2'></el-option>
@@ -282,6 +283,7 @@
         dataForm: {
           bussiness: '',
           company: '',
+          owner: '',
           companyName: '',
           taxType: '',
           area: '',
@@ -298,6 +300,7 @@
         selectedCompanyDict: [],
         remoteBusinessDictLoading: false,
         remoteCompanyDictLoading: false,
+        ownerShow: true,
 
 
       }
@@ -473,6 +476,13 @@
         } else {
           this.selectedCompanyDict = [];
         }
+      }, linkChange: function () {
+        if (this.dataForm.bussiness != undefined && this.dataForm.bussiness != '') {
+          this.ownerShow = false;
+        } else {
+          this.ownerShow = true;
+        }
+        let role = sessionStorage.getItem("role");
       },
       initDict: function () {
         //1. 初始化业务类型
