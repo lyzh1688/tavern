@@ -10,7 +10,9 @@ import lombok.EqualsAndHashCode;
  * Code Monkey: 何彪 <br>
  * Dev Time: 2019/08/11 <br>
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
+@AllArgsConstructor
 public class CustomInfoResponse extends TavernResponse {
     private CustomBasicInfoVO data;
 }

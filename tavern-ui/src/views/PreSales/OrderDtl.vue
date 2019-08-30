@@ -20,7 +20,7 @@
       </el-form>
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item>
-          <kt-button icon="fa fa-search" label="添加关联业务" perms="sys:role:view" type="primary" @click="handleEdit(null)"/>
+          <kt-button icon="fa fa-search" label="添加关联业务" perms="sys:role:view" type="primary" @click="handleAdd(null)"/>
         </el-form-item>
       </el-form>
     </div>
@@ -75,11 +75,10 @@
                      style="float:right;">
       </el-pagination>
     </div>
-    <!--新增编辑界面-->
     <el-dialog title="添加关联业务" width="50%" center :visible.sync="dialogVisible" :close-on-click-modal="false">
-      <el-form :inline="true" :model="dataForm" align="left">
-        <el-form-item label="业务类型" label-width="100px">
-          <el-select v-model="dataForm.bussiness"
+      <el-form :inline="true" :model="dataForm" align="left" ref="dataForm" :rules="dataFormRules">
+        <el-form-item label="业务类型" label-width="100px" prop="business">
+          <el-select v-model="dataForm.business"
                      filterable
                      remote
                      clearable
@@ -87,14 +86,15 @@
                      placeholder="请输入业务类型"
                      no-data-text="无匹配数据"
                      @change="linkChange"
-                     :loading="remoteBusinessDictLoading">
+                     :loading="remoteBusinessDictLoading"
+                     prop="business">
             <el-option v-for="item in selectedBizDict"
                        :key="item.id"
                        :value="item.id"
                        :label="item.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="关联公司" label-width="100px">
+        <el-form-item label="关联公司" label-width="150px" prop="company">
           <el-select v-model="dataForm.company"
                      filterable
                      remote
@@ -102,118 +102,150 @@
                      :remote-method="remoteCompanyDict"
                      placeholder="请输入关联公司"
                      no-data-text="无匹配数据"
-                     :loading="remoteCompanyDictLoading">
+                     :loading="remoteCompanyDictLoading"
+                     prop="company">
             <el-option v-for="item in selectedCompanyDict"
                        :key="item.id"
                        :value="item.id"
                        :label="item.name"/>
           </el-select>
         </el-form-item>
-      </el-form>
-      <el-form :inline="true" :model="dtlForm" align="left">
-        <el-form-item label="对接人员" label-width="100px">
-          <el-select v-model="dtlForm.owner" clearable auto-complete="off" placeholder="请选择对接人员" :disabled="ownerShow">
-            <el-option label="张三丰" value='0'></el-option>
-            <el-option label="李连杰" value='1'></el-option>
-            <el-option label="萧敬腾" value='2'></el-option>
-            <el-option label="薛之谦" value='3'></el-option>
+        <el-form-item label="对接人员" label-width="100px" prop="owner">
+          <el-select v-model="dataForm.owner"
+                     :disabled="ownerShow"
+                     filterable
+                     clearable
+                     placeholder="请选择对接人员"
+                     no-data-text="无匹配数据/请检查是否配置相关人员"
+                     prop="owner"
+          >
+            <el-option v-for="item in ownerDict"
+                       :key="item.id"
+                       :value="item.id"
+                       :label="item.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="是否需要合作方" label-width="150px">
-          <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
+        <el-form-item label="是否需要合作方" label-width="150px" prop="needThirdParty">
+          <el-select v-model="dataForm.needThirdParty"
+                     clearable auto-complete="off"
+                     placeholder="请选择"
+                     @change="linkThirdPartyChange"
+                     prop="needThirdParty"
+                     :rules="dataFormRules.needThirdParty"
+                     ref="dataForm">
             <el-option label="是" value='1'></el-option>
-            <el-option label="否" value='2'></el-option>
+            <el-option label="否" value='0'></el-option>
           </el-select>
         </el-form-item>
-      </el-form>
-      <el-form :inline="true" :model="dtlForm" align="left">
-        <el-form-item label="合作方" label-width="100px">
-          <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
-            <el-option label="张三丰" value='0'></el-option>
-            <el-option label="李连杰" value='1'></el-option>
-            <el-option label="萧敬腾" value='2'></el-option>
-            <el-option label="薛之谦" value='3'></el-option>
+        <el-form-item label="合作方" label-width="100px" prop="thirdParty">
+          <el-select v-model="dataForm.thirdParty"
+                     :disabled="thirdPartyShow"
+                     filterable
+                     remote
+                     clearable
+                     :remote-method="remoteThirdPartyDict"
+                     placeholder="请选择合作方"
+                     no-data-text="无匹配数据/请检查是否配置相关人员"
+                     :loading="remoteThirdPartyDictLoading"
+                     prop="thirdParty">
+            <el-option v-for="item in selectedPartyDict"
+                       :key="item.id"
+                       :value="item.id"
+                       :label="item.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="支付合作方费用" label-width="150px">
-          <el-input v-model="dtlForm.name" placeholder="请输入费用"></el-input>
+        <el-form-item label="支付合作方费用" label-width="150px" prop="thirdPartyFee">
+          <el-input v-model="dataForm.thirdPartyFee" placeholder="请输入费用"></el-input>
         </el-form-item>
-      </el-form>
-      <el-form :inline="true" :model="dtlForm" align="left">
-        <el-form-item label="前置任务" label-width="100px">
-          <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
-            <el-option label="任务一" value='0'></el-option>
-            <el-option label="任务二" value='1'></el-option>
-            <el-option label="任务三" value='2'></el-option>
-            <el-option label="任务四" value='3'></el-option>
+        <el-form-item label="前置任务" label-width="100px" prop="preEvent">
+          <el-select v-model="dataForm.preEvent"
+                     filterable
+                     remote
+                     clearable
+                     :remote-method="remotePreEventDict"
+                     placeholder="请输入前置任务"
+                     no-data-text="无前置任务数据"
+                     :loading="remotePreEventDictLoading">
+            <el-option v-for="item in selectedPreEventDict"
+                       :key="item.id"
+                       :value="item.id"
+                       :label="item.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="业务标签" label-width="150px">
-          <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
-            <el-option label="标签一" value='0'></el-option>
-            <el-option label="标签二" value='1'></el-option>
-            <el-option label="标签三" value='2'></el-option>
-            <el-option label="标签四" value='3'></el-option>
+        <el-form-item label="业务标签" label-width="150px" prop="businessTag">
+          <el-select v-model="dataForm.businessTag" clearable auto-complete="off" placeholder="请选择">
+            <el-option label="标签一" value='标签一'></el-option>
+            <el-option label="标签二" value='标签二'></el-option>
+            <el-option label="标签三" value='标签三'></el-option>
+            <el-option label="标签四" value='标签四'></el-option>
           </el-select>
         </el-form-item>
-      </el-form>
-      <el-form :inline="true" :model="dtlForm" align="left">
-        <el-form-item label="服务内容/备注" prop="bak" label-width="100px">
-          <el-input v-model="dtlForm.name" auto-complete="off" style="width: 550px" placeholder="输入内容"></el-input>
+        <el-form-item label="服务内容/备注" prop="remark" label-width="100px">
+          <el-input v-model="dataForm.remark" auto-complete="off" style="width: 550px" placeholder="输入内容"></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="dtlForm" align="left" v-if="showHelpBookKeeping">
-        <el-form :inline="true" :model="dtlForm" align="left">
-          <el-form-item label="代理记账" prop="bak" label-width="100px">
-          </el-form-item>
+      <el-form :inline="true" :model="dljzForm" align="left" v-if="showHelpBookKeeping" :rules="dljzFormRules"
+               ref="dljzForm">
+        <el-form>
+          <el-form-item label="代理记账" prop="bak" label-width="100px"/>
         </el-form>
-        <el-form :inline="true" :model="dtlForm" align="left">
-          <el-form-item label="应付金额" label-width="100px">
-            <el-input v-model="dtlForm.name" placeholder="请输入应付金额"></el-input>
-          </el-form-item>
-          <el-form-item label="实付金额" label-width="100px">
-            <el-input v-model="dtlForm.name" placeholder="请输入实付金额"></el-input>
-          </el-form-item>
-        </el-form>
+        <el-form-item label="服务开始" label-width="150px" prop="isBegin">
+          <el-select v-model="dljzForm.isBegin" clearable auto-complete="off" placeholder="请选择">
+            <el-option label="未开始" value='0'></el-option>
+            <el-option label="已开始" value='1'></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="服务期限(月)" label-width="150px" prop="months">
+          <el-input v-model="dljzForm.months" placeholder="请输入服务期限(月)"></el-input>
+        </el-form-item>
+        <el-form-item label="服务开始时间" label-width="150px" prop="beginDate">
+          <el-date-picker v-model="dljzForm.beginDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="服务结束时间" label-width="150px" prop="endDate" :disabled="true">
+          <el-date-picker v-model="dljzForm.endDate" type="datetime"></el-date-picker>
+        </el-form-item>
       </el-form>
-      <el-form :model="dtlForm" align="left" v-if="showHelpPay">
-        <el-form :inline="true" :model="dtlForm" align="left">
-          <el-form-item label="公积金代缴/社保代缴" prop="bak" label-width="200px">
+      <el-form :inline="true" :model="djfwForm" align="left" v-if="showHelpPay" :rules="djfwFormRules" ref="djfwForm">
+        <el-form>
+          <el-form-item label="公积金代缴/社保代缴" label-width="200px">
           </el-form-item>
         </el-form>
-        <el-form :inline="true" :model="dtlForm" align="left" style="margin-left: 50px">
-          <el-form-item label="服务开始时间" label-width="100px">
-            <el-date-picker v-model="dtlForm.accountPeriod" type="datetime" placeholder="选择日期时间"></el-date-picker>
-          </el-form-item>
-          <el-form-item label="服务期限(月)" label-width="100px">
-            <el-input v-model="dtlForm.name" placeholder="请输入服务期限(月)"></el-input>
-          </el-form-item>
-        </el-form>
-        <el-form :inline="true" :model="dtlForm" align="left" style="margin-left: 50px">
-          <el-form-item label="缴款人数" label-width="100px">
-            <el-input v-model="dtlForm.name" placeholder="请输入缴款人数"></el-input>
-          </el-form-item>
-          <el-form-item label="服务结束时间" label-width="100px">
-            <el-date-picker v-model="dtlForm.accountPeriod" type="datetime" placeholder="选择日期时间"></el-date-picker>
-          </el-form-item>
-        </el-form>
+        <el-form-item label="服务开始时间" label-width="150px" prop="beginDate">
+          <el-date-picker v-model="djfwForm.beginDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="服务期限(月)" label-width="150px" prop="months">
+          <el-input v-model="djfwForm.months" placeholder="请输入服务期限(月)"></el-input>
+        </el-form-item>
+        <el-form-item label="公司人数确认" label-width="150px" prop="confirmNum">
+          <el-select v-model="djfwForm.confirmNum" clearable auto-complete="off" placeholder="请选择"
+                     @change="djfwConfirmChange">
+            <el-option label="已确认" value='1'></el-option>
+            <el-option label="未确认" value='0'></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="缴款人数" label-width="150px" prop="employeeNum">
+          <el-input v-model="djfwForm.employeeNum" placeholder="请输入缴款人数" :disabled="djfwConfirmNum"></el-input>
+        </el-form-item>
+        <el-form-item label="服务结束时间" label-width="150px" prop="endDate">
+          <el-date-picker v-model="djfwForm.endDate" type="datetime" :disabled="true"></el-date-picker>
+        </el-form-item>
       </el-form>
-      <el-form :model="dtlForm" align="left" v-if="showHelpRegister">
-        <el-form :inline="true" :model="dtlForm" align="left">
+      <el-form :model="dataForm" align="left" v-if="showHelpRegister" :rules="dataFormRules" ref="dataForm">
+        <el-form :inline="true" :model="dataForm" align="left" :rules="dataFormRules" ref="dataForm">
           <el-form-item label="公司注册" prop="bak" label-width="100px">
           </el-form-item>
         </el-form>
-        <el-form :inline="true" :model="dtlForm" align="left">
+        <el-form :inline="true" :model="dataForm" align="left" :rules="dataFormRules" ref="dataForm">
           <el-form-item label="银行开户是否需要到场" label-width="200px">
-            <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
+            <el-select v-model="dataForm.name" clearable auto-complete="off" placeholder="请选择">
               <el-option label="是" value='0'></el-option>
               <el-option label="否" value='1'></el-option>
             </el-select>
           </el-form-item>
         </el-form>
-        <el-form :inline="true" :model="dtlForm" align="left">
+        <el-form :inline="true" :model="dataForm" align="left" :rules="dataFormRules">
           <el-form-item label="注册地类型" label-width="200px">
-            <el-select v-model="dtlForm.name" clearable auto-complete="off" placeholder="请选择">
+            <el-select v-model="dataForm.name" clearable auto-complete="off" placeholder="请选择">
               <el-option label="大陆" value='0'></el-option>
               <el-option label="香港" value='1'></el-option>
             </el-select>
@@ -222,7 +254,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button :size="size" @click.native="dialogVisible = false">{{$t('action.cancel')}}</el-button>
-        <el-button :size="size" type="primary" @click.native="dialogVisible = false" :loading="editLoading">
+        <el-button :size="size" type="primary" @click="submitForm()" :loading="editLoading">
           {{$t('action.submit')}}
         </el-button>
       </div>
@@ -267,28 +299,70 @@
         dialogVisible: false, // 新增编辑界面是否显示
         editLoading: false,
         dataFormRules: {
-          companyName: [
-            {required: true, message: '请填写公司名称', trigger: 'blur'}
+          business: [
+            {required: true, message: '请选择业务类型', trigger: 'blur'}
           ],
-          taxType: [
-            {required: true, message: '请选择纳税类型', trigger: 'blur'}
+          company: [
+            {required: true, message: '请选择关联公司', trigger: 'blur'}
           ],
-          area: [
-            {required: true, message: '请选择区域信息', trigger: 'blur'}
+          owner: [
+            {required: true, message: '请选择对接人员', trigger: 'blur'}
           ],
+          needThirdParty: [
+            {required: true, message: '请选择是否需要合作方', trigger: 'blur'}
+          ],
+          businessTag: [
+            {required: true, message: '请选择业务标签', trigger: 'blur'}
+          ],
+        },
+        dljzFormRules: {
+          isBegin: [
+            {required: true, message: '请选择是否开始服务', trigger: 'blur'}
+          ],
+          months: [
+            {required: true, message: '请填写服务期限(月)', trigger: 'blur'}
+          ],
+          beginDate: [
+            {required: true, message: '请选择服务开始时间', trigger: 'blur'}
+          ],
+        },
+        djfwFormRules: {
+          isBegin: [
+            {required: true, message: '请选择是否开始服务', trigger: 'blur'}
+          ],
+          confirmNum: [
+            {required: true, message: '请选择是否需要确认人数', trigger: 'blur'}
+          ],
+          beginDate: [
+            {required: true, message: '请选择服务开始时间', trigger: 'blur'}
+          ],
+        },
+        dljzForm: {
+          isBegin: '',
+          months: '',
+          beginDate: '',
+          endDate: ''
+        },
+        djfwForm: {
+          confirmNum: '',
+          employeeNum: '',
+          months: '',
+          beginDate: '',
+          endDate: ''
         },
         loading: false,
         editShow: false,
         // 新增编辑界面数据
         dataForm: {
-          bussiness: '',
+          business: '',
           company: '',
           owner: '',
-          companyName: '',
-          taxType: '',
-          area: '',
-          financeDiskType: '',
-          taxRate: '',
+          needThirdParty: '',
+          thirdParty: '',
+          thirdPartyFee: '',
+          preEvent: '',
+          businessTag: '',
+          remark: '',
         },
         showHelpBookKeeping: false,
         showHelpPay: false,
@@ -297,11 +371,19 @@
         bizDict: [],
         selectedBizDict: [],
         companyDict: [],
+        ownerDict: [],
         selectedCompanyDict: [],
+        thirdPartyDict: [],
+        selectedPartyDict: [],
+        preEventDict: [],
+        selectedPreEventDict: [],
         remoteBusinessDictLoading: false,
         remoteCompanyDictLoading: false,
+        remotePreEventDictLoading: false,
+        remoteThirdPartyDictLoading: false,
         ownerShow: true,
-
+        thirdPartyShow: true,
+        djfwConfirmNum: true
 
       }
     }, created() {
@@ -345,16 +427,17 @@
       handleAdd: function () {
         this.dialogVisible = true
         this.operation = true
+        this.selectBiz(null)
         this.dataForm = {
-          id: 0,
-          name: '',
-          password: '',
-          deptId: 1,
-          deptName: '',
-          email: 'test@qq.com',
-          mobile: '13889700023',
-          status: 1,
-          userRoles: []
+          business: '',
+          company: '',
+          owner: '',
+          needThirdParty: '',
+          thirdParty: '',
+          thirdPartyFee: '',
+          preEvent: '',
+          businessTag: '',
+          remark: '',
         }
       },
       // 显示编辑界面
@@ -424,14 +507,23 @@
         this.showHelpBookKeeping = false
         this.showHelpPay = false
         this.showHelpRegister = false
-        if (e == 0) {
-          this.showHelpBookKeeping = true
-        }
-        if (e == 1) {
-          this.showHelpPay = true
-        }
-        if (e == 2) {
-          this.showHelpRegister = true
+        let label = {};
+        label = this.bizDict.find(item => {
+          return e == item.id;
+        })
+        switch (label.name) {
+          case "代理记账":
+            this.showHelpBookKeeping = true;
+            break;
+          case "代缴公积金":
+            this.showHelpPay = true;
+            break;
+          case "代缴社保":
+            this.showHelpPay = true;
+            break;
+          case "公司注册":
+            this.showHelpRegister = true;
+            break;
         }
       }, initBusinessDict: function () {
         this.$api.customer.findBizDict(null).then((res) => {
@@ -476,18 +568,81 @@
         } else {
           this.selectedCompanyDict = [];
         }
-      }, linkChange: function () {
-        if (this.dataForm.bussiness != undefined && this.dataForm.bussiness != '') {
+      },
+      initPreEventDict: function () {
+        let param = {};
+        param.orderId = this.dtlForm.orderId;
+        this.$api.customer.findPreEventDict(param).then((res) => {
+          this.preEventDict = res.data;
+          this.selectedPreEventDict = res.data;
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+        })
+      }, remotePreEventDict: function (param) {
+        if (param != '') {
+          this.remotePreEventDictLoading = true;
+          setTimeout(() => {
+            this.remotePreEventDictLoading = false;
+            this.selectedPreEventDict = this.preEventDict.filter(item => {
+              return item.name.toLowerCase()
+                .indexOf(param.toLowerCase()) > -1;
+            });
+          }, 200);
+        } else {
+          this.selectedPreEventDict = [];
+        }
+      },
+      initThirdPartyDict: function () {
+        this.$api.customer.findThirdPartyDict().then((res) => {
+          this.thirdPartyDict = res.data;
+          this.selectedPartyDict = res.data;
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+        })
+      }, remoteThirdPartyDict: function (param) {
+        if (param != '') {
+          this.remoteThirdPartyDictLoading = true;
+          setTimeout(() => {
+            this.remoteThirdPartyDictLoading = false;
+            this.selectedPartyDict = this.thirdPartyDict.filter(item => {
+              return item.name.toLowerCase()
+                .indexOf(param.toLowerCase()) > -1;
+            });
+          }, 200);
+        } else {
+          this.selectedPartyDict = [];
+        }
+      }, linkChange: function (val) {
+        if (val != undefined && val != '') {
           this.ownerShow = false;
         } else {
           this.ownerShow = true;
         }
-        let role = sessionStorage.getItem("role");
+        let ownerRequest = {};
+        ownerRequest.business = val;
+        this.$api.customer.findOwnerDict(ownerRequest).then((res) => {
+          this.ownerDict = res.data
+        })
+        this.selectBiz(val)
+      }, linkThirdPartyChange: function () {
+        if (this.dataForm.needThirdParty != undefined && this.dataForm.needThirdParty != '' && this.dataForm.needThirdParty != '0') {
+          this.thirdPartyShow = false;
+        } else {
+          this.thirdPartyShow = true;
+        }
+      }, djfwConfirmChange: function (val) {
+        if (val != undefined && val != '' && val != '0') {
+          this.djfwConfirmNum = false;
+        } else {
+          this.djfwConfirmNum = true;
+        }
       },
       initDict: function () {
         //1. 初始化业务类型
         this.initBusinessDict();
         this.initCompanyDict();
+        this.initThirdPartyDict();
+        this.initPreEventDict();
 
         //1. 初始化业务角色
         //2. 初始化关联公司/customId
@@ -495,7 +650,12 @@
         //4. 初始化前置任务/orderId
 
 
-      }
+      },
+      handleCurrentChange(val) {
+        let _this = this;
+        _this.pageRequest.current = val;
+        _this.findPage(_this.pageRequest);
+      },
     },
     mounted() {
       this.initColumns()

@@ -1,8 +1,8 @@
 package com.tuoyou.tavern.crm.endpoint;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tuoyou.tavern.crm.service.CrmCustomStaffInfoService;
-import com.tuoyou.tavern.crm.service.CrmCustomStaffRelService;
+import com.tuoyou.tavern.crm.crm.service.CrmCustomStaffInfoService;
+import com.tuoyou.tavern.crm.crm.service.CrmCustomStaffRelService;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import com.tuoyou.tavern.protocol.crm.dto.CrmCompanyStaffInfoDTO;
 import com.tuoyou.tavern.protocol.crm.dto.CustomStaffQueryDTO;

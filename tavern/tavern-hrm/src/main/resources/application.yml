@@ -11,11 +11,11 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: y2iaciej
-    url: jdbc:mysql://119.3.19.171:3306/hrm?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true
+    password: 1233Trip_mysql
+    url: jdbc:mysql://127.0.0.1:3306/hrm?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true
     max-idle: 5
-      max-wait: 10000
-      min-idle: 1
-      initial-size: 5
+    max-wait: 10000
+    min-idle: 1
+    initial-size: 5
   application:
     name: tavern-hrm

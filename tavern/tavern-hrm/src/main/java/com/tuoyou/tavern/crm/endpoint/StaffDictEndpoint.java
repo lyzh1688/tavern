@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/dict")
+@RequestMapping("/hrm/dict")
 public class StaffDictEndpoint {
 
     private HrmUserBasicInfoService hrmUserBasicInfoService;

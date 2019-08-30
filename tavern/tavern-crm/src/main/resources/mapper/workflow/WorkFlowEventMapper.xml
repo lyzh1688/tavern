@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tuoyou.tavern.crm.dao.workflow.WorkFlowEventMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.WorkFlowEvent">
+<mapper namespace="com.tuoyou.tavern.crm.workflow.dao.WorkFlowEventMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.workflow.entity.WorkFlowEvent">
     <id column="event_id" jdbcType="VARCHAR" property="eventId" />
     <result column="graph_id" jdbcType="VARCHAR" property="graphId" />
     <result column="cur_node_id" jdbcType="VARCHAR" property="curNodeId" />
@@ -13,7 +13,7 @@
     delete from workflow_event
     where event_id = #{eventId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.WorkFlowEvent">
+  <insert id="insert" parameterType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowEvent">
     insert into workflow_event (event_id, graph_id, cur_node_id, 
       event_owner, cur_operator, begin_date
       )
@@ -21,7 +21,7 @@
       #{eventOwner,jdbcType=VARCHAR}, #{curOperator,jdbcType=VARCHAR}, #{beginDate,jdbcType=DATE}
       )
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.entity.WorkFlowEvent">
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowEvent">
     update workflow_event
     set graph_id = #{graphId,jdbcType=VARCHAR},
       cur_node_id = #{curNodeId,jdbcType=VARCHAR},

@@ -1,13 +1,11 @@
 package com.tuoyou.tavern.crm.endpoint;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.tuoyou.tavern.crm.service.CrmCustomBusinessDictService;
-import com.tuoyou.tavern.crm.service.CrmCustomCompanyInfoService;
-import com.tuoyou.tavern.crm.service.CrmCustomOrderBusinessRelService;
+import com.tuoyou.tavern.crm.crm.service.CrmCustomBusinessDictService;
+import com.tuoyou.tavern.crm.crm.service.CrmCustomCompanyInfoService;
+import com.tuoyou.tavern.crm.crm.service.CrmCustomThirdPartyInfoService;
+import com.tuoyou.tavern.crm.workflow.service.WorkFlowDefNodeService;
 import com.tuoyou.tavern.protocol.common.TavernDictResponse;
 import com.tuoyou.tavern.protocol.common.model.Dict;
-import com.tuoyou.tavern.protocol.crm.model.CrmOrderBusinessRel;
-import com.tuoyou.tavern.protocol.crm.response.CrmCompanyBusinessPageResponse;
 import com.tuoyou.tavern.protocol.hrm.spi.HrmUserDictService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +28,8 @@ public class CustomDictInfoEndpoint {
     private CrmCustomBusinessDictService crmCustomBusinessDictService;
     private CrmCustomCompanyInfoService crmCustomCompanyInfoService;
     private HrmUserDictService hrmUserDictService;
+    private WorkFlowDefNodeService workFlowDefNodeService;
+    private CrmCustomThirdPartyInfoService crmCustomThirdPartyInfoService;
 
 
     /**
@@ -68,7 +68,7 @@ public class CustomDictInfoEndpoint {
      * 对接人员
      */
     @GetMapping("/owner")
-    public TavernDictResponse getCrmFlowPointOperator(@RequestParam(name = "businessName") String businessName) {
+    public TavernDictResponse getWorkFlowPointOperator(@RequestParam(name = "business") String business) {
         //添加关联业务后，即发起一个流程，根据节点角色进行选择
         //1.graph代表UML
         //2.edge代表分支
@@ -77,10 +77,23 @@ public class CustomDictInfoEndpoint {
         //1.传入节点角色
         //2.根据角色进行查询人员
         //3.rpc到hrm查询相关人员
+        return this.workFlowDefNodeService.getWorkFlowOwnerInfo(business);
+    }
 
-
-//        return this.hrmUserDictService.queryStaffByRole(roleId);
-        return null;
+    /**
+     * 第三方合作方
+     */
+    @GetMapping("/thirdParty")
+    public TavernDictResponse getThirdParty() {
+        List<Dict> dictList = this.crmCustomThirdPartyInfoService.list()
+                .parallelStream()
+                .map(d -> {
+                    Dict dict = new Dict();
+                    dict.setId(d.getThirdPartyId());
+                    dict.setName(d.getThirdPartyName());
+                    return dict;
+                }).collect(Collectors.toList());
+        return new TavernDictResponse(dictList);
     }
 
     /**

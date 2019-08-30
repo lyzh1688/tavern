@@ -117,7 +117,7 @@ export const findBizDict = (params) => {
     params
   })
 }
-// 查询业务字典
+// 查询公司字典
 export const findCompanyDict = (params) => {
   return axios({
     url: '/crm/dict/company',
@@ -125,7 +125,30 @@ export const findCompanyDict = (params) => {
     params
   })
 }
-
+// 查询owner字典
+export const findOwnerDict = (params) => {
+  return axios({
+    url: '/crm/dict/owner',
+    method: 'get',
+    params
+  })
+}
+// 查询合作方字典
+export const findThirdPartyDict = (params) => {
+  return axios({
+    url: '/crm/dict/thirdParty',
+    method: 'get',
+    params
+  })
+}
+// 查询合作方字典
+export const findPreEventDict = (params) => {
+  return axios({
+    url: '/crm/dict/preEvent',
+    method: 'get',
+    params
+  })
+}
 
 // 查找用户的菜单权限标识集合
 export const findPermissions = (params) => {

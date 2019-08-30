@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * Dev Time: 2019/07/02 <br>
  */
 @Configuration
-@MapperScan("com.tuoyou.tavern.crm.dao")
+@MapperScan({"com.tuoyou.tavern.crm.crm.dao","com.tuoyou.tavern.crm.workflow.dao"})
 @ComponentScan("com.tuoyou.tavern.common.core.exception")
 public class MyBatisPlusConfiguration {
     /**

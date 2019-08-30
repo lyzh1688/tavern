@@ -1,36 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tuoyou.tavern.crm.dao.workflow.WorkFlowDefNodeMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.WorkFlowDefNode">
-    <id column="node_id" jdbcType="VARCHAR" property="nodeId" />
-    <result column="graph_id" jdbcType="VARCHAR" property="graphId" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="role" jdbcType="VARCHAR" property="role" />
-  </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from workflow_def_node
-    where node_id = #{nodeId,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.WorkFlowDefNode">
-    insert into workflow_def_node (node_id, graph_id, name, 
-      role)
-    values (#{nodeId,jdbcType=VARCHAR}, #{graphId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{role,jdbcType=VARCHAR})
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.entity.WorkFlowDefNode">
-    update workflow_def_node
-    set graph_id = #{graphId,jdbcType=VARCHAR},
-      name = #{name,jdbcType=VARCHAR},
-      role = #{role,jdbcType=VARCHAR}
-    where node_id = #{nodeId,jdbcType=VARCHAR}
-  </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select node_id, graph_id, name, role
-    from workflow_def_node
-    where node_id = #{nodeId,jdbcType=VARCHAR}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select node_id, graph_id, name, role
-    from workflow_def_node
-  </select>
+<mapper namespace="com.tuoyou.tavern.crm.workflow.dao.WorkFlowDefNodeMapper">
+    <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.workflow.entity.WorkFlowDefNode">
+        <id column="node_id" jdbcType="VARCHAR" property="nodeId"/>
+        <result column="graph_id" jdbcType="VARCHAR" property="graphId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="role" jdbcType="VARCHAR" property="role"/>
+    </resultMap>
+    <select id="selectWorkFlowDefNodeByBusiness" resultMap="BaseResultMap">
+        select t1.node_id, t1.graph_id, t1.name, t1.role
+        from workflow_def_node t1,workflow_def_graph t2,workflow_def_graph_business_rel t3
+        where t1.node_id = t2.root_node
+        and t2.graph_id = t3.graph_id
+        and t3.business_id = #{business}
+    </select>
 </mapper>

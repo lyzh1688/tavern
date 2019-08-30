@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tuoyou.tavern.crm.dao.workflow.WorkFlowDefEdgeMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.entity.WorkFlowDefEdge">
+<mapper namespace="com.tuoyou.tavern.crm.workflow.dao.WorkFlowDefEdgeMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.workflow.entity.WorkFlowDefEdge">
     <id column="edge_id" jdbcType="VARCHAR" property="edgeId" />
     <result column="graph_id" jdbcType="VARCHAR" property="graphId" />
     <result column="source_node" jdbcType="VARCHAR" property="sourceNode" />
@@ -12,13 +12,13 @@
     delete from workflow_def_edge
     where edge_id = #{edgeId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.crm.entity.WorkFlowDefEdge">
+  <insert id="insert" parameterType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowDefEdge">
     insert into workflow_def_edge (edge_id, graph_id, source_node, 
       target_node, tag)
     values (#{edgeId,jdbcType=VARCHAR}, #{graphId,jdbcType=VARCHAR}, #{sourceNode,jdbcType=VARCHAR}, 
       #{targetNode,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.entity.WorkFlowDefEdge">
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowDefEdge">
     update workflow_def_edge
     set graph_id = #{graphId,jdbcType=VARCHAR},
       source_node = #{sourceNode,jdbcType=VARCHAR},

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.crm.workflow.dao.WorkFlowDefGraphBusinessRelMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.workflow.entity.WorkFlowDefGraphBusinessRel">
+    <id column="graph_id" jdbcType="VARCHAR" property="graphId" />
+    <id column="business_id" jdbcType="VARCHAR" property="businessId" />
+  </resultMap>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select graph_id, business_id
+    from workflow_def_graph_business_rel
+  </select>
+</mapper>

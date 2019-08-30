@@ -1,6 +1,7 @@
 package com.tuoyou.tavern.protocol.hrm.spi;
 
 import com.tuoyou.tavern.protocol.common.TavernDictResponse;
+import com.tuoyou.tavern.protocol.common.annotation.PathParam;
 
 /**
  * 功能说明: <br>
@@ -13,7 +14,7 @@ import com.tuoyou.tavern.protocol.common.TavernDictResponse;
  */
 public interface HrmUserDictService {
 
-    TavernDictResponse queryStaffByRole(String roleId);
+    TavernDictResponse queryStaffByRole(@PathParam(name = "roleId") String roleId);
 
 
 }

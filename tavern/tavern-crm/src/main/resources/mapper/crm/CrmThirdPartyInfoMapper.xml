@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.crm.crm.dao.CrmThirdPartyInfoMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.crm.model.CrmThirdPartyInfo">
+    <id column="THIRD_PARTY_ID" jdbcType="VARCHAR" property="thirdPartyId" />
+    <result column="THIRD_PARTY_NAME" jdbcType="VARCHAR" property="thirdPartyName" />
+  </resultMap>
+</mapper>
