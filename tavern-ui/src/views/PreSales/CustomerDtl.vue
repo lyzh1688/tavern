@@ -310,8 +310,6 @@
         this.dialogVisible = false
       },
       handleAdd: function () {
-        this.dialogVisible = true
-        this.operation = true
         this.dataForm = {
           customId: '',
           companyId: '',
@@ -323,6 +321,8 @@
           banks: [],
           allBanks: bankOptions
         }
+        this.dialogVisible = true
+        this.operation = true
 
       },
       handleDtl: function (params) {

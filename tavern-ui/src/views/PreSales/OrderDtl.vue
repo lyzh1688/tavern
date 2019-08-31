@@ -20,7 +20,7 @@
       </el-form>
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item>
-          <kt-button icon="fa fa-search" label="添加关联业务" perms="sys:role:view" type="primary" @click="handleAdd(null)"/>
+          <kt-button icon="fa fa-add" label="添加关联业务" perms="sys:role:view" type="primary" @click="handleAdd(null)"/>
         </el-form-item>
       </el-form>
     </div>
@@ -75,7 +75,7 @@
                      style="float:right;">
       </el-pagination>
     </div>
-    <el-dialog title="添加关联业务" width="50%" center :visible.sync="dialogVisible" :close-on-click-modal="false">
+    <el-dialog :title="operation?'添加关联业务':'编辑关联业务'" width="50%" center :visible.sync="dialogVisible" :close-on-click-modal="false">
       <el-form :inline="true" :model="dataForm" align="left" ref="dataForm" :rules="dataFormRules">
         <el-form-item label="业务类型" label-width="100px" prop="business">
           <el-select v-model="dataForm.business"
@@ -155,7 +155,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="支付合作方费用" label-width="150px" prop="thirdPartyFee">
-          <el-input v-model="dataForm.thirdPartyFee" placeholder="请输入费用"></el-input>
+          <el-input v-model="dataForm.thirdPartyFee" placeholder="请输入费用" :disabled="thirdPartyShow"></el-input>
         </el-form-item>
         <el-form-item label="前置任务" label-width="100px" prop="preEvent">
           <el-select v-model="dataForm.preEvent"
@@ -230,27 +230,23 @@
           <el-date-picker v-model="djfwForm.endDate" type="datetime" :disabled="true"></el-date-picker>
         </el-form-item>
       </el-form>
-      <el-form :model="dataForm" align="left" v-if="showHelpRegister" :rules="dataFormRules" ref="dataForm">
-        <el-form :inline="true" :model="dataForm" align="left" :rules="dataFormRules" ref="dataForm">
+      <el-form :model="gszcForm" align="left" v-if="showHelpRegister" :rules="gszcFormRules" ref="gszcForm">
+        <el-form>
           <el-form-item label="公司注册" prop="bak" label-width="100px">
           </el-form-item>
         </el-form>
-        <el-form :inline="true" :model="dataForm" align="left" :rules="dataFormRules" ref="dataForm">
-          <el-form-item label="银行开户是否需要到场" label-width="200px">
-            <el-select v-model="dataForm.name" clearable auto-complete="off" placeholder="请选择">
-              <el-option label="是" value='0'></el-option>
-              <el-option label="否" value='1'></el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <el-form :inline="true" :model="dataForm" align="left" :rules="dataFormRules">
-          <el-form-item label="注册地类型" label-width="200px">
-            <el-select v-model="dataForm.name" clearable auto-complete="off" placeholder="请选择">
-              <el-option label="大陆" value='0'></el-option>
-              <el-option label="香港" value='1'></el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
+        <el-form-item label="银行开户是否需要到场" label-width="200px" prop="absent">
+          <el-select v-model="gszcForm.absent" clearable auto-complete="off" placeholder="请选择银行开户是否需要到场">
+            <el-option label="是" value='1'></el-option>
+            <el-option label="否" value='0'></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="注册地类型" label-width="200px" prop="regLocationType">
+          <el-select v-model="gszcForm.regLocationType" clearable auto-complete="off" placeholder="请选择注册地类型">
+            <el-option label="虚拟注册" value='虚拟注册'></el-option>
+            <el-option label="实地注册" value='实地注册'></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button :size="size" @click.native="dialogVisible = false">{{$t('action.cancel')}}</el-button>
@@ -337,6 +333,11 @@
             {required: true, message: '请选择服务开始时间', trigger: 'blur'}
           ],
         },
+        gszcFormRules: {
+          absent: [
+            {required: true, message: '请选择银行开户是否需要到场', trigger: 'blur'}
+          ],
+        },
         dljzForm: {
           isBegin: '',
           months: '',
@@ -349,6 +350,10 @@
           months: '',
           beginDate: '',
           endDate: ''
+        },
+        gszcForm: {
+          absent: '',
+          regLocationType: '',
         },
         loading: false,
         editShow: false,
@@ -412,22 +417,12 @@
           this.pageResult = res.data
         }).then(data != null ? data.callback : '')
       },
-      // 加载用户角色信息
-      findUserRoles: function () {
-        this.$api.role.findAll().then((res) => {
-          // 加载角色集合
-          this.roles = res.data
-        })
-      },
       // 批量删除
       handleDelete: function (data) {
         this.$api.order.batchDelete(data.params).then(data != null ? data.callback : '')
       },
       // 显示新增界面
       handleAdd: function () {
-        this.dialogVisible = true
-        this.operation = true
-        this.selectBiz(null)
         this.dataForm = {
           business: '',
           company: '',
@@ -439,48 +434,73 @@
           businessTag: '',
           remark: '',
         }
+        this.dljzForm = {
+          isBegin: '',
+          months: '',
+          beginDate: '',
+          endDate: ''
+        }
+        this.djfwForm = {
+          confirmNum: '',
+          employeeNum: '',
+          months: '',
+          beginDate: '',
+          endDate: ''
+        }
+        this.gszcForm = {
+          absent: '',
+          regLocationType: '',
+        }
+        this.dialogVisible = true
+        this.operation = true
+        this.selectBiz(null)
       },
       // 显示编辑界面
       handleEdit: function (params) {
         this.dialogVisible = true
         this.operation = false
         this.dataForm = Object.assign({}, params.row)
-        let userRoles = []
-        for (let i = 0, len = params.row.userRoles.length; i < len; i++) {
-          userRoles.push(params.row.userRoles[i].roleId)
-        }
-        this.dataForm.userRoles = userRoles
       },
       // 编辑
       submitForm: function () {
-        this.$refs.dataForm.validate((valid) => {
-          if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
-              this.editLoading = true
-              let params = Object.assign({}, this.dataForm)
-              let userRoles = []
-              for (let i = 0, len = params.userRoles.length; i < len; i++) {
-                let userRole = {
-                  userId: params.id,
-                  roleId: params.userRoles[i]
-                }
-                userRoles.push(userRole)
-              }
-              params.userRoles = userRoles
-              this.$api.customer.save(params).then((res) => {
-                this.editLoading = false
-                if (res.code == 200) {
-                  this.$message({message: '操作成功', type: 'success'})
-                  this.dialogVisible = false
-                  this.$refs['dataForm'].resetFields()
-                } else {
-                  this.$message({message: '操作失败, ' + res.msg, type: 'error'})
-                }
-                this.findPage(null)
-              })
-            })
-          }
+        let dataFormValid = this.$refs.dataForm.validate();
+        let label = {}
+        label = this.bizDict.find(item => {
+          return this.dataForm.business == item.id;
         })
+        let valid = '';
+        switch (label.name) {
+          case "代理记账":
+            valid = this.$refs.dljzForm.validate() && dataFormValid;
+            break;
+          case "代缴公积金":
+            valid = this.$refs.djfwForm.validate() && dataFormValid;
+            break;
+          case "代缴社保":
+            valid = this.$refs.djfwForm.validate() && dataFormValid;
+            break;
+          case "公司注册":
+            valid = this.$refs.gszcForm.validate() && dataFormValid;
+            break;
+        }
+        if (valid) {
+          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            this.editLoading = true
+            let params = Object.assign({}, this.dataForm)
+            params.customId = this.dtlForm.customId;
+            this.$api.customer.saveCompany(params).then((res) => {
+              this.editLoading = false
+              this.$message({message: '操作成功', type: 'success'})
+              this.dialogVisible = false
+              this.findPage(null)
+            }).catch(res => {
+              this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+              this.editLoading = false
+              this.dialogVisible = false
+            })
+          })
+        }
+
       },
       // 处理表格列过滤显示
       displayFilterColumnsDialog: function () {
@@ -507,7 +527,10 @@
         this.showHelpBookKeeping = false
         this.showHelpPay = false
         this.showHelpRegister = false
-        let label = {};
+        let label = {
+          id: '',
+          name: ''
+        }
         label = this.bizDict.find(item => {
           return e == item.id;
         })
@@ -652,9 +675,8 @@
 
       },
       handleCurrentChange(val) {
-        let _this = this;
-        _this.pageRequest.current = val;
-        _this.findPage(_this.pageRequest);
+        this.pageRequest.current = val;
+        this.findPage(this.pageRequest);
       },
     },
     mounted() {

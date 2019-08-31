@@ -3,6 +3,7 @@ package com.tuoyou.tavern.crm.endpoint;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tuoyou.tavern.crm.crm.service.CrmCustomOrderInfoService;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
+import com.tuoyou.tavern.protocol.crm.dto.CrmOrderBusinessRelDTO;
 import com.tuoyou.tavern.protocol.crm.dto.CustomCompanyOrderQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCustomOrderInfo;
 import com.tuoyou.tavern.protocol.crm.response.CrmCustomOrderPageResponse;
@@ -33,6 +34,10 @@ public class CustomOrderInfoEndpoint {
         return new CrmCustomOrderPageResponse(this.crmCustomOrderInfoService.getCrmOrderPage(page, customCompanyOrderQueryDTO));
     }
 
+    @PostMapping("/saveBizRel")
+    public TavernResponse createCrmCustomOrderInfo(@RequestBody @Valid CrmOrderBusinessRelDTO crmOrderBusinessRelDTO) {
+        return new TavernResponse();
+    }
 
 
 

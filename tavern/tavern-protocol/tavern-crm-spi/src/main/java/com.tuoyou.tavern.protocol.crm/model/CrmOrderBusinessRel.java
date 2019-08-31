@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("CRM_ORDER_BUSINESS_REL")
@@ -26,7 +28,7 @@ public class CrmOrderBusinessRel extends Model<CrmOrderBusinessRel> {
 
     private String thirdPartyId;
 
-    private Long thirdPartyFee;
+    private BigDecimal thirdPartyFee;
 
     private String businessTag;
 

@@ -8,7 +8,7 @@
 
   <select id="selectCrmOrderBusinessByOrderId" resultMap="BaseResultMap">
     select t1.BUSINESS_ID,t1.BUSINESS_NAME
-    from crm_business_dict t1,crm_order_business_rel t2
+    from CRM_BUSINESS_DICT t1,CRM_ORDER_BUSINESS_REL t2
     where t1.BUSINESS_ID = t2.BUSINESS_ID
     and t2.ORDER_ID = #{orderId}
   </select>
