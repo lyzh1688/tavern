@@ -1,16 +1,7 @@
 package com.tuoyou.tavern.crm.workflow.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowLogMessage;
-import java.util.List;
 
-public interface WorkFlowLogMessageMapper {
-    int deleteByPrimaryKey(String logId);
-
-    int insert(WorkFlowLogMessage record);
-
-    WorkFlowLogMessage selectByPrimaryKey(String logId);
-
-    List<WorkFlowLogMessage> selectAll();
-
-    int updateByPrimaryKey(WorkFlowLogMessage record);
+public interface WorkFlowLogMessageMapper extends BaseMapper<WorkFlowLogMessage> {
 }

@@ -58,6 +58,7 @@ public class LoginServiceImpl implements LoginService {
 
         //mock
         LoginVO loginVO = new LoginVO();
+        loginVO.setUserId("1");
         loginVO.setUserAccnt("admin");
         loginVO.setPassword("admin");
         loginVO.setUserType("1");

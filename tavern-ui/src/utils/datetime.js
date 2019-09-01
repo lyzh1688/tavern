@@ -8,6 +8,25 @@
  * 将 2018-09-23T11:54:16.000+0000 格式化成 2018/09/23 11:54:16
  * @param datetime 国际化日期格式
  */
+export function calDate(datetime, months) {
+  return calDateWithSeprator(datetime, months, '/')
+}
+
+export function calDateWithSeprator(datetime, months, dateSeprator) {
+  if (datetime != null) {
+    let dateMat = new Date(datetime);
+    let year = dateMat.getFullYear();
+    let month = makeupLength(dateMat.getMonth() + 1 + parseInt(months));
+    let day = makeupLength(dateMat.getDate());
+    while (month > 12) {
+      year = year + 1;
+      month = month - 12;
+    }
+    month = makeupLength(month)
+    return year + dateSeprator + month + dateSeprator + day;
+  }
+}
+
 export function format(datetime) {
   return formatWithSeperator(datetime, "/", ":", "0");
 }

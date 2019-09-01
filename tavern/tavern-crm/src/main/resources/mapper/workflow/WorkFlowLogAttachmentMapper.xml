@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.crm.workflow.dao.WorkFlowLogAttachmentMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.workflow.entity.WorkFlowLogAttachment">
+    <id column="file_id" jdbcType="VARCHAR" property="fileId" />
+    <result column="log_id" jdbcType="VARCHAR" property="logId" />
+    <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+    <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from workflow_log_attachment
+    where file_id = #{fileId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowLogAttachment">
+    insert into workflow_log_attachment (file_id, log_id, create_time, 
+      file_path)
+    values (#{fileId,jdbcType=VARCHAR}, #{logId,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, 
+      #{filePath,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowLogAttachment">
+    update workflow_log_attachment
+    set log_id = #{logId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      file_path = #{filePath,jdbcType=VARCHAR}
+    where file_id = #{fileId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select file_id, log_id, create_time, file_path
+    from workflow_log_attachment
+    where file_id = #{fileId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select file_id, log_id, create_time, file_path
+    from workflow_log_attachment
+  </select>
+</mapper>

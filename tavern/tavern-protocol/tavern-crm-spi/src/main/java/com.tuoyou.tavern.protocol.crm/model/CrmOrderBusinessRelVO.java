@@ -1,29 +1,28 @@
 package com.tuoyou.tavern.protocol.crm.model;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("CRM_ORDER_BUSINESS_REL")
-public class CrmOrderBusinessRel extends Model<CrmOrderBusinessRel> {
+public class CrmOrderBusinessRelVO {
 
-    @TableId
     private String eventId;
 
     private String orderId;
 
     private String businessId;
 
+    private String businessName;
+
     private String companyId;
 
+    private String companyName;
+
     private String ownerId;
+
+    private String owner;
 
     private String needThirdParty;
 
@@ -37,8 +36,7 @@ public class CrmOrderBusinessRel extends Model<CrmOrderBusinessRel> {
 
     private String remark;
 
-    private LocalDateTime createDate;
+    private String createDate;
 
-    private String owner;
 
 }

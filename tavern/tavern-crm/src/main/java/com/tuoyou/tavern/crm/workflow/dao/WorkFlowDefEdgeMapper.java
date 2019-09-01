@@ -1,16 +1,7 @@
 package com.tuoyou.tavern.crm.workflow.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowDefEdge;
-import java.util.List;
 
-public interface WorkFlowDefEdgeMapper {
-    int deleteByPrimaryKey(String edgeId);
-
-    int insert(WorkFlowDefEdge record);
-
-    WorkFlowDefEdge selectByPrimaryKey(String edgeId);
-
-    List<WorkFlowDefEdge> selectAll();
-
-    int updateByPrimaryKey(WorkFlowDefEdge record);
+public interface WorkFlowDefEdgeMapper extends BaseMapper<WorkFlowDefEdge> {
 }

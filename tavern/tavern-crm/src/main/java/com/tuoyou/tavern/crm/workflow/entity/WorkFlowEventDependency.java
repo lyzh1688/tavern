@@ -1,35 +1,22 @@
 package com.tuoyou.tavern.crm.workflow.entity;
 
-import java.util.Date;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-public class WorkFlowEventDependency {
+import java.time.LocalDateTime;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@TableName("workflow_event_dependency")
+public class WorkFlowEventDependency extends Model<WorkFlowEventDependency> {
+    @TableId
     private String preEvent;
 
     private String nextEvent;
 
-    private Date createDate;
+    private LocalDateTime createDate;
 
-    public String getPreEvent() {
-        return preEvent;
-    }
-
-    public void setPreEvent(String preEvent) {
-        this.preEvent = preEvent == null ? null : preEvent.trim();
-    }
-
-    public String getNextEvent() {
-        return nextEvent;
-    }
-
-    public void setNextEvent(String nextEvent) {
-        this.nextEvent = nextEvent == null ? null : nextEvent.trim();
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
 }

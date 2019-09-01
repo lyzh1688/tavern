@@ -139,7 +139,6 @@
           return;
         }
         this.$api.login.login(userInfo).then((res) => {
-          console.log(res)
           if (res.msg != null) {
             this.$message({
               message: res.msg,
@@ -148,6 +147,7 @@
           } else {
             Cookies.set('token', res.data.token) // 放置token到Cookie
             sessionStorage.setItem('user', userInfo.userAccnt) // 保存用户到本地会话
+            sessionStorage.setItem('userId', res.data.userId) // 保存用户到本地会话
             this.$store.commit('menuRouteLoaded', false) // 要求重新加载导航菜单
             this.$router.push('/')  // 登录成功，跳转到主页
           }

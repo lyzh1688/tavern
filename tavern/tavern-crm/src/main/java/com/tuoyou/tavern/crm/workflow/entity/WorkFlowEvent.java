@@ -1,8 +1,18 @@
 package com.tuoyou.tavern.crm.workflow.entity;
 
-import java.util.Date;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-public class WorkFlowEvent {
+import java.time.LocalDateTime;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@TableName("workflow_event")
+public class WorkFlowEvent extends Model<WorkFlowEvent> {
+    @TableId
     private String eventId;
 
     private String graphId;
@@ -13,53 +23,6 @@ public class WorkFlowEvent {
 
     private String curOperator;
 
-    private Date beginDate;
+    private LocalDateTime beginDate;
 
-    public String getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(String eventId) {
-        this.eventId = eventId == null ? null : eventId.trim();
-    }
-
-    public String getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(String graphId) {
-        this.graphId = graphId == null ? null : graphId.trim();
-    }
-
-    public String getCurNodeId() {
-        return curNodeId;
-    }
-
-    public void setCurNodeId(String curNodeId) {
-        this.curNodeId = curNodeId == null ? null : curNodeId.trim();
-    }
-
-    public String getEventOwner() {
-        return eventOwner;
-    }
-
-    public void setEventOwner(String eventOwner) {
-        this.eventOwner = eventOwner == null ? null : eventOwner.trim();
-    }
-
-    public String getCurOperator() {
-        return curOperator;
-    }
-
-    public void setCurOperator(String curOperator) {
-        this.curOperator = curOperator == null ? null : curOperator.trim();
-    }
-
-    public Date getBeginDate() {
-        return beginDate;
-    }
-
-    public void setBeginDate(Date beginDate) {
-        this.beginDate = beginDate;
-    }
 }

@@ -48,6 +48,8 @@
               v-loading="loading">
       <el-table-column prop="customId" header-align="center" align="center" label="客户ID" v-if="false">
       </el-table-column>
+      <el-table-column prop="businessId" label="业务Id" header-align="center" align="center" v-if="false">
+      </el-table-column>
       <el-table-column prop="businessName" label="业务类型" header-align="center" align="center">
       </el-table-column>
       <el-table-column prop="owner" label="对接人员" header-align="center" align="center">
@@ -58,15 +60,7 @@
       </el-table-column>
       <el-table-column prop="remark" label="备注" header-align="center" align="center">
       </el-table-column>
-      <el-table-column prop="updateDate" label="创建时间" header-align="center" align="center">
-      </el-table-column>
-      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
-        <template slot-scope="scope">
-          <kt-button icon="fa fa-edit" :label="$t('action.delete')" perms="sys:user:add" type="primary"
-                     @click="handleEdit(scope.row)"/>
-          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
-                     @click="handleDelete(scope.row)"/>
-        </template>
+      <el-table-column prop="createDate" label="创建时间" header-align="center" align="center">
       </el-table-column>
     </el-table>
     <div class="toolbar" style="padding:10px;">
@@ -75,7 +69,8 @@
                      style="float:right;">
       </el-pagination>
     </div>
-    <el-dialog :title="operation?'添加关联业务':'编辑关联业务'" width="50%" center :visible.sync="dialogVisible" :close-on-click-modal="false">
+    <el-dialog :title="operation?'添加关联业务':'编辑关联业务'" width="50%" center :visible.sync="dialogVisible"
+               :close-on-click-modal="false">
       <el-form :inline="true" :model="dataForm" align="left" ref="dataForm" :rules="dataFormRules">
         <el-form-item label="业务类型" label-width="100px" prop="business">
           <el-select v-model="dataForm.business"
@@ -118,6 +113,8 @@
                      placeholder="请选择对接人员"
                      no-data-text="无匹配数据/请检查是否配置相关人员"
                      prop="owner"
+                     @change="handleItemChange"
+
           >
             <el-option v-for="item in ownerDict"
                        :key="item.id"
@@ -174,10 +171,9 @@
         </el-form-item>
         <el-form-item label="业务标签" label-width="150px" prop="businessTag">
           <el-select v-model="dataForm.businessTag" clearable auto-complete="off" placeholder="请选择">
-            <el-option label="标签一" value='标签一'></el-option>
-            <el-option label="标签二" value='标签二'></el-option>
-            <el-option label="标签三" value='标签三'></el-option>
-            <el-option label="标签四" value='标签四'></el-option>
+            <el-option label="加急" value='加急'></el-option>
+            <el-option label="一般" value='一般'></el-option>
+            <el-option label="投诉" value='投诉'></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="服务内容/备注" prop="remark" label-width="100px">
@@ -187,7 +183,7 @@
       <el-form :inline="true" :model="dljzForm" align="left" v-if="showHelpBookKeeping" :rules="dljzFormRules"
                ref="dljzForm">
         <el-form>
-          <el-form-item label="代理记账" prop="bak" label-width="100px"/>
+          <el-form-item label="代理记账" prop="bak" label-width="150px"/>
         </el-form>
         <el-form-item label="服务开始" label-width="150px" prop="isBegin">
           <el-select v-model="dljzForm.isBegin" clearable auto-complete="off" placeholder="请选择">
@@ -195,26 +191,28 @@
             <el-option label="已开始" value='1'></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="服务期限(月)" label-width="150px" prop="months">
-          <el-input v-model="dljzForm.months" placeholder="请输入服务期限(月)"></el-input>
-        </el-form-item>
         <el-form-item label="服务开始时间" label-width="150px" prop="beginDate">
-          <el-date-picker v-model="dljzForm.beginDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
+          <el-date-picker v-model="dljzForm.beginDate" type="datetime" placeholder="选择日期时间"
+                          @change="dljzEndDateChange"></el-date-picker>
         </el-form-item>
-        <el-form-item label="服务结束时间" label-width="150px" prop="endDate" :disabled="true">
-          <el-date-picker v-model="dljzForm.endDate" type="datetime"></el-date-picker>
+        <el-form-item label="服务期限(月)" label-width="150px" prop="months">
+          <el-input v-model="dljzForm.months" placeholder="请输入服务期限(月)" @change="dljzEndDateChange"></el-input>
+        </el-form-item>
+        <el-form-item label="服务结束时间" label-width="150px" prop="endDate">
+          <el-date-picker v-model="dljzForm.endDate" type="datetime" :disabled="true"></el-date-picker>
         </el-form-item>
       </el-form>
       <el-form :inline="true" :model="djfwForm" align="left" v-if="showHelpPay" :rules="djfwFormRules" ref="djfwForm">
         <el-form>
-          <el-form-item label="公积金代缴/社保代缴" label-width="200px">
+          <el-form-item label="公积金代缴/社保代缴" label-width="150px">
           </el-form-item>
         </el-form>
         <el-form-item label="服务开始时间" label-width="150px" prop="beginDate">
-          <el-date-picker v-model="djfwForm.beginDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
+          <el-date-picker v-model="djfwForm.beginDate" type="datetime" placeholder="选择日期时间"
+                          @change="djfwEndDateChange"></el-date-picker>
         </el-form-item>
         <el-form-item label="服务期限(月)" label-width="150px" prop="months">
-          <el-input v-model="djfwForm.months" placeholder="请输入服务期限(月)"></el-input>
+          <el-input v-model="djfwForm.months" placeholder="请输入服务期限(月)" @change="djfwEndDateChange"></el-input>
         </el-form-item>
         <el-form-item label="公司人数确认" label-width="150px" prop="confirmNum">
           <el-select v-model="djfwForm.confirmNum" clearable auto-complete="off" placeholder="请选择"
@@ -232,7 +230,7 @@
       </el-form>
       <el-form :model="gszcForm" align="left" v-if="showHelpRegister" :rules="gszcFormRules" ref="gszcForm">
         <el-form>
-          <el-form-item label="公司注册" prop="bak" label-width="100px">
+          <el-form-item label="公司注册" prop="bak" label-width="200px">
           </el-form-item>
         </el-form>
         <el-form-item label="银行开户是否需要到场" label-width="200px" prop="absent">
@@ -263,14 +261,15 @@
   import KtTable from "@/views/Core/KtTable"
   import KtButton from "@/views/Core/KtButton"
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
-  import {format} from "@/utils/datetime"
+  import {format, calDate, formatDate, formatDateSimple8} from "@/utils/datetime"
 
   export default {
     components: {
       PopupTreeInput,
       KtTable,
       KtButton,
-      TableColumnFilterDialog
+      TableColumnFilterDialog,
+      format, calDate, formatDate, formatDateSimple8
     },
     data() {
       return {
@@ -388,7 +387,8 @@
         remoteThirdPartyDictLoading: false,
         ownerShow: true,
         thirdPartyShow: true,
-        djfwConfirmNum: true
+        djfwConfirmNum: true,
+        ownerName: ''
 
       }
     }, created() {
@@ -412,14 +412,21 @@
         if (data !== null) {
           this.pageRequest = data.pageRequest
         }
-        this.pageRequest.columndtlForm = {name: {name: 'name', value: this.dtlForm.name}}
-        this.$api.order.findDtlPage(this.pageRequest).then((res) => {
-          this.pageResult = res.data
-        }).then(data != null ? data.callback : '')
-      },
-      // 批量删除
-      handleDelete: function (data) {
-        this.$api.order.batchDelete(data.params).then(data != null ? data.callback : '')
+        this.pageRequest.orderId = this.dtlForm.orderId;
+        this.loading = true
+        let callback = res => {
+          this.loading = false
+        }
+        this.$api.customer.findOrderBusinessPage(this.pageRequest).then((res) => {
+          this.tableData = res.data.records;
+          this.total = res.data.total;
+          this.pageRequest.current = res.data.current;
+          this.pageRequest.size = res.data.size;
+          callback(res)
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+          callback(res)
+        })
       },
       // 显示新增界面
       handleAdd: function () {
@@ -487,8 +494,38 @@
           this.$confirm('确认提交吗？', '提示', {}).then(() => {
             this.editLoading = true
             let params = Object.assign({}, this.dataForm)
-            params.customId = this.dtlForm.customId;
-            this.$api.customer.saveCompany(params).then((res) => {
+            params.orderId = this.dtlForm.orderId
+            params.companyId = this.dataForm.company
+            params.creatorId = sessionStorage.getItem("userId")
+            params.ownerId = this.dataForm.owner
+            params.owner = this.ownerName;
+
+            let dljzDetail = {}
+            if (this.dljzForm.beginDate != '') {
+              dljzDetail.dljzBeginDate = this.dateFormat(this.dljzForm.beginDate)
+            }
+            if (this.dljzForm.endDate != '') {
+              dljzDetail.dljzEndDate = this.dljzForm.endDate
+            }
+            dljzDetail.isBegin = this.dljzForm.isBegin
+            let gjjsbdjDetail = {}
+            if (this.djfwForm.beginDate != '') {
+              gjjsbdjDetail.gjjsbdjBeginDate = this.dateFormat(this.djfwForm.beginDate)
+            }
+            if (this.djfwForm.endDate != '') {
+              gjjsbdjDetail.gjjsbdjEndDate = this.djfwForm.endDate
+            }
+            gjjsbdjDetail.employeeNum = this.djfwForm.employeeNum
+            let gszcDetail = {}
+            gszcDetail.absent = this.gszcForm.absent
+            gszcDetail.regLocationType = this.gszcForm.regLocationType
+
+            params.dljzDetail = dljzDetail
+            params.gjjsbdjDetail = gjjsbdjDetail
+            params.gszcDetail = gszcDetail
+
+            console.log(JSON.stringify(params))
+            this.$api.customer.saveOrderBusiness(params).then((res) => {
               this.editLoading = false
               this.$message({message: '操作成功', type: 'success'})
               this.dialogVisible = false
@@ -514,12 +551,11 @@
       // 处理表格列过滤显示
       initColumns: function () {
         this.columns = [
-          {prop: "name", label: "业务类型", minWidth: 120},
-          {prop: "staff", label: "对接人员", minWidth: 120},
-          {prop: "source", label: "业务来源", minWidth: 120},
-          {prop: "company", label: "关联公司", minWidth: 120},
-          {prop: "bak", label: "备注", minWidth: 120},
-          {prop: "createTime", label: "创建时间", minWidth: 120},
+          {prop: "businessName", label: "业务类型", minWidth: 120},
+          {prop: "owner", label: "对接人员", minWidth: 120},
+          {prop: "companyName", label: "关联公司", minWidth: 120},
+          {prop: "remark", label: "备注", minWidth: 120},
+          {prop: "createDate", label: "创建时间", minWidth: 120},
         ]
         this.filterColumns = JSON.parse(JSON.stringify(this.columns));
       },
@@ -527,11 +563,7 @@
         this.showHelpBookKeeping = false
         this.showHelpPay = false
         this.showHelpRegister = false
-        let label = {
-          id: '',
-          name: ''
-        }
-        label = this.bizDict.find(item => {
+        let label = this.bizDict.find(item => {
           return e == item.id;
         })
         switch (label.name) {
@@ -659,6 +691,23 @@
         } else {
           this.djfwConfirmNum = true;
         }
+      }, djfwEndDateChange: function () {
+        if (this.djfwForm.beginDate != '' && this.djfwForm.months != '') {
+          this.djfwForm.endDate = this.calEndDate(this.djfwForm.beginDate, this.djfwForm.months);
+        }
+      }, dljzEndDateChange: function () {
+        if (this.dljzForm.beginDate != '' && this.dljzForm.months != '') {
+          this.dljzForm.endDate = this.calEndDate(this.dljzForm.beginDate, this.dljzForm.months);
+        }
+      }, calEndDate: function (beginDate, months) {
+        return calDate(beginDate, months);
+      }, handleItemChange: function (val) {
+        this.ownerName = this.ownerDict.find(item => {
+          return val == item.id;
+        }).name
+      },// 时间格式化
+      dateFormat: function (date) {
+        return formatDateSimple8(date)
       },
       initDict: function () {
         //1. 初始化业务类型

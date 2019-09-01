@@ -149,7 +149,22 @@ export const findPreEventDict = (params) => {
     params
   })
 }
-
+// 保存订单业务信息
+export const saveOrderBusiness = (data) => {
+  return axios({
+    url: '/crm/order/saveBizRel',
+    method: 'post',
+    data
+  })
+}
+// 分页查询订单业务信息
+export const findOrderBusinessPage = (params) => {
+  return axios({
+    url: '/crm/order/bizPage',
+    method: 'get',
+    params
+  })
+}
 // 查找用户的菜单权限标识集合
 export const findPermissions = (params) => {
   return axios({

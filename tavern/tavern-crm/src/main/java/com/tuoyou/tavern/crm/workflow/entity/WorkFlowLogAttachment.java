@@ -1,4 +1,4 @@
-package com.tuoyou.tavern.protocol.crm.model;
+package com.tuoyou.tavern.crm.workflow.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -8,15 +8,15 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("CRM_ORDER_GSZC_DETAIL")
-public class CrmOrderGszcDetail extends Model<CrmOrderGszcDetail> {
+@TableName("workflow_log_attachment")
+public class WorkFlowLogAttachment extends Model<WorkFlowLogAttachment> {
     @TableId
-    private String eventId;
+    private String fileId;
 
-    private String orderId;
+    private String logId;
 
-    private String absent;
+    private String createTime;
 
-    private String regLocationType;
+    private String filePath;
 
 }

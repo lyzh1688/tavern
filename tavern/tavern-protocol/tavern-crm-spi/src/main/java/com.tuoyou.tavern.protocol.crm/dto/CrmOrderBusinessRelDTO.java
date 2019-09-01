@@ -18,7 +18,11 @@ public class CrmOrderBusinessRelDTO {
 
     private String companyId;
 
+    private String creatorId;//记录录单点
+
     private String ownerId;
+
+    private String owner;
 
     private String needThirdParty;
 

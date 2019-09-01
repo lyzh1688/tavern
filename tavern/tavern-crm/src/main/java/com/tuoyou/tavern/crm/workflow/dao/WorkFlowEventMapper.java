@@ -1,16 +1,9 @@
 package com.tuoyou.tavern.crm.workflow.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEvent;
-import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
-public interface WorkFlowEventMapper {
-    int deleteByPrimaryKey(String eventId);
-
-    int insert(WorkFlowEvent record);
-
-    WorkFlowEvent selectByPrimaryKey(String eventId);
-
-    List<WorkFlowEvent> selectAll();
-
-    int updateByPrimaryKey(WorkFlowEvent record);
+public interface WorkFlowEventMapper extends BaseMapper<WorkFlowEvent> {
+    int insertWorkFlowEvent(@Param("event") WorkFlowEvent workFlowEvent, @Param("businessId") String businessId);
 }

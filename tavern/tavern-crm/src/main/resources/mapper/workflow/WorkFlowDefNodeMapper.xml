@@ -9,9 +9,10 @@
     </resultMap>
     <select id="selectWorkFlowDefNodeByBusiness" resultMap="BaseResultMap">
         select t1.node_id, t1.graph_id, t1.name, t1.role
-        from workflow_def_node t1,workflow_def_graph t2,workflow_def_graph_business_rel t3
-        where t1.node_id = t2.root_node
+        from workflow_def_node t1,workflow_def_graph t2,workflow_def_graph_business_rel t3,workflow_def_edge t4
+        where t1.node_id = t4.target_node
         and t2.graph_id = t3.graph_id
+		and t2.root_node = t4.source_node
         and t3.business_id = #{business}
     </select>
 </mapper>

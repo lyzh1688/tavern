@@ -1,7 +1,10 @@
 package com.tuoyou.tavern.crm.crm.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tuoyou.tavern.protocol.crm.dto.CrmOrderBusinessRelDTO;
+import com.tuoyou.tavern.protocol.crm.dto.CustomOrderBizQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmBusinessDict;
 import com.tuoyou.tavern.protocol.crm.model.CrmOrderBusinessRel;
 
@@ -17,6 +20,8 @@ public interface CrmCustomOrderBusinessRelService extends IService<CrmOrderBusin
 
     void saveOrderBusiness(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId);
 
-    void startWorkFLow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO);
+    void rollBackOrderBusiness(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId);
+
+    IPage getCrmOrderBusinessPage(Page page, CustomOrderBizQueryDTO customCompanyOrderQueryDTO);
 
 }

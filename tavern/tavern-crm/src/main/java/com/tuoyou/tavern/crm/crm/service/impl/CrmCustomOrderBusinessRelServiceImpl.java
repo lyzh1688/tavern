@@ -1,5 +1,7 @@
 package com.tuoyou.tavern.crm.crm.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tuoyou.tavern.common.core.util.DateUtils;
 import com.tuoyou.tavern.common.core.util.UUIDUtil;
@@ -8,10 +10,8 @@ import com.tuoyou.tavern.crm.crm.service.CrmCustomOrderBusinessRelService;
 import com.tuoyou.tavern.crm.crm.service.CrmOrderDljzDetailService;
 import com.tuoyou.tavern.crm.crm.service.CrmOrderGjjsbdjDetailService;
 import com.tuoyou.tavern.crm.crm.service.CrmOrderGszcDetailService;
-import com.tuoyou.tavern.protocol.crm.dto.CrmOrderBusinessRelDTO;
-import com.tuoyou.tavern.protocol.crm.dto.DljzDetail;
-import com.tuoyou.tavern.protocol.crm.dto.GjjsbdjDetail;
-import com.tuoyou.tavern.protocol.crm.dto.GszcDetail;
+import com.tuoyou.tavern.crm.workflow.service.WorkFlowEventService;
+import com.tuoyou.tavern.protocol.crm.dto.*;
 import com.tuoyou.tavern.protocol.crm.model.CrmOrderBusinessRel;
 import com.tuoyou.tavern.protocol.crm.model.CrmOrderDljzDetail;
 import com.tuoyou.tavern.protocol.crm.model.CrmOrderGjjsbdjDetail;
@@ -21,6 +21,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -38,13 +40,21 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
     private CrmOrderGszcDetailService crmOrderGszcDetailService;
     @Autowired
     private CrmCustomOrderBusinessRelService crmCustomOrderBusinessRelService;
+    @Autowired
+    private WorkFlowEventService workFlowEventService;
 
 
     @Override
     public void saveOrderBusinessAndStartWorkFlow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO) {
         String eventId = UUIDUtil.randomUUID32();
-        this.crmCustomOrderBusinessRelService.saveOrderBusiness(crmOrderBusinessRelDTO, eventId);
-        //新增workflow
+        try {
+            this.crmCustomOrderBusinessRelService.saveOrderBusiness(crmOrderBusinessRelDTO, eventId);
+            //新增workflow
+            this.workFlowEventService.startWorkFlow(crmOrderBusinessRelDTO, eventId);
+        } catch (Exception e) {
+            this.crmCustomOrderBusinessRelService.rollBackOrderBusiness(crmOrderBusinessRelDTO, eventId);
+            throw e;
+        }
 
     }
 
@@ -56,6 +66,7 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
             CrmOrderBusinessRel crmOrderBusinessRel = new CrmOrderBusinessRel();
             BeanUtils.copyProperties(crmOrderBusinessRelDTO, crmOrderBusinessRel);
             crmOrderBusinessRel.setEventId(eventId);
+            crmOrderBusinessRel.setCreateDate(LocalDateTime.now());
             this.save(crmOrderBusinessRel);
             log.info("add new business {}", crmOrderBusinessRelDTO.getBusinessId());
             switch (crmOrderBusinessRelDTO.getBusinessId()) {
@@ -92,8 +103,28 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
     }
 
     @Override
-    public void startWorkFLow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO) {
+    public void rollBackOrderBusiness(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId) {
+        log.info("rollback new business {},eventId: {}", crmOrderBusinessRelDTO.getBusinessId(), eventId);
+        this.removeById(eventId);
+        switch (crmOrderBusinessRelDTO.getBusinessId()) {
+            case "BIZ_1":
+                this.crmOrderGjjsbdjDetailService.removeById(eventId);
+                break;
+            case "BIZ_2":
+                this.crmOrderGjjsbdjDetailService.removeById(eventId);
+                break;
+            case "BIZ_3":
+                this.crmOrderDljzDetailService.removeById(eventId);
+                break;
+            case "BIZ_4":
+                this.crmOrderGszcDetailService.removeById(eventId);
+                break;
+        }
+    }
 
+    @Override
+    public IPage getCrmOrderBusinessPage(Page page, CustomOrderBizQueryDTO customCompanyOrderQueryDTO) {
+        return this.baseMapper.selectCrmOrderBusinessPage(page, customCompanyOrderQueryDTO);
     }
 
     private void cvtCrmOrderGjjsbdjDetail(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId) {

@@ -23,7 +23,7 @@
 
         <sqlMapGenerator targetPackage="mapper/workflow" targetProject="src/main/resources" />
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.tuoyou.tavern.crm.mapper.workflow" targetProject="src/main/java" />
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.tuoyou.tavern.crm.workflow.dao" targetProject="src/main/java" />
 
         <!--<table tableName="CRM_BANK_INFO" domainObjectName="CrmBankInfo">
         </table>
@@ -53,7 +53,7 @@
         </table>
         <table tableName="CRM_COMPANY_STAFF_REL" domainObjectName="CrmCompanyStaffRel">
         </table>-->
-        <table tableName="workflow_def_edge" domainObjectName="WorkFlowDefEdge">
+        <!--<table tableName="workflow_def_edge" domainObjectName="WorkFlowDefEdge">
         </table>
         <table tableName="workflow_def_graph" domainObjectName="WorkFlowDefGraph">
         </table>
@@ -69,11 +69,11 @@
         </table>
         <table tableName="workflow_event_history" domainObjectName="WorkFlowEventHistory">
         </table>
-        <table tableName="workflow_log_attatchment" domainObjectName="WorkFlowLogAttachment">
-        </table>
-        <table tableName="workflow_log_message" domainObjectName="WorkFlowLogMessage">
-        </table>
 
+        <table tableName="workflow_log_message" domainObjectName="WorkFlowLogMessage">
+        </table>-->
+        <table tableName="workflow_log_attachment" domainObjectName="WorkFlowLogAttachment">
+        </table>
 
 
     </context>
