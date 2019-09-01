@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
-Source Server Version : 80013
-Source Host           : localhost:3306
+Source Server         : 119.3.19.171
+Source Server Version : 50560
+Source Host           : 119.3.19.171:3306
 Source Database       : work_flow
 
 Target Server Type    : MYSQL
-Target Server Version : 80013
+Target Server Version : 50560
 File Encoding         : 65001
 
-Date: 2019-08-30 18:12:54
+Date: 2019-09-02 07:28:10
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -24,7 +24,7 @@ CREATE TABLE `workflow_def_edge` (
   `edge_id` varchar(45) NOT NULL,
   `source_node` varchar(45) DEFAULT NULL,
   `target_node` varchar(45) DEFAULT NULL,
-  `tag` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '下一步（许可证办理...）',
+  `tag` varchar(45) DEFAULT NULL COMMENT '下一步（许可证办理...）',
   PRIMARY KEY (`edge_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='workflow_def_edge';
 
@@ -52,7 +52,7 @@ CREATE TABLE `workflow_def_graph` (
 -- ----------------------------
 -- Records of workflow_def_graph
 -- ----------------------------
-INSERT INTO `workflow_def_graph` VALUES ('g_dljz', '代理记账', 'g_dljz_node_cwzg');
+INSERT INTO `workflow_def_graph` VALUES ('g_dljz', '代理记账', 'g_dljz_node_sq');
 
 -- ----------------------------
 -- Table structure for workflow_def_graph_business_rel
@@ -74,8 +74,8 @@ INSERT INTO `workflow_def_graph_business_rel` VALUES ('g_dljz', 'biz_3');
 -- ----------------------------
 DROP TABLE IF EXISTS `workflow_def_node`;
 CREATE TABLE `workflow_def_node` (
-  `graph_id` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '唯一主键不可复用',
-  `node_id` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `graph_id` varchar(45) NOT NULL COMMENT '唯一主键不可复用',
+  `node_id` varchar(45) NOT NULL,
   `name` varchar(45) DEFAULT NULL,
   `role` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`node_id`)
@@ -117,7 +117,7 @@ CREATE TABLE `workflow_event` (
   `cur_node_id` varchar(45) DEFAULT NULL,
   `event_owner` varchar(45) DEFAULT NULL,
   `cur_operator` varchar(45) DEFAULT NULL,
-  `begin_date` date DEFAULT NULL,
+  `begin_date` datetime DEFAULT NULL,
   PRIMARY KEY (`event_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工作流事件';
 
@@ -162,12 +162,11 @@ CREATE TABLE `workflow_event_dependency_his` (
 DROP TABLE IF EXISTS `workflow_event_history`;
 CREATE TABLE `workflow_event_history` (
   `event_id` varchar(45) NOT NULL,
-  `graph_id` varchar(45) DEFAULT NULL,
-  `node_id` varchar(45) DEFAULT NULL,
+  `graph_id` varchar(45) NOT NULL,
+  `node_id` varchar(45) NOT NULL,
   `begin_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
-  `operator` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`event_id`)
+  `operator` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工作流事件历史';
 
 -- ----------------------------
@@ -175,10 +174,10 @@ CREATE TABLE `workflow_event_history` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for workflow_log_attatchment
+-- Table structure for workflow_log_attachment
 -- ----------------------------
-DROP TABLE IF EXISTS `workflow_log_attatchment`;
-CREATE TABLE `workflow_log_attatchment` (
+DROP TABLE IF EXISTS `workflow_log_attachment`;
+CREATE TABLE `workflow_log_attachment` (
   `file_id` varchar(45) NOT NULL,
   `log_id` varchar(45) DEFAULT NULL,
   `create_time` varchar(45) DEFAULT NULL,
@@ -187,7 +186,7 @@ CREATE TABLE `workflow_log_attatchment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='流程日志附件表';
 
 -- ----------------------------
--- Records of workflow_log_attatchment
+-- Records of workflow_log_attachment
 -- ----------------------------
 
 -- ----------------------------
