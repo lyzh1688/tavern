@@ -11,7 +11,7 @@
   </resultMap>
 
   <insert id="insertWorkFlowEventFirstNodeHistory">
-      insert into workflow_event (event_id, graph_id, node_id,
+      insert into workflow_event_history (event_id, graph_id, node_id,
       begin_date, end_date, operator
       )
         select

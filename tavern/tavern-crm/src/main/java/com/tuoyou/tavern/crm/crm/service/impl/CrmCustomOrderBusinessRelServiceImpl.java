@@ -17,6 +17,7 @@ import com.tuoyou.tavern.protocol.crm.model.CrmOrderDljzDetail;
 import com.tuoyou.tavern.protocol.crm.model.CrmOrderGjjsbdjDetail;
 import com.tuoyou.tavern.protocol.crm.model.CrmOrderGszcDetail;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,7 +84,7 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
                     crmOrderDljzDetail.setOrderId(crmOrderBusinessRelDTO.getOrderId());
                     crmOrderDljzDetail.setIsBegin(dljzDetail.getIsBegin());
                     crmOrderDljzDetail.setBeginDate(DateUtils.parseDate(dljzDetail.getDljzBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
-                    crmOrderDljzDetail.setEndDate(DateUtils.parseDate(dljzDetail.getDljzEndDate(), DateUtils.SIMPLE_8_FORMATTER));
+                    crmOrderDljzDetail.setEndDate(DateUtils.parseDate(StringUtils.replacePattern(dljzDetail.getDljzEndDate(),"/",""), DateUtils.SIMPLE_8_FORMATTER));
                     this.crmOrderDljzDetailService.save(crmOrderDljzDetail);
                     break;
                 case "BIZ_4":
@@ -134,7 +135,7 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
         crmOrderGjjsbdjDetail.setOrderId(crmOrderBusinessRelDTO.getOrderId());
         crmOrderGjjsbdjDetail.setBusinessId(crmOrderBusinessRelDTO.getBusinessId());
         crmOrderGjjsbdjDetail.setBeginDate(DateUtils.parseDate(detail.getGjjsbdjBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
-        crmOrderGjjsbdjDetail.setEndDate(DateUtils.parseDate(detail.getGjjsbdjBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
+        crmOrderGjjsbdjDetail.setEndDate(DateUtils.parseDate(StringUtils.replacePattern(detail.getGjjsbdjBeginDate(),"/",""), DateUtils.SIMPLE_8_FORMATTER));
         crmOrderGjjsbdjDetail.setEmployeeNum(detail.getEmployeeNum());
         this.crmOrderGjjsbdjDetailService.save(crmOrderGjjsbdjDetail);
     }

@@ -180,41 +180,47 @@
           <el-input v-model="dataForm.remark" auto-complete="off" style="width: 550px" placeholder="输入内容"></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="dljzForm" align="left" v-if="showHelpBookKeeping" :rules="dljzFormRules"
+      <el-form :inline="true" :model="dljzForm" align="left" v-if="showHelpBookKeeping"
                ref="dljzForm">
         <el-form>
-          <el-form-item label="代理记账" prop="bak" label-width="150px"/>
+          <el-form-item label="代理记账" label-width="150px"/>
         </el-form>
-        <el-form-item label="服务开始" label-width="150px" prop="isBegin">
+        <el-form-item label="服务开始时间" label-width="150px" prop="beginDate"
+                      :rules="{required: true, message: '请选择是否开始服务', trigger: 'change'}">
+          <el-date-picker v-model="dljzForm.beginDate" type="datetime" placeholder="选择日期时间"
+                          @change="dljzEndDateChange"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="服务期限(月)" label-width="150px" prop="months"
+                      :rules="{required: true, message: '请填写服务期限(月)', trigger: 'change'}">
+          <el-input v-model="dljzForm.months" placeholder="请输入服务期限(月)" @change="dljzEndDateChange"></el-input>
+        </el-form-item>
+        <el-form-item label="服务开始" label-width="150px" prop="isBegin"
+                      :rules="{required: true, message: '请填写服务开始', trigger: 'change'}">
           <el-select v-model="dljzForm.isBegin" clearable auto-complete="off" placeholder="请选择">
             <el-option label="未开始" value='0'></el-option>
             <el-option label="已开始" value='1'></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="服务开始时间" label-width="150px" prop="beginDate">
-          <el-date-picker v-model="dljzForm.beginDate" type="datetime" placeholder="选择日期时间"
-                          @change="dljzEndDateChange"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="服务期限(月)" label-width="150px" prop="months">
-          <el-input v-model="dljzForm.months" placeholder="请输入服务期限(月)" @change="dljzEndDateChange"></el-input>
-        </el-form-item>
         <el-form-item label="服务结束时间" label-width="150px" prop="endDate">
           <el-date-picker v-model="dljzForm.endDate" type="datetime" :disabled="true"></el-date-picker>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="djfwForm" align="left" v-if="showHelpPay" :rules="djfwFormRules" ref="djfwForm">
+      <el-form :inline="true" :model="djfwForm" align="left" v-if="showHelpPay" ref="djfwForm">
         <el-form>
           <el-form-item label="公积金代缴/社保代缴" label-width="150px">
           </el-form-item>
         </el-form>
-        <el-form-item label="服务开始时间" label-width="150px" prop="beginDate">
+        <el-form-item label="服务开始时间" label-width="150px" prop="beginDate"
+                      :rules="{required: true, message: '请填写服务开始时间', trigger: 'change'}">
           <el-date-picker v-model="djfwForm.beginDate" type="datetime" placeholder="选择日期时间"
                           @change="djfwEndDateChange"></el-date-picker>
         </el-form-item>
-        <el-form-item label="服务期限(月)" label-width="150px" prop="months">
+        <el-form-item label="服务期限(月)" label-width="150px" prop="months"
+                      :rules="{required: true, message: '请填写服务期限(月)', trigger: 'change'}">
           <el-input v-model="djfwForm.months" placeholder="请输入服务期限(月)" @change="djfwEndDateChange"></el-input>
         </el-form-item>
-        <el-form-item label="公司人数确认" label-width="150px" prop="confirmNum">
+        <el-form-item label="公司人数确认" label-width="150px" prop="confirmNum"
+                      :rules="{required: true, message: '请选择是否需要确认人数', trigger: 'change'}">
           <el-select v-model="djfwForm.confirmNum" clearable auto-complete="off" placeholder="请选择"
                      @change="djfwConfirmChange">
             <el-option label="已确认" value='1'></el-option>
@@ -228,12 +234,13 @@
           <el-date-picker v-model="djfwForm.endDate" type="datetime" :disabled="true"></el-date-picker>
         </el-form-item>
       </el-form>
-      <el-form :model="gszcForm" align="left" v-if="showHelpRegister" :rules="gszcFormRules" ref="gszcForm">
+      <el-form :model="gszcForm" align="left" v-if="showHelpRegister" ref="gszcForm">
         <el-form>
-          <el-form-item label="公司注册" prop="bak" label-width="200px">
+          <el-form-item label="公司注册" label-width="200px">
           </el-form-item>
         </el-form>
-        <el-form-item label="银行开户是否需要到场" label-width="200px" prop="absent">
+        <el-form-item label="银行开户是否需要到场" label-width="200px" prop="absent"
+                      :rules="{required: true, message: '请选择银行开户是否需要到场', trigger: 'change'}">
           <el-select v-model="gszcForm.absent" clearable auto-complete="off" placeholder="请选择银行开户是否需要到场">
             <el-option label="是" value='1'></el-option>
             <el-option label="否" value='0'></el-option>
@@ -295,46 +302,46 @@
         editLoading: false,
         dataFormRules: {
           business: [
-            {required: true, message: '请选择业务类型', trigger: 'blur'}
+            {required: true, message: '请选择业务类型', /*trigger: 'change'*/}
           ],
           company: [
-            {required: true, message: '请选择关联公司', trigger: 'blur'}
+            {required: true, message: '请选择关联公司', /*trigger: 'change'*/}
           ],
           owner: [
-            {required: true, message: '请选择对接人员', trigger: 'blur'}
+            {required: true, message: '请选择对接人员', /*trigger: 'change'*/}
           ],
           needThirdParty: [
-            {required: true, message: '请选择是否需要合作方', trigger: 'blur'}
+            {required: true, message: '请选择是否需要合作方', /*trigger: 'change'*/}
           ],
           businessTag: [
-            {required: true, message: '请选择业务标签', trigger: 'blur'}
+            {required: true, message: '请选择业务标签', /*trigger: 'change'*/}
           ],
         },
         dljzFormRules: {
           isBegin: [
-            {required: true, message: '请选择是否开始服务', trigger: 'blur'}
+            {required: true, message: '请选择是否开始服务', /*trigger: 'change'*/}
           ],
           months: [
-            {required: true, message: '请填写服务期限(月)', trigger: 'blur'}
+            {required: true, message: '请填写服务期限(月)', /*trigger: 'change'*/}
           ],
           beginDate: [
-            {required: true, message: '请选择服务开始时间', trigger: 'blur'}
+            {required: true, message: '请选择服务开始时间', /*trigger: 'change'*/}
           ],
         },
         djfwFormRules: {
           isBegin: [
-            {required: true, message: '请选择是否开始服务', trigger: 'blur'}
+            {required: true, message: '请选择是否开始服务', /*trigger: 'change'*/}
           ],
           confirmNum: [
-            {required: true, message: '请选择是否需要确认人数', trigger: 'blur'}
+            {required: true, message: '请选择是否需要确认人数', /*trigger: 'change'*/}
           ],
           beginDate: [
-            {required: true, message: '请选择服务开始时间', trigger: 'blur'}
+            {required: true, message: '请选择服务开始时间', /*trigger: 'change'*/}
           ],
         },
         gszcFormRules: {
           absent: [
-            {required: true, message: '请选择银行开户是否需要到场', trigger: 'blur'}
+            {required: true, message: '请选择银行开户是否需要到场', /*trigger: 'change'*/}
           ],
         },
         dljzForm: {
@@ -470,7 +477,10 @@
       },
       // 编辑
       submitForm: function () {
-        let dataFormValid = this.$refs.dataForm.validate();
+        let dataFormValid = ''
+        this.$refs.dataForm.validate((valid) => {
+          dataFormValid = valid;
+        });
         let label = {}
         label = this.bizDict.find(item => {
           return this.dataForm.business == item.id;
@@ -478,22 +488,36 @@
         let valid = '';
         switch (label.name) {
           case "代理记账":
-            valid = this.$refs.dljzForm.validate() && dataFormValid;
+            this.$refs.dljzForm.validate((bizValid) => {
+              valid = bizValid;
+            });
+            valid = valid && dataFormValid
             break;
           case "代缴公积金":
-            valid = this.$refs.djfwForm.validate() && dataFormValid;
+            this.$refs.djfwForm.validate((bizValid) => {
+              valid = bizValid;
+            });
+            valid && dataFormValid
             break;
           case "代缴社保":
-            valid = this.$refs.djfwForm.validate() && dataFormValid;
+            this.$refs.djfwForm.validate((bizValid) => {
+              valid = bizValid;
+            });
+            valid = valid && dataFormValid
             break;
           case "公司注册":
-            valid = this.$refs.gszcForm.validate() && dataFormValid;
+            this.$refs.gszcForm.validate((bizValid) => {
+              valid = bizValid;
+            });
+            valid = valid && dataFormValid
             break;
         }
         if (valid) {
           this.$confirm('确认提交吗？', '提示', {}).then(() => {
             this.editLoading = true
             let params = Object.assign({}, this.dataForm)
+            params.businessId = this.dataForm.business
+            params.thirdPartyId = this.dataForm.thirdParty
             params.orderId = this.dtlForm.orderId
             params.companyId = this.dataForm.company
             params.creatorId = sessionStorage.getItem("userId")
@@ -524,7 +548,6 @@
             params.gjjsbdjDetail = gjjsbdjDetail
             params.gszcDetail = gszcDetail
 
-            console.log(JSON.stringify(params))
             this.$api.customer.saveOrderBusiness(params).then((res) => {
               this.editLoading = false
               this.$message({message: '操作成功', type: 'success'})
@@ -560,9 +583,27 @@
         this.filterColumns = JSON.parse(JSON.stringify(this.columns));
       },
       selectBiz: function (e) {
+
         this.showHelpBookKeeping = false
         this.showHelpPay = false
         this.showHelpRegister = false
+        this.dljzForm = {
+          isBegin: '',
+          months: '',
+          beginDate: '',
+          endDate: ''
+        }
+        this.djfwForm = {
+          confirmNum: '',
+          employeeNum: '',
+          months: '',
+          beginDate: '',
+          endDate: ''
+        }
+        this.gszcForm = {
+          absent: '',
+          regLocationType: '',
+        }
         let label = this.bizDict.find(item => {
           return e == item.id;
         })
