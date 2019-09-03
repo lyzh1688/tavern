@@ -60,12 +60,12 @@
       </el-table-column>
       <el-table-column prop="endDate" label="到期时间" header-align="center" align="center">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
+      <!--<el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
         <template slot-scope="scope">
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
                      @click="handleDeleteBiz(scope.row)"/>
         </template>
-      </el-table-column>
+      </el-table-column>-->
     </el-table>
     <div class="toolbar" style="padding:10px;">
       <el-pagination layout="total, prev, pager, next, jumper" @current-change="handleBizCurrentChange"
@@ -121,7 +121,7 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-edit" label="修改客户" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-edit" label="修改员工" perms="sys:user:add" type="primary"
                      @click="handleStaffEdit(scope.row)"/>
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
                      @click="handleStaffDelete(scope.row)"/>

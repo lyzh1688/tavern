@@ -25,4 +25,65 @@
         and t2.root_node = t3.source_node
         and t1.business_id = #{businessId}
   </insert>
+    <select id="selectMyPendingWork">
+        SELECT
+        T3.CUSTOM_NAME customName,
+        T3.WANGWANG_ACCNT wangwangAccnt,
+        T2.COMPANY_NAME companyName,
+        T2.CITY city,
+        T2.DISTRICT district,
+        T1.REMARK remark,
+        T3.WEIXIN_NAME weixinName,
+        T4.BUSINESS_NAME businessName,
+        DATEDIFF(NOW(),T5.BEGIN_DATE) cost,
+        DATEDIFF(T5.END_DATE,NOW()) maxLeftDay,
+        T1.BUSINESS_TAG businessTag,
+        T1.CREATE_DATE createDate,
+        T3.CUSTOM_LEVEL customLevel,
+        T8.name curNodeName
+        FROM
+        crm.CRM_CUSTOM_ORDER_INFO T,
+        crm.CRM_ORDER_BUSINESS_REL T1,
+        crm.CRM_COMPANY_INFO T2,
+        crm.CRM_CUSTOM_BASIC_INFO T3,
+        crm.CRM_BUSINESS_DICT T4,
+        crm.CRM_COMPANY_BUSINESS T5,
+        work_flow.workflow_def_graph_business_rel T6,
+        work_flow.workflow_event T7,
+        work_flow.workflow_def_node T8
+        <where>
+            T.ORDER_ID = T1.ORDER_ID
+            AND T1.COMPANY_ID = T2.COMPANY_ID
+            AND T.CUSTOM_ID = T3.CUSTOM_ID
+            AND T1.BUSINESS_ID = T4.BUSINESS_ID
+            AND T1.BUSINESS_ID = T5.BUSINESS_ID
+            AND T1.BUSINESS_ID = T6.business_id
+            AND T7.cur_node_id = T8.node_id
+            AND (T7.event_owner = #{query.userId} or T7.cur_operator = #{query.userId})
+            <if test="query.city != null and query.city != ''">
+                and T2.CITY = #{query.city}
+            </if>
+            <if test="query.district != null and query.district != ''">
+                and T2.DISTRICT = #{query.district}
+            </if>
+            <if test="query.customName != null and query.customName != ''">
+                and T3.CUSTOM_NAME = #{query.customName}
+            </if>
+            <if test="query.curNodeName != null and query.curNodeName != ''">
+                and T8.name = #{query.curNodeName}
+            </if>
+            <if test="query.weixinName != null and query.weixinName != ''">
+                and T3.WEIXIN_NAME = #{query.weixinName}
+            </if>
+            <if test="query.createDate != null and query.createDate != ''">
+                and DATE_FORMAT(T1.CREATE_DATE,'%Y%m%d')  = #{query.createDate}
+            </if>
+            <if test="query.businessName != null and query.businessName != ''">
+                and T4.BUSINESS_NAME = #{query.businessName}
+            </if>
+            <if test="query.businessTag != null and query.businessTag != ''">
+                and T1.BUSINESS_TAG = #{query.businessTag}
+            </if>
+        </where>
+    </select>
 </mapper>

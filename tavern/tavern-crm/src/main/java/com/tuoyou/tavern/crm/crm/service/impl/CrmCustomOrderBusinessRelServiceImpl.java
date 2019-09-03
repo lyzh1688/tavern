@@ -1,21 +1,16 @@
 package com.tuoyou.tavern.crm.crm.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tuoyou.tavern.common.core.util.DateUtils;
 import com.tuoyou.tavern.common.core.util.UUIDUtil;
 import com.tuoyou.tavern.crm.crm.dao.CrmOrderBusinessRelMapper;
-import com.tuoyou.tavern.crm.crm.service.CrmCustomOrderBusinessRelService;
-import com.tuoyou.tavern.crm.crm.service.CrmOrderDljzDetailService;
-import com.tuoyou.tavern.crm.crm.service.CrmOrderGjjsbdjDetailService;
-import com.tuoyou.tavern.crm.crm.service.CrmOrderGszcDetailService;
+import com.tuoyou.tavern.crm.crm.service.*;
 import com.tuoyou.tavern.crm.workflow.service.WorkFlowEventService;
 import com.tuoyou.tavern.protocol.crm.dto.*;
-import com.tuoyou.tavern.protocol.crm.model.CrmOrderBusinessRel;
-import com.tuoyou.tavern.protocol.crm.model.CrmOrderDljzDetail;
-import com.tuoyou.tavern.protocol.crm.model.CrmOrderGjjsbdjDetail;
-import com.tuoyou.tavern.protocol.crm.model.CrmOrderGszcDetail;
+import com.tuoyou.tavern.protocol.crm.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -43,6 +38,8 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
     private CrmCustomOrderBusinessRelService crmCustomOrderBusinessRelService;
     @Autowired
     private WorkFlowEventService workFlowEventService;
+    @Autowired
+    private CrmCompanyBusinessInfoService crmCompanyBusinessInfoService;
 
 
     @Override
@@ -69,13 +66,18 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
             crmOrderBusinessRel.setEventId(eventId);
             crmOrderBusinessRel.setCreateDate(LocalDateTime.now());
             this.save(crmOrderBusinessRel);
+            CrmCompanyBusiness crmCompanyBusiness = new CrmCompanyBusiness();
+            crmCompanyBusiness.setBusinessId(crmOrderBusinessRelDTO.getBusinessId());
+            crmCompanyBusiness.setCompanyId(crmOrderBusinessRelDTO.getCompanyId());
+            crmCompanyBusiness.setIsValid("1");
+            crmCompanyBusiness.setUpdateDate(LocalDateTime.now());
             log.info("add new business {}", crmOrderBusinessRelDTO.getBusinessId());
             switch (crmOrderBusinessRelDTO.getBusinessId()) {
                 case "BIZ_1":
-                    this.cvtCrmOrderGjjsbdjDetail(crmOrderBusinessRelDTO, eventId);
+                    this.cvtCrmOrderGjjsbdjDetail(crmOrderBusinessRelDTO, eventId, crmCompanyBusiness);
                     break;
                 case "BIZ_2":
-                    this.cvtCrmOrderGjjsbdjDetail(crmOrderBusinessRelDTO, eventId);
+                    this.cvtCrmOrderGjjsbdjDetail(crmOrderBusinessRelDTO, eventId, crmCompanyBusiness);
                     break;
                 case "BIZ_3":
                     CrmOrderDljzDetail crmOrderDljzDetail = new CrmOrderDljzDetail();
@@ -84,8 +86,10 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
                     crmOrderDljzDetail.setOrderId(crmOrderBusinessRelDTO.getOrderId());
                     crmOrderDljzDetail.setIsBegin(dljzDetail.getIsBegin());
                     crmOrderDljzDetail.setBeginDate(DateUtils.parseDate(dljzDetail.getDljzBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
-                    crmOrderDljzDetail.setEndDate(DateUtils.parseDate(StringUtils.replacePattern(dljzDetail.getDljzEndDate(),"/",""), DateUtils.SIMPLE_8_FORMATTER));
+                    crmOrderDljzDetail.setEndDate(DateUtils.parseDate(StringUtils.replacePattern(dljzDetail.getDljzEndDate(), "/", ""), DateUtils.SIMPLE_8_FORMATTER));
                     this.crmOrderDljzDetailService.save(crmOrderDljzDetail);
+                    crmCompanyBusiness.setBeginDate(DateUtils.parseDateTime(dljzDetail.getDljzBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                    crmCompanyBusiness.setEndDate(DateUtils.parseDateTime(StringUtils.replacePattern(dljzDetail.getDljzEndDate(), "/", "") + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
                     break;
                 case "BIZ_4":
                     GszcDetail gszcDetail = crmOrderBusinessRelDTO.getGszcDetail();
@@ -97,6 +101,7 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
                     this.crmOrderGszcDetailService.save(crmOrderGszcDetail);
                     break;
             }
+            this.crmCompanyBusinessInfoService.save(crmCompanyBusiness);
         } catch (Exception e) {
             log.error("CrmCustomOrderBusinessRelServiceImpl-->saveOrderBusiness: {}", e.getMessage());
             throw e;
@@ -121,6 +126,8 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
                 this.crmOrderGszcDetailService.removeById(eventId);
                 break;
         }
+        this.crmCompanyBusinessInfoService.remove(Wrappers.<CrmCompanyBusiness>query().lambda().eq(CrmCompanyBusiness::getBusinessId, crmOrderBusinessRelDTO.getBusinessId())
+                .eq(CrmCompanyBusiness::getCompanyId, crmOrderBusinessRelDTO.getCompanyId()));
     }
 
     @Override
@@ -128,15 +135,17 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
         return this.baseMapper.selectCrmOrderBusinessPage(page, customCompanyOrderQueryDTO);
     }
 
-    private void cvtCrmOrderGjjsbdjDetail(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId) {
+    private void cvtCrmOrderGjjsbdjDetail(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId, CrmCompanyBusiness crmCompanyBusiness) {
         GjjsbdjDetail detail = crmOrderBusinessRelDTO.getGjjsbdjDetail();
         CrmOrderGjjsbdjDetail crmOrderGjjsbdjDetail = new CrmOrderGjjsbdjDetail();
         crmOrderGjjsbdjDetail.setEventId(eventId);
         crmOrderGjjsbdjDetail.setOrderId(crmOrderBusinessRelDTO.getOrderId());
         crmOrderGjjsbdjDetail.setBusinessId(crmOrderBusinessRelDTO.getBusinessId());
         crmOrderGjjsbdjDetail.setBeginDate(DateUtils.parseDate(detail.getGjjsbdjBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
-        crmOrderGjjsbdjDetail.setEndDate(DateUtils.parseDate(StringUtils.replacePattern(detail.getGjjsbdjBeginDate(),"/",""), DateUtils.SIMPLE_8_FORMATTER));
+        crmOrderGjjsbdjDetail.setEndDate(DateUtils.parseDate(StringUtils.replacePattern(detail.getGjjsbdjBeginDate(), "/", ""), DateUtils.SIMPLE_8_FORMATTER));
         crmOrderGjjsbdjDetail.setEmployeeNum(detail.getEmployeeNum());
         this.crmOrderGjjsbdjDetailService.save(crmOrderGjjsbdjDetail);
+        crmCompanyBusiness.setBeginDate(DateUtils.parseDateTime(detail.getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+        crmCompanyBusiness.setEndDate(DateUtils.parseDateTime(StringUtils.replacePattern(detail.getGjjsbdjEndDate(), "/", "") + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
     }
 }
