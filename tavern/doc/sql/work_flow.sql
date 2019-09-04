@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50560
 File Encoding         : 65001
 
-Date: 2019-09-02 07:28:10
+Date: 2019-09-04 23:43:29
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -124,6 +124,7 @@ CREATE TABLE `workflow_event` (
 -- ----------------------------
 -- Records of workflow_event
 -- ----------------------------
+INSERT INTO `workflow_event` VALUES ('63a69f219efc4ccb96e6b9013fb24d0e', 'g_dljz', 'g_dljz_node_cwzg', '8', '8', '2019-09-03 00:00:00');
 
 -- ----------------------------
 -- Table structure for workflow_event_dependency
@@ -172,6 +173,8 @@ CREATE TABLE `workflow_event_history` (
 -- ----------------------------
 -- Records of workflow_event_history
 -- ----------------------------
+INSERT INTO `workflow_event_history` VALUES ('63a69f219efc4ccb96e6b9013fb24d0e', 'g_dljz', 'g_dljz_node_sq', '2019-09-03', '2019-09-03', '1');
+INSERT INTO `workflow_event_history` VALUES ('63a69f219efc4ccb96e6b9013fb24d0e', 'g_dljz', 'g_dljz_node_cwzg', '2019-09-03', '2019-09-03', '8');
 
 -- ----------------------------
 -- Table structure for workflow_log_attachment

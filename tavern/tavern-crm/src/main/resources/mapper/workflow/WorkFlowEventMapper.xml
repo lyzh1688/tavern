@@ -25,7 +25,7 @@
         and t2.root_node = t3.source_node
         and t1.business_id = #{businessId}
   </insert>
-    <select id="selectMyPendingWork">
+    <select id="selectMyPendingWork" resultType="com.tuoyou.tavern.protocol.crm.model.MyTodoListVO">
         SELECT
         T3.CUSTOM_NAME customName,
         T3.WANGWANG_ACCNT wangwangAccnt,

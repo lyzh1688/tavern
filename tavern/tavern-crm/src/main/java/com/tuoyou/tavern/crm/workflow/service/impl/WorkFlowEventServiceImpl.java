@@ -1,10 +1,13 @@
 package com.tuoyou.tavern.crm.workflow.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dfzq.obgear.framework.spring.db.aspect.anno.TargetDataSource;
 import com.tuoyou.tavern.common.core.util.DateUtils;
 import com.tuoyou.tavern.crm.workflow.dao.WorkFlowEventMapper;
+import com.tuoyou.tavern.crm.workflow.dto.MyToDoListDTO;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEvent;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEventDependency;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEventHistory;
@@ -12,6 +15,7 @@ import com.tuoyou.tavern.crm.workflow.service.WorkFlowEventDependencyService;
 import com.tuoyou.tavern.crm.workflow.service.WorkFlowEventHistoryService;
 import com.tuoyou.tavern.crm.workflow.service.WorkFlowEventService;
 import com.tuoyou.tavern.protocol.crm.dto.CrmOrderBusinessRelDTO;
+import com.tuoyou.tavern.protocol.crm.model.MyTodoListVO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,5 +95,11 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
     @Override
     public int saveWorkFlowEvent(WorkFlowEvent workFlowEvent, String businessId) {
         return this.baseMapper.insertWorkFlowEvent(workFlowEvent, businessId);
+    }
+
+    @TargetDataSource(name = "workflow")
+    @Override
+    public IPage<MyTodoListVO> getMyPendingWork(Page page, MyToDoListDTO myToDoListDTO) {
+        return this.baseMapper.selectMyPendingWork(page, myToDoListDTO);
     }
 }

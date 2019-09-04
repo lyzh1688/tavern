@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50560
 File Encoding         : 65001
 
-Date: 2019-09-02 07:27:23
+Date: 2019-09-04 23:43:13
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -103,7 +103,7 @@ CREATE TABLE `CRM_COMPANY_BUSINESS` (
 -- ----------------------------
 -- Records of CRM_COMPANY_BUSINESS
 -- ----------------------------
-INSERT INTO `CRM_COMPANY_BUSINESS` VALUES ('A5B24848E32D47FD9472DE4323D61DA2', 'BIZ_1', '2019-08-26', '2019-08-30', '2019-08-26', '1');
+INSERT INTO `CRM_COMPANY_BUSINESS` VALUES ('A5B24848E32D47FD9472DE4323D61DA2', 'BIZ_3', '2019-09-01', '2019-10-03', '2019-08-26', '1');
 
 -- ----------------------------
 -- Table structure for CRM_COMPANY_INFO
@@ -348,6 +348,7 @@ CREATE TABLE `CRM_ORDER_BUSINESS_REL` (
 -- ----------------------------
 -- Records of CRM_ORDER_BUSINESS_REL
 -- ----------------------------
+INSERT INTO `CRM_ORDER_BUSINESS_REL` VALUES ('63a69f219efc4ccb96e6b9013fb24d0e', '0001', 'BIZ_3', 'A5B24848E32D47FD9472DE4323D61DA2', '8', '1', '4', '1212', '加急', null, '我是马云。你想加入阿里巴巴吗？工资随便开', '2019-09-03 00:09:43', '我是财务主管2');
 
 -- ----------------------------
 -- Table structure for CRM_ORDER_DLJZ_DETAIL
@@ -365,6 +366,7 @@ CREATE TABLE `CRM_ORDER_DLJZ_DETAIL` (
 -- ----------------------------
 -- Records of CRM_ORDER_DLJZ_DETAIL
 -- ----------------------------
+INSERT INTO `CRM_ORDER_DLJZ_DETAIL` VALUES ('63a69f219efc4ccb96e6b9013fb24d0e', '0001', '2019-09-03', '2019-10-03', '1');
 
 -- ----------------------------
 -- Table structure for CRM_ORDER_GJJSBDJ_DETAIL
