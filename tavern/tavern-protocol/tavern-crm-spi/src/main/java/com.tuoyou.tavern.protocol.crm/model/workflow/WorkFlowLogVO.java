@@ -17,7 +17,7 @@ public class WorkFlowLogVO {
 
     private String operator;
 
-    private String operatorId;
+    private String operatorName;
 
     private String createTime;
 

@@ -15,7 +15,7 @@ public class WorkFlowLogMessage extends Model<WorkFlowLogMessage> {
 
     private String operator;
 
-    private String operatorId;
+    private String operatorName;
 
     private String createTime;
 

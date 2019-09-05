@@ -2,14 +2,15 @@ package com.tuoyou.tavern.crm.endpoint;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowLogMessageDTO;
+import com.tuoyou.tavern.crm.workflow.service.WorkFlowEventService;
 import com.tuoyou.tavern.crm.workflow.service.WorkFlowLogMessageService;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.MyToDoListDTO;
-import com.tuoyou.tavern.crm.workflow.service.WorkFlowEventService;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.WorkFlowLogQueryDTO;
 import com.tuoyou.tavern.protocol.crm.response.WorkFlowLogPageResponse;
 import com.tuoyou.tavern.protocol.crm.response.WorkFlowTodoListResponse;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -44,8 +45,10 @@ public class WorkFlowEventEndpoint {
      * 备注添加
      */
     @PostMapping
-    public TavernResponse saveWorkFlowLog(@RequestBody WorkFlowLogMessageDTO workFlowLogMessageDTO) {
-
+    public TavernResponse saveWorkFlowLog(@RequestBody WorkFlowLogMessageDTO workFlowLogMessageDTO) throws Exception {
+        if(StringUtils.isNoneEmpty(workFlowLogMessageDTO.getMessage())&&!workFlowLogMessageDTO.getFiles().isEmpty()){
+            this.workFlowLogMessageService.saveWorkFlowLog(workFlowLogMessageDTO);
+        }
         return new TavernResponse();
     }
 
@@ -53,8 +56,6 @@ public class WorkFlowEventEndpoint {
     /**
      * 更新流程
      */
-    //更新event状态
-    //更新eventhis状态
-    //判断是否有dependency，发起下一个任务
+
 
 }

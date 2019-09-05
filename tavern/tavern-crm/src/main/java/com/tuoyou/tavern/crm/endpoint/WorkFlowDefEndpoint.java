@@ -24,7 +24,7 @@ public class WorkFlowDefEndpoint {
     private HrmUserDictService hrmUserDictService;
 
     /**
-     * 查询节点
+     * 查询下一节点
      */
     @GetMapping("/nextNode")
     public WorkFlowDefNodeResponse getWorkFlowNode(WorkFlowNodeQueryDTO workFlowNodeQueryDTO) {

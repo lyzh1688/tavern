@@ -29,4 +29,9 @@ public class WorkFlowEventHistoryServiceImpl extends ServiceImpl<WorkFlowEventHi
         return this.baseMapper.insertWorkFlowEventHistory(workFlowEventHistory, businessId);
     }
 
+    @TargetDataSource(name = "workflow")
+    @Override
+    public boolean save(WorkFlowEventHistory entity) {
+        return super.save(entity);
+    }
 }

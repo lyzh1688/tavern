@@ -8,6 +8,8 @@ import com.tuoyou.tavern.crm.workflow.service.WorkFlowEventDependencyService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
+
 /**
  * Code Monkey: 何彪 <br>
  * Dev Time: 2019/08/11 <br>
@@ -20,5 +22,11 @@ public class WorkFlowEventDependencyServiceImpl extends ServiceImpl<WorkFlowEven
     @Override
     public boolean save(WorkFlowEventDependency entity) {
         return super.save(entity);
+    }
+
+    @TargetDataSource(name = "workflow")
+    @Override
+    public WorkFlowEventDependency getById(Serializable id) {
+        return super.getById(id);
     }
 }
