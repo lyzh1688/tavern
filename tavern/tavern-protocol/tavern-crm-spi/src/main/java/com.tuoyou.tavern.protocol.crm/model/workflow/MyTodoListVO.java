@@ -1,4 +1,4 @@
-package com.tuoyou.tavern.protocol.crm.model;
+package com.tuoyou.tavern.protocol.crm.model.workflow;
 
 import lombok.Data;
 

@@ -7,10 +7,13 @@ import com.tuoyou.tavern.crm.workflow.dao.WorkFlowDefNodeMapper;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowDefNode;
 import com.tuoyou.tavern.crm.workflow.service.WorkFlowDefNodeService;
 import com.tuoyou.tavern.protocol.common.TavernDictResponse;
+import com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowDefNodeVO;
+import com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowNodeQueryDTO;
 import com.tuoyou.tavern.protocol.hrm.spi.HrmUserDictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -40,5 +43,11 @@ public class WorkFlowDefNodeServiceImpl extends ServiceImpl<WorkFlowDefNodeMappe
     @Override
     public WorkFlowDefNode getWorkFlowOwnerInfoByBusiness(String business) {
         return this.baseMapper.selectWorkFlowDefNodeByBusiness(business);
+    }
+
+    @TargetDataSource(name = "workflow")
+    @Override
+    public List<WorkFlowDefNodeVO> getWorkFlowDefNode(WorkFlowNodeQueryDTO workFlowNodeQueryDTO) {
+        return this.baseMapper.selectWorkFlowDefNode(workFlowNodeQueryDTO);
     }
 }

@@ -15,6 +15,8 @@ public class WorkFlowLogMessage extends Model<WorkFlowLogMessage> {
 
     private String operator;
 
+    private String operatorId;
+
     private String createTime;
 
     private String message;
@@ -22,5 +24,7 @@ public class WorkFlowLogMessage extends Model<WorkFlowLogMessage> {
     private String eventId;
 
     private String hasAttachment;
+
+    private String attachmentsPath;
 
 }

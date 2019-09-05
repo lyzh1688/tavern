@@ -4,39 +4,25 @@
   <resultMap id="BaseResultMap" type="com.tuoyou.tavern.crm.workflow.entity.WorkFlowLogMessage">
     <id column="log_id" jdbcType="VARCHAR" property="logId" />
     <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="operator_id" jdbcType="VARCHAR" property="operatorId" />
     <result column="create_time" jdbcType="VARCHAR" property="createTime" />
     <result column="message" jdbcType="VARCHAR" property="message" />
     <result column="event_id" jdbcType="VARCHAR" property="eventId" />
-    <result column="has_attatchment" jdbcType="VARCHAR" property="hasAttatchment" />
+    <result column="has_attachment" jdbcType="VARCHAR" property="hasAttachment" />
+    <result column="attachments_path" jdbcType="VARCHAR" property="attachmentsPath" />
   </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from workflow_log_message
-    where log_id = #{logId,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowLogMessage">
-    insert into workflow_log_message (log_id, operator, create_time, 
-      message, event_id, has_attatchment
-      )
-    values (#{logId,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, 
-      #{message,jdbcType=VARCHAR}, #{eventId,jdbcType=VARCHAR}, #{hasAttatchment,jdbcType=VARCHAR}
-      )
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowLogMessage">
-    update workflow_log_message
-    set operator = #{operator,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=VARCHAR},
-      message = #{message,jdbcType=VARCHAR},
-      event_id = #{eventId,jdbcType=VARCHAR},
-      has_attatchment = #{hasAttatchment,jdbcType=VARCHAR}
-    where log_id = #{logId,jdbcType=VARCHAR}
-  </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select log_id, operator, create_time, message, event_id, has_attatchment
+  <select id="selectWorkFlowLogMessagePage" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowLogVO">
+    select
+    log_id logId,
+    operator,
+    operator_id operatorId,
+    create_time createTime,
+    message,
+    event_id eventId,
+    has_attachment hasAttachment,
+    attachments_path attachmentsPath
     from workflow_log_message
-    where log_id = #{logId,jdbcType=VARCHAR}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select log_id, operator, create_time, message, event_id, has_attatchment
-    from workflow_log_message
+    where event_id = #{eventId}
+    order by create_time desc
   </select>
 </mapper>

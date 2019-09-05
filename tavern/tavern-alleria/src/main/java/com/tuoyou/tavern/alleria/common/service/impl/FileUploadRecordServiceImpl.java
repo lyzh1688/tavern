@@ -8,8 +8,7 @@ import com.tuoyou.tavern.alleria.common.dao.FileUploadRecordMapper;
 import com.tuoyou.tavern.alleria.configuration.TTLContext;
 import com.tuoyou.tavern.alleria.util.FileTransfer;
 import com.tuoyou.tavern.common.core.util.DateUtils;
-import com.tuoyou.tavern.common.core.util.UUIDUtil;
-import com.tuoyou.tavern.invoice.common.libs.utils.FileUtils;
+import com.tuoyou.tavern.common.core.util.FileUtils;
 import com.tuoyou.tavern.protocol.alleria.common.FileUploadStatus;
 import com.tuoyou.tavern.protocol.alleria.dto.FileUploadDTO;
 import com.tuoyou.tavern.alleria.common.service.FileUploadRecordService;
@@ -21,12 +20,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 

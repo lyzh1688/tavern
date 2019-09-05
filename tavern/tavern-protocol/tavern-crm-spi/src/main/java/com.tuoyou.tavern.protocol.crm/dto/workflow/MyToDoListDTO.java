@@ -1,4 +1,4 @@
-package com.tuoyou.tavern.crm.workflow.dto;
+package com.tuoyou.tavern.protocol.crm.dto.workflow;
 
 import lombok.Data;
 

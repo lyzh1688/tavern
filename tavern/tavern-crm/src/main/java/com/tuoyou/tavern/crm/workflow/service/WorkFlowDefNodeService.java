@@ -3,6 +3,10 @@ package com.tuoyou.tavern.crm.workflow.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowDefNode;
 import com.tuoyou.tavern.protocol.common.TavernDictResponse;
+import com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowDefNodeVO;
+import com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowNodeQueryDTO;
+
+import java.util.List;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -13,5 +17,7 @@ public interface WorkFlowDefNodeService extends IService<WorkFlowDefNode> {
     TavernDictResponse getWorkFlowOwnerInfo(String business);
 
     WorkFlowDefNode getWorkFlowOwnerInfoByBusiness(String business);
+
+    List<WorkFlowDefNodeVO> getWorkFlowDefNode(WorkFlowNodeQueryDTO workFlowNodeQueryDTO);
 
 }

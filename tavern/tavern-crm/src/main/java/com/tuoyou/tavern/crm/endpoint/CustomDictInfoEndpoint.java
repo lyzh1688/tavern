@@ -111,4 +111,5 @@ public class CustomDictInfoEndpoint {
                 }).collect(Collectors.toList());
         return new TavernDictResponse(dictList);
     }
+
 }

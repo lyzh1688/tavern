@@ -12,7 +12,15 @@
         from workflow_def_node t1,workflow_def_graph t2,workflow_def_graph_business_rel t3,workflow_def_edge t4
         where t1.node_id = t4.target_node
         and t2.graph_id = t3.graph_id
-		and t2.root_node = t4.source_node
+        and t2.root_node = t4.source_node
         and t3.business_id = #{business}
+    </select>
+    <select id="selectWorkFlowDefNode" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowDefNodeVO">
+        SELECT t3.graph_id graphId,t3.node_id nodeId,t3.name,t3.role FROM workflow_def_graph_business_rel t1,
+        workflow_def_edge t2,workflow_def_node t3
+        where t1.graph_id = t2.graph_id
+        and t2.target_node = t3.node_id
+        and t1.business_id = #{query.businessId}
+        and t2.source_node = #{query.curNode}
     </select>
 </mapper>

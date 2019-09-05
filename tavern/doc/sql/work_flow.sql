@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 119.3.19.171
-Source Server Version : 50560
-Source Host           : 119.3.19.171:3306
+Source Server         : localhost
+Source Server Version : 80013
+Source Host           : localhost:3306
 Source Database       : work_flow
 
 Target Server Type    : MYSQL
-Target Server Version : 50560
+Target Server Version : 80013
 File Encoding         : 65001
 
-Date: 2019-09-04 23:43:29
+Date: 2019-09-05 18:26:01
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -198,11 +198,13 @@ CREATE TABLE `workflow_log_attachment` (
 DROP TABLE IF EXISTS `workflow_log_message`;
 CREATE TABLE `workflow_log_message` (
   `log_id` varchar(45) NOT NULL,
+  `operator_id` varchar(45) DEFAULT NULL,
   `operator` varchar(45) DEFAULT NULL,
   `create_time` varchar(45) DEFAULT NULL,
   `message` varchar(45) DEFAULT NULL,
   `event_id` varchar(45) DEFAULT NULL,
-  `has_attatchment` varchar(1) DEFAULT NULL,
+  `has_attatchment` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '0',
+  `attachments_path` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='流程日志表';
 

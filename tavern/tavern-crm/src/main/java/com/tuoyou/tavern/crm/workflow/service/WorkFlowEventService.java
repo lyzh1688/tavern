@@ -3,10 +3,10 @@ package com.tuoyou.tavern.crm.workflow.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.tuoyou.tavern.crm.workflow.dto.MyToDoListDTO;
+import com.tuoyou.tavern.protocol.crm.dto.workflow.MyToDoListDTO;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEvent;
 import com.tuoyou.tavern.protocol.crm.dto.CrmOrderBusinessRelDTO;
-import com.tuoyou.tavern.protocol.crm.model.MyTodoListVO;
+import com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO;
 
 /**
  * Code Monkey: 何彪 <br>

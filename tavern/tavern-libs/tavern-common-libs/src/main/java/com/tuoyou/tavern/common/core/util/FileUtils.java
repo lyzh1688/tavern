@@ -1,4 +1,4 @@
-package com.tuoyou.tavern.invoice.common.libs.utils;
+package com.tuoyou.tavern.common.core.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
