@@ -2,6 +2,8 @@ package com.tuoyou.tavern.protocol.crm.model.workflow;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * 功能说明: <br>
  * 系统说明: <br>
@@ -14,18 +16,13 @@ import lombok.Data;
 @Data
 public class WorkFlowLogVO {
     private String logId;
-
     private String operator;
-
     private String operatorName;
-
     private String createTime;
-
     private String message;
-
     private String eventId;
-
     private String hasAttachment;
-
     private String attachmentsPath;
+    private String hasRefund;
+    private BigDecimal refundFee;
 }

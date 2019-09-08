@@ -10,6 +10,8 @@
     <result column="event_id" jdbcType="VARCHAR" property="eventId" />
     <result column="has_attachment" jdbcType="VARCHAR" property="hasAttachment" />
     <result column="attachments_path" jdbcType="VARCHAR" property="attachmentsPath" />
+    <result column="has_refund" jdbcType="VARCHAR" property="hasRefund" />
+    <result column="refund_fee" jdbcType="DECIMAL" property="refundFee" />
   </resultMap>
   <select id="selectWorkFlowLogMessagePage" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowLogVO">
     select
@@ -20,9 +22,11 @@
     message,
     event_id eventId,
     has_attachment hasAttachment,
-    attachments_path attachmentsPath
+    attachments_path attachmentsPath,
+    has_refund hasRefund,
+    refund_fee refundFee
     from workflow_log_message
-    where event_id = #{eventId}
+    where event_id = #{query.eventId}
     order by create_time desc
   </select>
 </mapper>

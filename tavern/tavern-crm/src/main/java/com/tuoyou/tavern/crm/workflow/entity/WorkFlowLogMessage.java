@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("workflow_log_message")
@@ -26,5 +28,7 @@ public class WorkFlowLogMessage extends Model<WorkFlowLogMessage> {
     private String hasAttachment;
 
     private String attachmentsPath;
+    private String hasRefund;
+    private BigDecimal refundFee;
 
 }

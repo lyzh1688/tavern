@@ -2,183 +2,221 @@
   <div class="page-container">
     <el-row>
       <el-col :span="24" align="left">
-        <p><span ></span>我的待办：
+        <p><span></span>我的待办：
         </p>
       </el-col>
     </el-row>
     <!--工具栏-->
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
-      <el-form :inline="true" :model="filters" :size="size"  align="left">
+      <el-form :inline="true" :model="filters" :size="size" align="left">
         <el-form-item label="市" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入旺旺账号"></el-input>
+          <el-input v-model="filters.city" placeholder="请输入城市"></el-input>
         </el-form-item>
         <el-form-item label="区" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入区域"></el-input>
+          <el-input v-model="filters.district" placeholder="请输入区域"></el-input>
         </el-form-item>
         <el-form-item label="公司名称" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入公司名称"></el-input>
+          <el-input v-model="filters.companyName" placeholder="请输入公司名称"></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" :size="size"  align="left">
+      <el-form :inline="true" :model="filters" :size="size" align="left">
         <el-form-item label="客户名称" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入客户名称"></el-input>
+          <el-input v-model="filters.customName" placeholder="请输入客户名称"></el-input>
         </el-form-item>
         <el-form-item label="当前流程" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入当前流程名"></el-input>
+          <el-input v-model="filters.curNodeName" placeholder="请输入当前流程名"></el-input>
         </el-form-item>
         <el-form-item label="客户级别" label-width="100px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择客户等级" >
-            <el-option label="VVIP" value='0'></el-option>
-            <el-option label="VIP" value='1'></el-option>
-            <el-option label="高级客户" value='2'></el-option>
-            <el-option label="普通客户" value='3'></el-option>
+          <el-select v-model="filters.customLevel" clearable auto-complete="off" placeholder="请选择客户等级">
+            <el-option label="VVIP" value='VVIP'></el-option>
+            <el-option label="VIP" value='VIP'></el-option>
+            <el-option label="高级客户" value='高级客户'></el-option>
+            <el-option label="普通客户" value='普通客户'></el-option>
           </el-select>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" :size="size"  align="left">
+      <el-form :inline="true" :model="filters" :size="size" align="left">
         <el-form-item label="微信昵称" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入微信昵称"></el-input>
+          <el-input v-model="filters.weixinName" placeholder="请输入微信昵称"></el-input>
         </el-form-item>
         <el-form-item label="业务创建时间" label-width="100px">
-          <el-date-picker v-model="filters.startTradeDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
+          <el-date-picker v-model="filters.createDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
         </el-form-item>
       </el-form>
       <el-form :inline="true" :model="filters" :size="size" align="left">
         <el-form-item label="业务类型" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入业务类型"></el-input>
+          <el-input v-model="filters.businessName" placeholder="请输入业务类型"></el-input>
         </el-form-item>
         <el-form-item label="紧急程度" label-width="100px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择紧急程度" >
-            <el-option label="重要" value='0'></el-option>
-            <el-option label="紧急" value='1'></el-option>
-            <el-option label="一般" value='2'></el-option>
+          <el-select v-model="filters.businessTag" clearable auto-complete="off" placeholder="请选择紧急程度">
+            <el-option label="加急" value='加急'></el-option>
+            <el-option label="一般" value='一般'></el-option>
+            <el-option label="投诉" value='投诉'></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item >
+        <el-form-item>
           <kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary"
                      @click="findPage(null)"/>
         </el-form-item>
       </el-form>
     </div>
 
-    <el-table :data="pageResult.content" stripe stripe height="600" size="mini" style="width: 100%;" v-loading="loading">
-      <el-table-column prop="id" header-align="center" align="center" label="客户ID" v-if="false">
+    <el-table :data="tableData" stripe stripe height="500" size="mini" style="width: 100%;"
+              v-loading="loading">
+      <el-table-column prop="eventId" header-align="center" align="center" label="事件ID" v-if="false">
       </el-table-column>
-      <el-table-column prop="name" label="客户姓名" header-align="center" align="center">
+      <el-table-column prop="customName" label="客户姓名" header-align="center" align="center">
       </el-table-column>
-      <el-table-column prop="aliAccnt" label="旺旺账号" header-align="center" align="center">
+      <el-table-column prop="wangwangAccnt" label="旺旺账号" header-align="center" align="center">
       </el-table-column>
-      <el-table-column prop="comName" label="公司名称" header-align="center" align="center">
+      <el-table-column prop="companyName" label="公司名称" header-align="center" align="center">
       </el-table-column>
       <el-table-column prop="city" label="市" header-align="center" align="center">
       </el-table-column>
       <el-table-column prop="district" label="区" header-align="center" align="center">
       </el-table-column>
-      <el-table-column prop="content" label="服务内容/备注" header-align="center" align="center">
+      <el-table-column prop="remark" label="服务内容/备注" header-align="center" align="center" width="300px">
       </el-table-column>
-      <el-table-column prop="weChatName" label="微信昵称" header-align="center" align="center">
+      <el-table-column prop="weixinName" label="微信昵称" header-align="center" align="center">
       </el-table-column>
-      <el-table-column prop="bizType" label="业务类型" header-align="center" align="center">
+      <el-table-column prop="businessName" label="业务类型" header-align="center" align="center">
       </el-table-column>
       <el-table-column prop="cost" label="耗时(天)" header-align="center" align="center">
       </el-table-column>
-      <el-table-column prop="emeLevel" label="紧急程度" header-align="center" align="center">
+      <el-table-column prop="businessTag" label="紧急程度" header-align="center" align="center">
       </el-table-column>
-      <el-table-column prop="maxDays" label="最大天数" header-align="center" align="center">
+      <el-table-column prop="maxLeftDay" label="最大剩余天数" header-align="center" align="center">
       </el-table-column>
-      <el-table-column prop="createTime" label="创建时间" header-align="center" align="center">
+      <el-table-column prop="createDate" label="创建时间" header-align="center" align="center" width="200px">
       </el-table-column>
-      <el-table-column prop="curProcess" label="当前流程" header-align="center" align="center">
+      <el-table-column prop="curNodeName" label="当前流程" header-align="center" align="center">
       </el-table-column>
-      <el-table-column prop="customerLevel" label="客户级别" header-align="center" align="center">
+      <el-table-column prop="customLevel" label="客户级别" header-align="center" align="center">
       </el-table-column>
-      <el-table-column fixed="right"label="操作" header-align="center" align="center" width="500">
+      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
         <template slot-scope="scope">
           <kt-button icon="fa fa-gears" label="流程日志" perms="sys:user:add" type="primary"
                      @click="showWorkFlow"/>
           <kt-button icon="fa fa-plus" label="添加备注" perms="sys:user:add" type="primary"
-                     @click="handleBak(scope.row)"/>
-         <!-- <kt-button icon="fa fa-retweet" label="客户详情" perms="sys:user:add" type="primary"
-                     @click="handleDtl"/>-->
+                     @click="handleLog(scope.row)"/>
+          <!-- <kt-button icon="fa fa-retweet" label="客户详情" perms="sys:user:add" type="primary"
+                      @click="handleDtl"/>-->
           <kt-button icon="fa fa-arrow-right" label="下一步" perms="sys:user:add" type="primary"
                      @click="handleNext(scope.row)"/>
         </template>
       </el-table-column>
     </el-table>
     <div class="toolbar" style="padding:10px;">
-      <el-pagination layout="total, prev, pager, next, jumper"
-                     @current-change="handleCurrentChange"
-                     :current-page="pageRequest.pageNum"
-                     :page-size="pageRequest.pageSize"
-                     :total="totalSize" style="float:right;">
+      <el-pagination layout="total, prev, pager, next, jumper" @current-change="handleCurrentChange"
+                     :current-page="pageRequest.current" :page-size="pageRequest.size" :total="total"
+                     style="float:right;">
       </el-pagination>
     </div>
     <!--新增编辑界面-->
     <el-dialog title="添加备注" width="60%" :visible.sync="dialogVisible" :close-on-click-modal="false">
       <el-form :model="dataForm" label-width="80px" :rules="dataFormRules" ref="dataForm" :size="size"
                label-position="center" align="center">
-        <el-form-item label="当前流程: " prop="curProcess" label-width="100px">
-          <span style="text-align: left;float: left;color: #a71d5d">{{dataForm.curProcess}}</span>
+        <el-form-item label="当前流程: " prop="curNodeName" label-width="100px">
+          <span style="text-align: left;float: left;color: #a71d5d">{{dataForm.curNodeName}}</span>
         </el-form-item>
-      </el-form>
-      <el-form  :size="size" label-position="center" align="left">
-        <el-form-item label="历史备注: " prop="id" label-width="100px">
-          <el-table :data="bakHistory.content" stripe size="mini" style="width: 100%;" v-loading="loading"
-                    element-loading-text="$t('action.loading')">
+        <el-form-item label="历史备注:" prop="bakHistory" label-width="100px">
+          <el-table :data="dataForm.logHistory" stripe size="mini" style="width: 100%;" v-loading="logHisLoading"
+                    element-loading-text="$t('action.loading')" height="300">
             <el-table-column
-              prop="content" header-align="center" align="center"  label="备注内容">
+              prop="logId" header-align="center" align="center" label="备注Id" v-if="false">
             </el-table-column>
             <el-table-column
-              prop="time" header-align="center" align="center"  label="备注时间">
+              prop="eventId" header-align="center" align="center" label="eventId" v-if="false">
             </el-table-column>
             <el-table-column
-              prop="writer" header-align="center" align="center" label="填写人">
+              prop="operator" header-align="center" align="center" label="操作人Id" v-if="false">
             </el-table-column>
             <el-table-column
-              prop="link" header-align="center" align="center" label="附件链接">
+              prop="operatorName" header-align="center" align="center" label="操作人">
+            </el-table-column>
+            <el-table-column
+              prop="createTime" header-align="center" align="center" label="备注时间">
+            </el-table-column>
+            <el-table-column
+              prop="message" header-align="center" align="center" label="备注内容">
+            </el-table-column>
+            <el-table-column
+              prop="refundFee" header-align="center" align="center" label="退款">
+            </el-table-column>
+            <el-table-column
+              prop="attachmentsPath" header-align="center" align="center" label="附件地址">
               <template slot-scope="scope1">
-                <a :href="scope1.row.link" target="_blank">{{scope1.row.link}}</a>
+                <a :href="scope1.row.attachmentsPath" target="_blank">{{scope1.row.attachmentsPath}}</a>
               </template>
             </el-table-column>
           </el-table>
+          <div class="toolbar" style="padding:10px;">
+            <el-pagination layout="total, prev, pager, next, jumper" @current-change="handleLogHisCurrentChange"
+                           :current-page="logHisPageRequest.current" :page-size="logHisPageRequest.size"
+                           :total="logHisTotal"
+                           style="float:right;">
+            </el-pagination>
+          </div>
         </el-form-item>
-      </el-form>
-      <el-form :inline="true" :model="filters" :size="size"  align="left">
         <el-form-item label="备注: " label-width="100px">
-          <el-input type="textarea" v-model="filters.desc" style="width: 500px"></el-input>
+          <el-input type="textarea" v-model="dataForm.message" style="width: 600px;float: left"></el-input>
         </el-form-item>
-      </el-form>
-      <el-form :inline="true" :model="filters" :size="size"  align="left">
         <el-form-item label="微信截图: " label-width="100px">
-          <el-upload
-            action="https://jsonplaceholder.typicode.com/posts/"
+          <!--    ref="uploadvideo"
+              :action="upload_url"
+              :auto-upload="false"
+              :before-upload="newVideo"
+              accept=".mp4"-->
+
+          <!--<el-upload
+            action="customize"
+            ref="uploadFiles"
+            accept='image/jpeg,image/gif,image/png'
+            :auto-upload="false"
             list-type="picture-card"
+            :on-change="handleChange"
             :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove">
+            :on-remove="handleRemove"
+            :http-request="handleSendUploadRequest"
+            style="float: left">
+            <i class="el-icon-plus"></i>
+          </el-upload>-->
+          <el-upload
+            ref="upload"
+            :action="uploadUrl"
+            name="attach"
+            list-type="picture-card"
+            :on-remove="handleRemove"
+            :file-list="fileList"
+            :auto-upload="false"
+            :on-change="handleChange"
+            :before-upload="handleBeforeUpload"
+            :http-request="handleSendUploadRequest"
+            style="float: left">
             <i class="el-icon-plus"></i>
           </el-upload>
-          <el-dialog :visible.sync="pictureDialogVisible" >
-            <el-image :src="dialogImageUrl" alt="" />
+          <el-dialog :visible.sync="pictureDialogVisible">
+            <el-image :src="dialogImageUrl" alt=""/>
           </el-dialog>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button :size="size" @click.native="dialogVisible = false">{{$t('action.cancel')}}</el-button>
-        <el-button :size="size" type="primary" @click.native="dialogVisible = false" :loading="editLoading">
+        <el-button :size="size" type="primary" @click.native="submitLogForm" :loading="editLoading">
           {{$t('action.submit')}}
         </el-button>
       </div>
     </el-dialog>
-    <el-dialog  width="40%" :visible.sync="nextDialogVisible" :close-on-click-modal="false">
+    <el-dialog width="40%" :visible.sync="nextDialogVisible" :close-on-click-modal="false">
       <el-form :model="nextForm" label-width="80px" :rules="dataFormRules" ref="nextForm" :size="size"
                label-position="center" align="center">
         <el-form-item label="当前流程: " prop="curProcess" label-width="100px">
           <span style="text-align: left;float: left;color: #a71d5d">{{nextForm.curProcess}}</span>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" :size="size"  align="left">
+      <el-form :inline="true" :model="filters" :size="size" align="left">
         <el-form-item label="下一流程" label-width="100px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择下一流程" >
+          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择下一流程">
             <el-option label="社保代缴" value='0'></el-option>
             <el-option label="社保代开" value='1'></el-option>
             <el-option label="公积金代缴" value='2'></el-option>
@@ -186,7 +224,7 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" :size="size"  align="left">
+      <el-form :inline="true" :model="filters" :size="size" align="left">
         <el-form-item label="对接人员" label-width="100px">
           <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择">
             <el-option label="张三丰" value='0'></el-option>
@@ -196,12 +234,12 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" :size="size"  align="left">
+      <el-form :inline="true" :model="filters" :size="size" align="left">
         <el-form-item label="备注: " label-width="100px">
           <el-input type="textarea" v-model="filters.desc" style="width: 500px"></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" :size="size"  align="left">
+      <el-form :inline="true" :model="filters" :size="size" align="left">
         <el-form-item label="微信截图: " label-width="100px">
           <el-upload
             action="https://jsonplaceholder.typicode.com/posts/"
@@ -210,8 +248,8 @@
             :on-remove="handleRemove">
             <i class="el-icon-plus"></i>
           </el-upload>
-          <el-dialog :visible.sync="pictureDialogVisible" >
-            <el-image :src="dialogImageUrl" alt="" />
+          <el-dialog :visible.sync="pictureDialogVisible">
+            <el-image :src="dialogImageUrl" alt=""/>
           </el-dialog>
         </el-form-item>
       </el-form>
@@ -230,7 +268,7 @@
   import KtTable from "@/views/Core/KtTable"
   import KtButton from "@/views/Core/KtButton"
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
-  import {format} from "@/utils/datetime"
+  import {format, formatDateSimple8} from "@/utils/datetime"
 
   export default {
     components: {
@@ -241,47 +279,54 @@
     },
     data() {
       return {
+        _file: null,
         size: 'small',
+        uploadUrl: '',
+        fileList: [],
         filters: {
-          name: ''
+          userId: '',
+          city: '',
+          district: '',
+          customName: '',
+          customLevel: '',
+          companyName: '',
+          curNodeName: '',
+          weixinName: '',
+          createDate: '',
+          businessName: '',
+          businessTag: '',
         },
         dialogImageUrl: '',
         pictureDialogVisible: false,
         nextDialogVisible: false,
-        loading:false,
-        columns: [],
+        loading: false,
+        logHisLoading: false,
+        tableData: [],
         filterColumns: [],
-        pageRequest: {pageNum: 1, pageSize: 10},
-        pageResult: {},
-        bakHistory: {},
-
+        pageRequest: {
+          current: 1,
+          size: 20,
+        },
+        total: 0,
+        logHisPageRequest: {
+          current: 1,
+          size: 20,
+        },
+        logHisTotal: 0,
         operation: false, // true:新增, false:编辑
         dialogVisible: false, // 新增编辑界面是否显示
         editLoading: false,
-        dataFormRules: {
-          name: [
-            {required: true, message: '请输入用户名', trigger: 'blur'}
-          ]
-        },
+        dataFormRules: {},
         // 新增编辑界面数据
         dataForm: {
-          id: 0,
-          name: '',
-          password: '123456',
-          deptId: 1,
-          deptName: '',
-          email: 'test@qq.com',
-          mobile: '13889700023',
-          status: 1,
-          userRoles: []
+          curNodeName: '',
+          logHistory: [],
+          message: '',
         },
         nextForm: {},
-        deptData: [],
-        deptTreeProps: {
-          label: 'name',
-          children: 'children'
-        },
-        roles: []
+        files: [],
+        logRowContent: {},
+        formData: new FormData()
       }
     },
     created() {
@@ -293,24 +338,56 @@
         if (data !== null) {
           this.pageRequest = data.pageRequest
         }
-        this.pageRequest.columnFilters = {name: {name: 'name', value: this.filters.name}}
-        this.$api.outer.findPage(this.pageRequest).then((res) => {
-          this.pageResult = res.data
-          this.pageRequest.pageNum = res.data.pageNum
-          this.pageRequest.pageSize = res.data.pageSize
-          this.totalSize = res.data.totalSize
+        this.loading = true
+        let callback = res => {
+          this.loading = false
+        }
+        // this.pageRequest.userId = sessionStorage.getItem("userId")
+        this.pageRequest.userId = '8'
+        this.pageRequest.city = this.filters.city
+        this.pageRequest.district = this.filters.district
+        this.pageRequest.customName = this.filters.customName
+        this.pageRequest.customLevel = this.filters.customLevel
+        this.pageRequest.companyName = this.filters.companyName
+        this.pageRequest.curNodeName = this.filters.curNodeName
+        this.pageRequest.weixinName = this.filters.weixinName
+        if (this.filters.createDate != undefined && this.filters.createDate != '') {
+          this.pageRequest.createDate = this.dateFormat(this.filters.createDate)
+        }
+        this.pageRequest.businessName = this.filters.businessName
+        this.pageRequest.businessTag = this.filters.businessTag
+        this.$api.workflow.findTodo(this.pageRequest).then((res) => {
+          this.tableData = res.data.records;
+          this.total = res.data.total;
+          this.pageRequest.current = res.data.current;
+          this.pageRequest.size = res.data.size;
+          callback(res)
         }).then(data != null ? data.callback : '')
+          .catch((res) => {
+            this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+            callback(res)
+          })
       },
-      // 加载用户角色信息
-      findUserRoles: function () {
-        this.$api.role.findAll().then((res) => {
-          // 加载角色集合
-          this.roles = res.data
-        })
-      },
-      // 批量删除
-      handleDelete: function (data) {
-        this.$api.outer.batchDelete(data.params).then(data != null ? data.callback : '')
+      findLogPage: function (data, params) {
+        if (data !== null) {
+          this.logHisPageRequest = data.logHisPageRequest
+        }
+        this.logHisLoading = true
+        let callback = res => {
+          this.logHisLoading = false
+        }
+        this.logHisPageRequest.eventId = params.eventId
+        this.$api.workflow.findLog(this.logHisPageRequest).then((res) => {
+          this.dataForm.logHistory = res.data.records;
+          this.logHisTotal = res.data.total;
+          this.logHisPageRequest.current = res.data.current;
+          this.logHisPageRequest.size = res.data.size;
+          callback(res)
+        }).then(data != null ? data.callback : '')
+          .catch((res) => {
+            this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+            callback(res)
+          })
       },
       handleAdd: function () {
         this.$router.push({path: '/preSales/customerDtl'})
@@ -326,94 +403,74 @@
         this.operation = false
         this.nextForm = Object.assign({}, params)
       },
-
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.pictureDialogVisible = true;
-      },
-      // 显示新增界面
-      /* handleAdd: function () {
-         this.dialogVisible = true
-         this.operation = true
-         this.dataForm = {
-           id: 0,
-           name: '',
-           password: '',
-           deptId: 1,
-           deptName: '',
-           email: 'test@qq.com',
-           mobile: '13889700023',
-           status: 1,
-           userRoles: []
-         }
+      /* handleRemove: function () {
+         this.formData = new FormData()
        },
-       // 显示编辑界面
-       handleEdit: function (params) {
-         this.dialogVisible = true
-         this.operation = false
-         this.dataForm = Object.assign({}, params.row)
-         let userRoles = []
-         for (let i = 0, len = params.row.userRoles.length; i < len; i++) {
-           userRoles.push(params.row.userRoles[i].roleId)
-         }
-         this.dataForm.userRoles = userRoles
-       },*/
-      handleBak: function (params) {
+       handleChange: function (file, fileList) {
+         this.formData.append('files',file)
+       },
+       handlePictureCardPreview(file) {
+         this.dialogImageUrl = file.url;
+         this.pictureDialogVisible = true;
+       }, handleSendUploadRequest(file) {
+
+       },*/handleSendUploadRequest(file) {
+
+      }, handleBeforeUpload: function () {
+      },
+      handleRemove: function () {
+        this.fileList = []
+      },
+      handleChange: function (file, fileList) {
+        this._file = file
+        this.fileList.push(this._file)
+      },
+      handleLog: function (params) {
+        this.dataForm = {
+          logHistory: [],
+          message: '',
+        }
+        this.logRowContent = {}
+        this.files = []
+        this.dataForm = Object.assign({}, params)
+        this.findLogPage(null, params)
         this.dialogVisible = true
         this.operation = false
-        this.dataForm = Object.assign({}, params)
-        this.$api.outer.findBak(params).then((res) => {
-          this.bakHistory = res.data
-        })
+        this.logRowContent = params
+        this.formData = new FormData()
       },
       // 编辑
-      submitForm: function () {
-        this.$refs.dataForm.validate((valid) => {
-          if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
-              this.editLoading = true
-              let params = Object.assign({}, this.dataForm)
-              let userRoles = []
-              for (let i = 0, len = params.userRoles.length; i < len; i++) {
-                let userRole = {
-                  userId: params.id,
-                  roleId: params.userRoles[i]
-                }
-                userRoles.push(userRole)
-              }
-              params.userRoles = userRoles
-              this.$api.customer.save(params).then((res) => {
-                this.editLoading = false
-                if (res.code == 200) {
-                  this.$message({message: '操作成功', type: 'success'})
-                  this.dialogVisible = false
-                  this.$refs['dataForm'].resetFields()
-                } else {
-                  this.$message({message: '操作失败, ' + res.msg, type: 'error'})
-                }
-                this.findPage(null)
-              })
+      submitLogForm: function () {
+
+        let valid = (this.fileList != undefined && this.fileList.length != 0)
+        if (valid) {
+          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            this.editLoading = true
+            let formData = new FormData()
+            for (let i = 0; i < this.fileList.length; i++) {
+              formData.append('files', this.fileList[i].raw);
+            }
+            formData.append('operator', "8");
+            formData.append('operatorName', "我是主管1");
+            formData.append('message', this.dataForm.message);
+            formData.append('eventId', this.logRowContent.eventId);
+
+            this.$api.workflow.saveLog(formData).then((res) => {
+              this.editLoading = false
+              this.$message({message: '操作成功', type: 'success'})
+              this.dialogVisible = false
             })
-          }
-        })
-      },
-      // 获取部门列表
-      findDeptTree: function () {
-        this.$api.dept.findDeptTree().then((res) => {
-          this.deptData = res.data
-        })
-      },
-      // 菜单树选中
-      deptTreeCurrentChangeHandle(data, node) {
-        this.dataForm.deptId = data.id
-        this.dataForm.deptName = data.name
+          }).catch((res) => {
+            this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+            this.dialogVisible = false
+          })
+        } else {
+          this.$message({message: '请上传微信截图', type: 'error'})
+        }
       },
       // 时间格式化
-      dateFormat: function (row, column, cellValue, index) {
-        return format(row[column.property])
+      dateFormat: function (date) {
+        return formatDateSimple8(date)
       },
       // 处理表格列过滤显示
       displayFilterColumnsDialog: function () {
@@ -424,28 +481,18 @@
         this.filterColumns = data.filterColumns
         this.$refs.tableColumnFilterDialog.setDialogVisible(false)
       },
-      // 处理表格列过滤显示
-      initColumns: function () {
-        this.columns = [
-          {prop: "id", label: "客户ID", minWidth: 50},
-          {prop: "name", label: "客户姓名", minWidth: 120},
-          {prop: "aliAccnt", label: "旺旺账号", minWidth: 120},
-          {prop: "wechatAccnt", label: "微信账号", minWidth: 100},
-          {prop: "wechatName", label: "微信昵称", minWidth: 120},
-          {prop: "mobile", label: "联系电话", minWidth: 100},
-          {prop: "createTime", label: "创建时间", minWidth: 70},
-        ]
-        this.filterColumns = JSON.parse(JSON.stringify(this.columns));
-      },
       handleCurrentChange(val) {
         let _this = this;
-        _this.pageRequest.pageNum = val;
+        _this.pageRequest.current = val;
         _this.findPage(_this.pageRequest);
       },
+      handleLogHisCurrentChange(val) {
+        let _this = this;
+        _this.logHisPageRequest.current = val;
+        _this.findPage(_this.logHisPageRequest);
+      }
     },
     mounted() {
-      // this.findDeptTree()
-      this.initColumns()
     }
   }
 </script>

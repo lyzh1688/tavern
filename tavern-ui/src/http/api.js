@@ -19,6 +19,7 @@ import * as salary from './moudules/salary'
 import * as customer from './moudules/customer'
 import * as order from './moudules/order'
 import * as outer from './moudules/outer'
+import * as workflow from './moudules/workflow'
 
 
 // 默认全部导出
@@ -41,4 +42,5 @@ export default {
   customer,
   order,
   outer,
+  workflow,
 }

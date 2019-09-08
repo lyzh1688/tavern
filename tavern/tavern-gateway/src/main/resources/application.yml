@@ -19,6 +19,9 @@ zuul:
     tavern-crm:
       path: /crm/**
       url: http://127.0.0.1:8083/
+    tavern-workflow:
+      path: /workflow/**
+      url: http://127.0.0.1:8083/
     tavern-hrm:
       path: /hrm/**
       url: http://127.0.0.1:8084/

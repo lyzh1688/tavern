@@ -27,6 +27,7 @@
   </insert>
     <select id="selectMyPendingWork" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO">
         SELECT
+        T7.event_id eventId,
         T3.CUSTOM_NAME customName,
         T3.WANGWANG_ACCNT wangwangAccnt,
         T2.COMPANY_NAME companyName,
@@ -51,6 +52,7 @@
         work_flow.workflow_def_graph_business_rel T6,
         work_flow.workflow_event T7,
         work_flow.workflow_def_node T8
+
         <where>
             T.ORDER_ID = T1.ORDER_ID
             AND T1.COMPANY_ID = T2.COMPANY_ID
@@ -59,30 +61,37 @@
             AND T1.BUSINESS_ID = T5.BUSINESS_ID
             AND T1.BUSINESS_ID = T6.business_id
             AND T7.cur_node_id = T8.node_id
+            AND not exists(select 1 from work_flow.workflow_event_dependency T9 where T7.event_id = T9.next_event)
             AND (T7.event_owner = #{query.userId} or T7.cur_operator = #{query.userId})
             <if test="query.city != null and query.city != ''">
-                and T2.CITY = #{query.city}
+                and T2.CITY like concat('%', #{query.city}, '%')
             </if>
             <if test="query.district != null and query.district != ''">
-                and T2.DISTRICT = #{query.district}
+                and T2.DISTRICT like concat('%', #{query.district}, '%')
+            </if>
+            <if test="query.companyName != null and query.companyName != ''">
+                and T2.COMPANY_NAME like concat('%', #{query.companyName}, '%')
             </if>
             <if test="query.customName != null and query.customName != ''">
-                and T3.CUSTOM_NAME = #{query.customName}
+                and T3.CUSTOM_NAME like concat('%', #{query.customName}, '%')
+            </if>
+            <if test="query.customLevel != null and query.customLevel != ''">
+                and T3.CUSTOM_LEVEL like concat('%', #{query.customLevel}, '%')
             </if>
             <if test="query.curNodeName != null and query.curNodeName != ''">
-                and T8.name = #{query.curNodeName}
+                and T8.name like concat('%', #{query.curNodeName}, '%')
             </if>
             <if test="query.weixinName != null and query.weixinName != ''">
-                and T3.WEIXIN_NAME = #{query.weixinName}
+                and T3.WEIXIN_NAME like concat('%', #{query.weixinName}, '%')
             </if>
             <if test="query.createDate != null and query.createDate != ''">
-                and DATE_FORMAT(T1.CREATE_DATE,'%Y%m%d')  = #{query.createDate}
+                and DATE_FORMAT(T1.CREATE_DATE,'%Y%m%d') = #{query.createDate}
             </if>
             <if test="query.businessName != null and query.businessName != ''">
-                and T4.BUSINESS_NAME = #{query.businessName}
+                and T4.BUSINESS_NAME like concat('%', #{query.businessName}, '%')
             </if>
             <if test="query.businessTag != null and query.businessTag != ''">
-                and T1.BUSINESS_TAG = #{query.businessTag}
+                and T1.BUSINESS_TAG like concat('%', #{query.businessTag}, '%')
             </if>
         </where>
     </select>

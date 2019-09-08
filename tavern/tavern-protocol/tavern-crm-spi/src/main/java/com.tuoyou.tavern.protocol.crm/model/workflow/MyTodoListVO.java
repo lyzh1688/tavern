@@ -8,6 +8,7 @@ import lombok.Data;
  */
 @Data
 public class MyTodoListVO {
+    private String eventId;
     private String customName;
     private String wangwangAccnt;
     private String companyName;

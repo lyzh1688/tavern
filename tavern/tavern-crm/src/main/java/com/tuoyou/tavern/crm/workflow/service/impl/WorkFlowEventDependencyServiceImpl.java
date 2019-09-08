@@ -29,4 +29,16 @@ public class WorkFlowEventDependencyServiceImpl extends ServiceImpl<WorkFlowEven
     public WorkFlowEventDependency getById(Serializable id) {
         return super.getById(id);
     }
+
+    @TargetDataSource(name = "workflow")
+    @Override
+    public WorkFlowEventDependency getWorkFlowEventDependency(String eventId) {
+        return this.baseMapper.selectWorkFlowEventDependency(eventId);
+    }
+
+    @TargetDataSource(name = "workflow")
+    @Override
+    public boolean removeById(Serializable id) {
+        return super.removeById(id);
+    }
 }

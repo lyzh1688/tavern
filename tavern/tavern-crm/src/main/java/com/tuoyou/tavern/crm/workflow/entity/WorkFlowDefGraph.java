@@ -1,33 +1,20 @@
 package com.tuoyou.tavern.crm.workflow.entity;
 
-public class WorkFlowDefGraph {
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@TableName("workflow_def_graph")
+public class WorkFlowDefGraph extends Model<WorkFlowDefGraph> {
     private String graphId;
 
     private String rootNode;
 
     private String name;
 
-    public String getGraphId() {
-        return graphId;
-    }
+    private String endNode;
 
-    public void setGraphId(String graphId) {
-        this.graphId = graphId == null ? null : graphId.trim();
-    }
-
-    public String getRootNode() {
-        return rootNode;
-    }
-
-    public void setRootNode(String rootNode) {
-        this.rootNode = rootNode == null ? null : rootNode.trim();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
 }

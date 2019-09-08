@@ -6,29 +6,12 @@
     <result column="next_event" jdbcType="VARCHAR" property="nextEvent" />
     <result column="create_date" jdbcType="DATE" property="createDate" />
   </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from workflow_event_dependency
-    where pre_event = #{preEvent,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowEventDependency">
-    insert into workflow_event_dependency (pre_event, next_event, create_date
-      )
-    values (#{preEvent,jdbcType=VARCHAR}, #{nextEvent,jdbcType=VARCHAR}, #{createDate,jdbcType=DATE}
-      )
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowEventDependency">
-    update workflow_event_dependency
-    set next_event = #{nextEvent,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=DATE}
-    where pre_event = #{preEvent,jdbcType=VARCHAR}
-  </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select pre_event, next_event, create_date
-    from workflow_event_dependency
-    where pre_event = #{preEvent,jdbcType=VARCHAR}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select pre_event, next_event, create_date
-    from workflow_event_dependency
+  <select id="selectWorkFlowEventDependency" resultMap="BaseResultMap">
+    select t1.pre_event, t1.next_event, t1.create_date
+    from workflow_event t,workflow_event_dependency t1,workflow_def_graph t2
+    where t.event_id = t1.pre_event_id
+    and t.graph_id = t2.graph_id
+    and t.cur_node_id = t2.end_node
+    and t.event_id = #{eventId}
   </select>
 </mapper>

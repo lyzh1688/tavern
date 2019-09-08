@@ -7,16 +7,17 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dfzq.obgear.framework.spring.db.aspect.anno.TargetDataSource;
 import com.tuoyou.tavern.common.core.util.DateUtils;
 import com.tuoyou.tavern.crm.workflow.dao.WorkFlowEventMapper;
+import com.tuoyou.tavern.crm.workflow.dto.WorkFlowLogMessageDTO;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowNextNodeDTO;
-import com.tuoyou.tavern.protocol.crm.dto.workflow.MyToDoListDTO;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEvent;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEventDependency;
+import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEventDependencyHis;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEventHistory;
-import com.tuoyou.tavern.crm.workflow.service.WorkFlowEventDependencyService;
-import com.tuoyou.tavern.crm.workflow.service.WorkFlowEventHistoryService;
-import com.tuoyou.tavern.crm.workflow.service.WorkFlowEventService;
+import com.tuoyou.tavern.crm.workflow.service.*;
 import com.tuoyou.tavern.protocol.crm.dto.CrmOrderBusinessRelDTO;
+import com.tuoyou.tavern.protocol.crm.dto.workflow.MyToDoListDTO;
 import com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,10 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
     private WorkFlowEventHistoryService workFlowEventHistoryService;
     @Autowired
     private WorkFlowEventDependencyService workFlowEventDependencyService;
+    @Autowired
+    private WorkFlowEventDependencyHisService workFlowEventDependencyHisService;
+    @Autowired
+    private WorkFlowLogMessageService workFlowLogMessageService;
 
     @TargetDataSource(name = "workflow")
     @Transactional
@@ -106,7 +111,7 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
 
     @TargetDataSource(name = "workflow")
     @Override
-    public void startNextWorkFlow(WorkFlowNextNodeDTO workFlowNextNodeDTO) {
+    public void startNextWorkFlow(WorkFlowNextNodeDTO workFlowNextNodeDTO) throws Exception {
         //更新event状态
         //更新eventhis状态
         //判断是否有dependency，发起下一个任务
@@ -124,13 +129,31 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         curWorkFlowEventHistory.setNodeId(workFlowNextNodeDTO.getCurNodeId());
         this.workFlowEventHistoryService.save(curWorkFlowEventHistory);
 
-        WorkFlowEventDependency workFlowEventDependency = this.workFlowEventDependencyService.getById(workFlowEvent.getEventId());
-        if (Objects.nonNull(workFlowEventDependency)){
+        //携带备注信息
+
+        if (StringUtils.isNotEmpty(workFlowNextNodeDTO.getMessage()) || workFlowNextNodeDTO.getRefundFee() != null || workFlowNextNodeDTO.getFiles().size() != 0) {
+            WorkFlowLogMessageDTO workFlowLogMessageDTO = new WorkFlowLogMessageDTO();
+            workFlowLogMessageDTO.setOperator(workFlowNextNodeDTO.getCurOperator());
+            workFlowLogMessageDTO.setOperatorName(workFlowNextNodeDTO.getCurOperatorName());
+            workFlowLogMessageDTO.setMessage(workFlowNextNodeDTO.getMessage());
+            workFlowLogMessageDTO.setEventId(workFlowNextNodeDTO.getEventId());
+            workFlowLogMessageDTO.setFiles(workFlowNextNodeDTO.getFiles());
+            workFlowLogMessageDTO.setRefundFee(workFlowNextNodeDTO.getRefundFee());
+            this.workFlowLogMessageService.saveWorkFlowLog(workFlowLogMessageDTO);
+        }
+
+
+        WorkFlowEventDependency workFlowEventDependency = this.workFlowEventDependencyService.getWorkFlowEventDependency(workFlowEvent.getEventId());
+        if (Objects.nonNull(workFlowEventDependency)) {
             //判断当前节点是否为结束节点
             //1.删除dependency
             //2.拉入历史
             //3.改造：查询当前任务时，需要过滤有dependency的
-
+            this.workFlowEventDependencyService.removeById(workFlowEvent.getEventId());
+            WorkFlowEventDependencyHis workFlowEventDependencyHis = new WorkFlowEventDependencyHis();
+            BeanUtils.copyProperties(workFlowEventDependency, workFlowEventDependencyHis);
+            workFlowEventDependencyHis.setFinishTime(LocalDateTime.now());
+            this.workFlowEventDependencyHisService.save(workFlowEventDependencyHis);
         }
 
 

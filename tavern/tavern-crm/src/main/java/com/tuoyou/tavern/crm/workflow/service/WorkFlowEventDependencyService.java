@@ -9,4 +9,6 @@ import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEventDependency;
  * Dev Time: 2019/08/11 <br>
  */
 public interface WorkFlowEventDependencyService extends IService<WorkFlowEventDependency> {
+
+    WorkFlowEventDependency getWorkFlowEventDependency(String eventId);
 }

@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -82,6 +83,10 @@ public class WorkFlowLogMessageServiceImpl extends ServiceImpl<WorkFlowLogMessag
                 FileUtils.multiPartFileWriter(file, eventWorkFlowLogPath);
             }
             this.workFlowLogAttachmentService.saveBatch(workFlowLogAttachment);
+        }
+        if(Objects.nonNull(workFlowLogMessageDTO.getRefundFee())){
+            workFlowLogMessage.setHasRefund("1");
+            workFlowLogMessage.setRefundFee(workFlowLogMessageDTO.getRefundFee());
         }
         this.save(workFlowLogMessage);
     }

@@ -11,7 +11,9 @@ public class MyToDoListDTO {
     private String userId;
     private String city;
     private String district;
+    private String companyName;
     private String customName;
+    private String customLevel;
     private String curNodeName;
     private String weixinName;
     private String createDate;

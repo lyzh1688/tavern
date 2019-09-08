@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/workflowDef")
+@RequestMapping("/def")
 public class WorkFlowDefEndpoint {
 
     private WorkFlowDefNodeService workFlowDefNodeService;

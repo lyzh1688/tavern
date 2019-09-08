@@ -2,6 +2,7 @@ package com.tuoyou.tavern.crm.endpoint;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowLogMessageDTO;
+import com.tuoyou.tavern.crm.workflow.dto.WorkFlowNextNodeDTO;
 import com.tuoyou.tavern.crm.workflow.service.WorkFlowEventService;
 import com.tuoyou.tavern.crm.workflow.service.WorkFlowLogMessageService;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
@@ -12,6 +13,10 @@ import com.tuoyou.tavern.protocol.crm.response.WorkFlowTodoListResponse;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -19,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/workflow")
+@RequestMapping("/event")
 public class WorkFlowEventEndpoint {
 
     private WorkFlowEventService workFlowEventService;
@@ -44,11 +49,27 @@ public class WorkFlowEventEndpoint {
     /**
      * 备注添加
      */
-    @PostMapping
-    public TavernResponse saveWorkFlowLog(@RequestBody WorkFlowLogMessageDTO workFlowLogMessageDTO) throws Exception {
-        if(StringUtils.isNoneEmpty(workFlowLogMessageDTO.getMessage())&&!workFlowLogMessageDTO.getFiles().isEmpty()){
-            this.workFlowLogMessageService.saveWorkFlowLog(workFlowLogMessageDTO);
-        }
+    @PostMapping("/log/save")
+    public TavernResponse saveWorkFlowLog(
+            @RequestParam("operator") String operator,
+            @RequestParam("operatorName") String operatorName,
+            @RequestParam("message") String message,
+            @RequestParam("eventId") String eventId,
+            @RequestParam("filex") MultipartFile files1,
+            @RequestParam("filey") MultipartFile files2,
+            @RequestParam("filez") MultipartFile files3,
+            @RequestParam("files") MultipartFile[] files4,
+            @RequestParam(name = "refundFee",required = false) BigDecimal refundFee) throws Exception {
+//        if (StringUtils.isNoneEmpty(message) && files != null && !files.isEmpty()) {
+//            WorkFlowLogMessageDTO workFlowLogMessageDTO = new WorkFlowLogMessageDTO();
+//            workFlowLogMessageDTO.setOperator(operator);
+//            workFlowLogMessageDTO.setOperatorName(operatorName);
+//            workFlowLogMessageDTO.setMessage(message);
+//            workFlowLogMessageDTO.setEventId(eventId);
+//            workFlowLogMessageDTO.setFiles(files);
+//            workFlowLogMessageDTO.setRefundFee(refundFee);
+//            this.workFlowLogMessageService.saveWorkFlowLog(workFlowLogMessageDTO);
+//        }
         return new TavernResponse();
     }
 
@@ -56,6 +77,10 @@ public class WorkFlowEventEndpoint {
     /**
      * 更新流程
      */
-
+    @PostMapping("/next")
+    public TavernResponse startNextWorkFlow(WorkFlowNextNodeDTO workFlowNextNodeDTO) throws Exception {
+        this.workFlowEventService.startNextWorkFlow(workFlowNextNodeDTO);
+        return new TavernResponse();
+    }
 
 }
