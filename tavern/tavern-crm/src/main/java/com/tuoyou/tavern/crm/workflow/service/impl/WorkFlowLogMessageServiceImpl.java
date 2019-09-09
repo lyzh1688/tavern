@@ -9,7 +9,6 @@ import com.tuoyou.tavern.common.core.util.FileUtils;
 import com.tuoyou.tavern.common.core.util.UUIDUtil;
 import com.tuoyou.tavern.crm.workflow.dao.WorkFlowLogMessageMapper;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowLogMessageDTO;
-import com.tuoyou.tavern.crm.workflow.dto.WorkFlowNextNodeDTO;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowLogAttachment;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowLogMessage;
 import com.tuoyou.tavern.crm.workflow.service.WorkFlowLogAttachmentService;
@@ -36,7 +35,9 @@ import java.util.stream.Collectors;
 @Service
 public class WorkFlowLogMessageServiceImpl extends ServiceImpl<WorkFlowLogMessageMapper, WorkFlowLogMessage> implements WorkFlowLogMessageService {
 
-    @Value("${workflow.log.path:http://127.0.0.1:80/workflow/log/attachment/}")
+    @Value("${workflow.log.url.path:http://127.0.0.1:80/workflow/log/attachment/}")
+    private String workFlowLogUrlPath;
+    @Value("${workflow.log.path:/mnt/file/workflow/log}")
     private String workFlowLogPath;
     @Autowired
     private WorkFlowLogAttachmentService workFlowLogAttachmentService;
@@ -58,22 +59,28 @@ public class WorkFlowLogMessageServiceImpl extends ServiceImpl<WorkFlowLogMessag
         BeanUtils.copyProperties(workFlowLogMessageDTO, workFlowLogMessage);
         workFlowLogMessage.setLogId(logId);
         if (!workFlowLogMessageDTO.getFiles().isEmpty()) {
+            String eventWorkFlowLogUrlPath = StringUtils.join(workFlowLogUrlPath,
+                    workFlowLogMessageDTO.getEventId(),
+                    "/",
+                    workFlowLogMessageDTO.getOperator(),
+                    "/");
             String eventWorkFlowLogPath = StringUtils.join(workFlowLogPath,
                     workFlowLogMessageDTO.getEventId(),
                     "/",
                     workFlowLogMessageDTO.getOperator(),
                     "/");
             workFlowLogMessage.setHasAttachment("1");
-            workFlowLogMessage.setAttachmentsPath(eventWorkFlowLogPath);
+            workFlowLogMessage.setAttachmentsPath(eventWorkFlowLogUrlPath);
+            workFlowLogMessage.setCreateTime(DateUtils.formatDateTime(LocalDateTime.now(),DateUtils.SIMPLE_DATETIME_FORMATTER));
 
             List<WorkFlowLogAttachment> workFlowLogAttachment = workFlowLogMessageDTO.getFiles()
                     .stream()
                     .map(file -> {
-                        String filePath = StringUtils.join(eventWorkFlowLogPath,
+                        String filePath = StringUtils.join(eventWorkFlowLogUrlPath,
                                 "/",
                                 file.getName());
                         WorkFlowLogAttachment tmpAttachment = new WorkFlowLogAttachment();
-                        tmpAttachment.setCreateTime(DateUtils.formatDateTime(LocalDateTime.now(),DateUtils.DEFAULT_DATETIME_FORMATTER));
+                        tmpAttachment.setCreateTime(DateUtils.formatDateTime(LocalDateTime.now(), DateUtils.DEFAULT_DATETIME_FORMATTER));
                         tmpAttachment.setFileId(UUIDUtil.randomUUID32());
                         tmpAttachment.setLogId(logId);
                         tmpAttachment.setFilePath(filePath);
@@ -82,14 +89,14 @@ public class WorkFlowLogMessageServiceImpl extends ServiceImpl<WorkFlowLogMessag
             for (MultipartFile file : workFlowLogMessageDTO.getFiles()) {
                 FileUtils.multiPartFileWriter(file, eventWorkFlowLogPath);
             }
-            this.workFlowLogAttachmentService.saveBatch(workFlowLogAttachment);
+
+            this.workFlowLogAttachmentService.saveWorkFlowLogAttachmentBatch(workFlowLogAttachment);
         }
-        if(Objects.nonNull(workFlowLogMessageDTO.getRefundFee())){
+        if (Objects.nonNull(workFlowLogMessageDTO.getRefundFee())) {
             workFlowLogMessage.setHasRefund("1");
             workFlowLogMessage.setRefundFee(workFlowLogMessageDTO.getRefundFee());
         }
         this.save(workFlowLogMessage);
     }
-
 
 }

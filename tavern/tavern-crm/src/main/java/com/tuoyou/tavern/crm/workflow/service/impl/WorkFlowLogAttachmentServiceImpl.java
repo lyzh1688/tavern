@@ -24,7 +24,7 @@ public class WorkFlowLogAttachmentServiceImpl extends ServiceImpl<WorkFlowLogAtt
 
     @TargetDataSource(name = "workflow")
     @Override
-    public boolean saveBatch(Collection<WorkFlowLogAttachment> entityList) {
+    public boolean saveWorkFlowLogAttachmentBatch(Collection<WorkFlowLogAttachment> entityList) {
         return this.saveBatch(entityList);
     }
 }

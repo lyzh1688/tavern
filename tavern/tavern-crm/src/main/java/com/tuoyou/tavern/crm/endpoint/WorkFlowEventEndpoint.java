@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -53,23 +53,18 @@ public class WorkFlowEventEndpoint {
     public TavernResponse saveWorkFlowLog(
             @RequestParam("operator") String operator,
             @RequestParam("operatorName") String operatorName,
-            @RequestParam("message") String message,
+            @RequestParam(name = "message", required = false) String message,
             @RequestParam("eventId") String eventId,
-            @RequestParam("filex") MultipartFile files1,
-            @RequestParam("filey") MultipartFile files2,
-            @RequestParam("filez") MultipartFile files3,
-            @RequestParam("files") MultipartFile[] files4,
-            @RequestParam(name = "refundFee",required = false) BigDecimal refundFee) throws Exception {
-//        if (StringUtils.isNoneEmpty(message) && files != null && !files.isEmpty()) {
-//            WorkFlowLogMessageDTO workFlowLogMessageDTO = new WorkFlowLogMessageDTO();
-//            workFlowLogMessageDTO.setOperator(operator);
-//            workFlowLogMessageDTO.setOperatorName(operatorName);
-//            workFlowLogMessageDTO.setMessage(message);
-//            workFlowLogMessageDTO.setEventId(eventId);
-//            workFlowLogMessageDTO.setFiles(files);
-//            workFlowLogMessageDTO.setRefundFee(refundFee);
-//            this.workFlowLogMessageService.saveWorkFlowLog(workFlowLogMessageDTO);
-//        }
+            @RequestParam("files") MultipartFile[] files,
+            @RequestParam(name = "refundFee", required = false) BigDecimal refundFee) throws Exception {
+        WorkFlowLogMessageDTO workFlowLogMessageDTO = new WorkFlowLogMessageDTO();
+        workFlowLogMessageDTO.setOperator(operator);
+        workFlowLogMessageDTO.setOperatorName(operatorName);
+        workFlowLogMessageDTO.setMessage(message);
+        workFlowLogMessageDTO.setEventId(eventId);
+        workFlowLogMessageDTO.setFiles(Arrays.asList(files));
+        workFlowLogMessageDTO.setRefundFee(refundFee);
+        this.workFlowLogMessageService.saveWorkFlowLog(workFlowLogMessageDTO);
         return new TavernResponse();
     }
 

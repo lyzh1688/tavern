@@ -162,15 +162,9 @@
           <el-input type="textarea" v-model="dataForm.message" style="width: 600px;float: left"></el-input>
         </el-form-item>
         <el-form-item label="微信截图: " label-width="100px">
-          <!--    ref="uploadvideo"
-              :action="upload_url"
-              :auto-upload="false"
-              :before-upload="newVideo"
-              accept=".mp4"-->
-
-          <!--<el-upload
+          <el-upload
             action="customize"
-            ref="uploadFiles"
+            ref="uploadLogFiles"
             accept='image/jpeg,image/gif,image/png'
             :auto-upload="false"
             list-type="picture-card"
@@ -178,20 +172,7 @@
             :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove"
             :http-request="handleSendUploadRequest"
-            style="float: left">
-            <i class="el-icon-plus"></i>
-          </el-upload>-->
-          <el-upload
-            ref="upload"
-            :action="uploadUrl"
-            name="attach"
-            list-type="picture-card"
-            :on-remove="handleRemove"
-            :file-list="fileList"
-            :auto-upload="false"
-            :on-change="handleChange"
-            :before-upload="handleBeforeUpload"
-            :http-request="handleSendUploadRequest"
+            :file-list="logFiles"
             style="float: left">
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -310,7 +291,7 @@
         total: 0,
         logHisPageRequest: {
           current: 1,
-          size: 20,
+          size: 5,
         },
         logHisTotal: 0,
         operation: false, // true:新增, false:编辑
@@ -326,7 +307,8 @@
         nextForm: {},
         files: [],
         logRowContent: {},
-        formData: new FormData()
+        formData: new FormData(),
+        logFiles:[]
       }
     },
     created() {
@@ -403,35 +385,28 @@
         this.operation = false
         this.nextForm = Object.assign({}, params)
       },
-      /* handleRemove: function () {
-         this.formData = new FormData()
-       },
-       handleChange: function (file, fileList) {
-         this.formData.append('files',file)
-       },
-       handlePictureCardPreview(file) {
-         this.dialogImageUrl = file.url;
-         this.pictureDialogVisible = true;
-       }, handleSendUploadRequest(file) {
-
-       },*/handleSendUploadRequest(file) {
+      handleSendUploadRequest(file) {
 
       }, handleBeforeUpload: function () {
       },
-      handleRemove: function () {
-        this.fileList = []
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.pictureDialogVisible = true;
+      },
+      handleRemove: function (file, fileList) {
+        this.fileList = fileList
       },
       handleChange: function (file, fileList) {
-        this._file = file
-        this.fileList.push(this._file)
+        this.fileList = fileList
       },
       handleLog: function (params) {
+        this.logFiles = []
         this.dataForm = {
           logHistory: [],
           message: '',
         }
         this.logRowContent = {}
-        this.files = []
+        this.fileList = []
         this.dataForm = Object.assign({}, params)
         this.findLogPage(null, params)
         this.dialogVisible = true
@@ -447,22 +422,28 @@
           this.$confirm('确认提交吗？', '提示', {}).then(() => {
             this.editLoading = true
             let formData = new FormData()
+            alert(this.fileList.length)
             for (let i = 0; i < this.fileList.length; i++) {
               formData.append('files', this.fileList[i].raw);
             }
             formData.append('operator', "8");
             formData.append('operatorName', "我是主管1");
-            formData.append('message', this.dataForm.message);
+            if (this.dataForm.message != undefined){
+              formData.append('message', this.dataForm.message);
+            }
             formData.append('eventId', this.logRowContent.eventId);
 
             this.$api.workflow.saveLog(formData).then((res) => {
               this.editLoading = false
               this.$message({message: '操作成功', type: 'success'})
               this.dialogVisible = false
+              this.logFiles = []
+            }).catch((res) => {
+              this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+              this.editLoading = false
+              this.dialogVisible = false
+              this.logFiles = []
             })
-          }).catch((res) => {
-            this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
-            this.dialogVisible = false
           })
         } else {
           this.$message({message: '请上传微信截图', type: 'error'})

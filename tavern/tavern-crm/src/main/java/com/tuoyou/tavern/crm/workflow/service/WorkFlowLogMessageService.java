@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowLogMessageDTO;
-import com.tuoyou.tavern.crm.workflow.dto.WorkFlowNextNodeDTO;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowLogMessage;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.WorkFlowLogQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowLogVO;
