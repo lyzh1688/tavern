@@ -73,7 +73,15 @@ public class WorkFlowEventEndpoint {
      * 更新流程
      */
     @PostMapping("/next")
-    public TavernResponse startNextWorkFlow(WorkFlowNextNodeDTO workFlowNextNodeDTO) throws Exception {
+    public TavernResponse startNextWorkFlow(
+            @RequestParam("eventId") String eventId,
+            @RequestParam("curNodeId") String curNodeId,
+            @RequestParam("curOperator") String curOperator,
+            @RequestParam("curOperatorName") String curOperatorName,
+            @RequestParam(name = "message", required = false) String message,
+            @RequestParam(name = "files",required = false) MultipartFile[] files,
+            @RequestParam(name = "refundFee", required = false) BigDecimal refundFee) throws Exception {
+        WorkFlowNextNodeDTO workFlowNextNodeDTO = new WorkFlowNextNodeDTO(eventId,curNodeId,curOperator,curOperatorName,message,Arrays.asList(files),refundFee);
         this.workFlowEventService.startNextWorkFlow(workFlowNextNodeDTO);
         return new TavernResponse();
     }

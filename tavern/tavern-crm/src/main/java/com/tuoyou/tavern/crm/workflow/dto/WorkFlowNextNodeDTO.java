@@ -21,4 +21,13 @@ public class WorkFlowNextNodeDTO {
     private List<MultipartFile> files = Lists.newArrayList();
     private BigDecimal refundFee;
 
+    public WorkFlowNextNodeDTO(String eventId, String curNodeId, String curOperator, String curOperatorName, String message, List<MultipartFile> files, BigDecimal refundFee) {
+        this.eventId = eventId;
+        this.curNodeId = curNodeId;
+        this.curOperator = curOperator;
+        this.curOperatorName = curOperatorName;
+        this.message = message;
+        this.files = files;
+        this.refundFee = refundFee;
+    }
 }

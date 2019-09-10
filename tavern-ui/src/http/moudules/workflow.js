@@ -27,3 +27,30 @@ export const saveLog = (formData) => {
     }
   })
 }
+// 查询下一节点信息
+export const findNextNode = (params) => {
+  return axios({
+    url: '/workflow/def/nextNode',
+    method: 'get',
+    params
+  })
+}
+// 查询下一节点操作人信息
+export const findNextOperator = (params) => {
+  return axios({
+    url: '/workflow/def/operator',
+    method: 'get',
+    params
+  })
+}
+// 查询备注添加
+export const saveNextEvent = (formData) => {
+  return axios({
+    url: '/zuul/workflow/event/next',
+    method: 'post',
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data;charset=utf-8'
+    }
+  })
+}

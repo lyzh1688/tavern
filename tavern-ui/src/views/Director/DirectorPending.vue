@@ -164,11 +164,11 @@
         <el-form-item label="微信截图: " label-width="100px">
           <el-upload
             action="customize"
-            ref="uploadLogFiles"
+            ref="nextUploadLogFiles"
             accept='image/jpeg,image/gif,image/png'
             :auto-upload="false"
             list-type="picture-card"
-            :on-change="handleChange"
+            :on-change="handleNextChange"
             :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove"
             :http-request="handleSendUploadRequest"
@@ -188,55 +188,77 @@
         </el-button>
       </div>
     </el-dialog>
-    <el-dialog width="40%" :visible.sync="nextDialogVisible" :close-on-click-modal="false">
-      <el-form :model="nextForm" label-width="80px" :rules="dataFormRules" ref="nextForm" :size="size"
+    <el-dialog title="下一步" width="40%" :visible.sync="nextDialogVisible" :close-on-click-modal="false">
+      <el-form :model="nextForm" label-width="80px" :rules="nextFormRules" ref="nextForm" :size="size"
                label-position="center" align="center">
         <el-form-item label="当前流程: " prop="curProcess" label-width="100px">
-          <span style="text-align: left;float: left;color: #a71d5d">{{nextForm.curProcess}}</span>
+          <span style="text-align: left;float: left;color: #a71d5d">{{nextForm.curNodeName}}</span>
         </el-form-item>
-      </el-form>
-      <el-form :inline="true" :model="filters" :size="size" align="left">
+        <el-form-item label="退款金额" label-width="100px" v-if="showRefund">
+          <el-input v-model="nextForm.refundFee" placeholder="请输入退款金额"></el-input>
+        </el-form-item>
         <el-form-item label="下一流程" label-width="100px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择下一流程">
-            <el-option label="社保代缴" value='0'></el-option>
-            <el-option label="社保代开" value='1'></el-option>
-            <el-option label="公积金代缴" value='2'></el-option>
-            <el-option label="公积金代开" value='3'></el-option>
+          <el-select v-model="nextForm.nextNode"
+                     filterable
+                     remote
+                     clearable
+                     :remote-method="remoteNextNodeDict"
+                     placeholder="请输入下一流程"
+                     no-data-text="无匹配数据/请检查是否配置相关流程"
+                     @change="linkChange"
+                     :loading="remoteNextNodeDictLoading"
+                     prop="nextNode"
+                     style="float: left">
+            <el-option v-for="item in selectedNextNodeDict"
+                       :key="item.nodeId"
+                       :value="item.nodeId"
+                       :label="item.name"/>
           </el-select>
         </el-form-item>
-      </el-form>
-      <el-form :inline="true" :model="filters" :size="size" align="left">
-        <el-form-item label="对接人员" label-width="100px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择">
-            <el-option label="张三丰" value='0'></el-option>
-            <el-option label="李连杰" value='1'></el-option>
-            <el-option label="萧敬腾" value='2'></el-option>
-            <el-option label="薛之谦" value='3'></el-option>
+        <el-form-item label="对接人员" label-width="100px" prop="owner">
+          <el-select v-model="nextForm.nextOperator"
+                     filterable
+                     clearable
+                     :disabled="nextOperatorShow"
+                     placeholder="请选择对接人员"
+                     no-data-text="无匹配数据/请检查是否配置相关人员"
+                     prop="nextOperator"
+                     @change="handleItemChange"
+                     style="float: left"
+
+          >
+            <el-option v-for="item in nextOperatorDict"
+                       :key="item.id"
+                       :value="item.id"
+                       :label="item.name"/>
           </el-select>
         </el-form-item>
-      </el-form>
-      <el-form :inline="true" :model="filters" :size="size" align="left">
         <el-form-item label="备注: " label-width="100px">
-          <el-input type="textarea" v-model="filters.desc" style="width: 500px"></el-input>
+          <el-input type="textarea" v-model="nextForm.message" style="width: 500px;float: left"></el-input>
         </el-form-item>
-      </el-form>
-      <el-form :inline="true" :model="filters" :size="size" align="left">
         <el-form-item label="微信截图: " label-width="100px">
           <el-upload
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="customize"
+            ref="uploadLogFiles"
+            accept='image/jpeg,image/gif,image/png'
+            :auto-upload="false"
             list-type="picture-card"
-            :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove">
+            :on-change="handleNextChange"
+            :on-preview="handleNextPictureCardPreview"
+            :on-remove="handleNextRemove"
+            :http-request="handleNextSendUploadRequest"
+            :file-list="nextFileList"
+            style="float: left">
             <i class="el-icon-plus"></i>
           </el-upload>
-          <el-dialog :visible.sync="pictureDialogVisible">
-            <el-image :src="dialogImageUrl" alt=""/>
+          <el-dialog :visible.sync="nextPictureDialogVisible">
+            <el-image :src="nextDialogImageUrl" alt=""/>
           </el-dialog>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button :size="size" @click.native="nextDialogVisible = false">{{$t('action.cancel')}}</el-button>
-        <el-button :size="size" @click.native="nextDialogVisible = false" :loading="editLoading">
+        <el-button :size="size" @click.native="submitNextLogForm" :loading="nextEditLoading">
           {{$t('action.submit')}}
         </el-button>
       </div>
@@ -264,6 +286,8 @@
         size: 'small',
         uploadUrl: '',
         fileList: [],
+        nextFileList: [],
+        nextOperatorDict: [],
         filters: {
           userId: '',
           city: '',
@@ -278,7 +302,9 @@
           businessTag: '',
         },
         dialogImageUrl: '',
+        nextDialogImageUrl: '',
         pictureDialogVisible: false,
+        nextPictureDialogVisible: false,
         nextDialogVisible: false,
         loading: false,
         logHisLoading: false,
@@ -297,18 +323,43 @@
         operation: false, // true:新增, false:编辑
         dialogVisible: false, // 新增编辑界面是否显示
         editLoading: false,
+        nextEditLoading: false,
         dataFormRules: {},
+        nextFormRules: {
+          nextNode: [
+            {required: true, message: '请选择下一流程', trigger: 'blur'}
+          ],
+          nextOperator: [
+            {required: true, message: '请选择对接人', trigger: 'blur'}
+          ],
+        },
         // 新增编辑界面数据
         dataForm: {
           curNodeName: '',
           logHistory: [],
           message: '',
         },
-        nextForm: {},
+        nextForm: {
+          curNodeName: '',
+          nextNode: '',
+          nextOperator: '',
+          message: '',
+          refundFee: ''
+        },
         files: [],
         logRowContent: {},
         formData: new FormData(),
-        logFiles:[]
+        logFiles: [],
+        nextLogFiles: [],
+        remoteNextNodeDictLoading: false,
+        selectedNextNodeDict: [],
+        nextNodeDict: [],
+        nextOperatorShow: true,
+        chosenNode: {},
+        operatorName: '',
+        chosenOperator: '',
+        showRefund: false
+
       }
     },
     created() {
@@ -381,6 +432,13 @@
         this.$router.push({path: '/preSales/workFlow'})
       },
       handleNext: function (params) {
+        this.nextLogFiles = []
+        this.nextFileList = []
+        this.nextForm = {
+          nextNode: '',
+          nextOperator: '',
+          message: '',
+        }
         this.nextDialogVisible = true
         this.operation = false
         this.nextForm = Object.assign({}, params)
@@ -398,6 +456,19 @@
       },
       handleChange: function (file, fileList) {
         this.fileList = fileList
+      },
+      handleNextSendUploadRequest(file) {
+
+      },
+      handleNextPictureCardPreview(file) {
+        this.NextDialogImageUrl = file.url;
+        this.NextPictureDialogVisible = true;
+      },
+      handleNextRemove: function (file, fileList) {
+        this.nextFileList = fileList
+      },
+      handleNextChange: function (file, fileList) {
+        this.nextFileList = fileList
       },
       handleLog: function (params) {
         this.logFiles = []
@@ -422,13 +493,12 @@
           this.$confirm('确认提交吗？', '提示', {}).then(() => {
             this.editLoading = true
             let formData = new FormData()
-            alert(this.fileList.length)
             for (let i = 0; i < this.fileList.length; i++) {
               formData.append('files', this.fileList[i].raw);
             }
             formData.append('operator', "8");
             formData.append('operatorName', "我是主管1");
-            if (this.dataForm.message != undefined){
+            if (this.dataForm.message != undefined) {
               formData.append('message', this.dataForm.message);
             }
             formData.append('eventId', this.logRowContent.eventId);
@@ -448,6 +518,44 @@
         } else {
           this.$message({message: '请上传微信截图', type: 'error'})
         }
+      },
+      submitNextLogForm: function () {
+
+        if (this.showRefund && this.nextForm.refundFee == undefined && this.nextForm.refundFee == '') {
+          this.$message({message: '请输入退款金额！', type: 'error'})
+          return
+        }
+        this.$refs.nextForm.validate((valid) => {
+          if (valid) {
+            this.$confirm('确认提交吗？', '提示', {}).then(() => {
+              this.nextEditLoading = true
+              let formData = new FormData()
+              formData.append('eventId', this.logRowContent.eventId);
+              formData.append('curNodeId', this.chosenNode.nodeId);
+              formData.append('curOperator', this.chosenOperator.id);
+              formData.append('curOperatorName', this.chosenOperator.name);
+              if (this.nextForm.message != undefined) {
+                formData.append('message', this.nextForm.message);
+              }
+              for (let i = 0; i < this.nextFileList.length; i++) {
+                formData.append('files', this.nextFileList[i].raw);
+              }
+              formData.append('refundFee', this.nextForm.refundFee);
+
+              this.$api.workflow.saveNextEvent(formData).then((res) => {
+                this.nextEditLoading = false
+                this.$message({message: '操作成功', type: 'success'})
+                this.nextDialogVisible = false
+                this.nextLogFiles = []
+              }).catch((res) => {
+                this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+                this.nextEditLoading = false
+                this.nextDialogVisible = false
+                this.nextLogFiles = []
+              })
+            })
+          }
+        })
       },
       // 时间格式化
       dateFormat: function (date) {
@@ -471,9 +579,57 @@
         let _this = this;
         _this.logHisPageRequest.current = val;
         _this.findPage(_this.logHisPageRequest);
-      }
+      }, initNextNodeDict: function () {
+        this.$api.workflow.findNextNode(null).then((res) => {
+          this.nextNodeDict = res.data;
+          this.selectedNextNodeDict = res.data;
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+        })
+      }, remoteNextNodeDict: function (param) {
+        if (param != '') {
+          this.remoteNextNodeDictLoading = true;
+          setTimeout(() => {
+            this.remoteNextNodeDictLoading = false;
+            this.selectedNextNodeDict = this.nextNodeDict.filter(item => {
+              return item.name.toLowerCase()
+                .indexOf(param.toLowerCase()) > -1;
+            });
+          }, 200);
+        } else {
+          this.selectedNextNodeDict = [];
+        }
+      }, linkChange: function (val) {
+        if (val != undefined && val != '') {
+          let nodeName = this.selectedNextNodeDict.find(item => {
+            return val == item.nodeId;
+          }).name
+          if (nodeName == '退款') {
+            this.showRefund = false;
+          }
+        }
+        if (val != undefined && val != '') {
+          this.nextOperatorShow = false;
+        } else {
+          this.nextOperatorShow = true;
+        }
+        let role = this.selectedNextNodeDict.find(item => {
+          return val == item.nodeId;
+        }).role
+        this.$api.workflow.findNextOperator(role).then((res) => {
+          this.nextOperatorDict = res.data
+        })
+        this.chosenNode = this.selectedNextNodeDict.find(item => {
+          return val == item.nodeId;
+        })
+      }, handleItemChange: function (val) {
+        this.chosenOperator = this.nextOperatorDict.find(item => {
+          return val == item.id;
+        })
+      },
     },
     mounted() {
+      this.initNextNodeDict();
     }
   }
 </script>
