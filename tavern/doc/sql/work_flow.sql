@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
-Source Server Version : 80013
-Source Host           : localhost:3306
+Source Server         : 119.3.19.171
+Source Server Version : 50560
+Source Host           : 119.3.19.171:3306
 Source Database       : work_flow
 
 Target Server Type    : MYSQL
-Target Server Version : 80013
+Target Server Version : 50560
 File Encoding         : 65001
 
-Date: 2019-09-05 18:26:01
+Date: 2019-09-11 07:09:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -46,13 +46,14 @@ CREATE TABLE `workflow_def_graph` (
   `graph_id` varchar(45) NOT NULL,
   `name` varchar(45) DEFAULT NULL,
   `root_node` varchar(45) NOT NULL,
-  PRIMARY KEY (`graph_id`,`root_node`)
+  `end_node` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`graph_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工作流定义';
 
 -- ----------------------------
 -- Records of workflow_def_graph
 -- ----------------------------
-INSERT INTO `workflow_def_graph` VALUES ('g_dljz', '代理记账', 'g_dljz_node_sq');
+INSERT INTO `workflow_def_graph` VALUES ('g_dljz', '代理记账', 'g_dljz_node_sq', 'g_dljz_node_end');
 
 -- ----------------------------
 -- Table structure for workflow_def_graph_business_rel
@@ -198,19 +199,22 @@ CREATE TABLE `workflow_log_attachment` (
 DROP TABLE IF EXISTS `workflow_log_message`;
 CREATE TABLE `workflow_log_message` (
   `log_id` varchar(45) NOT NULL,
-  `operator_id` varchar(45) DEFAULT NULL,
+  `operator_name` varchar(45) DEFAULT NULL,
   `operator` varchar(45) DEFAULT NULL,
   `create_time` varchar(45) DEFAULT NULL,
   `message` varchar(45) DEFAULT NULL,
   `event_id` varchar(45) DEFAULT NULL,
-  `has_attatchment` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '0',
+  `has_attachment` varchar(1) DEFAULT '0',
   `attachments_path` varchar(300) DEFAULT NULL,
+  `has_refund` varchar(1) DEFAULT NULL,
+  `refund_fee` decimal(20,5) DEFAULT NULL,
   PRIMARY KEY (`log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='流程日志表';
 
 -- ----------------------------
 -- Records of workflow_log_message
 -- ----------------------------
+INSERT INTO `workflow_log_message` VALUES ('1233', '我是主管1', '8', '2019-09-08 15:29:10', '马云爸爸答应给我们投资个小目标', '63a69f219efc4ccb96e6b9013fb24d0e', '0', null, '', null);
 
 -- ----------------------------
 -- Procedure structure for pr_convert_dbtab_utf8
