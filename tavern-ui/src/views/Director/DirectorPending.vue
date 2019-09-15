@@ -63,7 +63,15 @@
 
     <el-table :data="tableData" stripe stripe height="500" size="mini" style="width: 100%;"
               v-loading="loading">
+      <el-table-column prop="orderId" header-align="center" align="center" label="订单ID" v-if="false">
+      </el-table-column>
+      <el-table-column prop="businessId" header-align="center" align="center" label="业务ID" v-if="false">
+      </el-table-column>
+      <el-table-column prop="companyId" header-align="center" align="center" label="公司ID" v-if="false">
+      </el-table-column>
       <el-table-column prop="eventId" header-align="center" align="center" label="事件ID" v-if="false">
+      </el-table-column>
+      <el-table-column prop="curNodeId" header-align="center" align="center" label="业务节点ID" v-if="false">
       </el-table-column>
       <el-table-column prop="customName" label="客户姓名" header-align="center" align="center">
       </el-table-column>
@@ -95,10 +103,12 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-gears" label="流程日志" perms="sys:user:add" type="primary"
-                     @click="showWorkFlow"/>
-          <kt-button icon="fa fa-plus" label="添加备注" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-gears" label="流程日志" type="primary"
+                     @click="showWorkFlow(scope.row)"/>
+          <kt-button icon="fa fa-plus" label="添加备注"  type="primary"
                      @click="handleLog(scope.row)"/>
+          <kt-button icon="fa fa-money" label="退款审批"  type="primary"
+                     @click="handleDrawBack(scope.row)" v-if="scope.row.curNodeName == '退款审批'"/>
           <!-- <kt-button icon="fa fa-retweet" label="客户详情" perms="sys:user:add" type="primary"
                       @click="handleDtl"/>-->
           <kt-button icon="fa fa-arrow-right" label="下一步" perms="sys:user:add" type="primary"
@@ -121,7 +131,7 @@
         </el-form-item>
         <el-form-item label="历史备注:" prop="bakHistory" label-width="100px">
           <el-table :data="dataForm.logHistory" stripe size="mini" style="width: 100%;" v-loading="logHisLoading"
-                    element-loading-text="$t('action.loading')" height="300">
+                    :element-loading-text="$t('action.loading')" height="300">
             <el-table-column
               prop="logId" header-align="center" align="center" label="备注Id" v-if="false">
             </el-table-column>
@@ -191,13 +201,13 @@
     <el-dialog title="下一步" width="40%" :visible.sync="nextDialogVisible" :close-on-click-modal="false">
       <el-form :model="nextForm" label-width="80px" :rules="nextFormRules" ref="nextForm" :size="size"
                label-position="center" align="center">
-        <el-form-item label="当前流程: " prop="curProcess" label-width="100px">
+        <el-form-item label="当前流程: "  label-width="100px" prop="curNodeName">
           <span style="text-align: left;float: left;color: #a71d5d">{{nextForm.curNodeName}}</span>
         </el-form-item>
         <el-form-item label="退款金额" label-width="100px" v-if="showRefund">
           <el-input v-model="nextForm.refundFee" placeholder="请输入退款金额"></el-input>
         </el-form-item>
-        <el-form-item label="下一流程" label-width="100px">
+        <el-form-item label="下一流程" label-width="100px" prop="nextNode">
           <el-select v-model="nextForm.nextNode"
                      filterable
                      remote
@@ -215,7 +225,7 @@
                        :label="item.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="对接人员" label-width="100px" prop="owner">
+        <el-form-item label="对接人员" label-width="100px"  prop="nextOperator">
           <el-select v-model="nextForm.nextOperator"
                      filterable
                      clearable
@@ -263,6 +273,100 @@
         </el-button>
       </div>
     </el-dialog>
+    <el-dialog title="退款处理" width="40%" :visible.sync="drawBackDialogVisible" :close-on-click-modal="false">
+      <el-form :inline="true" :model="drawBackForm" align="left" label-width="80px" :rules="drawBackFormRules" ref="drawBackForm" :size="size"
+               label-position="center" >
+        <el-form-item label="订单号" label-width="100px" prop="orderId" >
+          <el-input v-model="drawBackForm.orderId" :readonly=true></el-input>
+        </el-form-item>
+        <el-form-item label="退款业务" label-width="100px" prop="businessName">
+          <el-input v-model="drawBackForm.businessName" :readonly=true></el-input>
+        </el-form-item>
+        <el-form-item label="应付金额" label-width="100px" prop="payableAmt">
+          <el-input v-model="drawBackForm.payableAmt" :readonly=true></el-input>
+        </el-form-item>
+        <el-form-item label="实付金额" label-width="100px" prop="receivableAmt">
+          <el-input v-model="drawBackForm.receivableAmt" :readonly=true></el-input>
+        </el-form-item>
+        <el-form-item label="流程日志: " label-width="100px">
+          <div id="mountNode" ref="mount"></div>
+        </el-form-item>
+        <el-form-item label="审批意见: " label-width="100px" prop="message">
+          <el-input type="textarea" v-model="drawBackForm.message" style="width: 500px"></el-input>
+        </el-form-item>
+        <el-form-item label="是否同意退款" label-width="100px" prop="agreeRefund">
+          <el-select v-model="drawBackForm.agreeRefund" clearable auto-complete="off" placeholder="请选择">
+            <el-option label="是" value='1'></el-option>
+            <el-option label="否" value='0'></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="变更处理人" label-width="100px"  prop="handler" v-if="false">
+          <el-select v-model="nextForm.nextOperator"
+                     filterable
+                     clearable
+                     :disabled="nextOperatorShow"
+                     placeholder="请选择处理人"
+                     no-data-text="无匹配数据/请检查是否配置相关处理人"
+                     prop="nextOperator"
+                     @change="handleItemChange"
+                     style="float: left"
+
+          >
+            <el-option v-for="item in nextOperatorDict"
+                       :key="item.id"
+                       :value="item.id"
+                       :label="item.name"/>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button :size="size" @click.native="drawBackDialogVisible = false">{{$t('action.cancel')}}</el-button>
+        <el-button :size="size" type="primary" @click.native="drawBackDialogVisible = false" :loading="editLoading">
+          {{$t('action.submit')}}
+        </el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="历史备注" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
+      <el-form :model="dataForm" :size="size" label-position="center" align="left">
+        <el-form-item  prop="logHistory" label-width="100px">
+          <el-table :data="dataForm.logHistory" stripe size="mini" style="width: 100%;" v-loading="logHisLoading"
+                    :element-loading-text="$t('action.loading')" height="300">
+            <el-table-column
+              prop="logId" header-align="center" align="center" label="备注Id" v-if="false">
+            </el-table-column>
+            <el-table-column
+              prop="eventId" header-align="center" align="center" label="eventId" v-if="false">
+            </el-table-column>
+            <el-table-column
+              prop="operator" header-align="center" align="center" label="操作人Id" v-if="false">
+            </el-table-column>
+            <el-table-column
+              prop="operatorName" header-align="center" align="center" label="操作人">
+            </el-table-column>
+            <el-table-column
+              prop="createTime" header-align="center" align="center" label="备注时间">
+            </el-table-column>
+            <el-table-column
+              prop="message" header-align="center" align="center" label="备注内容">
+            </el-table-column>
+            <el-table-column
+              prop="refundFee" header-align="center" align="center" label="退款">
+            </el-table-column>
+            <el-table-column
+              prop="attachmentsPath" header-align="center" align="center" label="附件地址">
+              <template slot-scope="scope1">
+                <a :href="scope1.row.attachmentsPath" target="_blank">{{scope1.row.attachmentsPath}}</a>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button :size="size" type="primary" @click.native="dialogVisible = false" :loading="editLoading">
+          确认
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -306,6 +410,7 @@
         pictureDialogVisible: false,
         nextPictureDialogVisible: false,
         nextDialogVisible: false,
+        drawBackDialogVisible: false,
         loading: false,
         logHisLoading: false,
         tableData: [],
@@ -333,6 +438,14 @@
             {required: true, message: '请选择对接人', trigger: 'blur'}
           ],
         },
+        drawBackFormRules: {
+          message: [
+            {required: true, message: '请输入审批意见', trigger: 'blur'}
+          ],
+          agreeRefund: [
+            {required: true, message: '请选择是否同意退款', trigger: 'blur'}
+          ],
+        },
         // 新增编辑界面数据
         dataForm: {
           curNodeName: '',
@@ -340,11 +453,20 @@
           message: '',
         },
         nextForm: {
+          eventId:'',
           curNodeName: '',
           nextNode: '',
           nextOperator: '',
           message: '',
           refundFee: ''
+        },
+        drawBackForm:{
+          orderId:'',
+          businessName:'',
+          payableAmt:'',
+          receivableAmt:'',
+          message:'',
+          agreeRefund:''
         },
         files: [],
         logRowContent: {},
@@ -422,14 +544,11 @@
             callback(res)
           })
       },
-      handleAdd: function () {
-        this.$router.push({path: '/preSales/customerDtl'})
+      handleDrawBack: function (params) {
+        this.drawBackDialogVisible = true
       },
-      handleEdit: function () {
-        this.$router.push({path: '/preSales/customerDtl'})
-      },
-      showWorkFlow: function () {
-        this.$router.push({path: '/preSales/workFlow'})
+      showWorkFlow: function (params) {
+        this.$router.push({name: '工作流日志', params: params})
       },
       handleNext: function (params) {
         this.nextLogFiles = []
@@ -442,6 +561,7 @@
         this.nextDialogVisible = true
         this.operation = false
         this.nextForm = Object.assign({}, params)
+        this.initNextNodeDict(params)
       },
       handleSendUploadRequest(file) {
 
@@ -530,17 +650,21 @@
             this.$confirm('确认提交吗？', '提示', {}).then(() => {
               this.nextEditLoading = true
               let formData = new FormData()
-              formData.append('eventId', this.logRowContent.eventId);
+              formData.append('eventId', this.nextForm.eventId);
               formData.append('curNodeId', this.chosenNode.nodeId);
               formData.append('curOperator', this.chosenOperator.id);
               formData.append('curOperatorName', this.chosenOperator.name);
+              formData.append('operator', "8");
+              formData.append('operatorName', "我是主管1");
               if (this.nextForm.message != undefined) {
                 formData.append('message', this.nextForm.message);
               }
               for (let i = 0; i < this.nextFileList.length; i++) {
                 formData.append('files', this.nextFileList[i].raw);
               }
-              formData.append('refundFee', this.nextForm.refundFee);
+              if (this.showRefund && this.nextForm.refundFee != undefined && this.nextForm.refundFee != '') {
+                formData.append('refundFee', this.nextForm.refundFee);
+              }
 
               this.$api.workflow.saveNextEvent(formData).then((res) => {
                 this.nextEditLoading = false
@@ -579,8 +703,11 @@
         let _this = this;
         _this.logHisPageRequest.current = val;
         _this.findPage(_this.logHisPageRequest);
-      }, initNextNodeDict: function () {
-        this.$api.workflow.findNextNode(null).then((res) => {
+      }, initNextNodeDict: function (params) {
+        let nextNodeRequest = {};
+        nextNodeRequest.businessId = params.businessId
+        nextNodeRequest.curNode = params.curNodeId
+        this.$api.workflow.findNextNode(nextNodeRequest).then((res) => {
           this.nextNodeDict = res.data;
           this.selectedNextNodeDict = res.data;
         }).catch((res) => {
@@ -610,15 +737,17 @@
         }
         if (val != undefined && val != '') {
           this.nextOperatorShow = false;
+          let role = this.selectedNextNodeDict.find(item => {
+            return val == item.nodeId;
+          }).role
+          let nextOperatorRequest = {}
+          nextOperatorRequest.role = role
+          this.$api.workflow.findNextOperator(nextOperatorRequest).then((res) => {
+            this.nextOperatorDict = res.data
+          })
         } else {
           this.nextOperatorShow = true;
         }
-        let role = this.selectedNextNodeDict.find(item => {
-          return val == item.nodeId;
-        }).role
-        this.$api.workflow.findNextOperator(role).then((res) => {
-          this.nextOperatorDict = res.data
-        })
         this.chosenNode = this.selectedNextNodeDict.find(item => {
           return val == item.nodeId;
         })
@@ -629,7 +758,6 @@
       },
     },
     mounted() {
-      this.initNextNodeDict();
     }
   }
 </script>

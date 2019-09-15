@@ -112,4 +112,11 @@ public class CustomDictInfoEndpoint {
         return new TavernDictResponse(dictList);
     }
 
+    /**
+     * 查询所有员工字典
+     */
+    @GetMapping("/allStaff")
+    public TavernDictResponse getAllStaff() {
+        return this.hrmUserDictService.queryStaffByRole("");
+    }
 }

@@ -23,6 +23,8 @@ public class WorkFlowEvent extends Model<WorkFlowEvent> {
 
     private String curOperator;
 
+    private String curOperatorName;
+
     private LocalDateTime beginDate;
 
 }

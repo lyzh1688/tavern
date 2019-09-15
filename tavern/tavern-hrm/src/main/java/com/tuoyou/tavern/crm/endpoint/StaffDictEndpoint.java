@@ -5,12 +5,14 @@ import com.tuoyou.tavern.protocol.common.TavernDictResponse;
 import com.tuoyou.tavern.protocol.common.model.Dict;
 import com.tuoyou.tavern.protocol.hrm.model.HrmUserBasicInfo;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -29,8 +31,13 @@ public class StaffDictEndpoint {
      */
     @GetMapping("/findDictByRole")
     public TavernDictResponse queryStaffByRole(@RequestParam(name = "roleId") String roleId) {
-        List<HrmUserBasicInfo> hrmUserBasicInfoList = this.hrmUserBasicInfoService
-                .getStaffByRole(roleId);
+        List<HrmUserBasicInfo> hrmUserBasicInfoList;
+        if (StringUtils.isEmpty(roleId)) {
+            hrmUserBasicInfoList = this.hrmUserBasicInfoService.list();
+        } else {
+            hrmUserBasicInfoList = this.hrmUserBasicInfoService
+                    .getStaffByRole(roleId);
+        }
         List<Dict> dictList = hrmUserBasicInfoList.parallelStream()
                 .map(info -> {
                     Dict dict = new Dict();
@@ -40,4 +47,6 @@ public class StaffDictEndpoint {
                 }).collect(Collectors.toList());
         return new TavernDictResponse(dictList);
     }
+
+
 }

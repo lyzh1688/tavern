@@ -8,6 +8,7 @@ import com.tuoyou.tavern.protocol.crm.dto.CrmOrderBusinessRelDTO;
 import com.tuoyou.tavern.protocol.crm.dto.CustomCompanyOrderQueryDTO;
 import com.tuoyou.tavern.protocol.crm.dto.CustomOrderBizQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCustomOrderInfo;
+import com.tuoyou.tavern.protocol.crm.response.CrmCompanyOrderDetailResponse;
 import com.tuoyou.tavern.protocol.crm.response.CrmCustomOrderPageResponse;
 import com.tuoyou.tavern.protocol.crm.response.CrmOrderBusinessPageResponse;
 import lombok.AllArgsConstructor;
@@ -47,6 +48,12 @@ public class CustomOrderInfoEndpoint {
     @GetMapping("/bizPage")
     public CrmOrderBusinessPageResponse getCrmOrderBusinessPage(Page page, CustomOrderBizQueryDTO customCompanyOrderQueryDTO) {
         return new CrmOrderBusinessPageResponse(this.crmCustomOrderBusinessRelService.getCrmOrderBusinessPage(page, customCompanyOrderQueryDTO));
+    }
+
+    @GetMapping("/companyDetail")
+    public CrmCompanyOrderDetailResponse getCrmCompanyOrderDetail(@RequestParam("eventId")String eventId){
+        return new CrmCompanyOrderDetailResponse(this.crmCustomOrderBusinessRelService.getCrmCompanyOrderDetail(eventId));
+
     }
 
 

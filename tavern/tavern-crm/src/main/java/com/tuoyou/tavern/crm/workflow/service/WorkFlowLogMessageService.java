@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowLogMessageDTO;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowLogMessage;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.WorkFlowLogQueryDTO;
+import com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowGraphLogVO;
 import com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowLogVO;
 
 /**
@@ -17,6 +18,9 @@ public interface WorkFlowLogMessageService extends IService<WorkFlowLogMessage> 
     IPage<WorkFlowLogVO> getWorkFlowLogMessagePage(Page page, WorkFlowLogQueryDTO workFlowLogQueryDTO);
 
     void saveWorkFlowLog(WorkFlowLogMessageDTO workFlowLogMessageDTO) throws Exception;
+
+    WorkFlowGraphLogVO getWorkFlowGraphLog(String eventId);
+
 
 
 

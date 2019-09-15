@@ -8,10 +8,13 @@ import lombok.Data;
  */
 @Data
 public class MyTodoListVO {
+    private String orderId;
+    private String businessId;
     private String eventId;
     private String customName;
     private String wangwangAccnt;
     private String companyName;
+    private String companyId;
     private String city;
     private String district;
     private String remark;
@@ -23,4 +26,6 @@ public class MyTodoListVO {
     private String createDate;
     private String customLevel;
     private String curNodeName;
+    private String curNodeId;
+    private String curOperatorName;
 }

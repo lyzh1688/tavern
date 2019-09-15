@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.tuoyou.tavern.protocol.crm.dto.CrmOrderBusinessRelDTO;
 import com.tuoyou.tavern.protocol.crm.dto.CustomOrderBizQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmBusinessDict;
+import com.tuoyou.tavern.protocol.crm.model.CrmCompanyOrderDetailVO;
 import com.tuoyou.tavern.protocol.crm.model.CrmOrderBusinessRel;
 
 import java.util.List;
@@ -23,5 +24,7 @@ public interface CrmCustomOrderBusinessRelService extends IService<CrmOrderBusin
     void rollBackOrderBusiness(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId);
 
     IPage getCrmOrderBusinessPage(Page page, CustomOrderBizQueryDTO customCompanyOrderQueryDTO);
+
+    CrmCompanyOrderDetailVO getCrmCompanyOrderDetail(String eventId);
 
 }

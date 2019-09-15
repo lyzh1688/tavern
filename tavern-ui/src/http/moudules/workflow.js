@@ -8,6 +8,14 @@ export const findTodo = (params) => {
     params
   })
 }
+// 查询所有
+export const findAllEvent = (params) => {
+  return axios({
+    url: '/workflow/event/todo/all',
+    method: 'get',
+    params
+  })
+}
 // 查询历史备注
 export const findLog = (params) => {
   return axios({
@@ -52,5 +60,21 @@ export const saveNextEvent = (formData) => {
     headers: {
       'Content-Type': 'multipart/form-data;charset=utf-8'
     }
+  })
+}
+// 流程日志
+export const findGraphLog = (params) => {
+  return axios({
+    url: '/workflow/event/log/graph',
+    method: 'get',
+    params
+  })
+}
+// 延期批示
+export const delayNotes = (data) => {
+  return axios({
+    url: '/workflow/event/delay',
+    method: 'post',
+    data
   })
 }

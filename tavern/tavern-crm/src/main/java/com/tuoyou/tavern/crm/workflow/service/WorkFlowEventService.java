@@ -3,6 +3,7 @@ package com.tuoyou.tavern.crm.workflow.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.tuoyou.tavern.crm.workflow.dto.WorkFlowDelayNotesDTO;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowNextNodeDTO;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.MyToDoListDTO;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEvent;
@@ -21,7 +22,11 @@ public interface WorkFlowEventService extends IService<WorkFlowEvent> {
 
     IPage<MyTodoListVO> getMyPendingWork(Page page, MyToDoListDTO myToDoListDTO);
 
+    IPage<MyTodoListVO> getAllWorkEvent(Page page, MyToDoListDTO myToDoListDTO);
+
     void startNextWorkFlow(WorkFlowNextNodeDTO workFlowNextNodeDTO) throws Exception;
+
+    void delayWorkEvent(WorkFlowDelayNotesDTO workFlowDelayNotesDTO);
 
 
 }

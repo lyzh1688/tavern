@@ -9,7 +9,7 @@
   <select id="selectWorkFlowEventDependency" resultMap="BaseResultMap">
     select t1.pre_event, t1.next_event, t1.create_date
     from workflow_event t,workflow_event_dependency t1,workflow_def_graph t2
-    where t.event_id = t1.pre_event_id
+    where t.event_id = t1.pre_event
     and t.graph_id = t2.graph_id
     and t.cur_node_id = t2.end_node
     and t.event_id = #{eventId}

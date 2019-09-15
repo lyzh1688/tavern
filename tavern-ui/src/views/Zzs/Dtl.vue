@@ -167,7 +167,7 @@
 
     <el-dialog width="60%" :visible.sync="dialogVisible" :close-on-click-modal="false">
       <el-table :data="tableGoodsData" stripe size="mini" style="width: 100%;" v-loading="loading"
-                element-loading-text="$t('action.loading')">
+                :element-loading-text="$t('action.loading')">
         <el-table-column
           prop="name" header-align="center" align="center"  label="名称">
         </el-table-column>

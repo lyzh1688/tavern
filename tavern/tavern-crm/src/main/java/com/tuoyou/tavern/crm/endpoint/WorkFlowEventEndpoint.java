@@ -1,17 +1,20 @@
 package com.tuoyou.tavern.crm.endpoint;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
+import com.tuoyou.tavern.crm.workflow.dto.WorkFlowDelayNotesDTO;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowLogMessageDTO;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowNextNodeDTO;
+import com.tuoyou.tavern.crm.workflow.dto.WorkFlowRefundDTO;
 import com.tuoyou.tavern.crm.workflow.service.WorkFlowEventService;
 import com.tuoyou.tavern.crm.workflow.service.WorkFlowLogMessageService;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.MyToDoListDTO;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.WorkFlowLogQueryDTO;
+import com.tuoyou.tavern.protocol.crm.response.WorkFlowGraphLogResponse;
 import com.tuoyou.tavern.protocol.crm.response.WorkFlowLogPageResponse;
 import com.tuoyou.tavern.protocol.crm.response.WorkFlowTodoListResponse;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,6 +39,14 @@ public class WorkFlowEventEndpoint {
     @GetMapping("/todo/page")
     public WorkFlowTodoListResponse getWorkFlowTodoList(Page page, MyToDoListDTO myToDoListDTO) {
         return new WorkFlowTodoListResponse(this.workFlowEventService.getMyPendingWork(page, myToDoListDTO));
+    }
+
+    /**
+     * 所有代办
+     */
+    @GetMapping("/todo/all")
+    public WorkFlowTodoListResponse getAllWorkFlowList(Page page, MyToDoListDTO myToDoListDTO) {
+        return new WorkFlowTodoListResponse(this.workFlowEventService.getAllWorkEvent(page, myToDoListDTO));
     }
 
     /**
@@ -78,10 +89,46 @@ public class WorkFlowEventEndpoint {
             @RequestParam("curNodeId") String curNodeId,
             @RequestParam("curOperator") String curOperator,
             @RequestParam("curOperatorName") String curOperatorName,
+            @RequestParam("operator") String operator,
+            @RequestParam("operatorName") String operatorName,
             @RequestParam(name = "message", required = false) String message,
-            @RequestParam(name = "files",required = false) MultipartFile[] files,
+            @RequestParam(name = "files", required = false) MultipartFile[] files,
             @RequestParam(name = "refundFee", required = false) BigDecimal refundFee) throws Exception {
-        WorkFlowNextNodeDTO workFlowNextNodeDTO = new WorkFlowNextNodeDTO(eventId,curNodeId,curOperator,curOperatorName,message,Arrays.asList(files),refundFee);
+        WorkFlowNextNodeDTO workFlowNextNodeDTO = new WorkFlowNextNodeDTO(eventId, curNodeId, curOperator, curOperatorName, operator, operatorName, message, Arrays.asList(files), refundFee);
+        this.workFlowEventService.startNextWorkFlow(workFlowNextNodeDTO);
+        return new TavernResponse();
+    }
+
+    /**
+     * 流程日志
+     */
+    @GetMapping("/log/graph")
+    public WorkFlowGraphLogResponse getWorkFlowGraph(@RequestParam("eventId") String eventId) {
+        return new WorkFlowGraphLogResponse(this.workFlowLogMessageService.getWorkFlowGraphLog(eventId));
+    }
+
+    /**
+     * 延期批示
+     */
+    @PostMapping("/delay")
+    public TavernResponse delayWorkEvent(@RequestBody WorkFlowDelayNotesDTO workFlowDelayNotesDTO) {
+        this.workFlowEventService.delayWorkEvent(workFlowDelayNotesDTO);
+        return new TavernResponse();
+    }
+
+    /**
+     * 退款处理
+     */
+    @PostMapping("/refund")
+    public TavernResponse refundWorkEvent(@RequestBody WorkFlowRefundDTO workFlowRefundDTO) throws Exception {
+        WorkFlowNextNodeDTO workFlowNextNodeDTO = new WorkFlowNextNodeDTO(workFlowRefundDTO.getEventId(),
+                workFlowRefundDTO.getCurNodeId(),
+                workFlowRefundDTO.getHandlerId(),
+                workFlowRefundDTO.getHandlerName(),
+                workFlowRefundDTO.getOperator(),
+                workFlowRefundDTO.getOperatorName(),
+                workFlowRefundDTO.getMessage(),
+                Lists.newArrayList(), null);
         this.workFlowEventService.startNextWorkFlow(workFlowNextNodeDTO);
         return new TavernResponse();
     }

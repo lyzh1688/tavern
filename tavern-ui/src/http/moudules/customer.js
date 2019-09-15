@@ -165,10 +165,10 @@ export const findOrderBusinessPage = (params) => {
     params
   })
 }
-// 查找用户的菜单权限标识集合
-export const findPermissions = (params) => {
+// 分页查询订单业务信息
+export const findOrdercompanyDetail = (params) => {
   return axios({
-    url: '/user/customer/findPermissions',
+    url: '/crm/order/companyDetail',
     method: 'get',
     params
   })

@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class WorkFlowLogQueryDTO {
     private String eventId;
+    private String operator;
 }

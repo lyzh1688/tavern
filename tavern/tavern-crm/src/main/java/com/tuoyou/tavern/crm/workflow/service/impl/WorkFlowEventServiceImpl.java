@@ -2,20 +2,22 @@ package com.tuoyou.tavern.crm.workflow.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dfzq.obgear.framework.spring.db.aspect.anno.TargetDataSource;
 import com.tuoyou.tavern.common.core.util.DateUtils;
+import com.tuoyou.tavern.common.core.util.UUIDUtil;
+import com.tuoyou.tavern.crm.crm.service.CrmCompanyBusinessInfoService;
 import com.tuoyou.tavern.crm.workflow.dao.WorkFlowEventMapper;
+import com.tuoyou.tavern.crm.workflow.dto.WorkFlowDelayNotesDTO;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowLogMessageDTO;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowNextNodeDTO;
-import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEvent;
-import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEventDependency;
-import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEventDependencyHis;
-import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEventHistory;
+import com.tuoyou.tavern.crm.workflow.entity.*;
 import com.tuoyou.tavern.crm.workflow.service.*;
 import com.tuoyou.tavern.protocol.crm.dto.CrmOrderBusinessRelDTO;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.MyToDoListDTO;
+import com.tuoyou.tavern.protocol.crm.model.CrmCompanyBusiness;
 import com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,9 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
     @Autowired
     private WorkFlowLogMessageService workFlowLogMessageService;
 
+    @Autowired
+    private CrmCompanyBusinessInfoService crmCompanyBusinessInfoService;
+
     @TargetDataSource(name = "workflow")
     @Transactional
     @Override
@@ -66,6 +71,7 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         workFlowEvent.setBeginDate(LocalDateTime.now());
         workFlowEvent.setCurOperator(crmOrderBusinessRelDTO.getOwnerId());
         workFlowEvent.setEventOwner(crmOrderBusinessRelDTO.getOwnerId());
+        workFlowEvent.setCurOperatorName(crmOrderBusinessRelDTO.getOwner());
         switch (crmOrderBusinessRelDTO.getBusinessId()) {
             case "BIZ_1":
                 workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getGjjsbdjDetail().getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
@@ -111,12 +117,20 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
 
     @TargetDataSource(name = "workflow")
     @Override
+    public IPage<MyTodoListVO> getAllWorkEvent(Page page, MyToDoListDTO myToDoListDTO) {
+        return this.baseMapper.selectAllWorkEvent(page, myToDoListDTO);
+    }
+
+    @Transactional
+    @TargetDataSource(name = "workflow")
+    @Override
     public void startNextWorkFlow(WorkFlowNextNodeDTO workFlowNextNodeDTO) throws Exception {
         //更新event状态
         //更新eventhis状态
         //判断是否有dependency，发起下一个任务
         WorkFlowEvent workFlowEvent = this.getById(workFlowNextNodeDTO.getEventId());
         workFlowEvent.setCurOperator(workFlowNextNodeDTO.getCurOperator());
+        workFlowEvent.setCurOperatorName(workFlowNextNodeDTO.getCurOperatorName());
         workFlowEvent.setCurNodeId(workFlowNextNodeDTO.getCurNodeId());
         workFlowEvent.setBeginDate(LocalDateTime.now());
         this.updateById(workFlowEvent);
@@ -125,7 +139,7 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         curWorkFlowEventHistory.setEventId(workFlowEvent.getEventId());
         curWorkFlowEventHistory.setBeginDate(LocalDateTime.now());
         curWorkFlowEventHistory.setOperator(workFlowNextNodeDTO.getCurOperator());
-        curWorkFlowEventHistory.setGraphId(workFlowEvent.getEventId());
+        curWorkFlowEventHistory.setGraphId(workFlowEvent.getGraphId());
         curWorkFlowEventHistory.setNodeId(workFlowNextNodeDTO.getCurNodeId());
         this.workFlowEventHistoryService.save(curWorkFlowEventHistory);
 
@@ -133,8 +147,8 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
 
         if (StringUtils.isNotEmpty(workFlowNextNodeDTO.getMessage()) || workFlowNextNodeDTO.getRefundFee() != null || workFlowNextNodeDTO.getFiles().size() != 0) {
             WorkFlowLogMessageDTO workFlowLogMessageDTO = new WorkFlowLogMessageDTO();
-            workFlowLogMessageDTO.setOperator(workFlowNextNodeDTO.getCurOperator());
-            workFlowLogMessageDTO.setOperatorName(workFlowNextNodeDTO.getCurOperatorName());
+            workFlowLogMessageDTO.setOperator(workFlowNextNodeDTO.getOperator());
+            workFlowLogMessageDTO.setOperatorName(workFlowNextNodeDTO.getOperatorName());
             workFlowLogMessageDTO.setMessage(workFlowNextNodeDTO.getMessage());
             workFlowLogMessageDTO.setEventId(workFlowNextNodeDTO.getEventId());
             workFlowLogMessageDTO.setFiles(workFlowNextNodeDTO.getFiles());
@@ -156,6 +170,35 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
             this.workFlowEventDependencyHisService.save(workFlowEventDependencyHis);
         }
 
+
+    }
+
+    @Override
+    public void delayWorkEvent(WorkFlowDelayNotesDTO workFlowDelayNotesDTO) {
+        String logId = UUIDUtil.randomUUID32();
+        try {
+            WorkFlowLogMessage workFlowLogMessage = new WorkFlowLogMessage();
+            workFlowLogMessage.setLogId(logId);
+            workFlowLogMessage.setOperator(workFlowDelayNotesDTO.getOperator());
+            workFlowLogMessage.setOperatorName(workFlowDelayNotesDTO.getOperatorName());
+            workFlowLogMessage.setCreateTime(DateUtils.formatDateTime(LocalDateTime.now(), DateUtils.DEFAULT_DATETIME_FORMATTER));
+            workFlowLogMessage.setMessage(workFlowDelayNotesDTO.getMessage());
+            workFlowLogMessage.setEventId(workFlowDelayNotesDTO.getEventId());
+            this.workFlowLogMessageService.save(workFlowLogMessage);
+            CrmCompanyBusiness crmCompanyBusiness = this.crmCompanyBusinessInfoService.getOne(Wrappers.<CrmCompanyBusiness>query().lambda()
+                    .eq(CrmCompanyBusiness::getBusinessId, workFlowDelayNotesDTO.getBusinessId())
+                    .eq(CrmCompanyBusiness::getCompanyId, workFlowDelayNotesDTO.getCompanyId()));
+            if (Objects.nonNull(crmCompanyBusiness)) {
+                crmCompanyBusiness.setEndDate(crmCompanyBusiness.getEndDate().plusDays(workFlowDelayNotesDTO.getDelayDays()));
+                crmCompanyBusiness.setUpdateDate(LocalDateTime.now());
+                this.crmCompanyBusinessInfoService.update(crmCompanyBusiness, Wrappers.<CrmCompanyBusiness>query().lambda()
+                        .eq(CrmCompanyBusiness::getBusinessId, workFlowDelayNotesDTO.getBusinessId())
+                        .eq(CrmCompanyBusiness::getCompanyId, workFlowDelayNotesDTO.getCompanyId()));
+            }
+        } catch (Exception e) {
+            this.workFlowLogMessageService.removeById(logId);
+            throw e;
+        }
 
     }
 }

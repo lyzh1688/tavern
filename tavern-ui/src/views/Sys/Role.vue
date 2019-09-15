@@ -45,16 +45,16 @@
 		</div>
 		<el-tree :data="menuData" size="mini" show-checkbox node-key="id" :props="defaultProps"
 			style="width: 100%;pading-top:20px;" ref="menuTree" :render-content="renderContent"
-			v-loading="menuLoading" element-loading-text="拼命加载中" :check-strictly="true"
+			v-loading="menuLoading" :element-loading-text="拼命加载中" :check-strictly="true"
 			@check-change="handleMenuCheckChange">
 		</el-tree>
 		<div style="float:left;padding-left:24px;padding-top:12px;padding-bottom:4px;">
 			<el-checkbox v-model="checkAll" @change="handleCheckAll" :disabled="this.selectRole.id == null"><b>全选</b></el-checkbox>
 		</div>
 		<div style="float:right;padding-right:15px;padding-top:4px;padding-bottom:4px;">
-			<kt-button :label="$t('action.reset')" perms="sys:role:edit" type="primary" @click="resetSelection" 
+			<kt-button :label="$t('action.reset')" perms="sys:role:edit" type="primary" @click="resetSelection"
 				:disabled="this.selectRole.id == null"/>
-			<kt-button :label="$t('action.submit')" perms="sys:role:edit" type="primary" @click="submitAuthForm" 
+			<kt-button :label="$t('action.submit')" perms="sys:role:edit" type="primary" @click="submitAuthForm"
 				:disabled="this.selectRole.id == null" :loading="authLoading"/>
 		</div>
 	</div>
@@ -270,7 +270,7 @@ export default {
       	dateFormat: function (row, column, cellValue, index){
           	return format(row[column.property])
       	}
-		
+
 	},
 	mounted() {
 	}
@@ -286,6 +286,6 @@ export default {
 	text-align: left;
 	font-size: 16px;
 	color: rgb(20, 89, 121);
-	
+
 }
 </style>

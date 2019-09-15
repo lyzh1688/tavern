@@ -38,4 +38,31 @@
         and t1.COMPANY_ID = t2.COMPANY_ID
         and t1.ORDER_ID = #{query.orderId}
   </select>
+    <select id="selectCrmCompanyOrderDetail" resultType="com.tuoyou.tavern.protocol.crm.model.CrmCompanyOrderDetailVO">
+        select
+            t1.ORDER_ID orderId,
+            t2.RECEIVABLE_AMT receivableAmt,
+            t4.COMPANY_NAME companyName,
+            t6.CUSTOM_NAME customName,
+            t4.DISTRICT district,
+            t6.CONTACT_NUMBER contactNumber,
+            t6.WANGWANG_ACCNT wangwangAccnt,
+            t7.EMPLOYEE_NUM employeeNum,
+            DATE_FORMAT(t3.BEGIN_DATE,'%Y-%m-%d %H:%i:%s') beginDate,
+            DATE_FORMAT(t3.END_DATE,'%Y-%m-%d %H:%i:%s') endDate
+
+        from
+            CRM_ORDER_BUSINESS_REL t1 LEFT JOIN CRM_ORDER_GJJSBDJ_DETAIL t7 on t1.ORDER_ID = t7.ORDER_ID,
+            CRM_CUSTOM_ORDER_INFO t2,
+            CRM_COMPANY_BUSINESS t3,
+            CRM_COMPANY_INFO t4,
+            CRM_CUSTOM_COMPANY_REL t5,
+            CRM_CUSTOM_BASIC_INFO t6
+            where t1.ORDER_ID = t2.ORDER_ID
+            and t1.BUSINESS_ID = t3.BUSINESS_ID
+            and t3.COMPANY_ID = t4.COMPANY_ID
+            and t4.COMPANY_ID = t5.COMPANY_ID
+            and t5.CUSTOM_ID = t6.CUSTOM_ID
+            and t1.EVENT_ID = #{eventId}
+    </select>
 </mapper>

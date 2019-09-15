@@ -12,4 +12,6 @@ public interface WorkFlowEventMapper extends BaseMapper<WorkFlowEvent> {
     int insertWorkFlowEvent(@Param("event") WorkFlowEvent workFlowEvent, @Param("businessId") String businessId);
 
     IPage<MyTodoListVO> selectMyPendingWork(Page page, @Param("query") MyToDoListDTO myToDoListDTO);
+
+    IPage<MyTodoListVO> selectAllWorkEvent(Page page, @Param("query") MyToDoListDTO myToDoListDTO);
 }

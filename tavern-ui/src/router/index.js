@@ -19,7 +19,7 @@ import CustomerDtl from '@/views/PreSales/CustomerDtl'
 import CompanyDtl from '@/views/PreSales/CompanyDtl'
 import OrderDtl from '@/views/PreSales/OrderDtl'
 import Order from '@/views/PreSales/Order'
-import WorkFlow from '@/views/PreSales/WorkFlow'
+import WorkFlow from '@/views/WorkFlow/WorkFlow'
 import {getIFramePath, getIFrameUrl} from '@/utils/iframe'
 
 Vue.use(Router)
@@ -219,7 +219,7 @@ const router = new Router({
       component: Home,
       children: [
         {
-          path: '/preSales/workFlow',
+          path: '/workFlow/workFlow',
           name: '工作流日志',
           component: WorkFlow,
           meta: {

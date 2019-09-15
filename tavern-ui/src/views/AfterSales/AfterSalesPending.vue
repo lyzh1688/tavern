@@ -124,7 +124,7 @@
       <el-form  :size="size" label-position="center" align="left">
         <el-form-item label="历史备注: " prop="id" label-width="100px">
           <el-table :data="bakHistory.content" stripe size="mini" style="width: 100%;" v-loading="loading"
-                    element-loading-text="$t('action.loading')">
+                    :element-loading-text="$t('action.loading')">
             <el-table-column
               prop="content" header-align="center" align="center"  label="备注内容">
             </el-table-column>
