@@ -28,6 +28,8 @@
     <select id="selectMyPendingWork" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO">
         SELECT
         T.ORDER_ID orderId,
+        T.RECEIVABLE_AMT receivableAmt,
+        T.PAYABLE_AMT payableAmt,
         T1.BUSINESS_ID businessId,
         T7.event_id eventId,
         T3.CUSTOM_NAME customName,
@@ -103,6 +105,8 @@
     <select id="selectAllWorkEvent" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO">
         SELECT
         T.ORDER_ID orderId,
+        T.RECEIVABLE_AMT receivableAmt,
+        T.PAYABLE_AMT payableAmt,
         T1.BUSINESS_ID businessId,
         T7.event_id eventId,
         T3.CUSTOM_NAME customName,

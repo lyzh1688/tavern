@@ -78,3 +78,12 @@ export const delayNotes = (data) => {
     data
   })
 }
+// 退款批示
+export const drawBack = (data) => {
+  return axios({
+    url: '/workflow/event/refund',
+    method: 'post',
+    data
+  })
+}
+

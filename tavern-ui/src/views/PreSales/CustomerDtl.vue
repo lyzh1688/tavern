@@ -4,37 +4,37 @@
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="法人姓名" label-width="100px">
-          <el-input v-model="dtlForm.corporation" placeholder="请输入法人姓名" :disabled=true></el-input>
+          <el-input v-model="dtlForm.corporation" placeholder="请输入法人姓名" :readonly=true></el-input>
         </el-form-item>
         <el-form-item label="法人电话" label-width="100px">
-          <el-input v-model="dtlForm.corporationNumber" placeholder="请输入法人电话" :disabled=true></el-input>
+          <el-input v-model="dtlForm.corporationNumber" placeholder="请输入法人电话" :readonly=true></el-input>
         </el-form-item>
       </el-form>
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="旺旺账号" label-width="100px">
-          <el-input v-model="dtlForm.wangwangAccnt" placeholder="请输入旺旺账号" :disabled=true></el-input>
+          <el-input v-model="dtlForm.wangwangAccnt" placeholder="请输入旺旺账号" :readonly=true></el-input>
         </el-form-item>
         <el-form-item label="微信账号" label-width="100px">
-          <el-input v-model="dtlForm.weixinAccnt" placeholder="请输入微信账号" :disabled=true></el-input>
+          <el-input v-model="dtlForm.weixinAccnt" placeholder="请输入微信账号" :readonly=true></el-input>
         </el-form-item>
         <el-form-item label="微信昵称" label-width="100px">
-          <el-input v-model="dtlForm.weixinName" placeholder="请输入微信昵称" :disabled=true></el-input>
+          <el-input v-model="dtlForm.weixinName" placeholder="请输入微信昵称" :readonly=true></el-input>
         </el-form-item>
       </el-form>
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="联系人姓名" label-width="100px">
-          <el-input v-model="dtlForm.contactPerson" placeholder="请输入联系人姓名" :disabled=true></el-input>
+          <el-input v-model="dtlForm.contactPerson" placeholder="请输入联系人姓名" :readonly=true></el-input>
         </el-form-item>
         <el-form-item label="联系人电话" label-width="100px">
-          <el-input v-model="dtlForm.contactNumber" placeholder="请输入联系人电话" :disabled=true></el-input>
+          <el-input v-model="dtlForm.contactNumber" placeholder="请输入联系人电话" :readonly=true></el-input>
         </el-form-item>
       </el-form>
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="客户姓名" label-width="100px" prop="customName">
-          <el-input v-model="dtlForm.customName" placeholder="请输入客户姓名" :disabled=true></el-input>
+          <el-input v-model="dtlForm.customName" placeholder="请输入客户姓名" :readonly=true></el-input>
         </el-form-item>
         <el-form-item label="客户等级" label-width="100px">
-          <el-input v-model="dtlForm.customLevel" clearable auto-complete="off" placeholder="请选择客户等级" :disabled=true>
+          <el-input v-model="dtlForm.customLevel" clearable auto-complete="off" placeholder="请选择客户等级" :readonly=true>
           </el-input>
         </el-form-item>
       </el-form>

@@ -2,6 +2,8 @@ package com.tuoyou.tavern.protocol.crm.model.workflow;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * Code Monkey: 何彪 <br>
  * Dev Time: 2019/09/04 <br>
@@ -9,6 +11,8 @@ import lombok.Data;
 @Data
 public class MyTodoListVO {
     private String orderId;
+    private BigDecimal receivableAmt;
+    private BigDecimal payableAmt;
     private String businessId;
     private String eventId;
     private String customName;

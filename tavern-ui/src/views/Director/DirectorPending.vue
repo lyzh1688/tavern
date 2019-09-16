@@ -65,6 +65,10 @@
               v-loading="loading">
       <el-table-column prop="orderId" header-align="center" align="center" label="订单ID" v-if="false">
       </el-table-column>
+      <el-table-column prop="receivableAmt" header-align="center" align="center" label="实收价格" v-if="false">
+      </el-table-column>
+      <el-table-column prop="payableAmt" header-align="center" align="center" label="应收价格" v-if="false">
+      </el-table-column>
       <el-table-column prop="businessId" header-align="center" align="center" label="业务ID" v-if="false">
       </el-table-column>
       <el-table-column prop="companyId" header-align="center" align="center" label="公司ID" v-if="false">
@@ -105,12 +109,10 @@
         <template slot-scope="scope">
           <kt-button icon="fa fa-gears" label="流程日志" type="primary"
                      @click="showWorkFlow(scope.row)"/>
-          <kt-button icon="fa fa-plus" label="添加备注"  type="primary"
+          <kt-button icon="fa fa-plus" label="添加备注" type="primary"
                      @click="handleLog(scope.row)"/>
-          <kt-button icon="fa fa-money" label="退款审批"  type="primary"
-                     @click="handleDrawBack(scope.row)" v-if="scope.row.curNodeName == '退款审批'"/>
-          <!-- <kt-button icon="fa fa-retweet" label="客户详情" perms="sys:user:add" type="primary"
-                      @click="handleDtl"/>-->
+          <kt-button icon="fa fa-money" label="退款审批" type="primary"
+                     @click="handleDrawBack(scope.row)"/><!--v-if="scope.row.curNodeName == '退款审批'"-->
           <kt-button icon="fa fa-arrow-right" label="下一步" perms="sys:user:add" type="primary"
                      @click="handleNext(scope.row)"/>
         </template>
@@ -201,7 +203,7 @@
     <el-dialog title="下一步" width="40%" :visible.sync="nextDialogVisible" :close-on-click-modal="false">
       <el-form :model="nextForm" label-width="80px" :rules="nextFormRules" ref="nextForm" :size="size"
                label-position="center" align="center">
-        <el-form-item label="当前流程: "  label-width="100px" prop="curNodeName">
+        <el-form-item label="当前流程: " label-width="100px" prop="curNodeName">
           <span style="text-align: left;float: left;color: #a71d5d">{{nextForm.curNodeName}}</span>
         </el-form-item>
         <el-form-item label="退款金额" label-width="100px" v-if="showRefund">
@@ -225,7 +227,7 @@
                        :label="item.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="对接人员" label-width="100px"  prop="nextOperator">
+        <el-form-item label="对接人员" label-width="100px" prop="nextOperator">
           <el-select v-model="nextForm.nextOperator"
                      filterable
                      clearable
@@ -273,46 +275,47 @@
         </el-button>
       </div>
     </el-dialog>
-    <el-dialog title="退款处理" width="40%" :visible.sync="drawBackDialogVisible" :close-on-click-modal="false">
-      <el-form :inline="true" :model="drawBackForm" align="left" label-width="80px" :rules="drawBackFormRules" ref="drawBackForm" :size="size"
-               label-position="center" >
-        <el-form-item label="订单号" label-width="100px" prop="orderId" >
+    <el-dialog title="退款处理" width="60%" :visible.sync="drawBackDialogVisible" :close-on-click-modal="false">
+      <el-form :inline="true" :model="drawBackForm" align="left" label-width="80px" :rules="drawBackFormRules"
+               ref="drawBackForm" :size="size"
+               label-position="center">
+        <el-form-item label="订单号" label-width="200px" prop="orderId">
           <el-input v-model="drawBackForm.orderId" :readonly=true></el-input>
         </el-form-item>
-        <el-form-item label="退款业务" label-width="100px" prop="businessName">
+        <el-form-item label="退款业务" label-width="200px" prop="businessName">
           <el-input v-model="drawBackForm.businessName" :readonly=true></el-input>
         </el-form-item>
-        <el-form-item label="应付金额" label-width="100px" prop="payableAmt">
+        <el-form-item label="应付金额" label-width="200px" prop="payableAmt">
           <el-input v-model="drawBackForm.payableAmt" :readonly=true></el-input>
         </el-form-item>
-        <el-form-item label="实付金额" label-width="100px" prop="receivableAmt">
+        <el-form-item label="实付金额" label-width="200px" prop="receivableAmt">
           <el-input v-model="drawBackForm.receivableAmt" :readonly=true></el-input>
         </el-form-item>
-        <el-form-item label="流程日志: " label-width="100px">
+        <el-form-item label="流程日志: " label-width="200px">
           <div id="mountNode" ref="mount"></div>
         </el-form-item>
-        <el-form-item label="审批意见: " label-width="100px" prop="message">
+        <el-form-item label="审批意见: " label-width="200px" prop="message">
           <el-input type="textarea" v-model="drawBackForm.message" style="width: 500px"></el-input>
         </el-form-item>
-        <el-form-item label="是否同意退款" label-width="100px" prop="agreeRefund">
-          <el-select v-model="drawBackForm.agreeRefund" clearable auto-complete="off" placeholder="请选择">
+        <el-form-item label="是否同意退款" label-width="200px" prop="agreeRefund">
+          <el-select v-model="drawBackForm.agreeRefund" clearable auto-complete="off" placeholder="请选择"
+                     @change="handleRefundChange">
             <el-option label="是" value='1'></el-option>
             <el-option label="否" value='0'></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="变更处理人" label-width="100px"  prop="handler" v-if="false">
-          <el-select v-model="nextForm.nextOperator"
+        <el-form-item label="变更处理人" label-width="200px" prop="handler" v-if="showHandler">
+          <el-select v-model="drawBackForm.handler"
                      filterable
                      clearable
-                     :disabled="nextOperatorShow"
                      placeholder="请选择处理人"
                      no-data-text="无匹配数据/请检查是否配置相关处理人"
-                     prop="nextOperator"
-                     @change="handleItemChange"
+                     prop="handlerShow"
+                     @change="handlerChange"
                      style="float: left"
 
           >
-            <el-option v-for="item in nextOperatorDict"
+            <el-option v-for="item in handlerDict"
                        :key="item.id"
                        :value="item.id"
                        :label="item.name"/>
@@ -321,15 +324,15 @@
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button :size="size" @click.native="drawBackDialogVisible = false">{{$t('action.cancel')}}</el-button>
-        <el-button :size="size" type="primary" @click.native="drawBackDialogVisible = false" :loading="editLoading">
+        <el-button :size="size" type="primary" @click.native="commitDrawBack" :loading="drawBackEditLoading">
           {{$t('action.submit')}}
         </el-button>
       </div>
     </el-dialog>
-    <el-dialog title="历史备注" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
-      <el-form :model="dataForm" :size="size" label-position="center" align="left">
-        <el-form-item  prop="logHistory" label-width="100px">
-          <el-table :data="dataForm.logHistory" stripe size="mini" style="width: 100%;" v-loading="logHisLoading"
+    <el-dialog title="历史备注" width="40%" :visible.sync="logDialogVisible" :close-on-click-modal="false">
+      <el-form :model="logDataForm" :size="size" label-position="center" align="left">
+        <el-form-item prop="logHistory" label-width="100px">
+          <el-table :data="logDataForm.logHistory" stripe size="mini" style="width: 100%;" v-loading="logLoading"
                     :element-loading-text="$t('action.loading')" height="300">
             <el-table-column
               prop="logId" header-align="center" align="center" label="备注Id" v-if="false">
@@ -362,7 +365,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
-        <el-button :size="size" type="primary" @click.native="dialogVisible = false" :loading="editLoading">
+        <el-button :size="size" type="primary" @click.native="logDialogVisible = false" :loading="logEditLoading">
           确认
         </el-button>
       </div>
@@ -371,6 +374,8 @@
 </template>
 
 <script>
+  import G6 from '@antv/g6';
+  import dagre from 'dagre';
   import PopupTreeInput from "@/components/PopupTreeInput"
   import KtTable from "@/views/Core/KtTable"
   import KtButton from "@/views/Core/KtButton"
@@ -413,6 +418,10 @@
         drawBackDialogVisible: false,
         loading: false,
         logHisLoading: false,
+        logEditLoading: false,
+        drawBackEditLoading: false,
+        logLoading: false,
+        logDialogVisible: false,
         tableData: [],
         filterColumns: [],
         pageRequest: {
@@ -423,11 +432,16 @@
         logHisPageRequest: {
           current: 1,
           size: 5,
+        },logPageRequest: {
+          current: 1,
+          size: 100,
         },
         logHisTotal: 0,
+        logTotal: 0,
         operation: false, // true:新增, false:编辑
         dialogVisible: false, // 新增编辑界面是否显示
         editLoading: false,
+        nextOperatorShow: false,
         nextEditLoading: false,
         dataFormRules: {},
         nextFormRules: {
@@ -452,21 +466,31 @@
           logHistory: [],
           message: '',
         },
+        logDataForm: {
+          eventId: '',
+          curNodeName: '',
+          logHistory: [],
+          message: '',
+        },
         nextForm: {
-          eventId:'',
+          eventId: '',
           curNodeName: '',
           nextNode: '',
           nextOperator: '',
           message: '',
           refundFee: ''
         },
-        drawBackForm:{
-          orderId:'',
-          businessName:'',
-          payableAmt:'',
-          receivableAmt:'',
-          message:'',
-          agreeRefund:''
+        drawBackForm: {
+          orderId: '',
+          eventId: '',
+          businessName: '',
+          payableAmt: '',
+          receivableAmt: '',
+          message: '',
+          agreeRefund: '',
+          handler: '',
+          mountNode: '',
+          curNodeId:''
         },
         files: [],
         logRowContent: {},
@@ -476,11 +500,15 @@
         remoteNextNodeDictLoading: false,
         selectedNextNodeDict: [],
         nextNodeDict: [],
-        nextOperatorShow: true,
+        handlerShow: true,
         chosenNode: {},
         operatorName: '',
         chosenOperator: '',
-        showRefund: false
+        chosenHandler: {},
+        showRefund: false,
+        showHandler: false,
+        handlerDict: [],
+        data: {}
 
       }
     },
@@ -545,7 +573,25 @@
           })
       },
       handleDrawBack: function (params) {
+        this.drawBackForm = {
+          orderId: '',
+          eventId: '',
+          businessName: '',
+          payableAmt: '',
+          receivableAmt: '',
+          message: '',
+          agreeRefund: '',
+          handler: '',
+          mountNode: '',
+          curNodeId:''
+        }
         this.drawBackDialogVisible = true
+        let ele = document.getElementById('mountNode')
+        if (ele != null) {
+          ele.innerHTML = '';
+        }
+        this.drawBackForm = Object.assign({}, params)
+        this.initG6(params)
       },
       showWorkFlow: function (params) {
         this.$router.push({name: '工作流日志', params: params})
@@ -616,8 +662,8 @@
             for (let i = 0; i < this.fileList.length; i++) {
               formData.append('files', this.fileList[i].raw);
             }
-            formData.append('operator', "8");
-            formData.append('operatorName', "我是主管1");
+            formData.append('operator', "6");
+            formData.append('operatorName', "我是主管6");
             if (this.dataForm.message != undefined) {
               formData.append('message', this.dataForm.message);
             }
@@ -654,8 +700,8 @@
               formData.append('curNodeId', this.chosenNode.nodeId);
               formData.append('curOperator', this.chosenOperator.id);
               formData.append('curOperatorName', this.chosenOperator.name);
-              formData.append('operator', "8");
-              formData.append('operatorName', "我是主管1");
+              formData.append('operator', "6");
+              formData.append('operatorName', "我是主管6");
               if (this.nextForm.message != undefined) {
                 formData.append('message', this.nextForm.message);
               }
@@ -681,18 +727,49 @@
           }
         })
       },
+      commitDrawBack: function () {
+        if (this.showHandler) {
+          if(this.drawBackForm.handler == undefined || this.drawBackForm.handler == ''){
+            this.$message({message: '请选择处理人！', type: 'error'})
+            return
+          }
+        }
+        this.$refs.drawBackForm.validate((valid) => {
+          if (valid) {
+            this.$confirm('确认提交吗？', '提示', {}).then(() => {
+              this.drawBackEditLoading = true
+
+              let request = {};
+              request.eventId = this.drawBackForm.eventId
+              request.operator = "6"
+              request.operatorName = "我是主管1"
+              request.message = this.drawBackForm.message
+
+              if(this.drawBackForm.agreeRefund == '0'){
+                request.handlerId = this.chosenHandler.id
+                request.handlerName = this.chosenHandler.name
+              }else {
+                request.handlerId = "6"
+                request.handlerName = "我是主管1"
+              }
+              request.curNodeId = this.drawBackForm.curNodeId
+
+              this.$api.workflow.drawBack(request).then((res) => {
+                this.drawBackEditLoading = false
+                this.$message({message: '操作成功', type: 'success'})
+                this.drawBackDialogVisible = false
+              }).catch((res) => {
+                this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+                this.drawBackEditLoading = false
+                this.drawBackDialogVisible = false
+              })
+            })
+          }
+        })
+      },
       // 时间格式化
       dateFormat: function (date) {
         return formatDateSimple8(date)
-      },
-      // 处理表格列过滤显示
-      displayFilterColumnsDialog: function () {
-        this.$refs.tableColumnFilterDialog.setDialogVisible(true)
-      },
-      // 处理表格列过滤显示
-      handleFilterColumns: function (data) {
-        this.filterColumns = data.filterColumns
-        this.$refs.tableColumnFilterDialog.setDialogVisible(false)
       },
       handleCurrentChange(val) {
         let _this = this;
@@ -754,6 +831,137 @@
       }, handleItemChange: function (val) {
         this.chosenOperator = this.nextOperatorDict.find(item => {
           return val == item.id;
+        })
+      }, handleRefundChange: function (val) {
+        this.showHandler = false
+        if (val == '0') {
+          this.showHandler = true
+          this.$api.customer.findAllOperator(null).then((res) => {
+            this.handlerDict = res.data
+          })
+        }
+      }, handlerChange: function (val) {
+        this.chosenHandler = this.handlerDict.find(item => {
+          return val == item.id;
+        })
+      },initG6(params) {
+        let request = {}
+        request.eventId = params.eventId
+        this.$api.workflow.findGraphLog(request).then((res) => {
+          this.data = res.data;
+          this.presentG6()
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+        })
+      },
+      presentG6() {
+        let _this = this
+        let data = {
+          nodes: [],
+          edges: []
+        }
+        data = this.data
+        var g = new dagre.graphlib.Graph();
+        g.setDefaultEdgeLabel(function () {
+          return {};
+        });
+        g.setGraph({
+          rankdir: 'TB'
+        });
+        data.nodes.forEach(function (node) {
+          node.label = node.label;
+          g.setNode(node.id, {
+            width: 150,
+            height: 50
+          });
+        });
+        data.edges.forEach(function (edge) {
+          g.setEdge(edge.source, edge.target);
+        });
+        dagre.layout(g);
+        var coord = void 0;
+        g.nodes().forEach(function (node, i) {
+          coord = g.node(node);
+          data.nodes[i].x = coord.x;
+          data.nodes[i].y = coord.y;
+        });
+        g.edges().forEach(function (edge, i) {
+          coord = g.edge(edge);
+          data.edges[i].startPoint = coord.points[0];
+          data.edges[i].endPoint = coord.points[coord.points.length - 1];
+          data.edges[i].controlPoints = coord.points.slice(1, coord.points.length - 1);
+        });
+        G6.registerNode('operation', {
+          drawShape: function drawShape(cfg, group) {
+            var rect = group.addShape('rect', {
+              attrs: {
+                x: -75,
+                y: -25,
+                width: 150,
+                height: 50,
+                radius: 10,
+                stroke: '#409EFF',
+                fill: '#409EFF',
+                fillOpacity: 0.45,
+                lineWidth: 2
+              }
+            });
+            return rect;
+          }
+        }, 'single-shape');
+        var graph = new G6.Graph({
+          container: 'mountNode',
+          width: 800,
+          height: 300,
+          pixelRatio: 2,
+          modes: {
+            default: ['drag-canvas', 'zoom-canvas']
+          },
+          defaultNode: {
+            shape: 'operation',
+            labelCfg: {
+              style: {
+                fill: '#409EFF',
+                fontSize: 14,
+                fontWeight: 'bold'
+              }
+            }
+          },
+          defaultEdge: {
+            shape: 'polyline'
+          },
+          edgeStyle: {
+            default: {
+              endArrow: true,
+              lineWidth: 2,
+              stroke: '#409EFF'
+            }
+          }
+        });
+        graph.data(data);
+        graph.render();
+        graph.fitView();
+        graph.on('click', function (ev) {
+          _this.findLogPage(ev.item.get('model'))
+        });
+      },
+      findLogPage: function (params) {
+        this.logDialogVisible = true
+        this.logLoading = true
+        let callback = res => {
+          this.logLoading = false
+        }
+        this.logPageRequest.eventId = this.drawBackForm.eventId
+        this.logPageRequest.operator = params.operatorId
+        this.$api.workflow.findLog(this.logPageRequest).then((res) => {
+          this.logDataForm.logHistory = res.data.records;
+          this.logTotal = res.data.total;
+          this.logPageRequest.current = res.data.current;
+          this.logPageRequest.size = res.data.size;
+          callback(res)
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+          callback(res)
         })
       },
     },

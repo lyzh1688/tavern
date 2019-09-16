@@ -39,6 +39,7 @@ public class StaffDictEndpoint {
                     .getStaffByRole(roleId);
         }
         List<Dict> dictList = hrmUserBasicInfoList.parallelStream()
+                .filter(info -> !info.getUserAccnt().equals("ADMIN"))
                 .map(info -> {
                     Dict dict = new Dict();
                     dict.setId(info.getUserId());

@@ -4,10 +4,10 @@
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="公司名称" label-width="100px">
-          <el-input v-model="dtlForm.companyName" :disabled="true"></el-input>
+          <el-input v-model="dtlForm.companyName" :readonly="true"></el-input>
         </el-form-item>
         <el-form-item label="纳税类型" label-width="100px" prop="taxType">
-          <el-input v-model="dtlForm.taxType" clearable auto-complete="off" style="float: left" :disabled="true">
+          <el-input v-model="dtlForm.taxType" clearable auto-complete="off" style="float: left" :readonly="true">
           </el-input>
         </el-form-item>
       </el-form>
@@ -19,18 +19,18 @@
             :props="{ expandTrigger: 'hover' }"
             :options="areaData"
             style="float: left"
-            :disabled="true"
+            :readonly="true"
           >
           </el-cascader>
         </el-form-item>
       </el-form>
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="金税盘种类" label-width="100px">
-          <el-input v-model="dtlForm.financeDiskType" clearable auto-complete="off" :disabled="true">
+          <el-input v-model="dtlForm.financeDiskType" clearable auto-complete="off" :readonly="true">
           </el-input>
         </el-form-item>
         <el-form-item label="税率" label-width="100px" prop="taxRate">
-          <el-input v-model="dtlForm.taxRate" :disabled="true"></el-input>
+          <el-input v-model="dtlForm.taxRate" :readonly="true"></el-input>
         </el-form-item>
       </el-form>
       <el-form :inline="false" :model="dtlForm" :size="size" align="left">
@@ -139,10 +139,10 @@
       <el-form :model="dataForm" label-width="80px" :rules="dataFormRules" ref="dataForm" :size="size"
                label-position="right">
         <el-form-item label="公司ID" prop="companyId" v-if="false">
-          <el-input v-model="dataForm.companyId" :disabled="true" auto-complete="off"></el-input>
+          <el-input v-model="dataForm.companyId" :readonly="true" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="员工ID" prop="staffId" v-if="editShow" label-width="100px">
-          <el-input v-model="dataForm.staffId" :disabled="true" auto-complete="off"></el-input>
+          <el-input v-model="dataForm.staffId" :readonly="true" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="姓名" prop="name" label-width="100px">
           <el-input v-model="dataForm.name" auto-complete="off"></el-input>

@@ -173,3 +173,11 @@ export const findOrdercompanyDetail = (params) => {
     params
   })
 }
+// 查询所有人
+export const findAllOperator = (params) => {
+  return axios({
+    url: '/workflow/dict/allStaff',
+    method: 'get',
+    params
+  })
+}
