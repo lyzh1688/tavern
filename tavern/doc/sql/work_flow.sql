@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50560
 File Encoding         : 65001
 
-Date: 2019-09-11 07:09:21
+Date: 2019-09-17 00:42:59
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -118,6 +118,7 @@ CREATE TABLE `workflow_event` (
   `cur_node_id` varchar(45) DEFAULT NULL,
   `event_owner` varchar(45) DEFAULT NULL,
   `cur_operator` varchar(45) DEFAULT NULL,
+  `cur_operator_name` varchar(255) DEFAULT NULL,
   `begin_date` datetime DEFAULT NULL,
   PRIMARY KEY (`event_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工作流事件';
@@ -125,7 +126,7 @@ CREATE TABLE `workflow_event` (
 -- ----------------------------
 -- Records of workflow_event
 -- ----------------------------
-INSERT INTO `workflow_event` VALUES ('63a69f219efc4ccb96e6b9013fb24d0e', 'g_dljz', 'g_dljz_node_cwzg', '8', '8', '2019-09-03 00:00:00');
+INSERT INTO `workflow_event` VALUES ('63a69f219efc4ccb96e6b9013fb24d0e', 'g_dljz', 'g_dljz_node_khjl', '8', '8', '我是财务主管2', '2019-09-17 00:39:16');
 
 -- ----------------------------
 -- Table structure for workflow_event_dependency
@@ -176,6 +177,9 @@ CREATE TABLE `workflow_event_history` (
 -- ----------------------------
 INSERT INTO `workflow_event_history` VALUES ('63a69f219efc4ccb96e6b9013fb24d0e', 'g_dljz', 'g_dljz_node_sq', '2019-09-03', '2019-09-03', '1');
 INSERT INTO `workflow_event_history` VALUES ('63a69f219efc4ccb96e6b9013fb24d0e', 'g_dljz', 'g_dljz_node_cwzg', '2019-09-03', '2019-09-03', '8');
+INSERT INTO `workflow_event_history` VALUES ('63a69f219efc4ccb96e6b9013fb24d0e', 'g_dljz', 'g_dljz_node_khjl', '2019-09-14', null, '5');
+INSERT INTO `workflow_event_history` VALUES ('63a69f219efc4ccb96e6b9013fb24d0e', 'g_dljz', 'g_dljz_node_khjl', '2019-09-17', null, '8');
+INSERT INTO `workflow_event_history` VALUES ('63a69f219efc4ccb96e6b9013fb24d0e', 'g_dljz', 'g_dljz_node_khjl', '2019-09-17', null, '8');
 
 -- ----------------------------
 -- Table structure for workflow_log_attachment
@@ -215,6 +219,10 @@ CREATE TABLE `workflow_log_message` (
 -- Records of workflow_log_message
 -- ----------------------------
 INSERT INTO `workflow_log_message` VALUES ('1233', '我是主管1', '8', '2019-09-08 15:29:10', '马云爸爸答应给我们投资个小目标', '63a69f219efc4ccb96e6b9013fb24d0e', '0', null, '', null);
+INSERT INTO `workflow_log_message` VALUES ('888a835cdbcb419eac9da146626be731', '我是主管1', '8', '2019-09-17 00:35:13', '不同意退款，请老总批示', '63a69f219efc4ccb96e6b9013fb24d0e', '0', null, null, null);
+INSERT INTO `workflow_log_message` VALUES ('a55347d85230447a8a0892cc752f8227', '我是主管1', '8', '2019-09-15 19:32:28', '这个案子处理过程很复杂,需要延时10天', '63a69f219efc4ccb96e6b9013fb24d0e', '0', null, null, null);
+INSERT INTO `workflow_log_message` VALUES ('d62098fd55524aafaa3cd42f1c10d2f8', '我是主管1', '8', '2019-09-17 00:39:16', '不同意退款，请老总批示', '63a69f219efc4ccb96e6b9013fb24d0e', '0', null, null, null);
+INSERT INTO `workflow_log_message` VALUES ('ff605d17289a4014b2295f4d967fad57', '我是主管1', '8', '2019-09-14 11:30:48', '请快速解决！', '63a69f219efc4ccb96e6b9013fb24d0e', '0', null, null, null);
 
 -- ----------------------------
 -- Procedure structure for pr_convert_dbtab_utf8

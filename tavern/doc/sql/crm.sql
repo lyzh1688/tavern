@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50560
 File Encoding         : 65001
 
-Date: 2019-09-04 23:43:13
+Date: 2019-09-17 00:43:11
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -103,7 +103,7 @@ CREATE TABLE `CRM_COMPANY_BUSINESS` (
 -- ----------------------------
 -- Records of CRM_COMPANY_BUSINESS
 -- ----------------------------
-INSERT INTO `CRM_COMPANY_BUSINESS` VALUES ('A5B24848E32D47FD9472DE4323D61DA2', 'BIZ_3', '2019-09-01', '2019-10-03', '2019-08-26', '1');
+INSERT INTO `CRM_COMPANY_BUSINESS` VALUES ('A5B24848E32D47FD9472DE4323D61DA2', 'BIZ_3', '2019-09-01', '2019-10-13', '2019-09-15', '1');
 
 -- ----------------------------
 -- Table structure for CRM_COMPANY_INFO
