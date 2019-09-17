@@ -3,18 +3,14 @@ package com.tuoyou.tavern.protocol.authcenter.model;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("AUTH_MENU")
-public class AuthMenu extends Model<AuthMenu> {
+public class AuthMenuVO  {
     @TableId
     private String menuId;
 
@@ -34,4 +30,11 @@ public class AuthMenu extends Model<AuthMenu> {
 
     private LocalDateTime updateDate;
 
+
+    // 非数据库字段
+    private String parentName;
+    // 非数据库字段
+    private Integer level;
+    // 非数据库字段
+    private List<AuthMenuVO> children;
 }

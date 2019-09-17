@@ -20,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -133,4 +135,23 @@ public class WorkFlowEventEndpoint {
         return new TavernResponse();
     }
 
+
+    /**
+     * 转授权
+     */
+    @PostMapping("/reChoose")
+    public TavernResponse reChooseHandler(@RequestBody List<WorkFlowRefundDTO> workFlowRefundDTOList) throws Exception {
+        List<WorkFlowNextNodeDTO> workFlowNextNodeDTOList = workFlowRefundDTOList.parallelStream()
+                .map(workFlowRefundDTO -> new WorkFlowNextNodeDTO(workFlowRefundDTO.getEventId(),
+                        workFlowRefundDTO.getCurNodeId(),
+                        workFlowRefundDTO.getHandlerId(),
+                        workFlowRefundDTO.getHandlerName(),
+                        workFlowRefundDTO.getOperator(),
+                        workFlowRefundDTO.getOperatorName(),
+                        workFlowRefundDTO.getMessage(),
+                        Lists.newArrayList(), null))
+                .collect(Collectors.toList());
+        this.workFlowEventService.reChooseHandler(workFlowNextNodeDTOList);
+        return new TavernResponse();
+    }
 }

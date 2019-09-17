@@ -49,16 +49,17 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary"
+          <kt-button icon="fa fa-search" :label="$t('action.search')" type="primary"
                      @click="findPage(null)"/>
-          <kt-button icon="fa fa-edit" label="批量转授权" perms="sys:role:view" type="primary"
-                     @click="handleReChoose(null)"/>
+          <kt-button icon="fa fa-edit" label="批量转授权" type="primary"
+                     @click="handleBatchReChoose(null)"/>
         </el-form-item>
       </el-form>
     </div>
 
     <el-table :data="tableData" stripe stripe height="500" size="mini" style="width: 100%;"
-              v-loading="loading">
+              v-loading="loading" @selection-change="selectionChange">
+      <el-table-column type="selection" width="40"></el-table-column>
       <el-table-column prop="orderId" header-align="center" align="center" label="订单ID" v-if="false">
       </el-table-column>
       <el-table-column prop="businessId" header-align="center" align="center" label="业务ID" v-if="false">
@@ -101,14 +102,14 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-gears" label="流程日志" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-gears" label="流程日志" type="primary"
                      @click="showWorkFlow(scope.row)"/>
-          <kt-button icon="fa fa-university" label="公司详情" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-university" label="公司详情" type="primary"
                      @click="handleComDtl(scope.row)"/>
-          <kt-button icon="fa fa-battery-2" label="延期" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-battery-2" label="延期" type="primary"
                      @click="handleDelay(scope.row)"/>
-          <kt-button icon="fa fa-money" label="退款" perms="sys:user:add" type="primary"
-                     @click="handleDrawBack(scope.row)"/>
+          <kt-button icon="fa fa-money" label="转授权" type="primary"
+                     @click="handleReChoose(scope.row)"/>
         </template>
       </el-table-column>
     </el-table>
@@ -160,7 +161,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
-        <el-button :size="size" @click.native="comDialogVisible = false" :loading="editLoading">
+        <el-button :size="size" type="primary" @click.native="comDialogVisible = false" :loading="editLoading">
           确认
         </el-button>
       </div>
@@ -193,7 +194,7 @@
     </el-dialog>
     <el-dialog title="历史备注" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
       <el-form :model="dataForm" :size="size" label-position="center" align="left">
-        <el-form-item  prop="logHistory" label-width="100px">
+        <el-form-item prop="logHistory" label-width="100px">
           <el-table :data="dataForm.logHistory" stripe size="mini" style="width: 100%;" v-loading="logHisLoading"
                     :element-loading-text="$t('action.loading')" height="300">
             <el-table-column
@@ -232,87 +233,86 @@
         </el-button>
       </div>
     </el-dialog>
-    <el-dialog title="退款处理" width="40%" :visible.sync="drawBackDialogVisible" :close-on-click-modal="false">
-      <el-form :inline="true" :model="filters" align="left">
-        <el-form-item label="订单号" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入订单号"></el-input>
+    <el-dialog title="转授权" width="20%" :visible.sync="reChooseDialogVisible"
+               :close-on-click-modal="false">
+      <el-form :model="reChooseForm" :size="size" align="left" :rules="reChooseFormRules" label-position="center"
+               ref="reChooseForm">
+        <el-form-item label="当前处理人" label-width="100px" prop="curOperatorName">
+          <el-input v-model="reChooseForm.curOperatorName" :readonly=true></el-input>
         </el-form-item>
-        <el-form-item label="退款业务" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入退款业务"></el-input>
-        </el-form-item>
-        <el-form-item label="应付金额" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入应付金额"></el-input>
-        </el-form-item>
-        <el-form-item label="实付金额" label-width="100px">
-          <el-input v-model="filters.name" placeholder="请输入实付金额"></el-input>
-        </el-form-item>
-        <el-form-item label="审批意见: " label-width="100px">
-          <el-input type="textarea" v-model="filters.desc" style="width: 500px"></el-input>
-        </el-form-item>
-        <el-form-item label="是否同意退款" label-width="100px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择">
-            <el-option label="是" value='0'></el-option>
-            <el-option label="否" value='1'></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer" align="center">
-        <el-button :size="size" @click.native="drawBackDialogVisible = false">{{$t('action.cancel')}}</el-button>
-        <el-button :size="size" type="primary" @click.native="drawBackDialogVisible = false" :loading="editLoading">
-          {{$t('action.submit')}}
-        </el-button>
-      </div>
-    </el-dialog>
-    <el-dialog title="转授权" width="60%" :visible.sync="reChooseDialogVisible" :close-on-click-modal="false">
-      <el-form :inline="true" :model="filters" :size="size" align="left">
-        <el-form-item label="当前处理人" label-width="100px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择">
-            <el-option label="张三丰" value='0'></el-option>
-            <el-option label="李连杰" value='1'></el-option>
-            <el-option label="萧敬腾" value='2'></el-option>
-            <el-option label="薛之谦" value='3'></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary"
-                     @click="findPage(null)"/>
-        </el-form-item>
-      </el-form>
-      <el-form :size="size" label-position="center" align="left">
-        <el-form-item prop="id">
-          <el-table :data="bakHistory.content" stripe size="mini" style="width: 100%;" v-loading="loading"
-                    :element-loading-text="$t('action.loading')">
-            <el-table-column
-              prop="content" header-align="center" align="center" label="事件ID">
-            </el-table-column>
-            <el-table-column
-              prop="time" header-align="center" align="center" label="客户名称">
-            </el-table-column>
-            <el-table-column
-              prop="writer" header-align="center" align="center" label="公司名称">
-            </el-table-column>
-            <el-table-column
-              prop="link" header-align="center" align="center" label="在办业务">
-            </el-table-column>
-            <el-table-column
-              prop="link" header-align="center" align="center" label="当前处理人">
-            </el-table-column>
-          </el-table>
-        </el-form-item>
-      </el-form>
-      <el-form :size="size" label-position="center" align="left">
-        <el-form-item label="变更处理人" label-width="100px">
-          <el-select v-model="filters.name" clearable auto-complete="off" placeholder="请选择">
-            <el-option label="张三丰" value='0'></el-option>
-            <el-option label="李连杰" value='1'></el-option>
-            <el-option label="萧敬腾" value='2'></el-option>
-            <el-option label="薛之谦" value='3'></el-option>
+        <el-form-item label="变更处理人" label-width="100px" prop="handler">
+          <el-select v-model="reChooseForm.handler"
+                     filterable
+                     clearable
+                     placeholder="请选择处理人"
+                     no-data-text="无匹配数据/请检查是否配置相关处理人"
+                     prop="handlerShow"
+                     @change="handlerChange"
+                     style="float: left"
+
+          >
+            <el-option v-for="item in handlerDict"
+                       :key="item.id"
+                       :value="item.id"
+                       :label="item.name"/>
           </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button :size="size" @click.native="reChooseDialogVisible = false">{{$t('action.cancel')}}</el-button>
-        <el-button :size="size" type="primary" @click.native="reChooseDialogVisible = false" :loading="editLoading">
+        <el-button :size="size" type="primary" @click.native="submitRechoose"
+                   :loading="reChooseEditLoading">
+          {{$t('action.submit')}}
+        </el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="转授权" width="60%" :visible.sync="reChooseBatchDialogVisible" :close-on-click-modal="false">
+      <el-form :model="reChooseBatchForm" :size="size" label-position="center" align="left"
+               :rules="reChooseBatchFormRules"
+               ref="reChooseBatchForm">
+        <el-form-item prop="content">
+          <el-table :data="reChooseBatchForm.content" stripe size="mini" style="width: 100%;" height="200"
+                    v-loading="reChooseBatchLoading"
+                    :element-loading-text="$t('action.loading')">
+            <el-table-column
+              prop="eventId" header-align="center" align="center" label="事件ID">
+            </el-table-column>
+            <el-table-column
+              prop="customName" header-align="center" align="center" label="客户名称">
+            </el-table-column>
+            <el-table-column
+              prop="companyName" header-align="center" align="center" label="公司名称">
+            </el-table-column>
+            <el-table-column
+              prop="businessName" header-align="center" align="center" label="在办业务">
+            </el-table-column>
+            <el-table-column
+              prop="curOperatorName" header-align="center" align="center" label="当前处理人">
+            </el-table-column>
+          </el-table>
+        </el-form-item>
+        <el-form-item label="变更处理人" label-width="100px" prop="handler">
+          <el-select v-model="reChooseBatchForm.handler"
+                     filterable
+                     clearable
+                     placeholder="请选择处理人"
+                     no-data-text="无匹配数据/请检查是否配置相关处理人"
+                     prop="handlerShow"
+                     @change="handlerBatchChange"
+                     style="float: left"
+
+          >
+            <el-option v-for="item in handlerDict"
+                       :key="item.id"
+                       :value="item.id"
+                       :label="item.name"/>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button :size="size" @click.native="reChooseBatchDialogVisible = false">{{$t('action.cancel')}}</el-button>
+        <el-button :size="size" type="primary" @click.native="submitReChooseBatch"
+                   :loading="reChooseBatchEditLoading">
           {{$t('action.submit')}}
         </el-button>
       </div>
@@ -371,10 +371,15 @@
         logHisLoading: false,
         dialogVisible: false,
         delayDialogVisible: false,
+        reChooseBatchLoading: false,
         reChooseDialogVisible: false,
+        reChooseDialogBatchVisible: false,
+        reChooseBatchDialogVisible: false,
         drawBackDialogVisible: false,
         comDialogVisible: false,
         editLoading: false,
+        reChooseEditLoading: false,
+        reChooseBatchEditLoading: false,
         delayLoading: false,
         dataFormRules: {},
         delayFormRules: {
@@ -383,6 +388,16 @@
           ],
           message: [
             {required: true, message: '请输入延期备注', trigger: 'blur'}
+          ],
+        },
+        reChooseFormRules: {
+          handler: [
+            {required: true, message: '请选择变更处理人', trigger: 'blur'}
+          ],
+        },
+        reChooseBatchFormRules: {
+          handler: [
+            {required: true, message: '请选择变更处理人', trigger: 'blur'}
           ],
         },
         comDtlForm: {
@@ -410,8 +425,20 @@
         bakHistory: {
           content: []
         },
-        data: {}
+        data: {},
+        reChooseForm: {
+          handler: ''
+        },
+        reChooseBatchForm: {
+          content: [],
+          handler: ''
 
+        },
+        showHandler: false,
+        handlerDict: [],
+        chosenHandler: {},
+        chosenBatchHandler: {},
+        selections: []  // 列表选中列
       }
     },
     created() {
@@ -476,12 +503,30 @@
         this.delayForm = Object.assign({}, params)
       },
       handleReChoose: function (params) {
+        this.reChooseForm = {
+          handler: ''
+        }
+        this.$api.customer.findAllOperator(null).then((res) => {
+          this.handlerDict = res.data
+        })
+        this.reChooseForm = Object.assign({}, params)
         this.reChooseDialogVisible = true
       },
-      handleDrawBack: function (params) {
-        this.drawBackDialogVisible = true
+      handleBatchReChoose: function (params) {
+        if (this.selections == undefined || this.selections.length == 0) {
+          this.$message({message: '未勾选转授权业务', type: 'error'})
+          return
+        }
+        this.reChooseBatchForm = {
+          content: [],
+          handler: ''
+        }
+        this.$api.customer.findAllOperator(null).then((res) => {
+          this.handlerDict = res.data
+        })
+        this.reChooseBatchForm.content = this.selections
+        this.reChooseBatchDialogVisible = true
       },
-
       handleRemove(file, fileList) {
         console.log(file, fileList);
       },
@@ -506,10 +551,11 @@
         request.eventId = params.eventId
         this.$api.customer.findOrdercompanyDetail(request).then((res) => {
           this.comDtlForm = res.data;
+          this.comDialogVisible = true
         }).catch((res) => {
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+          this.comDialogVisible = false
         })
-        this.comDialogVisible = true
       },
       // 编辑
       submitDelay: function () {
@@ -529,6 +575,72 @@
                 this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
                 this.delayLoading = false
                 this.delayDialogVisible = false
+              })
+            })
+          }
+        })
+      },
+      submitRechoose: function () {
+        this.$refs.reChooseForm.validate((valid) => {
+          if (valid) {
+            this.$confirm('确认提交吗？', '提示', {}).then(() => {
+              this.reChooseEditLoading = true
+              let batchRequest = [];
+              let request = {};
+              request.eventId = this.reChooseForm.eventId
+              request.operator = "6"
+              request.operatorName = "我是主管1"
+              request.message = "订单号: " + this.reChooseForm.orderId
+                + ",业务类型: " + this.reChooseForm.businessName
+                + ",当前节点: " + this.reChooseForm.curNodeName
+                + ",原处理人: " + this.reChooseForm.curOperatorName
+                + ",变更处理人: " + this.chosenHandler.name
+              request.handlerId = this.chosenHandler.id
+              request.handlerName = this.chosenHandler.name
+              request.curNodeId = this.reChooseForm.curNodeId
+              batchRequest.push(request)
+              this.$api.workflow.reChoose(batchRequest).then((res) => {
+                this.reChooseEditLoading = false
+                this.reChooseDialogVisible = false
+                this.$message({message: '操作成功', type: 'success'})
+              }).catch((res) => {
+                this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+                this.reChooseEditLoading = false
+                this.reChooseDialogVisible = false
+              })
+            })
+          }
+        })
+      },
+      submitReChooseBatch: function () {
+        this.$refs.reChooseBatchForm.validate((valid) => {
+          if (valid) {
+            this.$confirm('确认提交吗？', '提示', {}).then(() => {
+              this.reChooseBatchEditLoading = true
+              let batchRequest = [];
+              this.reChooseBatchForm.content.forEach((reChoose) => {
+                let request = {};
+                request.eventId = reChoose.eventId
+                request.operator = "6"
+                request.operatorName = "我是主管1"
+                request.message = "订单号: " + reChoose.orderId
+                  + ",业务类型: " + reChoose.businessName
+                  + ",当前节点: " + reChoose.curNodeName
+                  + ",原处理人: " + reChoose.curOperatorName
+                  + ",变更处理人: " + this.chosenBatchHandler.name
+                request.handlerId = this.chosenBatchHandler.id
+                request.handlerName = this.chosenBatchHandler.name
+                request.curNodeId = reChoose.curNodeId
+                batchRequest.push(request)
+              })
+              this.$api.workflow.reChoose(batchRequest).then((res) => {
+                this.reChooseBatchEditLoading = false
+                this.reChooseBatchDialogVisible = false
+                this.$message({message: '操作成功', type: 'success'})
+              }).catch((res) => {
+                this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+                this.reChooseBatchEditLoading = false
+                this.reChooseBatchDialogVisible = false
               })
             })
           }
@@ -658,6 +770,18 @@
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
           callback(res)
         })
+      }, handlerChange: function (val) {
+        this.chosenHandler = this.handlerDict.find(item => {
+          return val == item.id;
+        })
+      },// 选择切换
+      handlerBatchChange: function (val) {
+        this.chosenBatchHandler = this.handlerDict.find(item => {
+          return val == item.id;
+        })
+      },// 选择切换
+      selectionChange: function (selections) {
+        this.selections = selections
       },
     },
   }

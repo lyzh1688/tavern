@@ -270,7 +270,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button :size="size" @click.native="nextDialogVisible = false">{{$t('action.cancel')}}</el-button>
-        <el-button :size="size" @click.native="submitNextLogForm" :loading="nextEditLoading">
+        <el-button :size="size" type="primary" @click.native="submitNextLogForm" :loading="nextEditLoading">
           {{$t('action.submit')}}
         </el-button>
       </div>

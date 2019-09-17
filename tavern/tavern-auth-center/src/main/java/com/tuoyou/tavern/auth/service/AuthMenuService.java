@@ -2,6 +2,7 @@ package com.tuoyou.tavern.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tuoyou.tavern.protocol.authcenter.model.AuthMenu;
+import com.tuoyou.tavern.protocol.authcenter.model.AuthMenuVO;
 import com.tuoyou.tavern.protocol.hrm.model.HrmRoleInfo;
 
 import java.util.List;
@@ -12,8 +13,8 @@ import java.util.List;
  */
 public interface AuthMenuService extends IService<AuthMenu> {
 
-    List<AuthMenu> getAuthMenuList(String roles,int menuType);
+    List<AuthMenuVO> getAuthMenuList(String roles,int menuType);
 
-    List<AuthMenu> getAuthMenuByRoles(String roles);
+    List<AuthMenuVO> getAuthMenuByRoles(String roles);
 
 }

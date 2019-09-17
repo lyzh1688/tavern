@@ -111,7 +111,7 @@ const router = new Router({
           }
         }
       ]
-    },/*,{
+    }, /*,{
       path: '/',
       component: Home,
       children: [
@@ -139,7 +139,7 @@ const router = new Router({
           }
         }
       ]
-    },/*,{
+    }, /*,{
       path: '/',
       component: Home,
       children: [
@@ -253,7 +253,7 @@ router.beforeEach((to, from, next) => {
       addDynamicMenuAndRoutes(userName, to, from)
       next()
     }
-    if(to.matched.length == 0){
+    if (to.matched.length == 0) {
       next({path: '/login'})
     }
   }
@@ -288,95 +288,100 @@ function addDynamicMenuAndRoutes(userName, to, from) {
   // })
   // .catch(function(res) {
   // })
-}
-
-/**
- * 处理路由到本地直接指定页面组件的情况
- * 比如'代码生成'是要求直接绑定到'Generator'页面组件
- */
-function handleStaticComponent(router, dynamicRoutes) {
-  for (let j = 0; j < dynamicRoutes.length; j++) {
-    if (dynamicRoutes[j].name == '代码生成') {
-      dynamicRoutes[j].component = Generator
-      break
-    }
+  let perms = api.user.findPermissions({'name': userName})
+  store.commit('setPerms', perms.data.data)
+    //     // 保存用户权限标识集合
+    //     store.commit('setPerms', res.data)
+    //   })
   }
-  router.options.routes[0].children = router.options.routes[0].children.concat(dynamicRoutes)
-}
 
-/**
- * 处理IFrame嵌套页面
- */
-function handleIFrameUrl(path) {
-  // 嵌套页面，保存iframeUrl到store，供IFrame组件读取展示
-  let url = path
-  let length = store.state.iframe.iframeUrls.length
-  for (let i = 0; i < length; i++) {
-    let iframe = store.state.iframe.iframeUrls[i]
-    if (path != null && path.endsWith(iframe.path)) {
-      url = iframe.url
-      store.commit('setIFrameUrl', url)
-      break
-    }
-  }
-}
-
-/**
- * 添加动态(菜单)路由
- * @param {*} menuList 菜单列表
- * @param {*} routes 递归创建的动态(菜单)路由
- */
-function addDynamicRoutes(menuList = [], routes = []) {
-  var temp = []
-  for (var i = 0; i < menuList.length; i++) {
-    if (menuList[i].children && menuList[i].children.length >= 1) {
-      temp = temp.concat(menuList[i].children)
-    } else if (menuList[i].url && /\S/.test(menuList[i].url)) {
-      menuList[i].url = menuList[i].url.replace(/^\//, '')
-      // 创建路由配置
-      var route = {
-        path: menuList[i].url,
-        component: null,
-        name: menuList[i].name,
-        meta: {
-          icon: menuList[i].icon,
-          index: menuList[i].id
-        }
+  /**
+   * 处理路由到本地直接指定页面组件的情况
+   * 比如'代码生成'是要求直接绑定到'Generator'页面组件
+   */
+  function handleStaticComponent(router, dynamicRoutes) {
+    for (let j = 0; j < dynamicRoutes.length; j++) {
+      if (dynamicRoutes[j].name == '代码生成') {
+        dynamicRoutes[j].component = Generator
+        break
       }
-      let path = getIFramePath(menuList[i].url)
-      if (path) {
-        // 如果是嵌套页面, 通过iframe展示
-        route['path'] = path
-        route['component'] = resolve => require([`@/views/IFrame/IFrame`], resolve)
-        // 存储嵌套页面路由路径和访问URL
-        let url = getIFrameUrl(menuList[i].url)
-        let iFrameUrl = {'path': path, 'url': url}
-        store.commit('addIFrameUrl', iFrameUrl)
-      } else {
-        try {
-          // 根据菜单URL动态加载vue组件，这里要求vue组件须按照url路径存储
-          // 如url="sys/user"，则组件路径应是"@/views/sys/user.vue",否则组件加载不到
-          let array = menuList[i].url.split('/')
-          let url = ''
-          for (let i = 0; i < array.length; i++) {
-            url += array[i].substring(0, 1).toUpperCase() + array[i].substring(1) + '/'
+    }
+    router.options.routes[0].children = router.options.routes[0].children.concat(dynamicRoutes)
+  }
+
+  /**
+   * 处理IFrame嵌套页面
+   */
+  function handleIFrameUrl(path) {
+    // 嵌套页面，保存iframeUrl到store，供IFrame组件读取展示
+    let url = path
+    let length = store.state.iframe.iframeUrls.length
+    for (let i = 0; i < length; i++) {
+      let iframe = store.state.iframe.iframeUrls[i]
+      if (path != null && path.endsWith(iframe.path)) {
+        url = iframe.url
+        store.commit('setIFrameUrl', url)
+        break
+      }
+    }
+  }
+
+  /**
+   * 添加动态(菜单)路由
+   * @param {*} menuList 菜单列表
+   * @param {*} routes 递归创建的动态(菜单)路由
+   */
+  function addDynamicRoutes(menuList = [], routes = []) {
+    var temp = []
+    for (var i = 0; i < menuList.length; i++) {
+      if (menuList[i].children && menuList[i].children.length >= 1) {
+        temp = temp.concat(menuList[i].children)
+      } else if (menuList[i].url && /\S/.test(menuList[i].url)) {
+        menuList[i].url = menuList[i].url.replace(/^\//, '')
+        // 创建路由配置
+        var route = {
+          path: menuList[i].url,
+          component: null,
+          name: menuList[i].name,
+          meta: {
+            icon: menuList[i].icon,
+            index: menuList[i].id
           }
-          url = url.substring(0, url.length - 1)
-          route['component'] = resolve => require([`@/views/${url}`], resolve)
-        } catch (e) {
         }
+        let path = getIFramePath(menuList[i].url)
+        if (path) {
+          // 如果是嵌套页面, 通过iframe展示
+          route['path'] = path
+          route['component'] = resolve => require([`@/views/IFrame/IFrame`], resolve)
+          // 存储嵌套页面路由路径和访问URL
+          let url = getIFrameUrl(menuList[i].url)
+          let iFrameUrl = {'path': path, 'url': url}
+          store.commit('addIFrameUrl', iFrameUrl)
+        } else {
+          try {
+            // 根据菜单URL动态加载vue组件，这里要求vue组件须按照url路径存储
+            // 如url="sys/user"，则组件路径应是"@/views/sys/user.vue",否则组件加载不到
+            let array = menuList[i].url.split('/')
+            let url = ''
+            for (let i = 0; i < array.length; i++) {
+              url += array[i].substring(0, 1).toUpperCase() + array[i].substring(1) + '/'
+            }
+            url = url.substring(0, url.length - 1)
+            route['component'] = resolve => require([`@/views/${url}`], resolve)
+          } catch (e) {
+          }
+        }
+        routes.push(route)
       }
-      routes.push(route)
     }
+    if (temp.length >= 1) {
+      addDynamicRoutes(temp, routes)
+    } else {
+      console.log('动态路由加载...')
+      console.log(routes)
+      console.log('动态路由加载完成.')
+    }
+    return routes
   }
-  if (temp.length >= 1) {
-    addDynamicRoutes(temp, routes)
-  } else {
-    console.log('动态路由加载...')
-    console.log(routes)
-    console.log('动态路由加载完成.')
-  }
-  return routes
-}
 
-export default router
+  export default router

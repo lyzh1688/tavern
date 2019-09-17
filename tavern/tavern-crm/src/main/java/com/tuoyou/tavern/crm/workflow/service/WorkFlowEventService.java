@@ -10,6 +10,8 @@ import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEvent;
 import com.tuoyou.tavern.protocol.crm.dto.CrmOrderBusinessRelDTO;
 import com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO;
 
+import java.util.List;
+
 /**
  * Code Monkey: 何彪 <br>
  * Dev Time: 2019/08/11 <br>
@@ -27,6 +29,8 @@ public interface WorkFlowEventService extends IService<WorkFlowEvent> {
     void startNextWorkFlow(WorkFlowNextNodeDTO workFlowNextNodeDTO) throws Exception;
 
     void delayWorkEvent(WorkFlowDelayNotesDTO workFlowDelayNotesDTO);
+
+    void reChooseHandler(List<WorkFlowNextNodeDTO> workFlowNextNodeDTOList) throws Exception;
 
 
 }

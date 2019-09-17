@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import com.tuoyou.tavern.auth.dao.AuthMenuMapper;
 import com.tuoyou.tavern.auth.service.AuthMenuService;
 import com.tuoyou.tavern.protocol.authcenter.model.AuthMenu;
+import com.tuoyou.tavern.protocol.authcenter.model.AuthMenuVO;
 import com.tuoyou.tavern.protocol.hrm.constants.HrmUserConstant;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,10 +25,10 @@ public class AuthMenuServiceImpl extends ServiceImpl<AuthMenuMapper, AuthMenu> i
 
 
     @Override
-    public List<AuthMenu> getAuthMenuList(String roles, int menuType) {
-        List<AuthMenu> authMenuList = new ArrayList<>();
-        List<AuthMenu> menus = getAuthMenuByRoles(roles);
-        for (AuthMenu menu : menus) {
+    public List<AuthMenuVO> getAuthMenuList(String roles, int menuType) {
+        List<AuthMenuVO> authMenuList = new ArrayList<>();
+        List<AuthMenuVO> menus = getAuthMenuByRoles(roles);
+        for (AuthMenuVO menu : menus) {
             if (menu.getParentId() == null || menu.getParentId().equals("0")) {
                 menu.setLevel(0);
                 if (!exists(authMenuList, menu)) {
@@ -35,15 +36,15 @@ public class AuthMenuServiceImpl extends ServiceImpl<AuthMenuMapper, AuthMenu> i
                 }
             }
         }
-        authMenuList.sort(Comparator.comparing(AuthMenu::getOrderNum));
+        authMenuList.sort(Comparator.comparing(AuthMenuVO::getOrderNum));
         setChildren(authMenuList, menus, menuType);
         return authMenuList;
     }
 
-    private void setChildren(List<AuthMenu> menuList, List<AuthMenu> menus, int menuType) {
-        for (AuthMenu authMenu : menuList) {
-            List<AuthMenu> children = Lists.newArrayList();
-            for (AuthMenu menu : menus) {
+    private void setChildren(List<AuthMenuVO> menuList, List<AuthMenuVO> menus, int menuType) {
+        for (AuthMenuVO authMenu : menuList) {
+            List<AuthMenuVO> children = Lists.newArrayList();
+            for (AuthMenuVO menu : menus) {
                 if (menuType == 1 && menu.getType() == 2) {
                     // 如果是获取类型不需要按钮，且菜单类型是按钮的，直接过滤掉
                     continue;
@@ -57,22 +58,22 @@ public class AuthMenuServiceImpl extends ServiceImpl<AuthMenuMapper, AuthMenu> i
                 }
             }
             authMenu.setChildren(children);
-            children.sort(Comparator.comparing(AuthMenu::getOrderNum));
+            children.sort(Comparator.comparing(AuthMenuVO::getOrderNum));
             setChildren(children, menus, menuType);
         }
     }
 
     @Override
-    public List<AuthMenu> getAuthMenuByRoles(String roles) {
+    public List<AuthMenuVO> getAuthMenuByRoles(String roles) {
         if (StringUtils.isEmpty(roles)) {
-            return this.list();
+            return this.baseMapper.list();
         }
         return this.baseMapper.selectByRoleIds(Arrays.asList(StringUtils.split(roles, ",")));
     }
 
-    private boolean exists(List<AuthMenu> menuList, AuthMenu authMenu) {
+    private boolean exists(List<AuthMenuVO> menuList, AuthMenuVO authMenu) {
         boolean exist = false;
-        for (AuthMenu menu : menuList) {
+        for (AuthMenuVO menu : menuList) {
             if (menu.getMenuId().equals(authMenu.getMenuId())) {
                 exist = true;
             }

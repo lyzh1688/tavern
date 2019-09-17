@@ -1,6 +1,7 @@
 package com.tuoyou.tavern.protocol.authcenter.reponse;
 
 import com.tuoyou.tavern.protocol.authcenter.model.AuthMenu;
+import com.tuoyou.tavern.protocol.authcenter.model.AuthMenuVO;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AuthMenuResponse extends TavernResponse {
 
-    private List<AuthMenu> data;
+    private List<AuthMenuVO> data;
 
 
 }

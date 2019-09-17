@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -200,5 +201,38 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
             throw e;
         }
 
+    }
+
+    @TargetDataSource(name = "workflow")
+    @Override
+    public void reChooseHandler(List<WorkFlowNextNodeDTO> workFlowNextNodeDTOList) throws Exception {
+        for (WorkFlowNextNodeDTO workFlowNextNodeDTO : workFlowNextNodeDTOList) {
+
+            WorkFlowEvent workFlowEvent = this.getById(workFlowNextNodeDTO.getEventId());
+            workFlowEvent.setCurOperator(workFlowNextNodeDTO.getCurOperator());
+            workFlowEvent.setCurOperatorName(workFlowNextNodeDTO.getCurOperatorName());
+            workFlowEvent.setCurNodeId(workFlowNextNodeDTO.getCurNodeId());
+            workFlowEvent.setBeginDate(LocalDateTime.now());
+            this.updateById(workFlowEvent);
+
+            WorkFlowEventHistory curWorkFlowEventHistory = new WorkFlowEventHistory();
+            curWorkFlowEventHistory.setEventId(workFlowEvent.getEventId());
+            curWorkFlowEventHistory.setBeginDate(LocalDateTime.now());
+            curWorkFlowEventHistory.setOperator(workFlowNextNodeDTO.getCurOperator());
+            curWorkFlowEventHistory.setGraphId(workFlowEvent.getGraphId());
+            curWorkFlowEventHistory.setNodeId(workFlowNextNodeDTO.getCurNodeId());
+            this.workFlowEventHistoryService.save(curWorkFlowEventHistory);
+
+            //携带备注信息
+
+            WorkFlowLogMessage workFlowLogMessage = new WorkFlowLogMessage();
+            workFlowLogMessage.setLogId(UUIDUtil.randomUUID32());
+            workFlowLogMessage.setOperator(workFlowNextNodeDTO.getOperator());
+            workFlowLogMessage.setOperatorName(workFlowNextNodeDTO.getOperatorName());
+            workFlowLogMessage.setMessage(workFlowNextNodeDTO.getMessage());
+            workFlowLogMessage.setEventId(workFlowNextNodeDTO.getEventId());
+            workFlowLogMessage.setCreateTime(DateUtils.formatDateTime(LocalDateTime.now(), DateUtils.DEFAULT_DATETIME_FORMATTER));
+            this.workFlowLogMessageService.save(workFlowLogMessage);
+        }
     }
 }

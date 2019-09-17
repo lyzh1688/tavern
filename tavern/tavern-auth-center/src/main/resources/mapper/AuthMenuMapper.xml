@@ -12,20 +12,17 @@
     <result column="ORDER_NUM" jdbcType="INTEGER" property="orderNum" />
     <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
-  <sql id="all">
-    MENU_ID, MENU_URL, MENU_NAME, PARENT_ID, PERMS, TYPE, ICON, ORDER_NUM, UPDATE_DATE
-  </sql>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select MENU_ID, MENU_URL, MENU_NAME, PARENT_ID, PERMS, TYPE, ICON, ORDER_NUM, UPDATE_DATE
-    from AUTH_MENU
-  </select>
-  <select id="selectByRoleIds" resultMap="BaseResultMap">
-    select <include refid="all"/>
+  <select id="selectByRoleIds" resultType="com.tuoyou.tavern.protocol.authcenter.model.AuthMenuVO">
+    select  t1.MENU_ID, MENU_URL, MENU_NAME, PARENT_ID, PERMS, TYPE, ICON, ORDER_NUM, t1.UPDATE_DATE
     from AUTH_MENU t1,AUTH_MENU_ROLE_REL t2
     where t1.MENU_ID = t2.MENU_ID
     <foreach collection="list" index="index" item="item" open=" and (" close=" )" separator="or">
       t2.ROLE_ID = #{item}
     </foreach>
 
+  </select>
+  <select id="list" resultType="com.tuoyou.tavern.protocol.authcenter.model.AuthMenuVO">
+    select  MENU_ID, MENU_URL, MENU_NAME, PARENT_ID, PERMS, TYPE, ICON, ORDER_NUM, UPDATE_DATE
+    from AUTH_MENU
   </select>
 </mapper>

@@ -7,7 +7,7 @@ import axios from '../axios'
  // 保存
 export const save = (data) => {
     return axios({
-        url: '/menu/save',
+        url: '/auth/menu/save',
         method: 'post',
         data
     })
@@ -15,7 +15,7 @@ export const save = (data) => {
 // 删除
 export const batchDelete = (data) => {
     return axios({
-        url: '/menu/delete',
+        url: '/auth/menu/delete',
         method: 'post',
         data
     })
@@ -544,7 +544,7 @@ export const findNavTree = (params) => {
 // 查找导航菜单树
 export const findMenuTree = () => {
     return axios({
-        url: '/menu/findMenuTree',
+        url: '/auth/menu/findMenuTree',
         method: 'get'
     })
 }

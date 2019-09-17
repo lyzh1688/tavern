@@ -23,10 +23,10 @@ import * as outer from './modules/outer'
 // let openMock = true
 let openMock = false
 fnCreate(login, true)
-fnCreate(user, true)
+fnCreate(user, openMock)
 fnCreate(role, true)
 fnCreate(dept, openMock)
-fnCreate(menu, true)
+fnCreate(menu, openMock)
 fnCreate(dict, openMock)
 fnCreate(log, openMock)
 fnCreate(zzs, openMock)

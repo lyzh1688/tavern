@@ -86,4 +86,11 @@ export const drawBack = (data) => {
     data
   })
 }
-
+// 批示
+export const reChoose = (data) => {
+  return axios({
+    url: '/workflow/event/reChoose',
+    method: 'post',
+    data
+  })
+}
