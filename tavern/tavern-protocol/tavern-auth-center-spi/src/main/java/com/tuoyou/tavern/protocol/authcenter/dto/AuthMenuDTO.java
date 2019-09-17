@@ -1,11 +1,9 @@
-package com.tuoyou.tavern.protocol.authcenter.model;
+package com.tuoyou.tavern.protocol.authcenter.dto;
 
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class AuthMenuVO {
+public class AuthMenuDTO {
     private Long menuId;
 
     private String menuUrl;
@@ -24,11 +22,4 @@ public class AuthMenuVO {
 
     private String updateDate;
 
-
-    // 非数据库字段
-    private String parentName;
-    // 非数据库字段
-    private Integer level;
-    // 非数据库字段
-    private List<AuthMenuVO> children;
 }

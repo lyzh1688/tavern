@@ -6,6 +6,7 @@ import com.tuoyou.tavern.protocol.authcenter.model.AuthMenuRoleRel;
 import com.tuoyou.tavern.protocol.common.RetCode;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import com.tuoyou.tavern.protocol.hrm.constants.HrmUserConstant;
+import com.tuoyou.tavern.protocol.hrm.dto.StaffRoleDTO;
 import com.tuoyou.tavern.protocol.hrm.model.HrmRoleInfo;
 import com.tuoyou.tavern.protocol.hrm.response.StaffRolePageResponse;
 import com.tuoyou.tavern.protocol.hrm.response.StaffRoleResponse;
@@ -22,7 +23,7 @@ import java.util.Objects;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/hrm/role")
+@RequestMapping("/role")
 public class StaffRoleEndpoint {
 
     private final HrmUserRoleService hrmUserRoleService;
@@ -63,8 +64,8 @@ public class StaffRoleEndpoint {
      * 分页查询角色
      */
     @GetMapping("/page")
-    public StaffRolePageResponse page(Page<HrmRoleInfo> page) {
-        return new StaffRolePageResponse(this.hrmUserRoleService.page(page));
+    public StaffRolePageResponse page(Page page, StaffRoleDTO staffRoleDTO) {
+        return new StaffRolePageResponse(this.hrmUserRoleService.getStaffRolePage(page,staffRoleDTO));
     }
 
     /**

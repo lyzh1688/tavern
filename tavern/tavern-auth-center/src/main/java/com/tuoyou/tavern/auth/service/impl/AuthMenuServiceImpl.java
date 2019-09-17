@@ -29,7 +29,7 @@ public class AuthMenuServiceImpl extends ServiceImpl<AuthMenuMapper, AuthMenu> i
         List<AuthMenuVO> authMenuList = new ArrayList<>();
         List<AuthMenuVO> menus = getAuthMenuByRoles(roles);
         for (AuthMenuVO menu : menus) {
-            if (menu.getParentId() == null || menu.getParentId().equals("0")) {
+            if (menu.getParentId() == null || menu.getParentId().equals(0L)) {
                 menu.setLevel(0);
                 if (!exists(authMenuList, menu)) {
                     authMenuList.add(menu);

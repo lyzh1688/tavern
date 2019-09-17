@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tuoyou.tavern.auth.dao.AuthMenuMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.authcenter.model.AuthMenu">
-    <id column="MENU_ID" jdbcType="VARCHAR" property="menuId" />
-    <result column="MENU_URL" jdbcType="VARCHAR" property="menuUrl" />
-    <result column="MENU_NAME" jdbcType="VARCHAR" property="menuName" />
-    <result column="PARENT_ID" jdbcType="VARCHAR" property="parentId" />
-    <result column="PERMS" jdbcType="VARCHAR" property="perms" />
-    <result column="TYPE" jdbcType="INTEGER" property="type" />
-    <result column="ICON" jdbcType="VARCHAR" property="icon" />
-    <result column="ORDER_NUM" jdbcType="INTEGER" property="orderNum" />
-    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
-  </resultMap>
-  <select id="selectByRoleIds" resultType="com.tuoyou.tavern.protocol.authcenter.model.AuthMenuVO">
-    select  t1.MENU_ID, MENU_URL, MENU_NAME, PARENT_ID, PERMS, TYPE, ICON, ORDER_NUM, t1.UPDATE_DATE
-    from AUTH_MENU t1,AUTH_MENU_ROLE_REL t2
-    where t1.MENU_ID = t2.MENU_ID
-    <foreach collection="list" index="index" item="item" open=" and (" close=" )" separator="or">
-      t2.ROLE_ID = #{item}
-    </foreach>
+    <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.authcenter.model.AuthMenu">
+        <id column="MENU_ID" jdbcType="INTEGER" property="menuId"/>
+        <result column="MENU_URL" jdbcType="VARCHAR" property="menuUrl"/>
+        <result column="MENU_NAME" jdbcType="VARCHAR" property="menuName"/>
+        <result column="PARENT_ID" jdbcType="INTEGER" property="parentId"/>
+        <result column="PERMS" jdbcType="VARCHAR" property="perms"/>
+        <result column="TYPE" jdbcType="INTEGER" property="type"/>
+        <result column="ICON" jdbcType="VARCHAR" property="icon"/>
+        <result column="ORDER_NUM" jdbcType="INTEGER" property="orderNum"/>
+        <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate"/>
+    </resultMap>
+    <select id="selectByRoleIds" resultType="com.tuoyou.tavern.protocol.authcenter.model.AuthMenuVO">
+        select t1.MENU_ID menuId,
+        MENU_URL menuUrl,
+        MENU_NAME menuName,
+        PARENT_ID parentId,
+        PERMS perms, TYPE type, ICON icon,
+        ORDER_NUM orderNum,
+        DATE_FORMAT(t1.UPDATE_DATE,'%Y-%m-%d %H:%i:%s') updateDate
+        from AUTH_MENU t1,AUTH_MENU_ROLE_REL t2
+        where t1.MENU_ID = t2.MENU_ID
+        <foreach collection="list" index="index" item="item" open=" and (" close=" )" separator="or">
+            t2.ROLE_ID = #{item}
+        </foreach>
 
-  </select>
-  <select id="list" resultType="com.tuoyou.tavern.protocol.authcenter.model.AuthMenuVO">
-    select  MENU_ID, MENU_URL, MENU_NAME, PARENT_ID, PERMS, TYPE, ICON, ORDER_NUM, UPDATE_DATE
+    </select>
+    <select id="list" resultType="com.tuoyou.tavern.protocol.authcenter.model.AuthMenuVO">
+    select MENU_ID menuId,
+        MENU_URL menuUrl,
+        MENU_NAME menuName,
+        PARENT_ID parentId,
+        PERMS perms, TYPE type, ICON icon,
+        ORDER_NUM orderNum,
+        DATE_FORMAT(UPDATE_DATE,'%Y-%m-%d %H:%i:%s') updateDate
     from AUTH_MENU
   </select>
 </mapper>

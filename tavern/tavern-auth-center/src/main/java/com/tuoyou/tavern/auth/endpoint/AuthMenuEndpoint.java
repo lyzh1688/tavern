@@ -1,12 +1,14 @@
 package com.tuoyou.tavern.auth.endpoint;
 
 import com.tuoyou.tavern.auth.service.AuthMenuService;
+import com.tuoyou.tavern.protocol.authcenter.dto.AuthMenuDTO;
 import com.tuoyou.tavern.protocol.authcenter.model.AuthMenu;
 import com.tuoyou.tavern.protocol.authcenter.model.AuthMenuVO;
 import com.tuoyou.tavern.protocol.authcenter.reponse.AuthMenuResponse;
 import com.tuoyou.tavern.protocol.common.TavernRequestAuthFields;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,18 +27,24 @@ public class AuthMenuEndpoint {
     private final AuthMenuService authMenuService;
 
     @PostMapping("/save")
-    public TavernResponse save(@Valid @RequestBody AuthMenu authMenu) {
+    public TavernResponse save(@Valid @RequestBody AuthMenuDTO authMenuDTO) {
+        AuthMenu authMenu = new AuthMenu();
+        BeanUtils.copyProperties(authMenuDTO, authMenu);
         if (authMenu.getParentId() == null) {
-            authMenu.setParentId("0");
+            authMenu.setParentId(0L);
         }
         authMenu.setUpdateDate(LocalDateTime.now());
-        this.authMenuService.saveOrUpdate(authMenu);
+        if (authMenu.getMenuId() == null || authMenu.getMenuId() == 0) {
+            this.authMenuService.save(authMenu);
+            return new TavernResponse();
+        }
+        this.authMenuService.updateById(authMenu);
         return new TavernResponse();
     }
 
     @PostMapping("/delete")
-    public TavernResponse delete(@Valid @RequestBody List<AuthMenu> authMenu) {
-        this.authMenuService.removeByIds(authMenu.stream().map(AuthMenu::getMenuId).collect(Collectors.toList()));
+    public TavernResponse delete(@Valid @RequestBody List<AuthMenuDTO> authMenu) {
+        this.authMenuService.removeByIds(authMenu.stream().map(AuthMenuDTO::getMenuId).collect(Collectors.toList()));
         return new TavernResponse();
     }
 
@@ -48,7 +56,7 @@ public class AuthMenuEndpoint {
 
     @GetMapping("/findMenuTree")
     public AuthMenuResponse getMenuTree() {
-        List<AuthMenuVO> authMenuList = this.authMenuService.getAuthMenuList(null, 1);
+        List<AuthMenuVO> authMenuList = this.authMenuService.getAuthMenuList(null, 0);
         return new AuthMenuResponse(authMenuList);
     }
 }

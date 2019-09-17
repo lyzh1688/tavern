@@ -7,7 +7,7 @@ import axios from '../axios'
 // 保存
 export const save = (data) => {
   return axios({
-    url: '/role/save',
+    url: '/hrm/role/save',
     method: 'post',
     data
   })
@@ -15,30 +15,30 @@ export const save = (data) => {
 // 删除
 export const batchDelete = (data) => {
   return axios({
-    url: '/role/delete',
+    url: '/hrm/role/delete',
     method: 'post',
     data
   })
 }
 // 分页查询
-export const findPage = (data) => {
+export const findPage = (params) => {
   return axios({
-    url: '/role/findPage',
-    method: 'post',
-    data
+    url: '/hrm/role/page',
+    method: 'get',
+    params
   })
 }
 // 查询全部
 export const findAll = () => {
   return axios({
-    url: '/role/findAll',
+    url: '/hrm/role/findAll',
     method: 'get'
   })
 }
 // 查询角色菜单集合
 export const findRoleMenus = (params) => {
   return axios({
-    url: '/role/findRoleMenus',
+    url: '/hrm/role/findRoleMenus',
     method: 'get',
     params
   })
@@ -46,7 +46,7 @@ export const findRoleMenus = (params) => {
 // 保存角色菜单集合
 export const saveRoleMenus = (data) => {
   return axios({
-    url: '/role/saveRoleMenus',
+    url: '/hrm/role/saveRoleMenus',
     method: 'post',
     data
   })

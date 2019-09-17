@@ -4,9 +4,6 @@
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
       <el-form :inline="true" :model="filters" :size="size">
         <el-form-item>
-          <el-input v-model="filters.name" placeholder="名称"></el-input>
-        </el-form-item>
-        <el-form-item>
           <kt-button icon="fa fa-search" :label="$t('action.search')" v-if="sys_menu_view" type="primary"
                      @click="findTreeData(null)"/>
         </el-form-item>
@@ -18,7 +15,7 @@
     </div>
     <!--表格树内容栏-->
     <el-table :data="tableTreeDdata" stripe size="mini" style="width: 100%;" height="600"
-              rowKey="id" v-loading="loading" :element-loading-text="$t('action.loading')">
+              rowKey="menuId" v-loading="loading" :element-loading-text="$t('action.loading')">
       <el-table-column
         prop="menuId" header-align="center" align="center" width="80" label="ID">
       </el-table-column>
@@ -174,11 +171,11 @@
           iconList: []
         },
         dataRule: {
-          name: [{required: true, message: "菜单名称不能为空", trigger: "blur"}]
+          menuName: [{required: true, message: "菜单名称不能为空", trigger: "blur"}]
         },
         popupTreeData: [],
         popupTreeProps: {
-          label: "name",
+          label: "menuName",
           children: "children"
         },
         sys_menu_edit: false,
@@ -211,7 +208,7 @@
       getParentMenuTree: function (tableTreeDdata) {
         let parent = {
           parentId: 0,
-          name: "顶级菜单",
+          menuName: "顶级菜单",
           children: tableTreeDdata
         };
         return [parent];
@@ -267,8 +264,8 @@
       ,
       // 菜单树选中
       handleTreeSelectChange(data, node) {
-        this.dataForm.parentId = data.id;
-        this.dataForm.parentName = data.name;
+        this.dataForm.parentId = data.menuId;
+        this.dataForm.parentName = data.menuName;
       }
       ,
       // 图标选中

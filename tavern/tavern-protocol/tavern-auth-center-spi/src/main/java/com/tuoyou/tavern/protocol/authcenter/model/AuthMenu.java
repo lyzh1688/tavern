@@ -16,13 +16,13 @@ import java.util.List;
 @TableName("AUTH_MENU")
 public class AuthMenu extends Model<AuthMenu> {
     @TableId
-    private String menuId;
+    private Long menuId;
 
     private String menuUrl;
 
     private String menuName;
 
-    private String parentId;
+    private Long parentId;
 
     private String perms;
 

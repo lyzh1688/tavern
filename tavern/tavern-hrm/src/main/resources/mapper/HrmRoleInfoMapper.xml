@@ -9,8 +9,13 @@
   <sql id="all">
     ROLE_ID, ROLE_NAME, PARENT_ROLE
   </sql>
-  <select id="selectAll" resultMap="BaseResultMap">
+  <select id="selectStaffRolePage" resultMap="BaseResultMap">
     select <include refid="all"/>
     from HRM_ROLE_INFO
+    <where>
+      <if test="query.roleName != null and query.roleName != ''">
+        ROLE_NAME like concat('%', #{query.roleName}, '%')
+      </if>
+    </where>
   </select>
 </mapper>

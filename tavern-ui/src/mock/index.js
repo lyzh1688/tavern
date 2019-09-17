@@ -24,7 +24,7 @@ import * as outer from './modules/outer'
 let openMock = false
 fnCreate(login, true)
 fnCreate(user, openMock)
-fnCreate(role, true)
+fnCreate(role, openMock)
 fnCreate(dept, openMock)
 fnCreate(menu, openMock)
 fnCreate(dict, openMock)
