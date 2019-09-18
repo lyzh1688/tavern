@@ -59,15 +59,20 @@ public class DoAfterLogin extends ZuulFilter {
         try {
             String body = IOUtils.toString(stream);
             loginResponse = JSON.parseObject(body).toJavaObject(LoginResponse.class);
+            if (loginResponse.getRetCode() != 0) {
+                ctx.setResponseBody(JSON.toJSONString(new TavernResponse(RetCode.AUTH_FAILED, loginResponse.getRetMessage())));
+                ctx.set(ContextDict.isLoginSuccess, false);
+                return null;
+            }
             //登陆成功
             AuthTokenFactor authTokenFactor = new AuthTokenFactor();
-            authTokenFactor.setUserType(loginResponse.getData().getUserType());
+//            authTokenFactor.setUserType(loginResponse.getData().getUserType());
             authTokenFactor.setUserAccnt(loginResponse.getData().getUserAccnt());
             authTokenFactor.setRoleId(loginResponse.getData().getRoles());
             String token = TokenHelper.createToken(this.config, authTokenFactor);
             loginResponse.getData().setToken(token);
             RequestContext.getCurrentContext().setResponseBody(JSON.toJSONString(loginResponse));
-        } catch (IOException e) {
+        } catch (Exception e) {
             ctx.setResponseBody(JSON.toJSONString(new TavernResponse(RetCode.AUTH_FAILED, "登陆失败")));
             ctx.set(ContextDict.isLoginSuccess, false);
             return null;

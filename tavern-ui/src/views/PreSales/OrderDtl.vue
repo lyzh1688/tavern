@@ -4,18 +4,18 @@
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="订单号" label-width="100px">
-          <el-input v-model="dtlForm.orderId" :disabled=true></el-input>
+          <el-input v-model="dtlForm.orderId" :readonly=true></el-input>
         </el-form-item>
         <el-form-item label="订单日期" label-width="100px">
-          <el-date-picker v-model="dtlForm.orderDate" type="datetime" :disabled=true></el-date-picker>
+          <el-date-picker v-model="dtlForm.orderDate" type="datetime" :readonly=true></el-date-picker>
         </el-form-item>
       </el-form>
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="应付金额" label-width="100px">
-          <el-input v-model="dtlForm.receivableAmt" :disabled=true></el-input>
+          <el-input v-model="dtlForm.receivableAmt" :readonly=true></el-input>
         </el-form-item>
         <el-form-item label="实付金额" label-width="100px">
-          <el-input v-model="dtlForm.payableAmt" :disabled=true></el-input>
+          <el-input v-model="dtlForm.payableAmt" :readonly=true></el-input>
         </el-form-item>
       </el-form>
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">

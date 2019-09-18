@@ -17,7 +17,7 @@ public class HrmServiceProviderDesc {
         SpiDescription staffServiceQueryStaffBasicInfo = new SpiDescription.Builder()
                 .serviceClass(StaffService.class)
                 .requestMethod(RequestMethods.GET)
-                .resourcePath("/hrm/staff?accnt=${accnt}&password=${password}")
+                .resourcePath("/user/staff?accnt=${accnt}&password=${password}")
                 .serviceApi("queryStaffBasicInfo")
                 .build();
 

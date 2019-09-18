@@ -1,5 +1,6 @@
 package com.tuoyou.tavern.crm.endpoint;
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tuoyou.tavern.auth.libs.utils.PwdUtils;
@@ -77,14 +78,25 @@ public class StaffEndpoint {
     public StaffInfoResponse queryStaffBasicInfo(@RequestParam(name = "accnt") String accnt, @RequestParam(name = "password") String password) {
         StaffBasicInfo staffBasicInfo = this.hrmUserBasicInfoService.queryStaffBasicInfo(accnt, password);
         StaffInfoResponse staffInfoResponse = new StaffInfoResponse();
+        // 账号不存在、密码错误
         if (Objects.isNull(staffBasicInfo)) {
             staffInfoResponse.setRetCode(RetCode.AUTH_FAILED);
             staffInfoResponse.setRetMessage("用户不存在");
             return staffInfoResponse;
-        } else {
+        }
+        if (StringUtils.isEmpty(staffBasicInfo.getSalt()) && password.equals(staffBasicInfo.getPassword())) {
             staffInfoResponse.setData(staffBasicInfo);
             return staffInfoResponse;
         }
+
+        if (!PwdUtils.matches(staffBasicInfo.getSalt(), password, staffBasicInfo.getPassword())) {
+            staffInfoResponse.setRetCode(RetCode.AUTH_FAILED);
+            staffInfoResponse.setRetMessage("密码不正确");
+            return staffInfoResponse;
+        }
+
+        staffInfoResponse.setData(staffBasicInfo);
+        return staffInfoResponse;
     }
 
     /*

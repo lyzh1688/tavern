@@ -33,15 +33,15 @@
     </select>
 
     <select id="selectStaffBasicInfo" resultMap="BasicInfoMap">
-        select T1.USER_ID,T1.USER_ACCNT,T1.USER_NAME,T3.ROLE_ID,T2.USER_ID USER_ID_REL,T3.ROLE_NAME, from HRM_USER_BASIC_INFO
+        select T1.USER_ID,T1.USER_ACCNT,T1.USER_NAME,T1.PASSWORD,T1.SALT,DATE_FORMAT(T1.UPDATE_DATE,'%Y-%m-%d %H:%i:%s') UPDATE_DATE,
+        T3.ROLE_ID,T2.USER_ID USER_ID_REL,T3.ROLE_NAME from HRM_USER_BASIC_INFO
         T1 left join HRM_USER_ROLE_REL T2 on T1.USER_ID = T2.USER_ID
         left join HRM_ROLE_INFO T3 on T2.ROLE_ID = T3.ROLE_ID
         WHERE  T1.USER_ACCNT = #{accnt}
-        and T1.PASSWORD = #{password}
         and T1.IS_VALID = '1'
     </select>
     <select id="selectStaffPage" resultMap="BasicInfoMap">
-        select T1.USER_ID,T1.USER_ACCNT,T1.USER_NAME,T1.PASSWORD,DATE_FORMAT(T1.UPDATE_DATE,'%Y-%m-%d %H:%i:%s')
+        select  T1.USER_ID,T1.USER_ACCNT,T1.USER_NAME,T1.PASSWORD,T1.SALT,DATE_FORMAT(T1.UPDATE_DATE,'%Y-%m-%d %H:%i:%s')
         UPDATE_DATE,T3.ROLE_NAME,
         T3.ROLE_ID,T2.USER_ID USER_ID_REL from
         HRM_USER_BASIC_INFO T1

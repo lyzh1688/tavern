@@ -111,8 +111,8 @@
                      @click="showWorkFlow(scope.row)"/>
           <kt-button icon="fa fa-plus" label="添加备注" type="primary"
                      @click="handleLog(scope.row)"/>
-          <kt-button icon="fa fa-money" label="退款审批" type="primary"
-                     @click="handleDrawBack(scope.row)"/><!--v-if="scope.row.curNodeName == '退款审批'"-->
+          <kt-button icon="fa fa-money" label="退款审批" type="primary" v-if="scope.row.curNodeName == '退款审批'"
+                     @click="handleDrawBack(scope.row)"/>
           <kt-button icon="fa fa-arrow-right" label="下一步" perms="sys:user:add" type="primary"
                      @click="handleNext(scope.row)"/>
         </template>
@@ -525,8 +525,7 @@
         let callback = res => {
           this.loading = false
         }
-        // this.pageRequest.userId = sessionStorage.getItem("userId")
-        this.pageRequest.userId = '8'
+        this.pageRequest.userId = sessionStorage.getItem("userId")
         this.pageRequest.city = this.filters.city
         this.pageRequest.district = this.filters.district
         this.pageRequest.customName = this.filters.customName
@@ -662,8 +661,8 @@
             for (let i = 0; i < this.fileList.length; i++) {
               formData.append('files', this.fileList[i].raw);
             }
-            formData.append('operator', "6");
-            formData.append('operatorName', "我是主管6");
+            formData.append('operator', sessionStorage.getItem("userId"));
+            formData.append('operatorName', sessionStorage.getItem("userName"));
             if (this.dataForm.message != undefined) {
               formData.append('message', this.dataForm.message);
             }
@@ -700,8 +699,8 @@
               formData.append('curNodeId', this.chosenNode.nodeId);
               formData.append('curOperator', this.chosenOperator.id);
               formData.append('curOperatorName', this.chosenOperator.name);
-              formData.append('operator', "6");
-              formData.append('operatorName', "我是主管6");
+              formData.append('operator', sessionStorage.getItem("userId"));
+              formData.append('operatorName', sessionStorage.getItem("userName"));
               if (this.nextForm.message != undefined) {
                 formData.append('message', this.nextForm.message);
               }
@@ -741,16 +740,16 @@
 
               let request = {};
               request.eventId = this.drawBackForm.eventId
-              request.operator = "6"
-              request.operatorName = "我是主管1"
+              request.operator = sessionStorage.getItem("userId")
+              request.operatorName = sessionStorage.getItem("userName")
               request.message = this.drawBackForm.message
 
               if(this.drawBackForm.agreeRefund == '0'){
                 request.handlerId = this.chosenHandler.id
                 request.handlerName = this.chosenHandler.name
               }else {
-                request.handlerId = "6"
-                request.handlerName = "我是主管1"
+                request.operator = sessionStorage.getItem("userId")
+                request.operatorName = sessionStorage.getItem("userName")
               }
               request.curNodeId = this.drawBackForm.curNodeId
 

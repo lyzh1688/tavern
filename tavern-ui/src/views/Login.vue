@@ -10,14 +10,18 @@
       <!-- 语言切换 -->
       <!-- <lang-selector class="lang-selector"></lang-selector>    -->
     </span>
-        <h2 class="title" style="padding-left:22px;">财务管理平台</h2>
+        <h2 class="title" style="padding-left:22px;">拓佑财务管理平台</h2>
         <el-form-item prop="account">
-          <el-input type="text" v-model="loginForm.account" auto-complete="off" placeholder="账号" size="medium"></el-input>
+          <el-input type="text" v-model="loginForm.account" auto-complete="off" placeholder="账号"
+                    @keyup.enter.native="login"
+                    size="medium"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="密码" size="medium"></el-input>
+          <el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="密码"
+                    @keyup.enter.native="login"
+                    size="medium"></el-input>
         </el-form-item>
-        <el-form-item prop="userType">
+       <!-- <el-form-item prop="userType">
           <el-select v-model="loginForm.userType" clearable auto-complete="off" placeholder="请选择登录类型" size="medium">
             <el-option
               v-for="item in options"
@@ -26,7 +30,7 @@
               :value="item.value">
             </el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
 
         <!-- <el-form-item>
            <el-col :span="12">
@@ -49,12 +53,13 @@
           <el-button type="primary" style="width:48%;" @click.native.prevent="login" :loading="loading">登 录</el-button>
         </el-form-item>
       </el-form>
+      <!--<div style="padding-bottom: 0px">
+        <el-footer >
+          <p class="copyright">© 2018 </p>
+        </el-footer>
+      </div>-->
     </div>
-    <!--<div>
-      <el-footer>
-        <p>版权所有 &copy; </p>
-      </el-footer>
-    </div>-->
+
   </div>
 </template>
 
@@ -74,8 +79,8 @@
       return {
         loading: false,
         loginForm: {
-          account: 'admin',
-          password: 'admin',
+          account: '',
+          password: '',
           userType: '1',
           captcha: '',
           src: ''
@@ -87,9 +92,9 @@
           password: [
             {required: true, message: '请输入密码', trigger: 'blur'}
           ],
-          userType: [
+         /* userType: [
             {required: true, message: '请选择登录类型', trigger: 'blur'}
-          ]
+          ]*/
           // ,
           // captcha: [
           //   { required: true, message: '请输入验证码', trigger: 'blur' }
@@ -114,7 +119,7 @@
           userType: this.loginForm.userType,
           captcha: this.loginForm.captcha
         }
-        if(this.loginForm.account  == undefined || this.loginForm.account == null || this.loginForm.account == '') {
+        if (this.loginForm.account == undefined || this.loginForm.account == null || this.loginForm.account == '') {
           this.$message({
             message: "请输入用户名",
             type: 'error'
@@ -122,7 +127,7 @@
           this.loading = false
           return;
         }
-        if(this.loginForm.password  == undefined || this.loginForm.password == null || this.loginForm.password == '') {
+        if (this.loginForm.password == undefined || this.loginForm.password == null || this.loginForm.password == '') {
           this.$message({
             message: "请输入密码",
             type: 'error'
@@ -130,31 +135,33 @@
           this.loading = false
           return;
         }
-        if(this.loginForm.userType  == undefined || this.loginForm.userType == null || this.loginForm.userType == '') {
+        /*if (this.loginForm.userType == undefined || this.loginForm.userType == null || this.loginForm.userType == '') {
           this.$message({
             message: "请选择用户类型",
             type: 'error'
           })
           this.loading = false
           return;
-        }
+        }*/
         this.$api.login.login(userInfo).then((res) => {
-          if (res.msg != null) {
+          if (res.retCode != 0) {
             this.$message({
-              message: res.msg,
+              message: res.retMessage,
               type: 'error'
             })
           } else {
             Cookies.set('token', res.data.token) // 放置token到Cookie
-            sessionStorage.setItem('user', userInfo.userAccnt) // 保存用户到本地会话
+            sessionStorage.setItem('user', res.data.userAccnt) // 保存用户到本地会话
             sessionStorage.setItem('userId', res.data.userId) // 保存用户到本地会话
+            sessionStorage.setItem('roles', res.data.roles) // 保存用户到本地会话
+            sessionStorage.setItem('userInfo', JSON.stringify(res.data)) // 保存用户到本地会话
             this.$store.commit('menuRouteLoaded', false) // 要求重新加载导航菜单
             this.$router.push('/')  // 登录成功，跳转到主页
           }
           this.loading = false
         }).catch((res) => {
           this.$message({
-            message: res.message,
+            message: res.response.data.retMessage,
             type: 'error'
           })
           this.loading = false
@@ -215,5 +222,21 @@
     background-size: cover;
   }
 
+  .copyright-footer {
+    margin: 0 auto;
+    padding: 0 22px;
+    width: 1300px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .logo {
+      margin-left: -50px;
+    }
+    .copyright {
+      color: #666;
+      line-height: 1.5;
+      font-size: 12px;
+    }
+  }
 
 </style>

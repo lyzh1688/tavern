@@ -22,7 +22,7 @@ import * as outer from './modules/outer'
 // 3. 开启/关闭[业务模块中某个请求]拦截, 通过函数返回对象中的[isOpen属性]设置.
 // let openMock = true
 let openMock = false
-fnCreate(login, true)
+fnCreate(login, openMock)
 fnCreate(user, openMock)
 fnCreate(role, openMock)
 fnCreate(dept, openMock)

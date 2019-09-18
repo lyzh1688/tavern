@@ -564,8 +564,8 @@
             this.$confirm('确认提交吗？', '提示', {}).then(() => {
               this.delayLoading = true
               let params = Object.assign({}, this.delayForm)
-              params.operator = "8";
-              params.operatorName = "我是主管1";
+              params.operator =  sessionStorage.getItem("userId")
+              params.operatorName = sessionStorage.getItem("userName")
               params.message = this.delayForm.message + ",需要延时" + this.delayForm.delayDays + "天"
               this.$api.workflow.delayNotes(params).then((res) => {
                 this.delayLoading = false
@@ -588,8 +588,8 @@
               let batchRequest = [];
               let request = {};
               request.eventId = this.reChooseForm.eventId
-              request.operator = "6"
-              request.operatorName = "我是主管1"
+              request.operator =  sessionStorage.getItem("userId")
+              request.operatorName = sessionStorage.getItem("userName")
               request.message = "订单号: " + this.reChooseForm.orderId
                 + ",业务类型: " + this.reChooseForm.businessName
                 + ",当前节点: " + this.reChooseForm.curNodeName
@@ -621,8 +621,8 @@
               this.reChooseBatchForm.content.forEach((reChoose) => {
                 let request = {};
                 request.eventId = reChoose.eventId
-                request.operator = "6"
-                request.operatorName = "我是主管1"
+                request.operator =  sessionStorage.getItem("userId")
+                request.operatorName = sessionStorage.getItem("userName")
                 request.message = "订单号: " + reChoose.orderId
                   + ",业务类型: " + reChoose.businessName
                   + ",当前节点: " + reChoose.curNodeName

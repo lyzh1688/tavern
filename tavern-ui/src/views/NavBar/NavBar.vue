@@ -94,7 +94,7 @@ export default {
   .logo {
     position:absolute;
     top: 0px;
-    height: 60px;   
+    height: 60px;
     line-height: 60px;
     background: #545c64;
     cursor:pointer;

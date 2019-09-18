@@ -55,7 +55,7 @@ public class AuthMenuEndpoint {
     }
 
     @GetMapping("/findNavTree")
-    public AuthMenuResponse getNavTree(@RequestHeader(value = TavernRequestAuthFields.ROLE_ID) String roles) {
+    public AuthMenuResponse getNavTree(@RequestParam(name = "roles") String roles) {
         List<AuthMenuVO> authMenuList = this.authMenuService.getAuthMenuList(roles, 1);
         return new AuthMenuResponse(authMenuList);
     }
@@ -82,7 +82,7 @@ public class AuthMenuEndpoint {
         }
         this.authMenuRoleRelService.remove(Wrappers.<AuthMenuRoleRel>query().lambda().eq(AuthMenuRoleRel::getRoleId, authMenuRoleRelList.get(0).getRoleId()));
         //全部删除
-        if(authMenuRoleRelList.size() == 1 && authMenuRoleRelList.get(0).getMenuId() == null){
+        if (authMenuRoleRelList.size() == 1 && authMenuRoleRelList.get(0).getMenuId() == null) {
             return new TavernResponse();
         }
         this.authMenuRoleRelService.saveBatch(authMenuRoleRelList);

@@ -17,10 +17,10 @@
     <el-table :data="tableTreeDdata" stripe size="mini" style="width: 100%;" height="600"
               rowKey="menuId" v-loading="loading" :element-loading-text="$t('action.loading')">
       <el-table-column
-        prop="menuId" header-align="center" align="center" width="80" label="ID">
+        prop="menuId" header-align="center" align="center" label="ID">
       </el-table-column>
       <table-tree-column
-        prop="menuName" header-align="center" treeKey="id" width="150" label="名称">
+        prop="menuName" header-align="center" treeKey="id" label="名称">
       </table-tree-column>
       <el-table-column header-align="center" align="center" label="图标">
         <template slot-scope="scope">
@@ -35,20 +35,20 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="parentName" header-align="center" align="center" width="120" label="上级菜单">
+        prop="parentName" header-align="center" align="center" label="上级菜单">
       </el-table-column>
       <el-table-column
-        prop="menuUrl" header-align="center" align="center" width="150"
+        prop="menuUrl" header-align="center" align="center"
         :show-overflow-tooltip="true" label="菜单URL">
       </el-table-column>
       <el-table-column
-        prop="perms" header-align="center" align="center" width="150"
+        prop="perms" header-align="center" align="center"
         :show-overflow-tooltip="true" label="授权标识">
       </el-table-column>
       <el-table-column
         prop="orderNum" header-align="center" align="center" label="排序">
       </el-table-column>
-      <el-table-column fixed="right" header-align="center" align="center" width="185" :label="$t('action.operation')">
+      <el-table-column fixed="right" header-align="center" align="center"  :label="$t('action.operation')">
         <template slot-scope="scope">
           <kt-button icon="fa fa-edit" :label="$t('action.edit')" v-if="sys_menu_edit" @click="handleEdit(scope.row)"/>
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" v-if="sys_menu_del" type="danger"
@@ -140,6 +140,7 @@
   import TableTreeColumn from "@/views/Core/TableTreeColumn";
   import PopupTreeInput from "@/components/PopupTreeInput";
   import FaIconTooltip from "@/components/FaIconTooltip";
+  import {hasPermission} from '@/permission/index.js'
 
   export default {
     components: {
@@ -185,10 +186,10 @@
       };
     },
     created() {
-      this.sys_menu_edit = this.$store.state.user.perms.indexOf('sys:menu:edit') === -1
-      this.sys_menu_del = this.$store.state.user.perms.indexOf('sys:menu:del') === -1
-      this.sys_menu_add = this.$store.state.user.perms.indexOf('sys:menu:add') === -1
-      this.sys_menu_view = this.$store.state.user.perms.indexOf('sys:menu:view') === -1
+      this.sys_menu_edit = hasPermission('sys:menu:edit')
+      this.sys_menu_del = hasPermission('sys:menu:del')
+      this.sys_menu_add = hasPermission('sys:menu:add')
+      this.sys_menu_view = hasPermission('sys:menu:view')
     },
     methods: {
       // 获取数据

@@ -97,9 +97,11 @@ export default {
   },
   mounted() {
     this.sysName = "tavern Platform"
-    var user = sessionStorage.getItem("user")
+    var user = JSON.parse(sessionStorage.getItem("userInfo"))
     if (user) {
-      this.user.name = user
+      this.user.name = user.userName
+      this.user.role = user.roleName
+      this.user.registeInfo = "注册时间： " + user.updateDate
       this.user.avatar = require("@/assets/user2.jpg")
     }
   },

@@ -406,7 +406,6 @@
               this.editLoading = true
               let params = Object.assign({}, this.dataForm)
               params.companyId = this.dtlForm.companyId
-              alert(JSON.stringify(params))
               this.$api.customer.saveStaff(params).then((res) => {
                 this.editLoading = false
                 this.$message({message: '操作成功', type: 'success'})

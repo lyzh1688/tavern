@@ -34,7 +34,8 @@ public class HrmUserBasicInfoServiceImpl extends ServiceImpl<HrmUserBasicInfoMap
 
     @Override
     public StaffBasicInfo queryStaffBasicInfo(String accnt, String password) {
-        return this.baseMapper.selectStaffBasicInfo(accnt, password);
+        return this.baseMapper.selectStaffBasicInfo(accnt);
+
     }
 
     @Transactional

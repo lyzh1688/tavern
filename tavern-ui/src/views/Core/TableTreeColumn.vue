@@ -19,7 +19,7 @@
       },
       treeKey: {
         type: String,
-        default: 'id'
+        default: 'menuId'
       },
       parentKey: {
         type: String,

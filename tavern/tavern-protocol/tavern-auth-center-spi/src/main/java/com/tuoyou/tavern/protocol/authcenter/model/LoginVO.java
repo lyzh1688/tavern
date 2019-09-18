@@ -10,10 +10,13 @@ public class LoginVO {
 
     private String userId;
     private String userAccnt;
+    private String userName;
     private String password;
     private String userType;
     private String token;
     private String roles;
+    private String roleName;
+    private String updateDate;
     private boolean loginSuccess;
 
 

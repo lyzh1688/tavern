@@ -14,11 +14,6 @@
           </span>
         </div>
     </div>
-    <div class="personal-relation">
-        <span class="relation-item">followers</span>
-        <span class="relation-item">watches</span>
-        <span class="relation-item">friends</span>
-    </div>
     <div class="main-operation">
         <span class="main-operation-item">
           <el-button size="small" icon="fa fa-male"> 个人中心</el-button>

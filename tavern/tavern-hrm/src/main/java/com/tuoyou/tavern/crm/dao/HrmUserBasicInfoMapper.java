@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface HrmUserBasicInfoMapper extends BaseMapper<HrmUserBasicInfo> {
 
-    StaffBasicInfo selectStaffBasicInfo(@Param("accnt") String accnt, @Param("password") String password);
+    StaffBasicInfo selectStaffBasicInfo(@Param("accnt") String accnt);
 
     IPage<StaffBasicInfo> selectStaffPage(Page page, @Param("query") StaffInfoDTO staffInfoDTO);
 
