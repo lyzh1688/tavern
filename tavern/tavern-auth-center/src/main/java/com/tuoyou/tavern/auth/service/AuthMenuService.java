@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface AuthMenuService extends IService<AuthMenu> {
 
-    List<AuthMenuVO> getAuthMenuList(String roles,int menuType);
+    List<AuthMenuVO> getAuthMenuList(String roles, int menuType);
 
     List<AuthMenuVO> getAuthMenuByRoles(String roles);
 

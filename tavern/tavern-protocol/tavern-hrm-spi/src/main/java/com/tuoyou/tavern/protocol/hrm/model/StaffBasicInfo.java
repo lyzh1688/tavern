@@ -17,6 +17,6 @@ public class StaffBasicInfo {
     private String salt;
     private String roleNames;
     private String updateDate;
-    private List<HrmUserRoleRel> roleList = new ArrayList<>();
+    private List<HrmUserRoleRelVO> userRoles = new ArrayList<>();
 
 }

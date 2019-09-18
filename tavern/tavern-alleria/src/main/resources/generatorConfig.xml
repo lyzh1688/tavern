@@ -15,7 +15,7 @@
        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://119.3.19.171:3306/alleria?characterEncoding=UTF-8"
                         userId="root"
-                        password="y2iaciej" />
+                        password="1233Trip_mysql" />
 
         <javaModelGenerator targetPackage="com.tuoyou.tavern.alleria.salary.entity" targetProject="src/main/java" >
             <property name="trimStrings" value = "true"></property>

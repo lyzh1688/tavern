@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/hrm")
+@RequestMapping("/user")
 public class StaffEndpoint {
     private HrmUserBasicInfoService hrmUserBasicInfoService;
 
@@ -40,7 +40,7 @@ public class StaffEndpoint {
         HrmUserBasicInfo hrmUserBasicInfo = this.hrmUserBasicInfoService.getById(staffBasicInfo.getUserId());
         if (hrmUserBasicInfo != null) {
             //修改
-            if (staffBasicInfo.getUserName().equals(HrmUserConstant.ADMIN)) {
+            if (staffBasicInfo.getUserName().equalsIgnoreCase(HrmUserConstant.ADMIN)) {
                 return new TavernResponse(RetCode.SYS_ERROR, "系统管理员不允许修改");
             }
         }
@@ -53,7 +53,7 @@ public class StaffEndpoint {
                 if (newInfo != null) {
                     return new TavernResponse(RetCode.SYS_ERROR, "用户名已存在");
                 }
-                String password = PwdUtils.encode(hrmUserBasicInfo.getPassword(), salt);
+                String password = PwdUtils.encode(staffBasicInfo.getPassword(), salt);
                 staffBasicInfo.setSalt(salt);
                 staffBasicInfo.setPassword(password);
             } else {
@@ -104,7 +104,7 @@ public class StaffEndpoint {
         for (String userId : userList) {
             HrmUserBasicInfo hrmUserBasicInfo = this.hrmUserBasicInfoService.getOne(Wrappers.<HrmUserBasicInfo>query().lambda()
                     .eq(HrmUserBasicInfo::getUserId, userId));
-            if (hrmUserBasicInfo != null && hrmUserBasicInfo.getUserAccnt().toLowerCase().equals(HrmUserConstant.ADMIN)) {
+            if (hrmUserBasicInfo != null && hrmUserBasicInfo.getUserAccnt().equalsIgnoreCase(HrmUserConstant.ADMIN)) {
                 return new TavernResponse(RetCode.SYS_ERROR, "系统管理员不允许删除");
             }
         }
@@ -113,7 +113,7 @@ public class StaffEndpoint {
                     .stream()
                     .map(info -> {
                         HrmUserBasicInfo tmpInfo = new HrmUserBasicInfo();
-                        tmpInfo.setUserAccnt(info);
+                        tmpInfo.setUserId(info);
                         tmpInfo.setIsValid("0");
                         tmpInfo.setUpdateDate(LocalDateTime.now());
                         return tmpInfo;

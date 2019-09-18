@@ -7,7 +7,7 @@ import axios from '../axios'
 // 保存
 export const save = (data) => {
   return axios({
-    url: '/user/save',
+    url: '/hrm/user/save',
     method: 'post',
     data
   })
@@ -15,24 +15,24 @@ export const save = (data) => {
 // 删除
 export const batchDelete = (data) => {
   return axios({
-    url: '/user/delete',
-    method: 'post',
+    url: '/hrm/user/delete',
+    method: 'delete',
     data
   })
 }
 // 分页查询
-export const findPage = (data) => {
+export const findPage = (params) => {
   return axios({
-    url: '/user/findPage',
-    method: 'post',
-    data
+    url: '/hrm/user/page',
+    method: 'get',
+    params
   })
 }
 // 查找用户的菜单权限标识集合
 /*
 export const findPermissions = (params) => {
     return axios({
-        url: '/user/findPermissions',
+        url: '/hrm/user/findPermissions',
         method: 'get',
         params
     })
@@ -42,24 +42,27 @@ export function findPermissions() {
     "code": 200,
     "msg": null,
     "data": [
-      "sys_menu_edit",
+      "sys:user:add",
+      "sys:user:delete",
+      "sys:user:edit",
       "sys:user:view",
+      "sys:menu:add",
+      "sys:menu:delete",
+      "sys:menu:edit",
+      "sys:menu:view",
+      "sys:role:add",
+      "sys:role:edit",
+      "sys:role:view",
+      "sys:role:delete",
       "sys:dept:edit",
       "sys:dict:edit",
       "sys:dict:delete",
-      "sys:user:add",
       "sys:log:view",
       "sys:dept:delete",
-      "sys:role:edit",
-      "sys:role:view",
       "sys:dict:view",
-      "sys:user:edit",
-      "sys:user:delete",
       "sys:dept:view",
       "sys:dept:add",
-      "sys:role:delete",
-      "sys:dict:add",
-      "sys:role:add"
+      "sys:dict:add"
     ]
   }
   return {

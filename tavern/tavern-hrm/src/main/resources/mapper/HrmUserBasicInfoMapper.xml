@@ -17,7 +17,8 @@
         <result column="SALT" jdbcType="VARCHAR" property="salt"/>
         <result column="PASSWORD" jdbcType="VARCHAR" property="password"/>
         <result column="UPDATE_DATE" jdbcType="VARCHAR" property="updateDate"/>
-        <collection property="roleList" ofType="string">
+        <collection property="userRoles" ofType="com.tuoyou.tavern.protocol.hrm.model.HrmUserRoleRelVO">
+            <result column="ROLE_NAME" property="roleName"></result>
             <result column="USER_ID_REL" property="userId"></result>
             <result column="ROLE_ID" property="roleId"></result>
         </collection>
@@ -32,25 +33,27 @@
     </select>
 
     <select id="selectStaffBasicInfo" resultMap="BasicInfoMap">
-        select T1.USER_ID,T1.USER_ACCNT,T1.USER_NAME,T3.ROLE_ID,T2.USER_ID USER_ID_REL from HRM_USER_BASIC_INFO
-        T1,HRM_USER_ROLE_REL T2,HRM_ROLE_INFO T3
-        WHERE T1.USER_ID = T2.USER_ID
-        AND T2.ROLE_ID = T3.ROLE_ID
-        and T1.USER_ACCNT = #{accnt}
+        select T1.USER_ID,T1.USER_ACCNT,T1.USER_NAME,T3.ROLE_ID,T2.USER_ID USER_ID_REL,T3.ROLE_NAME, from HRM_USER_BASIC_INFO
+        T1 left join HRM_USER_ROLE_REL T2 on T1.USER_ID = T2.USER_ID
+        left join HRM_ROLE_INFO T3 on T2.ROLE_ID = T3.ROLE_ID
+        WHERE  T1.USER_ACCNT = #{accnt}
         and T1.PASSWORD = #{password}
         and T1.IS_VALID = '1'
     </select>
     <select id="selectStaffPage" resultMap="BasicInfoMap">
         select T1.USER_ID,T1.USER_ACCNT,T1.USER_NAME,T1.PASSWORD,DATE_FORMAT(T1.UPDATE_DATE,'%Y-%m-%d %H:%i:%s')
-        UPDATE_DATE,
-        T3.ROLE_ID,T2.USER_ID USER_ID_REL from HRM_USER_BASIC_INFO
-        T1,HRM_USER_ROLE_REL T2,HRM_ROLE_INFO T3
-        WHERE T1.USER_ID = T2.USER_ID
-        AND T2.ROLE_ID = T3.ROLE_ID
+        UPDATE_DATE,T3.ROLE_NAME,
+        T3.ROLE_ID,T2.USER_ID USER_ID_REL from
+        HRM_USER_BASIC_INFO T1
+        left join HRM_USER_ROLE_REL T2 on T1.USER_ID = T2.USER_ID
+        left join HRM_ROLE_INFO T3 on T2.ROLE_ID = T3.ROLE_ID
+        <where>
         <if test="query.userName != null and query.userName != ''">
             T1.USER_NAME like concat("%",#{query.userName},"%")
         </if>
         and T1.IS_VALID = '1'
+        </where>
+        order by UPDATE_DATE desc
     </select>
     <select id="selectStaffByRole" resultMap="BaseResultMap">
         select

@@ -16,7 +16,7 @@ export const save = (data) => {
 export const batchDelete = (data) => {
   return axios({
     url: '/hrm/role/delete',
-    method: 'post',
+    method: 'delete',
     data
   })
 }
@@ -31,7 +31,7 @@ export const findPage = (params) => {
 // 查询全部
 export const findAll = () => {
   return axios({
-    url: '/hrm/role/findAll',
+    url: '/hrm/role/all',
     method: 'get'
   })
 }

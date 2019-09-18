@@ -7,22 +7,47 @@
           <el-input v-model="filters.name" placeholder="角色名"></el-input>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary"
+          <kt-button icon="fa fa-search" :label="$t('action.search')" v-if="sys_role_view" type="primary"
                      @click="findPage(null)"/>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-plus" :label="$t('action.add')" perms="sys:role:add" type="primary"
+          <kt-button icon="fa fa-plus" :label="$t('action.add')" v-if="sys_role_add" type="primary"
                      @click="handleAdd"/>
         </el-form-item>
       </el-form>
     </div>
     <!--表格内容栏-->
-    <kt-table :height="300" permsEdit="sys:role:edit" permsDelete="sys:role:delete" :highlightCurrentRow="true"
+    <el-table :data="tableData" stripe size="mini" style="width: 100%;" height="300"
+              rowKey="roleId" v-loading="loading" :element-loading-text="$t('action.loading')"
+              permsDelete="sys:role:delete" :highlightCurrentRow="true"
+              :stripe="false"
+              @current-change="handleRoleSelectChange">
+      <el-table-column
+        prop="roleId" header-align="center" align="center" label="ID">
+      </el-table-column>
+      <el-table-column
+        prop="roleName" header-align="center" align="center" label="角色名">
+      </el-table-column>
+      <el-table-column fixed="right" header-align="center" align="center" width="185" :label="$t('action.operation')">
+        <template slot-scope="scope">
+          <kt-button icon="fa fa-edit" :label="$t('action.edit')" v-if="sys_role_edit" @click="handleEdit(scope.row)"/>
+          <kt-button icon="fa fa-trash" :label="$t('action.delete')" v-if="sys_role_del" type="danger"
+                     @click="handleDelete(scope.row)"/>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="toolbar" style="padding:10px;">
+      <el-pagination layout="total, prev, pager, next, jumper" @current-change="handleCurrentChange"
+                     :current-page="pageRequest.current" :page-size="pageRequest.size" :total="total"
+                     style="float:right;">
+      </el-pagination>
+    </div>
+    <!--<kt-table :height="300" permsEdit="sys:role:edit" permsDelete="sys:role:delete" :highlightCurrentRow="true"
               :stripe="false"
               :data="pageResult" :columns="columns" :showBatchDelete="false"
               @handleCurrentChange="handleRoleSelectChange"
               @findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete">
-    </kt-table>
+    </kt-table>-->
     <!-- </el-col> -->
     <!--新增编辑界面-->
     <el-dialog :title="operation?'新增':'编辑'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
@@ -46,20 +71,20 @@
       <div class="menu-header">
         <span><B>角色菜单授权</B></span>
       </div>
-      <el-tree :data="menuData" size="mini" show-checkbox node-key="id" :props="defaultProps"
+      <el-tree :data="menuData" size="mini" show-checkbox node-key="menuId" :props="defaultProps"
                style="width: 100%;pading-top:20px;" ref="menuTree" :render-content="renderContent"
-               v-loading="menuLoading" :element-loading-text="拼命加载中" :check-strictly="true"
+               v-loading="menuLoading" :element-loading-text="$t('action.loading')" :check-strictly="true"
                @check-change="handleMenuCheckChange">
       </el-tree>
       <div style="float:left;padding-left:24px;padding-top:12px;padding-bottom:4px;">
-        <el-checkbox v-model="checkAll" @change="handleCheckAll" :disabled="this.selectRole.id == null"><b>全选</b>
+        <el-checkbox v-model="checkAll" @change="handleCheckAll" :disabled="this.selectRole.roleId == null"><b>全选</b>
         </el-checkbox>
       </div>
       <div style="float:right;padding-right:15px;padding-top:4px;padding-bottom:4px;">
         <kt-button :label="$t('action.reset')" perms="sys:role:edit" type="primary" @click="resetSelection"
-                   :disabled="this.selectRole.id == null"/>
+                   :disabled="this.selectRole.roleId == null"/>
         <kt-button :label="$t('action.submit')" perms="sys:role:edit" type="primary" @click="submitAuthForm"
-                   :disabled="this.selectRole.id == null" :loading="authLoading"/>
+                   :disabled="this.selectRole.roleId == null" :loading="authLoading"/>
       </div>
     </div>
   </div>
@@ -70,12 +95,14 @@
   import KtButton from "@/views/Core/KtButton"
   import TableTreeColumn from '@/views/Core/TableTreeColumn'
   import {format} from "@/utils/datetime"
+  import { hasPermission } from '@/permission/index.js'
 
   export default {
     components: {
       KtTable,
       KtButton,
-      TableTreeColumn
+      TableTreeColumn,
+      hasPermission
     },
     data() {
       return {
@@ -87,8 +114,12 @@
           {prop: "roleId", label: "ID", minWidth: 50},
           {prop: "roleName", label: "角色名", minWidth: 120},
         ],
-        pageRequest: {pageNum: 1, pageSize: 10},
-        pageResult: {},
+        pageRequest: {
+          current: 1,
+          size: 20
+        },
+        total: 0,
+        tableData:[],
 
         operation: false, // true:新增, false:编辑
         dialogVisible: false, // 新增编辑界面是否显示
@@ -109,6 +140,7 @@
         selectRole: {},
         menuData: [],
         menuSelections: [],
+        loading: false,
         menuLoading: false,
         authLoading: false,
         checkAll: false,
@@ -116,28 +148,56 @@
         defaultProps: {
           children: 'children',
           label: 'name'
-        }
+        },
+        sys_role_edit: false,
+        sys_role_del: false,
+        sys_role_add: false,
+        sys_role_view: false,
       }
+    },created(){
+      this.sys_role_edit = hasPermission('sys:role:edit')
+      this.sys_role_del = hasPermission('sys:role:del')
+      this.sys_role_add = hasPermission('sys:role:add')
+      this.sys_role_view = hasPermission('sys:role:view')
     },
     methods: {
       // 获取分页数据
       findPage: function (data) {
-        if (data !== null) {
-          this.pageRequest = data.pageRequest
-        }
-        let request = {};
-        request.roleName = this.filters.name
-        request.current = this.pageRequest.pageNum
-        request.size = this.pageRequest.pageSize
-        this.$api.role.findPage(request).then((res) => {
-          this.pageResult.content = res.data.records
-          this.pageResult.total = res.data.total
-          this.findTreeData()
-        }).then(data != null ? data.callback : '')
+          if (data !== null) {
+            this.pageRequest = data
+          }
+          this.loading = true
+          let callback = res => {
+            this.loading = false
+          }
+            this.pageRequest.roleName = this.filters.name
+          this.$api.role.findPage(this.pageRequest).then((res) => {
+            this.tableData = res.data.records;
+            this.total = res.data.total;
+            this.pageRequest.current = res.data.current;
+            this.pageRequest.size = res.data.size;
+            callback(res)
+            this.findTreeData()
+          }).catch((res) => {
+              this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+              callback(res)
+            })
       },
       // 批量删除
       handleDelete: function (data) {
-        this.$api.role.batchDelete(data.params).then(data.callback)
+        this.$confirm('确认删除选中记录吗？', '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.loading = true
+          let callback = res => {
+              this.$message({message: '删除成功', type: 'success'})
+              this.findPage(null)
+              this.loading = false
+          }
+          this.$api.role.batchDelete(data).then(data != null ? callback : '')
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+        })
       },
       // 显示新增界面
       handleAdd: function () {
@@ -152,7 +212,7 @@
       handleEdit: function (params) {
         this.dialogVisible = true
         this.operation = false
-        this.dataForm = Object.assign({}, params.row)
+        this.dataForm = Object.assign({}, params)
       },
       // 编辑
       submitForm: function () {
@@ -167,6 +227,7 @@
               let params = Object.assign({}, this.dataForm);
               this.$api.role.save(params).then(res => {
                 this.$message({message: "操作成功", type: "success"});
+                this.findPage(null)
                 this.findTreeData();
                 callback(res)
               }).catch((res) => {
@@ -187,11 +248,11 @@
       },
       // 角色选择改变监听
       handleRoleSelectChange(val) {
-        if (val == null || val.val == null) {
+        if (val == null || val.roleId == null) {
           return
         }
-        this.selectRole = val.val
-        this.$api.role.findRoleMenus({'roleId': val.val.id}).then((res) => {
+        this.selectRole = val
+        this.$api.role.findRoleMenus({'roleId': val.roleId}).then((res) => {
           this.currentRoleMenus = res.data
           this.$refs.menuTree.setCheckedNodes(res.data)
         })
@@ -206,7 +267,7 @@
           // 节点取消选中时同步取消选中子节点
           if (data.children != null) {
             data.children.forEach(element => {
-              this.$refs.menuTree.setChecked(element.id, false, false)
+              this.$refs.menuTree.setChecked(element.menuId, false, false)
             });
           }
         }
@@ -237,8 +298,8 @@
       },
       // 角色菜单授权提交
       submitAuthForm() {
-        let roleId = this.selectRole.id
-        if ('admin' == this.selectRole.name) {
+        let roleId = this.selectRole.roleId
+        if ('ADMIN' == this.selectRole.roleName) {
           this.$message({message: '超级管理员拥有所有菜单权限，不允许修改！', type: 'error'})
           return
         }
@@ -246,22 +307,25 @@
         let checkedNodes = this.$refs.menuTree.getCheckedNodes(false, true)
         let roleMenus = []
         for (let i = 0, len = checkedNodes.length; i < len; i++) {
-          let roleMenu = {roleId: roleId, menuId: checkedNodes[i].id}
+          let roleMenu = {roleId: roleId, menuId: checkedNodes[i].menuId}
+          roleMenus.push(roleMenu)
+        }
+        if(checkedNodes.length == 0){
+          let roleMenu = {roleId: roleId, menuId: null}
           roleMenus.push(roleMenu)
         }
         this.$api.role.saveRoleMenus(roleMenus).then((res) => {
-          if (res.code == 200) {
             this.$message({message: '操作成功', type: 'success'})
-          } else {
-            this.$message({message: '操作失败, ' + res.msg, type: 'error'})
-          }
+          this.authLoading = false
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
           this.authLoading = false
         })
       },
       renderContent(h, { node, data, store }) {
         return (
           <div class="column-container">
-          <span style="text-algin:center;margin-right:80px;">{data.name}</span>
+          <span style="text-algin:center;margin-right:80px;">{data.menuName}</span>
         <span style="text-algin:center;margin-right:80px;">
           <el-tag type={data.type === 0?'':data.type === 1?'success':'info'} size="small">
         {data.type === 0?'目录':data.type === 1?'菜单':'按钮'}
@@ -269,15 +333,20 @@
         </span>
         <span style="text-algin:center;margin-right:80px;"> <i class={data.icon}></i></span>
         <span style="text-algin:center;margin-right:80px;">{data.parentName?data.parentName:'顶级菜单'}</span>
-        <span style="text-algin:center;margin-right:80px;">{data.url?data.url:'\t'}</span>
+        <span style="text-algin:center;margin-right:80px;">{data.menuUrl?data.url:'\t'}</span>
         </div>);
       },
       // 时间格式化
       dateFormat: function (row, column, cellValue, index){
         return format(row[column.property])
+      },handleCurrentChange(val) {
+        this.pageRequest.current = val;
+        this.findPage(this.pageRequest);
       }
     },
     mounted() {
+      this.findPage(null)
+      this.findTreeData()
     }
   }
 </script>

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,6 +18,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class AuthMenuResponse extends TavernResponse {
+    public AuthMenuResponse() {
+        super();
+    }
 
     private List<AuthMenuVO> data;
 

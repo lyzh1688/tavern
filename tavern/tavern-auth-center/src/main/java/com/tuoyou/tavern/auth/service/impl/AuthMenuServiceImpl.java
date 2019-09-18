@@ -65,10 +65,11 @@ public class AuthMenuServiceImpl extends ServiceImpl<AuthMenuMapper, AuthMenu> i
 
     @Override
     public List<AuthMenuVO> getAuthMenuByRoles(String roles) {
-        if (StringUtils.isEmpty(roles)) {
+        if (StringUtils.isEmpty(roles)||roles.equalsIgnoreCase(HrmUserConstant.ADMIN)) {
             return this.baseMapper.list();
         }
-        return this.baseMapper.selectByRoleIds(Arrays.asList(StringUtils.split(roles, ",")));
+        List<AuthMenuVO> authMenuVOList=  this.baseMapper.selectByRoleIds(Arrays.asList(StringUtils.split(roles, ",")));
+        return authMenuVOList;
     }
 
     private boolean exists(List<AuthMenuVO> menuList, AuthMenuVO authMenu) {

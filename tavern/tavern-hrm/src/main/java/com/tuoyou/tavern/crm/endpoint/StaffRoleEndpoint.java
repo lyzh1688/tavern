@@ -3,6 +3,8 @@ package com.tuoyou.tavern.crm.endpoint;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tuoyou.tavern.crm.service.HrmUserRoleService;
 import com.tuoyou.tavern.protocol.authcenter.model.AuthMenuRoleRel;
+import com.tuoyou.tavern.protocol.authcenter.reponse.AuthMenuResponse;
+import com.tuoyou.tavern.protocol.authcenter.spi.AuthMenuService;
 import com.tuoyou.tavern.protocol.common.RetCode;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import com.tuoyou.tavern.protocol.hrm.constants.HrmUserConstant;
@@ -27,6 +29,7 @@ import java.util.Objects;
 public class StaffRoleEndpoint {
 
     private final HrmUserRoleService hrmUserRoleService;
+    private final AuthMenuService authMenuService;
 
     /**
      * 新增修改角色
@@ -65,14 +68,14 @@ public class StaffRoleEndpoint {
      */
     @GetMapping("/page")
     public StaffRolePageResponse page(Page page, StaffRoleDTO staffRoleDTO) {
-        return new StaffRolePageResponse(this.hrmUserRoleService.getStaffRolePage(page,staffRoleDTO));
+        return new StaffRolePageResponse(this.hrmUserRoleService.getStaffRolePage(page, staffRoleDTO));
     }
 
     /**
      * 查询所有角色
      */
     @GetMapping("/all")
-    public StaffRoleResponse getAll(){
+    public StaffRoleResponse getAll() {
         return new StaffRoleResponse(this.hrmUserRoleService.list());
     }
 
@@ -80,18 +83,18 @@ public class StaffRoleEndpoint {
      * 查询角色菜单
      */
     @GetMapping("/findRoleMenus")
-    public TavernResponse findRoleMenus(@RequestParam String roleId){
+    public AuthMenuResponse findRoleMenus(@RequestParam(name = "roleId") String roleId) {
         //1.RPC到auth获取菜单
-        return new TavernResponse();
+        return this.authMenuService.queryAuthMenuByRole(roleId);
     }
 
     /**
      * 角色菜单新增
      */
-    @GetMapping("/saveRoleMenus")
-    public TavernResponse saveRoleMenus(@RequestBody List<AuthMenuRoleRel> authMenuRoleRelList){
+    @PostMapping("/saveRoleMenus")
+    public TavernResponse saveRoleMenus(@RequestBody List<AuthMenuRoleRel> authMenuRoleRelList) {
         //1.RPC到auth保存菜单
-        return new TavernResponse();
+        return this.authMenuService.saveAuthRoleMenus(authMenuRoleRelList);
     }
 
 
