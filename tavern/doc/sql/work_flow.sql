@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 119.3.19.171
-Source Server Version : 50560
-Source Host           : 119.3.19.171:3306
+Source Server         : localhost
+Source Server Version : 80013
+Source Host           : localhost:3306
 Source Database       : work_flow
 
 Target Server Type    : MYSQL
-Target Server Version : 50560
+Target Server Version : 80013
 File Encoding         : 65001
 
-Date: 2019-09-19 02:01:20
+Date: 2019-09-19 16:15:45
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -37,11 +37,78 @@ INSERT INTO `workflow_def_edge` VALUES ('g_dljz', 'g_dljz_edge_cwzg_sczg', 'g_dl
 INSERT INTO `workflow_def_edge` VALUES ('g_dljz', 'g_dljz_edge_khjl_end', 'g_dljz_node_khjl', 'g_dljz_node_end', '结束');
 INSERT INTO `workflow_def_edge` VALUES ('g_dljz', 'g_dljz_edge_sczg_cn', 'g_dljz_node_sczg', 'g_dljz_node_cn', '退款');
 INSERT INTO `workflow_def_edge` VALUES ('g_dljz', 'g_dljz_edge_sq_cwzg', 'g_dljz_node_sq', 'g_dljz_node_cwzg', '代理记账');
+INSERT INTO `workflow_def_edge` VALUES ('g_gjjdj', 'g_gjjdj_edge_cn_end', 'g_gjjdj_node_cn', 'g_gjjdj_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_gjjdj', 'g_gjjdj_edge_sczg_cn', 'g_gjjdj_node_sczg', 'g_gjjdj_node_cn', '退款');
+INSERT INTO `workflow_def_edge` VALUES ('g_gjjdj', 'g_gjjdj_edge_sh_end', 'g_gjjdj_node_sh', 'g_gjjdj_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_gjjdj', 'g_gjjdj_edge_sh_sczg', 'g_gjjdj_node_sh', 'g_gjjdj_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_gjjdj', 'g_gjjdj_edge_sh_sh', 'g_gjjdj_node_sh', 'g_gjjdj_node_sh', '公积金代缴');
+INSERT INTO `workflow_def_edge` VALUES ('g_gjjdj', 'g_gjjdj_edge_sh_wq', 'g_gjjdj_node_sh', 'g_gjjdj_node_wq', '外勤协办');
+INSERT INTO `workflow_def_edge` VALUES ('g_gjjdj', 'g_gjjdj_edge_sq_sh', 'g_gjjdj_node_sq', 'g_gjjdj_node_sh', '客户公司人数确认');
+INSERT INTO `workflow_def_edge` VALUES ('g_gjjdj', 'g_gjjdj_edge_wq_sh', 'g_gjjdj_node_wq', 'g_gjjdj_node_sh', '公积金代缴');
+INSERT INTO `workflow_def_edge` VALUES ('g_gjjdk', 'g_gjjdk_edge_cn_end', 'g_gjjdk_node_cn', 'g_gjjdk_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_gjjdk', 'g_gjjdk_edge_sczg_cn', 'g_gjjdk_node_sczg', 'g_gjjdk_node_cn', '退款');
+INSERT INTO `workflow_def_edge` VALUES ('g_gjjdk', 'g_gjjdk_edge_sh_end', 'g_gjjdk_node_sh', 'g_gjjdk_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_gjjdk', 'g_gjjdk_edge_sh_sczg', 'g_gjjdk_node_sh', 'g_gjjdk_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_gjjdk', 'g_gjjdk_edge_sh_wq', 'g_gjjdk_node_sh', 'g_gjjdk_node_wq', '外勤协办');
+INSERT INTO `workflow_def_edge` VALUES ('g_gjjdk', 'g_gjjdk_edge_sq_sh', 'g_gjjdk_node_sq', 'g_gjjdk_node_sh', '公积金代开');
+INSERT INTO `workflow_def_edge` VALUES ('g_gjjdk', 'g_gjjdk_edge_wq_sh', 'g_gjjdk_node_wq', 'g_gjjdk_node_sh', '公积金代开');
+INSERT INTO `workflow_def_edge` VALUES ('g_gsbg', 'g_gsbg_edge_cn_end', 'g_gsbg_node_cn', 'g_gsbg_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_gsbg', 'g_gsbg_edge_sczg_cn', 'g_gsbg_node_sczg', 'g_gsbg_node_cn', '退款');
+INSERT INTO `workflow_def_edge` VALUES ('g_gsbg', 'g_gsbg_edge_sh_end', 'g_gsbg_node_sh', 'g_gsbg_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_gsbg', 'g_gsbg_edge_sh_sczg', 'g_gsbg_edge_sq_wq', 'g_gsbg_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_gsbg', 'g_gsbg_edge_sq_wq', 'g_gsbg_node_sq', 'g_gsbg_node_wq', '工商变更');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_edge_ddxz_shddxz_wqzgdyhkh', 'g_gszc_node_shddxz', 'g_gszc_node_ddxz_wqzgdyhkh', '待银行开户');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_edge_ddxz_wqzgdhs_sczg', 'g_gszc_node_ddxz_wqzgdhs', 'g_gszc_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_edge_shddxz_sczg', 'g_gszc_node_shddxz', 'g_gszc_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_edge_shkhqz_sczg', 'g_gszc_node_shkhqz', 'g_gszc_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_edge_shkhqz_shddxz', 'g_gszc_node_shkhqz', 'g_gszc_node_shddxz', '等待下证');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_edge_shzlsh_sczg', 'g_gszc_node_shzlsh', 'g_gszc_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_edge_shzlsh_shkhqz', 'g_gszc_node_shzlsh', 'g_gszc_node_shkhqz', '客户签字');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_edge_shzlsj_sczg', 'g_gszc_node_shzlsj', 'g_gszc_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_edge_shzlsj_shzlsh', 'g_gszc_node_shzlsj', 'g_gszc_node_shzlsh', '资料审核');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_edge_sq_shzlsj', 'g_gszc_node_sq', 'g_gszc_node_shzlsj', '资料收集');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_ddxz_shddxz_shyhkhzzkh', 'g_gszc_node_shddxz', 'g_gszc_node_ddxz_shyhkhzzkh', '银行客户自助开户');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_ddxz_shyhkhzzkh_sczg', 'g_gszc_node_ddxz_shyhkhzzkh', 'g_gszc_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_ddxz_shyhkhzzkh_wqzgdhs', 'g_gszc_node_ddxz_shyhkhzzkh', 'g_gszc_node_shyhkhzzkh_wqzgdhs', '待核税');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_ddxz_wqyhkh_shdhzfhs', 'g_gszc_node_ddxz_wqzgdyhkh', 'g_gszc_node_shdhzfhs', '待合作方核税');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_ddxz_wqzgdhs_wqhs', 'g_gszc_node_ddxz_wqzgdhs', 'g_gszc_node_ddxz_wqhs', '核税');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_ddxz_wqzgdyhkh_wqyhkh', 'g_gszc_node_ddxz_wqzgdyhkh', 'g_gszc_node_ddxz_wqyhkh', '银行开户');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_hs_shyhkhzzkh_end', 'g_gszc_node_hs_shyhkhzzkh', 'g_gszc_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_hs_shyhkhzzkh_sczg', 'g_gszc_node_hs_shyhkhzzkh', 'g_gszc_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_hs_wqhs_shyhkhzzkh', 'g_gszc_node_ddxz_wqhs', 'g_gszc_node_hs_shyhkhzzkh', '银行客户自助开户');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_hs_wqhs_wqzgdyhkh', 'g_gszc_node_ddxz_wqhs', 'g_gszc_node_hs_wqzgdyhkh', '待银行开户');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_hs_wqyhkh_end', 'g_gszc_node_hs_wqyhkh', 'g_gszc_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_hs_wqyhkh_sczg', 'g_gszc_node_hs_wqyhkh', 'g_gszc_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_hs_wqzgdyhkh_wqyhkh', 'g_gszc_node_hs_wqzgdyhkh', 'g_gszc_node_hs_wqyhkh', '银行开户');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_sczg_end', 'g_gszc_node_sczg', 'g_gszc_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_shddxz_ddxz_wqzgdhs', 'g_gszc_node_shddxz', 'g_gszc_node_ddxz_wqzgdhs', '待核税');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_shdhzfhs_end', 'g_gszc_node_shdhzfhs', 'g_gszc_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_shyhkhzzkh_wqhs_end', 'g_gszc_node_shyhkhzzkh_wqhs', 'g_gszc_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_shyhkhzzkh_wqhs_sczg', 'g_gszc_node_shyhkhzzkh_wqhs', 'g_gszc_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_shyhkhzzkh_wqzgdhs_wqhs', 'g_gszc_node_shyhkhzzkh_wqzgdhs', 'g_gszc_node_shyhkhzzkh_wqhs', '核税');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszc', 'g_gszc_node_wqzgdyhkh_sczg', 'g_gszc_node_shdhzfhs', 'g_gszc_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszx', 'g_gszx_edge_cn_end', 'g_gszx_node_cn', 'g_gszx_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszx', 'g_gszx_edge_sczg_cn', 'g_gszx_node_sczg', 'g_gszx_node_cn', '退款');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszx', 'g_gszx_edge_sh_end', 'g_gszx_node_sh', 'g_gszx_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszx', 'g_gszx_edge_sh_sczg', 'g_gszx_edge_sq_wq', 'g_gszx_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_gszx', 'g_gszx_edge_sq_wq', 'g_gszx_node_sq', 'g_gszx_node_wq', '公司注销');
+INSERT INTO `workflow_def_edge` VALUES ('g_sbdk', 'g_sbdk_edge_cn_end', 'g_sbdk_node_cn', 'g_sbdk_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_sbdk', 'g_sbdk_edge_sczg_cn', 'g_sbdk_node_sczg', 'g_sbdk_node_cn', '退款');
+INSERT INTO `workflow_def_edge` VALUES ('g_sbdk', 'g_sbdk_edge_sh_end', 'g_sbdk_node_sh', 'g_sbdk_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_sbdk', 'g_sbdk_edge_sh_sczg', 'g_sbdk_node_sh', 'g_sbdk_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_sbdk', 'g_sbdk_edge_sh_wq', 'g_sbdk_node_sh', 'g_sbdk_node_wq', '外勤协办');
+INSERT INTO `workflow_def_edge` VALUES ('g_sbdk', 'g_sbdk_edge_sq_sh', 'g_sbdk_node_sq', 'g_sbdk_node_sh', '社保代开');
+INSERT INTO `workflow_def_edge` VALUES ('g_sbdk', 'g_sbdk_edge_wq_sh', 'g_sbdk_node_wq', 'g_sbdk_node_sh', '社保代开');
 INSERT INTO `workflow_def_edge` VALUES ('g_sbzc', 'g_sbzc_edge_cn_end', 'g_sbzc_node_cn', 'g_sbzc_node_end', '结束');
 INSERT INTO `workflow_def_edge` VALUES ('g_sbzc', 'g_sbzc_edge_sczg_cn', 'g_sbzc_node_sczg', 'g_sbzc_node_cn', '退款');
 INSERT INTO `workflow_def_edge` VALUES ('g_sbzc', 'g_sbzc_edge_sh_end', 'g_sbzc_node_sh', 'g_sbzc_node_end', '结束');
 INSERT INTO `workflow_def_edge` VALUES ('g_sbzc', 'g_sbzc_edge_sh_sczg', 'g_sbzc_node_sh', 'g_sbzc_node_sczg', '退款审批');
 INSERT INTO `workflow_def_edge` VALUES ('g_sbzc', 'g_sbzc_edge_sq_sh', 'g_sbzc_node_sq', 'g_sbzc_node_sh', '商标注册');
+INSERT INTO `workflow_def_edge` VALUES ('g_xkzbl', 'g_xkzbl_edge_cn_end', 'g_xkzbl_node_cn', 'g_xkzbl_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_xkzbl', 'g_xkzbl_edge_sczg_cn', 'g_xkzbl_node_sczg', 'g_xkzbl_node_cn', '退款');
+INSERT INTO `workflow_def_edge` VALUES ('g_xkzbl', 'g_xkzbl_edge_sh_end', 'g_xkzbl_node_sh', 'g_xkzbl_node_end', '结束');
+INSERT INTO `workflow_def_edge` VALUES ('g_xkzbl', 'g_xkzbl_edge_sh_sczg', 'g_xkzbl_node_sh', 'g_xkzbl_node_sczg', '退款审批');
+INSERT INTO `workflow_def_edge` VALUES ('g_xkzbl', 'g_xkzbl_edge_sq_sh', 'g_xkzbl_node_sq', 'g_xkzbl_node_sh', '许可证办理');
 
 -- ----------------------------
 -- Table structure for workflow_def_graph
@@ -59,7 +126,15 @@ CREATE TABLE `workflow_def_graph` (
 -- Records of workflow_def_graph
 -- ----------------------------
 INSERT INTO `workflow_def_graph` VALUES ('g_dljz', '代理记账', 'g_dljz_node_sq', 'g_dljz_node_end');
+INSERT INTO `workflow_def_graph` VALUES ('g_gjjdj', '公积金代缴', 'g_gjjdj_node_sq', 'g_gjjdk_node_end');
+INSERT INTO `workflow_def_graph` VALUES ('g_gjjdk', '公积金代开', 'g_gjjdk_node_sq', 'g_gjjdk_node_end');
+INSERT INTO `workflow_def_graph` VALUES ('g_gsbg', '工商变更', 'g_gsbg_node_sq', 'g_gsbg_node_end');
+INSERT INTO `workflow_def_graph` VALUES ('g_gszc', '公司注册', 'g_gszc_node_sq', 'g_gszc_node_end');
+INSERT INTO `workflow_def_graph` VALUES ('g_gszx', '工商注销', 'g_gszx_node_sq', 'g_gszx_node_end');
+INSERT INTO `workflow_def_graph` VALUES ('g_sbdj', '社保代缴', 'g_sbdj_node_sq', 'g_sbdj_node_end');
+INSERT INTO `workflow_def_graph` VALUES ('g_sbdk', '社保代开', 'g_sbdk_node_sq', 'g_sbdk_node_end');
 INSERT INTO `workflow_def_graph` VALUES ('g_sbzc', '商标注册', 'g_sbzc_node_sq', 'g_sbzc_node_end');
+INSERT INTO `workflow_def_graph` VALUES ('g_xkzbl', '许可证办理', 'g_xkzbl_node_sq', 'g_xkzbl_node_end');
 
 -- ----------------------------
 -- Table structure for workflow_def_graph_business_rel
@@ -98,11 +173,71 @@ INSERT INTO `workflow_def_node` VALUES ('g_dljz', 'g_dljz_node_khjl', '客户服
 INSERT INTO `workflow_def_node` VALUES ('g_dljz', 'g_dljz_node_sczg', '退款审批', 'R_SCZG');
 INSERT INTO `workflow_def_node` VALUES ('g_dljz', 'g_dljz_node_sq', '客户登记', 'R_SQ');
 INSERT INTO `workflow_def_node` VALUES ('g_dljz', 'g_dljz_node_sys', '系统触发', '');
+INSERT INTO `workflow_def_node` VALUES ('g_gjjdj', 'g_gjjdj_node_cn', '退款', 'R_CN');
+INSERT INTO `workflow_def_node` VALUES ('g_gjjdj', 'g_gjjdj_node_end', '结束', '');
+INSERT INTO `workflow_def_node` VALUES ('g_gjjdj', 'g_gjjdj_node_sczg', '退款审批', 'R_SCZG');
+INSERT INTO `workflow_def_node` VALUES ('g_gjjdj', 'g_gjjdj_node_sh', '公积金代缴', 'R_SH');
+INSERT INTO `workflow_def_node` VALUES ('g_gjjdj', 'g_gjjdj_node_shrsrq', '客户公司人数确认', 'R_SH');
+INSERT INTO `workflow_def_node` VALUES ('g_gjjdj', 'g_gjjdj_node_sq', '客户登记', 'R_SQ');
+INSERT INTO `workflow_def_node` VALUES ('g_gjjdj', 'g_gjjdj_node_wq', '外勤协办', 'R_WQ');
+INSERT INTO `workflow_def_node` VALUES ('g_gjjdk', 'g_gjjdk_node_cn', '退款', 'R_CN');
+INSERT INTO `workflow_def_node` VALUES ('g_gjjdk', 'g_gjjdk_node_end', '结束', '');
+INSERT INTO `workflow_def_node` VALUES ('g_gjjdk', 'g_gjjdk_node_sczg', '退款审批', 'R_SCZG');
+INSERT INTO `workflow_def_node` VALUES ('g_gjjdk', 'g_gjjdk_node_sh', '公积金代开', 'R_SH');
+INSERT INTO `workflow_def_node` VALUES ('g_gjjdk', 'g_gjjdk_node_sq', '客户登记', 'R_SQ');
+INSERT INTO `workflow_def_node` VALUES ('g_gjjdk', 'g_gjjdk_node_wq', '外勤协办', 'R_WQ');
+INSERT INTO `workflow_def_node` VALUES ('g_gsbg', 'g_gsbg_node_cn', '退款', 'R_CN');
+INSERT INTO `workflow_def_node` VALUES ('g_gsbg', 'g_gsbg_node_end', '结束', '');
+INSERT INTO `workflow_def_node` VALUES ('g_gsbg', 'g_gsbg_node_sczg', '退款审批', 'R_SCZG');
+INSERT INTO `workflow_def_node` VALUES ('g_gsbg', 'g_gsbg_node_sh', '工商变更', 'R_WQ');
+INSERT INTO `workflow_def_node` VALUES ('g_gsbg', 'g_gsbg_node_sq', '客户登记', 'R_SQ');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_cn', '退款', 'R_CN');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_ddxz_shyhkhzzkh', '银行客户自主开户', 'R_SH');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_ddxz_wqhs', '核税', 'R_WQ');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_ddxz_wqyhkh', '银行开户', 'R_WQ');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_ddxz_wqzgdhs', '待核税', 'R_WQZG');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_ddxz_wqzgdyhkh', '待银行开户', 'R_WQZG');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_end', '结束', '');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_hs_shyhkhzzkh', '银行客户自主开户', 'R_SH');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_hs_wqyhkh', '银行开户', 'R_WQ');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_hs_wqzgdyhkh', '待银行开户', 'R_WQZG');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_sczg', '退款审批', 'R_SCZG');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_shddxz', '等待下证', 'R_SH');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_shdhzfhs', '待合作方核税', 'R_SH');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_shkhqz', '客户签字', 'R_SH');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_shyhkhzzkh_wqhs', '核税', 'R_WQ');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_shyhkhzzkh_wqzgdhs', '待核税', 'R_WQZG');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_shzlsh', '资料审核', 'R_SH');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_shzlsj', '资料收集', 'R_SH');
+INSERT INTO `workflow_def_node` VALUES ('g_gszc', 'g_gszc_node_sq', '公司注册', 'R_SQ');
+INSERT INTO `workflow_def_node` VALUES ('g_gszx', 'g_gszx_node_cn', '退款', 'R_CN');
+INSERT INTO `workflow_def_node` VALUES ('g_gszx', 'g_gszx_node_end', '结束', '');
+INSERT INTO `workflow_def_node` VALUES ('g_gszx', 'g_gszx_node_sczg', '退款审批', 'R_SCZG');
+INSERT INTO `workflow_def_node` VALUES ('g_gszx', 'g_gszx_node_sh', '公司注销', 'R_WQ');
+INSERT INTO `workflow_def_node` VALUES ('g_gszx', 'g_gszx_node_sq', '客户登记', 'R_SQ');
+INSERT INTO `workflow_def_node` VALUES ('g_sbdj', 'g_sbdj_node_cn', '退款', 'R_CN');
+INSERT INTO `workflow_def_node` VALUES ('g_sbdj', 'g_sbdj_node_end', '结束', '');
+INSERT INTO `workflow_def_node` VALUES ('g_sbdj', 'g_sbdj_node_sczg', '退款审批', 'R_SCZG');
+INSERT INTO `workflow_def_node` VALUES ('g_sbdj', 'g_sbdj_node_sh', '社保代缴', 'R_SH');
+INSERT INTO `workflow_def_node` VALUES ('g_sbdj', 'g_sbdj_node_shrsrq', '客户公司人数确认', 'R_SH');
+INSERT INTO `workflow_def_node` VALUES ('g_sbdj', 'g_sbdj_node_sq', '客户登记', 'R_SQ');
+INSERT INTO `workflow_def_node` VALUES ('g_sbdj', 'g_sbdj_node_wq', '外勤协办', 'R_WQ');
+INSERT INTO `workflow_def_node` VALUES ('g_sbdk', 'g_sbdk_node_cn', '退款', 'R_CN');
+INSERT INTO `workflow_def_node` VALUES ('g_sbdk', 'g_sbdk_node_end', '结束', '');
+INSERT INTO `workflow_def_node` VALUES ('g_sbdk', 'g_sbdk_node_sczg', '退款审批', 'R_SCZG');
+INSERT INTO `workflow_def_node` VALUES ('g_sbdk', 'g_sbdk_node_sh', '社保代开', 'R_SH');
+INSERT INTO `workflow_def_node` VALUES ('g_sbdk', 'g_sbdk_node_sq', '客户登记', 'R_SQ');
+INSERT INTO `workflow_def_node` VALUES ('g_sbdk', 'g_sbdk_node_wq', '外勤协办', 'R_WQ');
 INSERT INTO `workflow_def_node` VALUES ('g_sbzc', 'g_sbzc_node_cn', '退款', 'R_CN');
 INSERT INTO `workflow_def_node` VALUES ('g_sbzc', 'g_sbzc_node_end', '结束', '');
 INSERT INTO `workflow_def_node` VALUES ('g_sbzc', 'g_sbzc_node_sczg', '退款审批', 'R_SCZG');
 INSERT INTO `workflow_def_node` VALUES ('g_sbzc', 'g_sbzc_node_sh', '商标注册', 'R_SH');
 INSERT INTO `workflow_def_node` VALUES ('g_sbzc', 'g_sbzc_node_sq', '客户登记', 'R_SQ');
+INSERT INTO `workflow_def_node` VALUES ('g_xkzbl', 'g_xkzbl_node_cn', '退款', 'R_CN');
+INSERT INTO `workflow_def_node` VALUES ('g_xkzbl', 'g_xkzbl_node_end', '结束', '');
+INSERT INTO `workflow_def_node` VALUES ('g_xkzbl', 'g_xkzbl_node_sczg', '退款审批', 'R_SCZG');
+INSERT INTO `workflow_def_node` VALUES ('g_xkzbl', 'g_xkzbl_node_sh', '许可证办理', 'R_SH');
+INSERT INTO `workflow_def_node` VALUES ('g_xkzbl', 'g_xkzbl_node_sq', '客户登记', 'R_SQ');
 
 -- ----------------------------
 -- Table structure for workflow_def_node_ext_attr
