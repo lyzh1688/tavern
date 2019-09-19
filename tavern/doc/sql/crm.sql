@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50560
 File Encoding         : 65001
 
-Date: 2019-09-17 00:43:11
+Date: 2019-09-20 07:31:03
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -51,10 +51,16 @@ CREATE TABLE `CRM_BUSINESS_DICT` (
 -- ----------------------------
 -- Records of CRM_BUSINESS_DICT
 -- ----------------------------
-INSERT INTO `CRM_BUSINESS_DICT` VALUES ('BIZ_1', '代缴公积金');
+INSERT INTO `CRM_BUSINESS_DICT` VALUES ('BIZ_1', '公积金代缴');
+INSERT INTO `CRM_BUSINESS_DICT` VALUES ('BIZ_10', '许可证办理');
 INSERT INTO `CRM_BUSINESS_DICT` VALUES ('BIZ_2', '代缴社保');
 INSERT INTO `CRM_BUSINESS_DICT` VALUES ('BIZ_3', '代理记账');
 INSERT INTO `CRM_BUSINESS_DICT` VALUES ('BIZ_4', '公司注册');
+INSERT INTO `CRM_BUSINESS_DICT` VALUES ('BIZ_5', '公积金代开');
+INSERT INTO `CRM_BUSINESS_DICT` VALUES ('BIZ_6', '工商变更');
+INSERT INTO `CRM_BUSINESS_DICT` VALUES ('BIZ_7', '工商注销');
+INSERT INTO `CRM_BUSINESS_DICT` VALUES ('BIZ_8', '社保代开');
+INSERT INTO `CRM_BUSINESS_DICT` VALUES ('BIZ_9', '商标注册');
 
 -- ----------------------------
 -- Table structure for CRM_COMPANY_BANK_REL

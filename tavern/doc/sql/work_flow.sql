@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
-Source Server Version : 80013
-Source Host           : localhost:3306
+Source Server         : 119.3.19.171
+Source Server Version : 50560
+Source Host           : 119.3.19.171:3306
 Source Database       : work_flow
 
 Target Server Type    : MYSQL
-Target Server Version : 80013
+Target Server Version : 50560
 File Encoding         : 65001
 
-Date: 2019-09-19 16:15:45
+Date: 2019-09-20 07:31:12
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -149,7 +149,17 @@ CREATE TABLE `workflow_def_graph_business_rel` (
 -- ----------------------------
 -- Records of workflow_def_graph_business_rel
 -- ----------------------------
-INSERT INTO `workflow_def_graph_business_rel` VALUES ('g_dljz', 'biz_3');
+INSERT INTO `workflow_def_graph_business_rel` VALUES ('g_dljz', 'BIZ_3');
+INSERT INTO `workflow_def_graph_business_rel` VALUES ('g_gjjdj', '');
+INSERT INTO `workflow_def_graph_business_rel` VALUES ('g_gjjdj', 'BIZ_1');
+INSERT INTO `workflow_def_graph_business_rel` VALUES ('g_gjjdk', 'BIZ_5');
+INSERT INTO `workflow_def_graph_business_rel` VALUES ('g_gsbg', 'BIZ_6');
+INSERT INTO `workflow_def_graph_business_rel` VALUES ('g_gszc', 'BIZ_4');
+INSERT INTO `workflow_def_graph_business_rel` VALUES ('g_gszx', 'BIZ_7');
+INSERT INTO `workflow_def_graph_business_rel` VALUES ('g_sbdj', 'BIZ_2');
+INSERT INTO `workflow_def_graph_business_rel` VALUES ('g_sbdk', 'BIZ_8');
+INSERT INTO `workflow_def_graph_business_rel` VALUES ('g_sbzc', 'BIZ_9');
+INSERT INTO `workflow_def_graph_business_rel` VALUES ('g_xkzbl', 'BIZ_10');
 
 -- ----------------------------
 -- Table structure for workflow_def_node
