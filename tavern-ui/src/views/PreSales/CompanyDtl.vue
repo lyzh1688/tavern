@@ -257,13 +257,14 @@
           needSocialServer: '',
           needHabitationServer: '',
         },
+        areaData: [],
       }
     }, created() {
       //初始化客户信息
       this.dtlForm = this.$route.params;
       let tmpInfo = JSON.parse(localStorage.getItem("companyDtl"));
       if (this.dtlForm.companyId == undefined || this.dtlForm.companyId == null) {
-        if (tmpInfo.companyId == undefined || tmpInfo.companyId == null) {
+        if (tmpInfo.companyId == null || tmpInfo.companyId == undefined ) {
           this.$router.push({name: "客户详情"})
           return
         } else {
