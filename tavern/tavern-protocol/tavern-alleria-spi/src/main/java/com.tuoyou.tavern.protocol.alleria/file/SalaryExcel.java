@@ -89,4 +89,6 @@ public class SalaryExcel extends BaseRowModel {
     private String netWages;
     @ExcelProperty(index = 41)
     private String bankCard;
+    @ExcelProperty(index = 43)
+    private String department;
 }

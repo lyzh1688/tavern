@@ -45,7 +45,7 @@
       {{$t("common.logout")}}
     </div>
     <!--备份还原界面-->
-    <backup ref="backupDialog" @afterRestore="afterRestore"></backup>
+    <!--<backup ref="backupDialog" @afterRestore="afterRestore"></backup>-->
   </div>
 </template>
 

@@ -604,6 +604,9 @@
           absent: '',
           regLocationType: '',
         }
+        if (e == undefined || e == null) {
+          return
+        }
         let label = this.bizDict.find(item => {
           return e == item.id;
         })

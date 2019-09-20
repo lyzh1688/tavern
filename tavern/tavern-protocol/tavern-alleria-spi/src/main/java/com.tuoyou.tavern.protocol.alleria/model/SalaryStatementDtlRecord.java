@@ -93,4 +93,6 @@ public class SalaryStatementDtlRecord extends Model<SalaryStatementDtlRecord> {
     private BigDecimal netWages;
 
     private String bankCard;
+
+    private String department;
 }

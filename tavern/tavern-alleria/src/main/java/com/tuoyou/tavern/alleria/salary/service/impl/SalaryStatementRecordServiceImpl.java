@@ -123,6 +123,7 @@ public class SalaryStatementRecordServiceImpl extends ServiceImpl<SalaryStatemen
                     salaryStatementDtlRecord.setHabitationInsCom(StringUtils.isEmpty(dtl.getHabitationInsCom()) ? null : new BigDecimal(StringUtils.replace(dtl.getHabitationInsCom(), "￥", "")));
                     salaryStatementDtlRecord.setIndividualIncomeTax(StringUtils.isEmpty(dtl.getIndividualIncomeTax()) ? null : new BigDecimal(StringUtils.replace(dtl.getIndividualIncomeTax(), "￥", "")));
                     salaryStatementDtlRecord.setNetWages(StringUtils.isEmpty(dtl.getNetWages()) ? null : new BigDecimal(StringUtils.replace(dtl.getNetWages(), "￥", "")));
+                    salaryStatementDtlRecord.setDepartment(dtl.getDepartment());
 
                     salaryStatementDtlRecordList.add(salaryStatementDtlRecord);
                 }
