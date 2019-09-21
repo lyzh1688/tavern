@@ -249,12 +249,14 @@
             this.findTreeData();
             this.$message({message: "删除成功", type: "success"});
           });
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
         });
       }
       ,
       // 获取删除的包含子菜单的id列表
       getDeleteIds(ids, row) {
-        ids.push({id: row.id});
+        ids.push({menuId: row.menuId});
         if (row.children != null) {
           for (let i = 0, len = row.children.length; i < len; i++) {
             this.getDeleteIds(ids, row.children[i]);

@@ -81,9 +81,9 @@
         </el-checkbox>
       </div>
       <div style="float:right;padding-right:15px;padding-top:4px;padding-bottom:4px;">
-        <kt-button :label="$t('action.reset')" perms="sys:role:edit" type="primary" @click="resetSelection"
+        <kt-button :label="$t('action.reset')" v-if="sys_role_edit" type="primary" @click="resetSelection"
                    :disabled="this.selectRole.roleId == null"/>
-        <kt-button :label="$t('action.submit')" perms="sys:role:edit" type="primary" @click="submitAuthForm"
+        <kt-button :label="$t('action.submit')" v-if="sys_role_del" type="primary" @click="submitAuthForm"
                    :disabled="this.selectRole.roleId == null" :loading="authLoading"/>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import axios from '../axios'
 
-/* 
+/*
  * 用户管理模块
  */
 
@@ -47,7 +47,7 @@ export function findPermissions() {
       "sys:user:edit",
       "sys:user:view",
       "sys:menu:add",
-      "sys:menu:delete",
+      "sys:menu:del",
       "sys:menu:edit",
       "sys:menu:view",
       "sys:role:add",

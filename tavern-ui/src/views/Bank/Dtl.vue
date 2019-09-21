@@ -13,7 +13,7 @@
           <el-input v-model="filters.recvAccntId" placeholder="对方账户"></el-input>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary"
+          <kt-button icon="fa fa-search" :label="$t('action.search')"  v-if="sys_bank_dtl_view" type="primary"
                      @click="findPage(null)"/>
         </el-form-item>
       </el-form>
@@ -27,9 +27,6 @@
             </el-tooltip>
             <el-tooltip content="列显示" placement="top">
               <el-button icon="fa fa-filter" @click="displayFilterColumnsDialog"></el-button>
-            </el-tooltip>
-            <el-tooltip content="导出" placement="top">
-              <el-button icon="fa fa-file-excel-o"></el-button>
             </el-tooltip>
           </el-button-group>
         </el-form-item>
@@ -53,6 +50,7 @@
   import KtButton from "@/views/Core/KtButton"
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
   import {format, formatDate} from "@/utils/datetime"
+  import {hasPermission} from '@/permission/index.js'
 
   export default {
     components: {
@@ -74,11 +72,13 @@
         pageRequest: {pageNum: 1, pageSize: 10},
         pageResult: {},
         showOperation: false,
-        batchId: ''
+        batchId: '',
+        sys_bank_dtl_view:false
       }
     },
     created() {
       let _this = this;
+      _this.sys_bank_dtl_view = hasPermission('sys:bank:dtl:view')
       _this.batchId = this.$route.params.batchId;
       let _id = localStorage.getItem("bankStatementDtlBatchId");
       if (_this.batchId == undefined || _this.batchId == null || _this.batchId == '') {

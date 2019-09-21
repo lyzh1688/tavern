@@ -4,10 +4,12 @@
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
       <el-form :inline="true" :model="filter" class="form-inline">
         <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')" type="primary" @click="queryBankStatement"/>
+          <kt-button icon="fa fa-search" v-if="sys_bank_upload_view" :label="$t('action.search')" type="primary"
+                     @click="queryBankStatement"/>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-cloud-upload" type="success" @click="uploadDialogVisible = true" label="文件上传"/>
+          <kt-button icon="fa fa-cloud-upload" v-if="sys_bank_upload" type="success" @click="uploadDialogVisible = true"
+                     label="文件上传"/>
         </el-form-item>
       </el-form>
     </div>
@@ -46,7 +48,7 @@
         fixed="right" header-align="center" align="center" width="185">
         <template slot-scope="scope">
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
-                     @click="handleDelete(scope.row)" :perms="permsDelete"/>
+                     @click="handleDelete(scope.row)" v-if="sys_bank_upload_del"/>
         </template>
       </el-table-column>
     </el-table>
@@ -119,6 +121,7 @@
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
   import Dtl from "@/views/Zzs/Dtl"
   import {genNonDuplicateID} from '@/utils/common'
+  import {hasPermission} from '@/permission/index.js'
 
   export default {
     components: {
@@ -209,11 +212,18 @@
         percentage: 0.0,
         getPercent: null,
         sid: '', batchId: '',
-        showFileId: false
+        showFileId: false,
+        sys_bank_upload_view: false,
+        sys_bank_upload: false,
+        sys_bank_upload_del: false,
       }
+
     },
     created() {
-      this.querySalaryStatement();
+      this.sys_bank_upload_view = hasPermission('sys:bank:upload:view')
+      this.sys_bank_upload = hasPermission('sys:bank:upload')
+      this.sys_bank_upload_del = hasPermission('sys:bank:upload:del')
+      this.queryBankStatement(null);
     },
     methods: {
       /*设置表头背景色*/
@@ -233,20 +243,25 @@
         this.isCommit = false
       },
       //查询
-      querySalaryStatement() {
+      queryBankStatement(data) {
+        if (data !== null) {
+          this.pageRequest = data
+        }
+        this.loading = true
+        let callback = res => {
+          this.loading = false
+        }
         this.pageRequest.fileType = '1'
         this.$api.fileManager.findPage(this.pageRequest).then((res) => {
-          console.log(JSON.stringify(res))
-          if (res.retCode == 0) {
-            console.log(JSON.stringify(res))
-            this.tableData = res.data.records;
-            this.total = res.data.total;
-            this.pageRequest.current = res.data.current;
-            this.pageRequest.size = res.data.size;
-          } else {
-            this.$message({message: '操作失败, ' + res.msg, type: 'error'})
-          }
-        });
+          this.tableData = res.data.records;
+          this.total = res.data.total;
+          this.pageRequest.current = res.data.current;
+          this.pageRequest.size = res.data.size;
+          callback(res)
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+          callback(res)
+        })
       },
       //覆盖原有的上传action
       handleSendUploadRequest() {
@@ -259,26 +274,20 @@
         formData.append('batchId', _this.batchId)
         _this.$api.bank.uploadFile(formData).then(function (response) {
           _this.isCommit = false
-
-          if (response.retCode == 0) {
-            _this.uploadDialogVisible = false;
-            _this.$message.success("提交完成！");
-            clearInterval(_this.getPercent);
-            _this.percentage = 0;
-            _this.$refs.upload.clearFiles();
-            _this.sid = ''
-            _this.showPercentage = false;
-          } else {
-            _this.$message.error(response.retMessage || "系统异常");
-            _this.isStop = true;
-            clearInterval(_this.getPercent);
-            _this.percentage = 0;
-            _this.showPercentage = false;
-          }
-          _this.querySalaryStatement();
-        }).catch((res) => {
+          _this.uploadDialogVisible = false;
+          _this.$message.success("提交完成！");
           clearInterval(_this.getPercent);
-          _this.$message.error(res.retMessage || "系统异常");
+          _this.percentage = 0;
+          _this.$refs.upload.clearFiles();
+          _this.sid = ''
+          _this.showPercentage = false;
+          _this.queryBankStatement(null);
+        }).catch((res) => {
+          _this.isStop = true;
+          clearInterval(_this.getPercent);
+          _this.percentage = 0;
+          _this.showPercentage = false;
+          _this.$message.error(res.response.data.retMessage || "系统异常");
         })
       },
       handleBeforeUpload: function () {
@@ -322,13 +331,13 @@
           }
         }).catch((res) => {
           clearInterval(_this.getPercent);
-          _this.$message.error(res.retMessage || "系统异常");
+          _this.$message.error(res.response.data.retMessage || "系统异常");
         })
       },
       handleCurrentChange(val) {
         let _this = this;
         _this.pageRequest.current = val;
-        _this.querySalaryStatement();
+        _this.queryBankStatement(_this.pageRequest);
       },
       // 删除
       handleDelete: function (data) {
@@ -338,16 +347,14 @@
         }).then(() => {
           this.loading = true
           let callback = res => {
-            if (res.retCode == 0) {
-              this.$message({message: '删除成功', type: 'success'})
-              this.querySalaryStatement()
-            } else {
-              this.$message({message: '操作失败, ' + res.msg, type: 'error'})
-            }
+            this.$message({message: '删除成功', type: 'success'})
+            this.queryBankStatement(null)
             this.loading = false
           }
           this.$api.fileManager.batchDelete(data.batchId).then(data != null ? callback : '')
-        }).catch(() => {
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+          this.loading = false
         })
       },
       closeDialog: function () {
@@ -358,7 +365,7 @@
         _this.showPercentage = false;
         this.isCommit = true
       },
-      handleCancel:function () {
+      handleCancel: function () {
         let _this = this;
         _this.percentage = 0;
         _this.$refs.upload.clearFiles();

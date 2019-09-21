@@ -220,7 +220,7 @@
             this.loading = false
             this.findPage(null)
           }
-          let ids =[]
+          let ids = []
           ids.push(data.userId)
           this.$api.user.batchDelete(ids).then(data != null ? callback : '').catch((res) => {
             this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
@@ -264,6 +264,9 @@
                   let params = Object.assign({}, this.dataForm)
                   let userRoles = []
                   for (let i = 0, len = params.userRoles.length; i < len; i++) {
+                    if (params.userRoles[i] == undefined || params.userRoles[i] == null) {
+                      continue
+                    }
                     let userRole = {
                       userId: params.userId,
                       roleId: params.userRoles[i]
