@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50560
 File Encoding         : 65001
 
-Date: 2019-09-19 02:01:45
+Date: 2019-09-23 00:34:49
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,7 +30,7 @@ CREATE TABLE `AUTH_MENU` (
   `ORDER_NUM` int(11) DEFAULT NULL COMMENT '排序',
   `UPDATE_DATE` datetime DEFAULT NULL,
   PRIMARY KEY (`MENU_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of AUTH_MENU
@@ -62,6 +62,49 @@ INSERT INTO `AUTH_MENU` VALUES ('24', '/Director/directorPending', '主管待办
 INSERT INTO `AUTH_MENU` VALUES ('25', '/Director/bizQuery', '业务办理进度查询', '23', '', '1', 'el-icon-time', '28', '2019-09-18 23:32:07');
 INSERT INTO `AUTH_MENU` VALUES ('26', '/sys/user', '用户管理', '1', '', '1', 'el-icon-service', '30', '2019-09-19 00:36:48');
 INSERT INTO `AUTH_MENU` VALUES ('27', '/sys/role', '角色管理', '1', '', '1', 'el-icon-view', '31', '2019-09-19 00:37:23');
+INSERT INTO `AUTH_MENU` VALUES ('28', '', '编辑', '8', 'sys:menu:edit', '2', '', '0', '2019-09-21 23:06:55');
+INSERT INTO `AUTH_MENU` VALUES ('29', '', '删除', '8', 'sys:menu:del', '2', '', '0', '2019-09-21 23:07:15');
+INSERT INTO `AUTH_MENU` VALUES ('30', '', '新增', '8', 'sys:menu:add', '2', '', '0', '2019-09-21 23:07:36');
+INSERT INTO `AUTH_MENU` VALUES ('31', '', '查询', '8', 'sys:menu:view', '2', '', '0', '2019-09-21 23:07:59');
+INSERT INTO `AUTH_MENU` VALUES ('32', '', '编辑', '26', 'sys:user:edit', '2', '', '0', '2019-09-21 23:11:20');
+INSERT INTO `AUTH_MENU` VALUES ('33', '', '删除', '26', 'sys:user:del', '2', '', '0', '2019-09-21 23:11:40');
+INSERT INTO `AUTH_MENU` VALUES ('36', '', '新增', '26', 'sys:user:add', '2', '', '0', '2019-09-21 23:24:14');
+INSERT INTO `AUTH_MENU` VALUES ('37', '', '查询', '26', 'sys:user:view', '2', '', '0', '2019-09-21 23:24:39');
+INSERT INTO `AUTH_MENU` VALUES ('38', '', '新增', '27', 'sys:role:add', '2', '', '0', '2019-09-21 23:25:01');
+INSERT INTO `AUTH_MENU` VALUES ('39', '', '编辑', '27', 'sys:role:edit', '2', '', '0', '2019-09-21 23:25:18');
+INSERT INTO `AUTH_MENU` VALUES ('40', '', '删除', '27', 'sys:role:del', '2', '', '0', '2019-09-21 23:26:09');
+INSERT INTO `AUTH_MENU` VALUES ('41', '', '查询', '27', 'sys:role:view', '2', '', '0', '2019-09-21 23:26:28');
+INSERT INTO `AUTH_MENU` VALUES ('42', '', '查询', '4', 'sys:bank:upload:view', '2', '', '0', '2019-09-22 00:14:04');
+INSERT INTO `AUTH_MENU` VALUES ('43', '', '上传', '4', 'sys:bank:upload', '2', '', '0', '2019-09-22 00:15:49');
+INSERT INTO `AUTH_MENU` VALUES ('44', '', '删除', '4', 'sys:bank:upload:del', '2', '', '0', '2019-09-22 00:16:09');
+INSERT INTO `AUTH_MENU` VALUES ('45', '', '删除', '5', 'sys:bank:query:del', '2', '', '0', '2019-09-22 00:22:59');
+INSERT INTO `AUTH_MENU` VALUES ('46', '', '查询', '5', 'sys:bank:query:view', '2', '', '0', '2019-09-22 00:23:22');
+INSERT INTO `AUTH_MENU` VALUES ('48', '', '查询', '5', 'sys:bank:dtl:view', '2', '', '0', '2019-09-22 13:22:14');
+INSERT INTO `AUTH_MENU` VALUES ('49', '', '查询', '7', 'sys:invoice:upload:view', '2', '', '0', '2019-09-22 19:10:46');
+INSERT INTO `AUTH_MENU` VALUES ('50', '', '上传', '7', 'sys:invoice:upload', '2', '', '0', '2019-09-22 19:11:08');
+INSERT INTO `AUTH_MENU` VALUES ('51', '', '删除', '7', 'sys:invoice:upload:del', '2', '', '0', '2019-09-22 19:11:29');
+INSERT INTO `AUTH_MENU` VALUES ('52', '', '查询', '9', 'sys:invoice:query:view', '2', '', '0', '2019-09-22 20:14:06');
+INSERT INTO `AUTH_MENU` VALUES ('53', '', '删除', '9', 'sys:invoice:query:del', '2', '', '0', '2019-09-22 20:14:26');
+INSERT INTO `AUTH_MENU` VALUES ('54', '', '查询', '10', 'sys:zzs:upload:view', '2', '', '0', '2019-09-22 21:27:37');
+INSERT INTO `AUTH_MENU` VALUES ('55', '', '上传', '10', 'sys:zzs:upload', '2', '', '0', '2019-09-22 21:29:32');
+INSERT INTO `AUTH_MENU` VALUES ('56', '', '删除', '10', 'sys:zzs:upload:del', '2', '', '0', '2019-09-22 21:29:49');
+INSERT INTO `AUTH_MENU` VALUES ('57', '', '查询', '10', 'sys:zzs:dtl:view', '2', '', '0', '2019-09-22 21:38:04');
+INSERT INTO `AUTH_MENU` VALUES ('58', '', '提交', '10', 'sys:zzs:amend:submit', '2', '', '0', '2019-09-22 23:25:45');
+INSERT INTO `AUTH_MENU` VALUES ('59', '', '新增', '11', 'sys:extInvoice:add', '2', '', '0', '2019-09-23 00:00:31');
+INSERT INTO `AUTH_MENU` VALUES ('60', '', '编辑', '11', 'sys:extInvoice:edit', '2', '', '0', '2019-09-23 00:00:50');
+INSERT INTO `AUTH_MENU` VALUES ('61', '', '查询', '11', 'sys:extInvoice:view', '2', '', '0', '2019-09-23 00:01:10');
+INSERT INTO `AUTH_MENU` VALUES ('62', '', '删除', '11', 'sys:extInvoice:del', '2', '', '0', '2019-09-23 00:01:25');
+INSERT INTO `AUTH_MENU` VALUES ('63', '', '查询', '13', 'sys:salary:upload:view', '2', '', '0', '2019-09-23 00:10:25');
+INSERT INTO `AUTH_MENU` VALUES ('64', '', '上传', '13', 'sys:salary:upload', '2', '', '0', '2019-09-23 00:10:42');
+INSERT INTO `AUTH_MENU` VALUES ('65', '', '删除', '13', 'sys:salary:upload:del', '2', '', '0', '2019-09-23 00:11:01');
+INSERT INTO `AUTH_MENU` VALUES ('66', '', '删除', '14', 'sys:salary:query:del', '2', '', '0', '2019-09-23 00:19:00');
+INSERT INTO `AUTH_MENU` VALUES ('67', '', '查询', '14', 'sys:salary:query:view', '2', '', '0', '2019-09-23 00:19:18');
+INSERT INTO `AUTH_MENU` VALUES ('68', '', '删除', '16', 'sys:presales:customer:del', '2', '', '0', '2019-09-23 00:30:49');
+INSERT INTO `AUTH_MENU` VALUES ('69', '', '查询', '16', 'sys:presales:customer:view', '2', '', '0', '2019-09-23 00:31:07');
+INSERT INTO `AUTH_MENU` VALUES ('70', '', '新增', '16', 'sys:presales:customer:add', '2', '', '0', '2019-09-23 00:31:22');
+INSERT INTO `AUTH_MENU` VALUES ('71', '', '编辑', '16', 'sys:presales:customer:edit', '2', '', '0', '2019-09-23 00:31:37');
+INSERT INTO `AUTH_MENU` VALUES ('72', '', '客户详情', '16', 'sys:presales:customer:dtl', '2', '', '0', '2019-09-23 00:32:31');
+INSERT INTO `AUTH_MENU` VALUES ('73', '', '客户订单', '16', 'sys:presales:customer:order', '2', '', '0', '2019-09-23 00:32:56');
 
 -- ----------------------------
 -- Table structure for AUTH_MENU_ROLE_REL
