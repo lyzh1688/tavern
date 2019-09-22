@@ -3,20 +3,22 @@
   <div class="page-container">
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
       <el-form :inline="true" :model="filter" class="form-inline">
-       <!-- <el-form-item label="公司名称：">
-          <el-input v-model="filter.name" placeholder="公司名称"></el-input>
-        </el-form-item>
-        <el-form-item label="会计期间：">
-          <el-date-picker v-model="filter.accountPeriod" type="datetime"></el-date-picker>
+        <!-- <el-form-item label="公司名称：">
+           <el-input v-model="filter.name" placeholder="公司名称"></el-input>
+         </el-form-item>
+         <el-form-item label="会计期间：">
+           <el-date-picker v-model="filter.accountPeriod" type="datetime"></el-date-picker>
+         </el-form-item>
+         <el-form-item>
+           <kt-button icon="fa fa-search" :label="$t('action.search')" type="primary" @click="queryInvoiceRecord"/>
+         </el-form-item>-->
+        <el-form-item>
+          <kt-button icon="fa fa-search" v-if="sys_invoice_upload_view" :label="$t('action.search')" type="primary"
+                     @click="queryInvoiceRecord"/>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')" type="primary" @click="queryInvoiceRecord"/>
-        </el-form-item>-->
-        <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')" type="primary" @click="queryInvoiceRecord"/>
-        </el-form-item>
-        <el-form-item>
-          <kt-button icon="fa fa-cloud-upload" type="success" @click="uploadDialogVisible = true" label="文件上传"/>
+          <kt-button icon="fa fa-cloud-upload" v-if="sys_invoice_upload" type="success"
+                     @click="uploadDialogVisible = true" label="文件上传"/>
         </el-form-item>
       </el-form>
     </div>
@@ -54,8 +56,8 @@
       <el-table-column
         fixed="right" header-align="center" align="center" width="185">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
-                     @click="handleDelete(scope.row)" :perms="permsDelete"/>
+          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger" v-if="sys_invoice_upload_del"
+                     @click="handleDelete(scope.row)" />
         </template>
       </el-table-column>
     </el-table>
@@ -128,6 +130,7 @@
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
   import Dtl from "@/views/Zzs/Dtl"
   import {genNonDuplicateID} from '@/utils/common'
+  import {hasPermission} from '@/permission/index.js'
 
   export default {
     components: {
@@ -218,11 +221,17 @@
         percentage: 0.0,
         getPercent: null,
         sid: '', batchId: '',
-        showFileId: false
+        showFileId: false,
+        sys_invoice_upload_view: false,
+        sys_invoice_upload: false,
+        sys_invoice_upload_del: false,
       }
     },
     created() {
-      this.queryInvoiceRecord();
+      this.sys_invoice_upload_view = hasPermission('sys:invoice:upload:view')
+      this.sys_invoice_upload = hasPermission('sys:invoice:upload')
+      this.sys_invoice_upload_del = hasPermission('sys:invoice:upload:del')
+      this.queryInvoiceRecord(null);
     },
     methods: {
       /*设置表头背景色*/
@@ -242,19 +251,24 @@
         this.isCommit = false
       },
       //查询
-      queryInvoiceRecord() {
+      queryInvoiceRecord(data) {
+        if (data !== null) {
+          this.pageRequest = data
+        }
+        this.loading = true
+        let callback = res => {
+          this.loading = false
+        }
         this.pageRequest.fileType = '2'
         this.$api.fileManager.findPage(this.pageRequest).then((res) => {
-          console.log(JSON.stringify(res))
-          if (res.retCode == 0) {
-            console.log(JSON.stringify(res))
-            this.tableData = res.data.records;
-            this.total = res.data.total;
-            this.pageRequest.current = res.data.current;
-            this.pageRequest.size = res.data.size;
-          } else {
-            this.$message({message: '操作失败, ' + res.msg, type: 'error'})
-          }
+          this.tableData = res.data.records;
+          this.total = res.data.total;
+          this.pageRequest.current = res.data.current;
+          this.pageRequest.size = res.data.size;
+          callback(res)
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+          callback(res)
         });
       },
       //覆盖原有的上传action
@@ -268,26 +282,21 @@
         formData.append('batchId', _this.batchId)
         _this.$api.invoice.uploadFile(formData).then(function (response) {
           _this.isCommit = false
-
-          if (response.retCode == 0) {
-            _this.uploadDialogVisible = false;
-            _this.$message.success("提交完成！");
-            clearInterval(_this.getPercent);
-            _this.percentage = 0;
-            _this.$refs.upload.clearFiles();
-            _this.sid = ''
-            _this.showPercentage = false;
-          } else {
-            _this.$message.error(response.retMessage || "系统异常");
-            _this.isStop = true;
-            clearInterval(_this.getPercent);
-            _this.percentage = 0;
-            _this.showPercentage = false;
-          }
-          _this.queryInvoiceRecord();
-        }).catch((res) => {
+          _this.uploadDialogVisible = false;
+          _this.$message.success("提交完成！");
           clearInterval(_this.getPercent);
-          _this.$message.error(res.retMessage || "系统异常");
+          _this.percentage = 0;
+          _this.$refs.upload.clearFiles();
+          _this.sid = ''
+          _this.showPercentage = false;
+          _this.queryInvoiceRecord(null);
+        }).catch((res) => {
+          _this.uploadDialogVisible = false;
+          _this.$message.error(res.response.data.retMessage || "系统异常");
+          _this.isStop = true;
+          clearInterval(_this.getPercent);
+          _this.percentage = 0;
+          _this.showPercentage = false;
         })
       },
       handleBeforeUpload: function () {
@@ -337,11 +346,10 @@
       handleCurrentChange(val) {
         let _this = this;
         _this.pageRequest.current = val;
-        _this.queryInvoiceRecord();
+        _this.queryInvoiceRecord(_this.pageRequest);
       },
       // 删除
       handleDelete: function (data) {
-
         this.$confirm('确认删除选中记录吗？', '提示', {
           type: 'warning'
         }).then(() => {
@@ -349,14 +357,13 @@
           let callback = res => {
             if (res.retCode == 0) {
               this.$message({message: '删除成功', type: 'success'})
-              this.queryInvoiceRecord()
+              this.queryInvoiceRecord(null)
             } else {
-              this.$message({message: '操作失败, ' + res.msg, type: 'error'})
+              this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
             }
             this.loading = false
           }
           this.$api.fileManager.batchDelete(data.batchId).then(data != null ? callback : '')
-        }).catch(() => {
         })
       },
       closeDialog: function () {
@@ -367,14 +374,14 @@
         _this.showPercentage = false;
         this.isCommit = true
       },
-    handleCancel:function () {
-      let _this = this;
-      _this.percentage = 0;
-      _this.$refs.upload.clearFiles();
-      _this.sid = ''
-      _this.showPercentage = false;
-      _this.uploadDialogVisible = false
-    }
+      handleCancel: function () {
+        let _this = this;
+        _this.percentage = 0;
+        _this.$refs.upload.clearFiles();
+        _this.sid = ''
+        _this.showPercentage = false;
+        _this.uploadDialogVisible = false
+      }
     }
   }
 </script>

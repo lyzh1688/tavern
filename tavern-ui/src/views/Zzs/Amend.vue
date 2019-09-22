@@ -37,7 +37,8 @@
       </el-form>
       <el-form :model="formInline" class="form-inline" style="margin-left: 100px;">
         <el-form-item size="large" style="margin-left: 40px">
-          <el-button type="primary" @click="confirm" :loading="loading">提交</el-button>
+          <el-button type="primary" @click="confirm" :loading="loading" v-if="sys_zzs_amend_submit">提交</el-button>
+          <el-button @click.native="returnBack" :loading="loading">返回</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -46,6 +47,8 @@
 </template>
 
 <script>
+  import {hasPermission} from '@/permission/index.js'
+
   export default {
     name: 'zzdAmend',
     data() {
@@ -64,11 +67,13 @@
         },
         rotate: false,
         fileId: '',
-        loading: false
+        loading: false,
+        sys_zzs_amend_submit: false
       }
     },
     created() {
       let _this = this;
+      _this.sys_zzs_amend_submit = hasPermission('sys:zzs:amend:submit')
       _this.params = this.$route.params;
       _this.fileId = this.$route.params.fileId;
       let _id = localStorage.getItem("zzsFileId");
@@ -90,8 +95,6 @@
           return 'background-color: #dce3f2;color:#333;'
         }
       },
-      confirm() {
-      },
       refreshUrl() {
         let _this = this;
         _this.rotate = !_this.rotate;
@@ -100,12 +103,9 @@
       findFileScanDtl() {
         let _this = this;
         this.$api.zzs.findFileScanDtl(_this.fileId).then((res) => {
-          if (res.retCode == 0) {
-            console.log(JSON.stringify(res))
-            _this.formInline = res.data;
-          } else {
-            _this.$message({message: '操作失败, ' + res.msg, type: 'error'})
-          }
+          _this.formInline = res.data;
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
         });
       },
       confirm: function () {
@@ -114,18 +114,21 @@
           type: 'warning'
         }).then(() => {
           _this.loading = true
+          _this.formInline.operator = sessionStorage.getItem("userName")
           _this.$api.zzs.editScanDtl(_this.formInline).then((res) => {
-            if (res.retCode == 0) {
-              _this.$message({message: '修改成功', type: 'success'})
-              _this.findFileScanDtl()
-            } else {
-              _this.$message({message: '操作失败, ' + res.msg, type: 'error'})
-            }
+            _this.$message({message: '修改成功', type: 'success'})
+            _this.findFileScanDtl()
             _this.loading = false
-          })
+          }).catch((res) => {
+            _this.loading = false
+            this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+          });
         }).catch(() => {
         })
       },
+      returnBack() {
+        this.$router.push("/zzs/dtl")
+      }
     }
   }
 </script>

@@ -3,17 +3,19 @@
     <!--工具栏-->
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
       <el-form :inline="true" :model="filters" :size="size">
-        <el-form-item label="公司名称：">
+        <el-form-item label="公司名称：" v-if="sys_extInvoice_view">
           <el-input v-model="filters.name" placeholder="公司名称"></el-input>
         </el-form-item>
-        <el-form-item label="会计期间：">
+        <el-form-item label="会计期间：" v-if="sys_extInvoice_view">
           <el-date-picker v-model="filters.accountPeriod" type="date" placeholder="选择日期时间"></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')" type="primary" @click="findPage(null)"/>
+          <kt-button icon="fa fa-search" :label="$t('action.search')" type="primary" @click="findPage(null)"
+                     v-if="sys_extInvoice_view"/>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-plus" :label="$t('action.add')" type="primary" @click="handleAdd"/>
+          <kt-button icon="fa fa-plus" :label="$t('action.add')" type="primary" @click="handleAdd"
+                     v-if="sys_extInvoice_add"/>
         </el-form-item>
       </el-form>
     </div>
@@ -26,9 +28,6 @@
             </el-tooltip>
             <el-tooltip content="列显示" placement="top">
               <el-button icon="fa fa-filter" @click="displayFilterColumnsDialog"></el-button>
-            </el-tooltip>
-            <el-tooltip content="导出" placement="top">
-              <el-button icon="fa fa-file-excel-o"></el-button>
             </el-tooltip>
           </el-button-group>
         </el-form-item>
@@ -62,10 +61,13 @@
       <el-table-column prop="itemCount" label="发票张数" header-align="center" align="center">
       </el-table-column>
       <el-table-column
+        v-if="sys_extInvoice_edit || sys_extInvoice_del"
         fixed="right" header-align="center" align="center" width="185" :label="$t('action.operation')">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-edit" :label="$t('action.edit')" @click="handleEdit(scope.row)"/>
-          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger" @click="handleDelete(scope.row)"/>
+          <kt-button icon="fa fa-edit" :label="$t('action.edit')" @click="handleEdit(scope.row)"
+                     v-if="sys_extInvoice_edit"/>
+          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger" @click="handleDelete(scope.row)"
+                     v-if="sys_extInvoice_del"/>
         </template>
       </el-table-column>
     </el-table>
@@ -115,6 +117,7 @@
   import KtButton from "@/views/Core/KtButton"
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
   import {format, formatDate, formatDateSimple8} from "@/utils/datetime"
+  import {hasPermission} from '@/permission/index.js'
 
   export default {
     components: {
@@ -159,11 +162,29 @@
           itemCount: '',
         },
         loading: false,  // 加载标识
+        sys_extInvoice_add: false,
+        sys_extInvoice_edit: false,
+        sys_extInvoice_view: false,
+        sys_extInvoice_del: false
       }
+    },
+    created() {
+      this.sys_extInvoice_add = hasPermission('sys:extInvoice:add')
+      this.sys_extInvoice_edit = hasPermission('sys:extInvoice:edit')
+      this.sys_extInvoice_view = hasPermission('sys:extInvoice:view')
+      this.sys_extInvoice_del = hasPermission('sys:extInvoice:del')
+      findPage(null)
     },
     methods: {
       // 获取分页数据
       findPage: function (data) {
+        if (data !== null) {
+          this.pageRequest = data
+        }
+        this.loading = true
+        let callback = res => {
+          this.loading = false
+        }
         this.loading = true
         if (this.filters.name !== '') {
           this.pageRequest.customId = this.filters.customId
@@ -172,13 +193,15 @@
           this.pageRequest.accountPeriod = this.dateFormat(this.filters.accountPeriod)
         }
         this.$api.extrainvoice.findPage(this.pageRequest).then((res) => {
-          console.log(JSON.stringify(res))
           this.tableData = res.data.records;
           this.total = res.data.total;
           this.pageRequest.current = res.data.current;
           this.pageRequest.size = res.data.size;
-        }).then(data != null ? data.callback : '')
-        this.loading = false
+          callback(res)
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+          callback(res)
+        });
       },
       // 批量删除
       handleDelete: function (data) {
@@ -191,16 +214,21 @@
               this.$message({message: '删除成功', type: 'success'})
               this.findPage(null)
             } else {
-              this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
+              this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
             }
           }
           this.$api.extrainvoice.deleteRecord(data.recordId, "0").then(data != null ? callback : '')
-        }).catch((res) => {
-          this.$message({message: '操作失败, ' + res.msg, type: 'error'})
         })
       },
       // 显示新增界面
       handleAdd: function () {
+        this.dataForm = {
+          customId: '',
+          accountPeriod: '',
+          invoiceType: '',
+          totalAmount: '',
+          itemCount: '',
+        }
         this.dialogVisible = true
         this.operation = true
       },
@@ -223,15 +251,13 @@
               params.recordId = this.dataForm.customId + "_" + params.accountPeriod + "_" + this.dataForm.invoiceType
               this.$api.extrainvoice.save(params).then((res) => {
                 this.editLoading = false
-                if (res.retCode === 0) {
-                  this.$message({message: '操作成功', type: 'success'})
-                  this.dialogVisible = false
-                  this.$refs['dataForm'].resetFields()
-                } else {
-                  this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
-                }
+                this.$message({message: '操作成功', type: 'success'})
+                this.dialogVisible = false
+                this.$refs['dataForm'].resetFields()
                 this.findPage(null)
               }).catch((res) => {
+                this.editLoading = false
+                this.dialogVisible = false
                 this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
               })
             })

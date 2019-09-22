@@ -16,4 +16,5 @@ public class ZZSInvoiceKeyField {
     private String invoiceDate;
     private String checkCode;
     private String taxFreeAmount;
+    private String operator;
 }

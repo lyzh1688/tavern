@@ -11,9 +11,6 @@
             <el-tooltip content="列显示" placement="top">
               <el-button icon="fa fa-filter" @click="displayFilterColumnsDialog"></el-button>
             </el-tooltip>
-            <el-tooltip content="导出" placement="top">
-              <el-button icon="fa fa-file-excel-o"></el-button>
-            </el-tooltip>
           </el-button-group>
         </el-form-item>
       </el-form>

@@ -1,5 +1,6 @@
 package com.tuoyou.tavern.auth.endpoint;
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tuoyou.tavern.auth.service.AuthMenuRoleRelService;
 import com.tuoyou.tavern.auth.service.AuthMenuService;
@@ -7,6 +8,7 @@ import com.tuoyou.tavern.protocol.authcenter.dto.AuthMenuDTO;
 import com.tuoyou.tavern.protocol.authcenter.model.AuthMenu;
 import com.tuoyou.tavern.protocol.authcenter.model.AuthMenuRoleRel;
 import com.tuoyou.tavern.protocol.authcenter.model.AuthMenuVO;
+import com.tuoyou.tavern.protocol.authcenter.reponse.AuthMenuPermissionResponse;
 import com.tuoyou.tavern.protocol.authcenter.reponse.AuthMenuResponse;
 import com.tuoyou.tavern.protocol.common.TavernRequestAuthFields;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
@@ -63,6 +65,14 @@ public class AuthMenuEndpoint {
     @GetMapping("/findRoleMenus")
     public AuthMenuResponse getRoleMenus(@RequestParam(name = "roleId") String roleId) {
         return new AuthMenuResponse(this.authMenuService.getAuthMenuByRoles(roleId));
+    }
+
+    @GetMapping(value = "/findPermissions")
+    public AuthMenuPermissionResponse getAuthMenuPermission(@RequestParam(name = "roleId") String roleId) {
+        return new AuthMenuPermissionResponse(this.authMenuService.getAuthMenuByRoles(roleId).parallelStream()
+                .filter(authMenuVO -> StringUtils.isNotEmpty(authMenuVO.getPerms()))
+                .map(AuthMenuVO::getPerms)
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("/findMenuTree")

@@ -11,9 +11,6 @@
             <el-tooltip content="列显示" placement="top">
               <el-button icon="fa fa-filter" @click="displayFilterColumnsDialog"></el-button>
             </el-tooltip>
-            <el-tooltip content="导出" placement="top">
-              <el-button icon="fa fa-file-excel-o"></el-button>
-            </el-tooltip>
           </el-button-group>
         </el-form-item>
       </el-form>
@@ -36,6 +33,8 @@
   import KtButton from "@/views/Core/KtButton"
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
   import { format } from "@/utils/datetime"
+  import {hasPermission} from '@/permission/index.js'
+
   export default {
     components:{
       PopupTreeInput,

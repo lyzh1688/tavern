@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @Service
 public class WorkFlowLogMessageServiceImpl extends ServiceImpl<WorkFlowLogMessageMapper, WorkFlowLogMessage> implements WorkFlowLogMessageService {
 
-    @Value("${workflow.log.url.path:http://127.0.0.1:80/workflow/log/attachment/}")
+    @Value("${workflow.log.url.path:http://119.3.19.171:80/workflow/log/attachment/}")
     private String workFlowLogUrlPath;
     @Value("${workflow.log.path:/mnt/file/workflow/log}")
     private String workFlowLogPath;

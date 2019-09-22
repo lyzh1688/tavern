@@ -9,13 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 功能说明: <br>
- * 系统说明: <br>
- * 模块说明: <br>
- * 功能描述: <br>
- * <br>
- * 开发人员: Hebiao <br>
- * 开发时间: 2019/9/18 <br>
+ * Code Monkey: 何彪 <br>
+ * Dev Time: 2019/08/25 <br>
  */
 public class AuthMenuServiceProviderDesc {
     public static Map<Class<?>, Map<String, SpiDescription>> serviceProviderDesc = new HashMap<>();
@@ -35,7 +30,15 @@ public class AuthMenuServiceProviderDesc {
                 .serviceApi("saveAuthRoleMenus")
                 .build();
 
+        SpiDescription queryAuthMenuPermissionByRole = new SpiDescription.Builder()
+                .serviceClass(AuthMenuService.class)
+                .requestMethod(RequestMethods.GET)
+                .resourcePath("/menu/findPermissions?roleId=${roleId}")
+                .serviceApi("queryAuthMenuPermissionByRole")
+                .build();
+
         authMenuServiceProviderDesc.put("queryAuthMenuByRole", queryAuthMenuByRole);
+        authMenuServiceProviderDesc.put("queryAuthMenuPermissionByRole", queryAuthMenuPermissionByRole);
         authMenuServiceProviderDesc.put("saveAuthRoleMenus", saveAuthRoleMenus);
 
         serviceProviderDesc.put(AuthMenuService.class, authMenuServiceProviderDesc);

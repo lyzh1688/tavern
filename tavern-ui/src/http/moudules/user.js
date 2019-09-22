@@ -29,15 +29,14 @@ export const findPage = (params) => {
   })
 }
 // 查找用户的菜单权限标识集合
-/*
 export const findPermissions = (params) => {
     return axios({
         url: '/hrm/user/findPermissions',
         method: 'get',
         params
     })
-}*/
-export function findPermissions() {
+}
+/*export function findPermissions() {
   let permsData = {
     "code": 200,
     "msg": null,
@@ -70,4 +69,4 @@ export function findPermissions() {
     type: 'get',
     data: permsData
   }
-}
+}*/

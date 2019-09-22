@@ -5,18 +5,18 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tuoyou.tavern.auth.libs.utils.PwdUtils;
 import com.tuoyou.tavern.crm.service.HrmUserBasicInfoService;
+import com.tuoyou.tavern.protocol.authcenter.reponse.AuthMenuPermissionResponse;
+import com.tuoyou.tavern.protocol.authcenter.spi.AuthMenuService;
 import com.tuoyou.tavern.protocol.common.RetCode;
-import com.tuoyou.tavern.protocol.common.TavernDictResponse;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
-import com.tuoyou.tavern.protocol.common.model.Dict;
 import com.tuoyou.tavern.protocol.hrm.constants.HrmUserConstant;
 import com.tuoyou.tavern.protocol.hrm.dto.StaffInfoDTO;
 import com.tuoyou.tavern.protocol.hrm.model.HrmUserBasicInfo;
+import com.tuoyou.tavern.protocol.hrm.model.HrmUserRoleRelVO;
 import com.tuoyou.tavern.protocol.hrm.model.StaffBasicInfo;
 import com.tuoyou.tavern.protocol.hrm.response.StaffInfoPageResponse;
 import com.tuoyou.tavern.protocol.hrm.response.StaffInfoResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/user")
 public class StaffEndpoint {
     private HrmUserBasicInfoService hrmUserBasicInfoService;
+    private AuthMenuService authMenuService;
 
     /*
      * 创建用户
@@ -135,5 +136,11 @@ public class StaffEndpoint {
         return new TavernResponse();
     }
 
+    @GetMapping(value = "/findPermissions")
+    public AuthMenuPermissionResponse getAuthMenuPermission(@RequestParam(name = "userAccnt") String userAccnt) {
+        StaffBasicInfo staffBasicInfo = this.hrmUserBasicInfoService.queryStaffBasicInfo(userAccnt, null);
+        String roleId = org.apache.commons.lang3.StringUtils.join(staffBasicInfo.getUserRoles().parallelStream().map(HrmUserRoleRelVO::getRoleId).collect(Collectors.toList()), ",");
+        return this.authMenuService.queryAuthMenuPermissionByRole(roleId);
+    }
 
 }

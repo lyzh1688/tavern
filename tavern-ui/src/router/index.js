@@ -286,17 +286,14 @@ function addDynamicMenuAndRoutes(userName, roles, to, from) {
       store.commit('setNavTree', res.data)
     }).catch(function (res) {
     this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+  }).then(res => {
+    api.user.findPermissions({'userAccnt':userName}).then(res => {
+      // 保存用户权限标识集合
+      store.commit('setPerms', res.data)
+    })
   })
-  // }).then(res => {
-  //   api.user.findPermissions({'name':userName}).then(res => {
-  //     // 保存用户权限标识集合
-  //     store.commit('setPerms', res.data)
-  //   })
-  // })
-  // .catch(function(res) {
-  // })
-  let perms = api.user.findPermissions({'name': userName})
-  store.commit('setPerms', perms.data.data)
+  .catch(function(res) {
+  })
   //     // 保存用户权限标识集合
   //     store.commit('setPerms', res.data)
   //   })

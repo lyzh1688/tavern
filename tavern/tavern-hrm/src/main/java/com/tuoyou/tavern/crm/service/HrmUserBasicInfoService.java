@@ -23,4 +23,6 @@ public interface HrmUserBasicInfoService extends IService<HrmUserBasicInfo> {
 
     List<HrmUserBasicInfo> getStaffByRole(String roleId);
 
+
+
 }

@@ -3,12 +3,12 @@
     <!--工具栏-->
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
       <el-form :inline="true" :model="filters" :size="size">
-        <el-form-item label="会计期间：">
+        <el-form-item label="会计期间：" v-if="sys_salary_query_view">
           <el-date-picker v-model="filters.accountPeriod" type="datetime" placeholder="选择日期时间"></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary"
-                     @click="findPage"/>
+          <kt-button icon="fa fa-search" :label="$t('action.search')" v-if="sys_salary_query_view" type="primary"
+                     @click="findPage(null)"/>
         </el-form-item>
       </el-form>
     </div>
@@ -21,9 +21,6 @@
             </el-tooltip>
             <el-tooltip content="列显示" placement="top">
               <el-button icon="fa fa-filter" @click="displayFilterColumnsDialog"></el-button>
-            </el-tooltip>
-            <el-tooltip content="导出" placement="top">
-              <el-button icon="fa fa-file-excel-o"></el-button>
             </el-tooltip>
           </el-button-group>
         </el-form-item>
@@ -54,9 +51,10 @@
       <el-table-column prop="updateDate" label="上传时间" header-align="center" align="center">
       </el-table-column>
       <el-table-column
+        v-if="sys_salary_query_del"
         fixed="right" header-align="center" align="center" width="185" :label="$t('action.operation')">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
+          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger" v-if="sys_salary_query_del"
                      @click="handleDelete(scope.row)"/>
         </template>
       </el-table-column>
@@ -74,6 +72,7 @@
   import KtButton from "@/views/Core/KtButton"
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
   import {format} from "@/utils/datetime"
+  import {hasPermission} from '@/permission/index.js'
 
   export default {
     components: {
@@ -99,17 +98,27 @@
         pageResult: {},
         total: 0,
         loading: false,  // 加载标识
+        sys_salary_query_del:false,
+        sys_salary_query_view:false,
       }
     },
     created() {
       let _this = this;
+      _this.sys_salary_query_del = hasPermission('sys:salary:query:del')
+      _this.sys_salary_query_view = hasPermission('sys:salary:query:view')
       _this.batchId = this.$route.params.batchId;
-      this.findPage(null);
     },
     methods: {
       // 获取分页数据
       findPage: function (data) {
         let _this = this
+        if (data !== null) {
+          _this.pageRequest = data
+        }
+        _this.loading = true
+        let callback = res => {
+          _this.loading = false
+        }
         if (_this.batchId != undefined && _this.batchId != null && _this.batchId != '') {
           _this.pageRequest.batchId = _this.batchId;
         }
@@ -121,7 +130,11 @@
           _this.total = res.data.total;
           _this.pageRequest.current = res.data.current;
           _this.pageRequest.size = res.data.size;
-        }).then(data != null ? data.callback : '')
+          callback(res)
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+          callback(res)
+        });
       },
       // 批量删除
       handleDelete: function (data) {
@@ -134,13 +147,12 @@
               this.$message({message: '删除成功', type: 'success'})
               this.findPage(null)
             } else {
-              this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
+              this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
             }
             this.loading = false
           }
           this.$api.salary.batchDelete(data.batchId,'0').then(data != null ? callback : '')
         }).catch((res) => {
-          this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
           this.loading = false
         })
       },

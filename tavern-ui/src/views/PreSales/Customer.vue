@@ -3,18 +3,18 @@
     <!--工具栏-->
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
       <el-form :inline="true" :model="filters" :size="size">
-        <el-form-item label="旺旺账号" label-width="100px" prop="wangwangAccnt">
+        <el-form-item label="旺旺账号" label-width="100px" prop="wangwangAccnt" v-if="sys_presales_customer_view">
           <el-input v-model="filters.wangwangAccnt" placeholder="请输入旺旺账号"></el-input>
         </el-form-item>
-        <el-form-item label="客户姓名" label-width="100px" prop="customName">
+        <el-form-item label="客户姓名" label-width="100px" prop="customName" v-if="sys_presales_customer_view">
           <el-input v-model="filters.customName" placeholder="请输入客户姓名"></el-input>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary"
+          <kt-button icon="fa fa-search" :label="$t('action.search')" v-if="sys_presales_customer_view" type="primary"
                      @click="findPage(null)"/>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-plus" label="新增客户" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-plus" label="新增客户"  type="primary" v-if="sys_presales_customer_add"
                      @click="handleAdd"/>
         </el-form-item>
       </el-form>
@@ -47,15 +47,18 @@
       </el-table-column>
       <el-table-column prop="updateDate" label="创建时间" header-align="center" align="center">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
+      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500"
+                       v-if="sys_presales_customer_edit || sys_presales_customer_dtl
+                       || sys_presales_customer_order || sys_presales_customer_del"
+      >
         <template slot-scope="scope">
-          <kt-button icon="fa fa-edit" label="修改客户" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-edit" label="修改客户" v-if="sys_presales_customer_edit" type="primary"
                      @click="handleEdit(scope.row)"/>
-          <kt-button icon="fa fa-retweet" label="客户详情" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-retweet" label="客户详情" v-if="sys_presales_customer_dtl" type="primary"
                      @click="handleDtl(scope.row)"/>
-          <kt-button icon="fa fa-shopping-cart" label="客户订单" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-shopping-cart" label="客户订单" v-if="sys_presales_customer_order" type="primary"
                      @click="handleOrder(scope.row)"/>
-          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
+          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"  v-if="sys_presales_customer_del"
                      @click="handleDelete(scope.row)"/>
         </template>
       </el-table-column>
@@ -123,6 +126,7 @@
   import KtButton from "@/views/Core/KtButton"
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
   import {format} from "@/utils/datetime"
+  import {hasPermission} from '@/permission/index.js'
 
   export default {
     components: {
@@ -187,16 +191,28 @@
           customName: '',
           updateDate: ''
         },
+        sys_presales_customer_del:false,
+        sys_presales_customer_view:false,
+        sys_presales_customer_add:false,
+        sys_presales_customer_edit:false,
+        sys_presales_customer_dtl:false,
+        sys_presales_customer_order:false,
       }
     },
     created() {
+      this.sys_presales_customer_del = hasPermission('sys:presales:customer:del')
+      this.sys_presales_customer_view = hasPermission('sys:presales:customer:view')
+      this.sys_presales_customer_add = hasPermission('sys:presales:customer:add')
+      this.sys_presales_customer_edit = hasPermission('sys:presales:customer:edit')
+      this.sys_presales_customer_dtl = hasPermission('sys:presales:customer:dtl')
+      this.sys_presales_customer_order = hasPermission('sys:presales:customer:order')
       this.findPage(null);
     },
     methods: {
       // 获取分页数据
       findPage: function (data) {
         if (data !== null) {
-          this.pageRequest = data.pageRequest
+          this.pageRequest = data
         }
         this.loading = true
         let callback = res => {
@@ -227,7 +243,7 @@
               this.$message({message: '删除成功', type: 'success'})
               this.findPage(null)
             } else {
-              this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
+              this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
             }
             this.loading = false
           }

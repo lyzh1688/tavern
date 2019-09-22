@@ -56,7 +56,8 @@ public class ZZSInvoiceEndpoint {
      *
      * **/
     @PostMapping("/upload")
-    public TavernResponse uploadZzsInvoiceFile(@RequestParam("file") MultipartFile multipartFile, @RequestParam("batchId") String batchId) throws Exception {
+    public TavernResponse uploadZzsInvoiceFile(@RequestParam("file") MultipartFile multipartFile,
+                                               @RequestParam("batchId") String batchId) throws Exception {
         String date = DateUtils.formatDate(LocalDate.now(), DateUtils.SIMPLE_8_FORMATTER);
         this.fileUploadRecordService.uploadFile(multipartFile,
                 StringUtils.join(zzsDir, "/", date, "/"),

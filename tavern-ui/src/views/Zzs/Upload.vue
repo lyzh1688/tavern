@@ -2,7 +2,7 @@
 <template>
   <div class="page-container">
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
-      <el-form :inline="true" :model="formInline" class="form-inline">
+      <el-form :inline="true" :model="formInline" class="form-inline" v-if="sys_zzs_upload_view">
         <el-form-item>
           <el-form-item>
             <el-select v-model="formInline.status" clearable placeholder="上传状态">
@@ -13,11 +13,13 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <kt-button icon="fa fa-search" type="primary" :label="$t('action.search')" @click="queryFileUpload"/>
+            <kt-button icon="fa fa-search" type="primary" :label="$t('action.search')" @click="queryFileUpload(null)"
+                       v-if="sys_zzs_upload_view"/>
           </el-form-item>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-cloud-upload" type="success" @click="uploadDialogVisible = true" label="文件上传"/>
+          <kt-button icon="fa fa-cloud-upload" type="success" @click="uploadDialogVisible = true" label="文件上传"
+                     v-if="sys_zzs_upload"/>
         </el-form-item>
       </el-form>
     </div>
@@ -53,10 +55,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        fixed="right" header-align="center" align="center" width="185">
+        fixed="right" header-align="center" align="center" width="185" label="操作" v-if="sys_zzs_upload_del">
         <template slot-scope="scope">
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
-                     @click="handleDelete(scope.row)" :perms="permsDelete"/>
+                     @click="handleDelete(scope.row)" v-if="sys_zzs_upload_del"/>
         </template>
       </el-table-column>
     </el-table>
@@ -129,6 +131,7 @@
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
   import Dtl from "@/views/Zzs/Dtl"
   import {genNonDuplicateID} from '@/utils/common'
+  import {hasPermission} from '@/permission/index.js'
 
   export default {
     components: {
@@ -217,11 +220,17 @@
         fileList: [],
         percentage: 0.0,
         getPercent: null,
-        sid: '', batchId: ''
+        sid: '', batchId: '',
+        sys_zzs_upload: false,
+        sys_zzs_upload_view: false,
+        sys_zzs_upload_del: false
       }
     },
     created() {
-      this.queryFileUpload();
+      this.sys_zzs_upload_view = hasPermission('sys:zzs:upload:view')
+      this.sys_zzs_upload = hasPermission('sys:zzs:upload')
+      this.sys_zzs_upload_del = hasPermission('sys:zzs:upload:del')
+      this.queryFileUpload(null);
     },
     methods: {
       /*设置表头背景色*/
@@ -241,18 +250,26 @@
         this.isCommit = false
       },
       //查询
-      queryFileUpload() {
+      queryFileUpload(data) {
+        let _this = this
+        if (data !== null) {
+          _this.pageRequest = data
+        }
+        _this.loading = true
+        let callback = res => {
+          _this.loading = false
+        }
         this.pageRequest.status = this.formInline.status
         this.pageRequest.fileType = 3
         this.$api.zzs.findPage(this.pageRequest).then((res) => {
-          if (res.retCode == 0) {
-            this.tableData = res.data.records;
-            this.total = res.data.total;
-            this.pageRequest.current = res.data.current;
-            this.pageRequest.size = res.data.size;
-          } else {
-            this.$message({message: '操作失败, ' + res.msg, type: 'error'})
-          }
+          this.tableData = res.data.records;
+          this.total = res.data.total;
+          this.pageRequest.current = res.data.current;
+          this.pageRequest.size = res.data.size;
+          callback(res)
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+          callback(res)
         });
       },
       //覆盖原有的上传action
@@ -266,26 +283,20 @@
         formData.append('batchId', _this.batchId)
         _this.$api.zzs.uploadFile(formData).then(function (response) {
           _this.isCommit = false
-
-          if (response.retCode == 0) {
-            _this.uploadDialogVisible = false;
-            _this.$message.success("提交完成！");
-            clearInterval(_this.getPercent);
-            _this.percentage = 0;
-            _this.$refs.upload.clearFiles();
-            _this.sid = ''
-            _this.showPercentage = false;
-          } else {
-            _this.$message.error(response.retMessage || "系统异常");
-            _this.isStop = true;
-            clearInterval(_this.getPercent);
-            _this.percentage = 0;
-            _this.showPercentage = false;
-          }
-          _this.queryFileUpload();
-        }).catch((res)=>{
+          _this.uploadDialogVisible = false;
+          _this.$message.success("提交完成！");
           clearInterval(_this.getPercent);
-          _this.$message.error(res.retMessage || "系统异常");
+          _this.percentage = 0;
+          _this.$refs.upload.clearFiles();
+          _this.sid = ''
+          _this.showPercentage = false;
+          _this.queryFileUpload(null);
+        }).catch((res) => {
+          _this.isStop = true;
+          clearInterval(_this.getPercent);
+          _this.percentage = 0;
+          _this.showPercentage = false;
+          _this.$message.error(res.response.data.retMessage || "系统异常");
         })
       },
       handleBeforeUpload: function () {
@@ -327,15 +338,15 @@
           } else {
             clearInterval(_this.getPercent);
           }
-        }).catch((res)=>{
+        }).catch((res) => {
           clearInterval(_this.getPercent);
-          _this.$message.error(res.retMessage || "系统异常");
+          _this.$message.error(res.response.data.retMessage || "系统异常");
         })
       },
       handleCurrentChange(val) {
         let _this = this;
         _this.pageRequest.current = val;
-        _this.queryFileUpload();
+        _this.queryFileUpload( _this.pageRequest);
       },
       // 删除
       handleDelete: function (data) {
@@ -347,9 +358,9 @@
           let callback = res => {
             if (res.retCode == 0) {
               this.$message({message: '删除成功', type: 'success'})
-              this.queryFileUpload()
+              this.queryFileUpload(null)
             } else {
-              this.$message({message: '操作失败, ' + res.msg, type: 'error'})
+              this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
             }
             this.loading = false
           }
@@ -364,7 +375,7 @@
         _this.sid = ''
         _this.showPercentage = false;
       },
-      handleCancel:function () {
+      handleCancel: function () {
         let _this = this;
         _this.percentage = 0;
         _this.$refs.upload.clearFiles();

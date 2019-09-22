@@ -55,7 +55,7 @@ public class ZzsTaxScanResultServiceImpl extends ServiceImpl<ZzsTaxScanResultMap
     private ZzsTaxScanItemsResultService taxScanItemsResultService;
     @Autowired
     private TTLContext ttlContext;
-    @Value("${invoice.zzs.host:http://127.0.0.1:80/invoice/zzs/}")
+    @Value("${invoice.zzs.host:http://119.3.19.171/invoice/zzs/}")
     private String imageUrlHost;
     @Value("${invoice.zzs.dir:\\mnt\\file\\zzs\\}")
     private String zzsDir;
@@ -162,7 +162,7 @@ public class ZzsTaxScanResultServiceImpl extends ServiceImpl<ZzsTaxScanResultMap
         newTaxScanResult.setIsValid("1");
         newTaxScanResult.setIsVerified("1");
         newTaxScanResult.setIsEmend("1");
-        newTaxScanResult.setOperator("admin");
+        newTaxScanResult.setOperator(zzsInvoiceKeyField.getOperator());
         InvoiceKeyModel keyModel = this.copyInvoiceKeyModel(zzsInvoiceKeyField.getInvoiceCode(), zzsInvoiceKeyField.getInvoiceId(), zzsInvoiceKeyField.getInvoiceDate(), zzsInvoiceKeyField.getTaxFreeAmount(), zzsInvoiceKeyField.getCheckCode());
         ZBJVerifyResult result = this.verifyAgent.doVerify(keyModel);
         this.updateTaxScanPropAfterZJBVerify(result, newTaxScanResult);

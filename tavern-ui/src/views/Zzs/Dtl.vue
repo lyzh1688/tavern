@@ -2,7 +2,7 @@
   <div class="mainWrap">
     <div class="page-container">
       <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
-        <el-form :inline="true" :model="formInline" class="form-inline">
+        <el-form :inline="true" :model="formInline" class="form-inline" v-if="sys_zzs_dtl_view">
           <el-form-item>
             <el-form-item>
               <el-select v-model="formInline.verify" clearable placeholder="验证通过状态">
@@ -17,7 +17,8 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <kt-button icon="fa fa-search" type="primary" :label="$t('action.search')" @click="queryFileGeneral"/>
+              <kt-button icon="fa fa-search" type="primary" :label="$t('action.search')" @click="queryFileGeneral(null)"
+                         v-if="sys_zzs_dtl_view"/>
             </el-form-item>
           </el-form-item>
         </el-form>
@@ -169,13 +170,13 @@
       <el-table :data="tableGoodsData" stripe size="mini" style="width: 100%;" v-loading="loading"
                 :element-loading-text="$t('action.loading')">
         <el-table-column
-          prop="name" header-align="center" align="center"  label="名称">
+          prop="name" header-align="center" align="center" label="名称">
         </el-table-column>
         <table-tree-column
-          prop="spec" header-align="center" treeKey="id"  label="规格">
+          prop="spec" header-align="center" treeKey="id" label="规格">
         </table-tree-column>
         <el-table-column
-          prop="unit" header-align="center" align="center"  label="单位">
+          prop="unit" header-align="center" align="center" label="单位">
         </el-table-column>
         <el-table-column
           prop="amount" header-align="center" align="center" label="数量">
@@ -209,6 +210,7 @@
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
   import {genNonDuplicateID} from '@/utils/common'
   import Amend from "@/views/Zzs/Amend"
+  import {hasPermission} from '@/permission/index.js'
 
   export default {
     components: {
@@ -242,13 +244,15 @@
         loading: false,
         showFileId: false,
         showGoodData: false,
-        dialogVisible: false
+        dialogVisible: false,
+        sys_zzs_dtl_view: false
       }
     },
     beforeCreate() {
     },
     created() {
       let _this = this;
+      _this.sys_zzs_dtl_view = hasPermission('sys:zzs:dtl:view')
       _this.batchId = this.$route.params.batchId;
       let _id = localStorage.getItem("zzsDtlBatchId");
       if (_this.batchId == undefined || _this.batchId == null || _this.batchId == '') {
@@ -259,33 +263,38 @@
           _this.batchId = _id;
         }
       }
-      _this.queryFileGeneral();
+      _this.queryFileGeneral(null);
       localStorage.setItem("zzsDtlBatchId", _this.batchId);
     },
     methods: {
       //查询
-      queryFileGeneral() {
+      queryFileGeneral(data) {
         let _this = this;
+        if (data !== null) {
+          _this.pageRequest = data
+        }
+        _this.loading = true
+        let callback = res => {
+          _this.loading = false
+        }
         _this.pageRequest.batchId = _this.batchId;
         _this.pageRequest.verify = _this.formInline.verify;
         _this.pageRequest.emend = _this.formInline.emend;
         this.$api.zzs.findFileGeneralPage(this.pageRequest).then((res) => {
-          if (res.retCode == 0) {
-            _this.tableData = res.data.records;
-            _this.total = res.data.total;
-            _this.pageRequest.current = res.data.current;
-            _this.pageRequest.size = res.data.size;
-          } else {
-            _this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
-          }
+          _this.tableData = res.data.records;
+          _this.total = res.data.total;
+          _this.pageRequest.current = res.data.current;
+          _this.pageRequest.size = res.data.size;
+          callback(res)
         }).catch((res) => {
-          _this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+          callback(res)
         });
       },
       handleCurrentChange(val) {
         let _this = this;
         _this.pageRequest.current = val;
-        _this.queryFileGeneral();
+        _this.queryFileGeneral(_this.pageRequest);
       },
       handleShow: function (data) {
         let _this = this;
