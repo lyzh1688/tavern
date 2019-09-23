@@ -80,7 +80,7 @@
       </el-col>
     </el-row>
     <div class="toolbar" style="padding:10px;float: right">
-      <kt-button icon="fa fa-plus" label="新增员工" perms="sys:user:add" type="primary"
+      <kt-button icon="fa fa-plus" label="新增员工" v-if="sys_presales_company_staff_add" type="primary"
                  @click="handleStaffAdd"/>
     </div>
     <el-table :data="staffTableData" stripe stripe height="400" size="mini" style="width: 100%;"
@@ -119,11 +119,12 @@
           <span v-if="scope.row.needSocialServer == '2'">代开中</span>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
+      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500"
+                       v-if="sys_presales_company_staff_edit ||sys_presales_company_staff_del ">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-edit" label="修改员工" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-edit" label="修改员工" v-if="sys_presales_company_staff_edit" type="primary"
                      @click="handleStaffEdit(scope.row)"/>
-          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
+          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger" v-if="sys_presales_company_staff_del"
                      @click="handleStaffDelete(scope.row)"/>
         </template>
       </el-table-column>
@@ -201,6 +202,7 @@
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
   import {format} from "@/utils/datetime"
   import AreaJson from "@/utils/area.json"
+  import {hasPermission} from '@/permission/index.js'
 
   export default {
     components: {
@@ -258,13 +260,19 @@
           needHabitationServer: '',
         },
         areaData: [],
+        sys_presales_company_staff_add: false,
+        sys_presales_company_staff_edit: false,
+        sys_presales_company_staff_del: false
       }
     }, created() {
+      this.sys_presales_company_staff_add = hasPermission('sys:presales:company:staff:add')
+      this.sys_presales_company_staff_edit = hasPermission('sys:presales:company:staff:edit')
+      this.sys_presales_company_staff_del = hasPermission('sys:presales:company:staff:del')
       //初始化客户信息
       this.dtlForm = this.$route.params;
       let tmpInfo = JSON.parse(localStorage.getItem("companyDtl"));
       if (this.dtlForm.companyId == undefined || this.dtlForm.companyId == null) {
-        if (tmpInfo.companyId == null || tmpInfo.companyId == undefined ) {
+        if (tmpInfo.companyId == null || tmpInfo.companyId == undefined) {
           this.$router.push({name: "客户详情"})
           return
         } else {
@@ -285,7 +293,7 @@
       // 获取分页数据
       findBizPage: function (data) {
         if (data !== null) {
-          this.bizPageRequest = data.bizPageRequest
+          this.bizPageRequest = data
         }
         this.bizPageRequest.companyId = this.dtlForm.companyId;
         this.bizLoading = true
@@ -305,7 +313,7 @@
       },
       findStaffPage: function (data) {
         if (data !== null) {
-          this.staffPageRequest = data.staffPageRequest
+          this.staffPageRequest = data
         }
         this.staffPageRequest.companyId = this.dtlForm.companyId;
         this.staffLoading = true
@@ -334,7 +342,7 @@
               this.$message({message: '删除成功', type: 'success'})
               this.findBizPage(null)
             } else {
-              this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
+              this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
             }
             this.bizLoading = false
           }
@@ -360,7 +368,7 @@
               this.$message({message: '删除成功', type: 'success'})
               this.findStaffPage(null)
             } else {
-              this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
+              this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
             }
             this.staffLoading = false
           }

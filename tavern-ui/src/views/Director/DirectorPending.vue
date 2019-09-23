@@ -7,7 +7,7 @@
       </el-col>
     </el-row>
     <!--工具栏-->
-    <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
+    <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;" v-if="sys_director_pending_view">
       <el-form :inline="true" :model="filters" :size="size" align="left">
         <el-form-item label="市" label-width="100px">
           <el-input v-model="filters.city" placeholder="请输入城市"></el-input>
@@ -55,7 +55,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary"
+          <kt-button icon="fa fa-search" :label="$t('action.search')" v-if="sys_director_pending_view" type="primary"
                      @click="findPage(null)"/>
         </el-form-item>
       </el-form>
@@ -105,15 +105,22 @@
       </el-table-column>
       <el-table-column prop="customLevel" label="客户级别" header-align="center" align="center">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
+      <el-table-column prop="curOperatorName" label="当前处理人" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column fixed="right" label="操作"
+                       v-if="sys_director_pending_flow || sys_director_pending_addlog || sys_director_pending_drawback || sys_director_pending_next"
+                       header-align="center" align="center" width="500">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-gears" label="流程日志" type="primary"
+          <kt-button icon="fa fa-gears" label="流程日志" type="primary" v-if="sys_director_pending_flow"
                      @click="showWorkFlow(scope.row)"/>
           <kt-button icon="fa fa-plus" label="添加备注" type="primary"
+                     v-if="sys_director_pending_addlog && scope.row.curOperatorName == userName "
                      @click="handleLog(scope.row)"/>
-          <kt-button icon="fa fa-money" label="退款审批" type="primary" v-if="scope.row.curNodeName == '退款审批'"
+          <kt-button icon="fa fa-money" label="退款审批" type="primary"
+                     v-if="scope.row.curNodeName == '退款审批' && sys_director_pending_drawback && scope.row.curOperatorName == userName"
                      @click="handleDrawBack(scope.row)"/>
-          <kt-button icon="fa fa-arrow-right" label="下一步" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-arrow-right" label="下一步" type="primary"
+                     v-if="sys_director_pending_next && scope.row.curOperatorName == userName"
                      @click="handleNext(scope.row)"/>
         </template>
       </el-table-column>
@@ -195,7 +202,8 @@
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button :size="size" @click.native="dialogVisible = false">{{$t('action.cancel')}}</el-button>
-        <el-button :size="size" type="primary" @click.native="submitLogForm" :loading="editLoading">
+        <el-button :size="size" type="primary" @click.native="submitLogForm" :loading="editLoading"
+                   v-if="this.dataForm.curOperatorName == userName">
           {{$t('action.submit')}}
         </el-button>
       </div>
@@ -381,6 +389,7 @@
   import KtButton from "@/views/Core/KtButton"
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
   import {format, formatDateSimple8} from "@/utils/datetime"
+  import {hasPermission} from '@/permission/index.js'
 
   export default {
     components: {
@@ -432,7 +441,7 @@
         logHisPageRequest: {
           current: 1,
           size: 5,
-        },logPageRequest: {
+        }, logPageRequest: {
           current: 1,
           size: 100,
         },
@@ -465,6 +474,7 @@
           curNodeName: '',
           logHistory: [],
           message: '',
+          curOperatorName: ''
         },
         logDataForm: {
           eventId: '',
@@ -478,7 +488,8 @@
           nextNode: '',
           nextOperator: '',
           message: '',
-          refundFee: ''
+          refundFee: '',
+          curOperatorName: ''
         },
         drawBackForm: {
           orderId: '',
@@ -490,7 +501,7 @@
           agreeRefund: '',
           handler: '',
           mountNode: '',
-          curNodeId:''
+          curNodeId: ''
         },
         files: [],
         logRowContent: {},
@@ -508,18 +519,30 @@
         showRefund: false,
         showHandler: false,
         handlerDict: [],
-        data: {}
+        data: {},
+        userName: '',
+        sys_director_pending_view: false,
+        sys_director_pending_flow: false,
+        sys_director_pending_addlog: false,
+        sys_director_pending_drawback: false,
+        sys_director_pending_next: false,
 
       }
     },
     created() {
+      this.sys_director_pending_view = hasPermission('sys:director:pending:view')
+      this.sys_director_pending_flow = hasPermission('sys:director:pending:flow')
+      this.sys_director_pending_addlog = hasPermission('sys:director:pending:addlog')
+      this.sys_director_pending_drawback = hasPermission('sys:director:pending:drawback')
+      this.sys_director_pending_next = hasPermission('sys:director:pending:next')
+      this.userName = sessionStorage.getItem("userName")
       this.findPage(null);
     },
     methods: {
       // 获取分页数据
       findPage: function (data) {
         if (data !== null) {
-          this.pageRequest = data.pageRequest
+          this.pageRequest = data
         }
         this.loading = true
         let callback = res => {
@@ -552,7 +575,7 @@
       },
       findLogPage: function (data, params) {
         if (data !== null) {
-          this.logHisPageRequest = data.logHisPageRequest
+          this.logHisPageRequest = data
         }
         this.logHisLoading = true
         let callback = res => {
@@ -582,7 +605,7 @@
           agreeRefund: '',
           handler: '',
           mountNode: '',
-          curNodeId:''
+          curNodeId: ''
         }
         this.drawBackDialogVisible = true
         let ele = document.getElementById('mountNode')
@@ -602,6 +625,7 @@
           nextNode: '',
           nextOperator: '',
           message: '',
+          curOperatorName: ''
         }
         this.nextDialogVisible = true
         this.operation = false
@@ -728,7 +752,7 @@
       },
       commitDrawBack: function () {
         if (this.showHandler) {
-          if(this.drawBackForm.handler == undefined || this.drawBackForm.handler == ''){
+          if (this.drawBackForm.handler == undefined || this.drawBackForm.handler == '') {
             this.$message({message: '请选择处理人！', type: 'error'})
             return
           }
@@ -744,10 +768,10 @@
               request.operatorName = sessionStorage.getItem("userName")
               request.message = this.drawBackForm.message
 
-              if(this.drawBackForm.agreeRefund == '0'){
+              if (this.drawBackForm.agreeRefund == '0') {
                 request.handlerId = this.chosenHandler.id
                 request.handlerName = this.chosenHandler.name
-              }else {
+              } else {
                 request.operator = sessionStorage.getItem("userId")
                 request.operatorName = sessionStorage.getItem("userName")
               }
@@ -843,7 +867,7 @@
         this.chosenHandler = this.handlerDict.find(item => {
           return val == item.id;
         })
-      },initG6(params) {
+      }, initG6(params) {
         let request = {}
         request.eventId = params.eventId
         this.$api.workflow.findGraphLog(request).then((res) => {

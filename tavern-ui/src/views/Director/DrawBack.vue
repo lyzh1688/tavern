@@ -106,7 +106,7 @@
       // 获取分页数据
       findPage: function (data) {
         if (data !== null) {
-          this.pageRequest = data.pageRequest
+          this.pageRequest = data
         }
         this.pageRequest.columnFilters = {name: {name: 'name', value: this.filters.name}}
         this.$api.outer.findPage(this.pageRequest).then((res) => {

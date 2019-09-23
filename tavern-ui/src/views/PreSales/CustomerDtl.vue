@@ -40,7 +40,7 @@
       </el-form>
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item>
-          <kt-button icon="fa fa-plus" label="新增公司信息" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-plus" label="新增公司信息" v-if="sys_presales_customer_dtl_add" type="primary"
                      @click="handleAdd"/>
         </el-form-item>
       </el-form>
@@ -78,13 +78,14 @@
       </el-table-column>
       <el-table-column prop="updateDate" label="创建时间" header-align="center" align="center">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
+      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500"
+                       v-if="sys_presales_customer_dtl_edit || sys_presales_customer_dtl_view || sys_presales_customer_dtl_del">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-edit" label="修改公司信息" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-edit" label="修改公司信息" v-if="sys_presales_customer_dtl_edit" type="primary"
                      @click="handleEdit(scope.row)"/>
-          <kt-button icon="fa fa-retweet" label="公司信息详情" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-retweet" label="公司信息详情" v-if="sys_presales_customer_dtl_view" type="primary"
                      @click="handleDtl(scope.row)"/>
-          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
+          <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger" v-if="sys_presales_customer_dtl_del"
                      @click="handleDelete(scope.row)"/>
         </template>
       </el-table-column>
@@ -165,6 +166,7 @@
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
   import {format} from "@/utils/datetime"
   import AreaJson from "@/utils/area.json"
+  import {hasPermission} from '@/permission/index.js'
 
   const bankOptions = ['工商银行', '招商银行', '建设银行', '中国银行', '农业银行', '交通银行', '中信银行', '光大银行', '民生银行', '上海银行']
   export default {
@@ -232,11 +234,19 @@
         cascaderAddr: [],
         editAreaLabel: '',
         areaLabel: '',
-        taxTypeRef: ''
+        taxTypeRef: '',
+        sys_presales_customer_dtl_add:false,
+        sys_presales_customer_dtl_edit: false,
+        sys_presales_customer_dtl_view: false,
+        sys_presales_customer_dtl_del: false,
 
       }
     }, created() {
       //初始化客户信息
+      this.sys_presales_customer_dtl_add = hasPermission('sys:presales:customer:dtl:add')
+      this.sys_presales_customer_dtl_edit = hasPermission('sys:presales:customer:dtl:edit')
+      this.sys_presales_customer_dtl_view = hasPermission('sys:presales:customer:dtl:view')
+      this.sys_presales_customer_dtl_del = hasPermission('sys:presales:customer:dtl:del')
       this.dtlForm = this.$route.params;
       let tmpInfo = JSON.parse(localStorage.getItem("customerDtl"));
       if (this.dtlForm.customId == undefined || this.dtlForm.customId == null) {
@@ -261,7 +271,7 @@
       // 获取分页数据
       findPage: function (data) {
         if (data !== null) {
-          this.pageRequest = data.pageRequest
+          this.pageRequest = data
         }
         this.pageRequest.customId = this.dtlForm.customId;
         this.loading = true
@@ -290,7 +300,7 @@
               this.$message({message: '删除成功', type: 'success'})
               this.findPage(null)
             } else {
-              this.$message({message: '操作失败, ' + res.retMessage, type: 'error'})
+              this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
             }
             this.loading = false
           }

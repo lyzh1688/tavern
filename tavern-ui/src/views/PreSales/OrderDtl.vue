@@ -20,7 +20,7 @@
       </el-form>
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item>
-          <kt-button icon="fa fa-add" label="添加关联业务" perms="sys:role:view" type="primary" @click="handleAdd(null)"/>
+          <kt-button icon="fa fa-add" label="添加关联业务" v-if="sys_presales_business_add" type="primary" @click="handleAdd"/>
         </el-form-item>
       </el-form>
     </div>
@@ -44,7 +44,7 @@
     </div>
     <!--表格内容栏-->
     <!--表格内容栏-->
-    <el-table :data="tableData" stripe stripe height="400" size="mini" style="width: 100%;"
+    <el-table :data="tableData" stripe stripe height="600" size="mini" style="width: 100%;"
               v-loading="loading">
       <el-table-column prop="customId" header-align="center" align="center" label="客户ID" v-if="false">
       </el-table-column>
@@ -269,6 +269,7 @@
   import KtButton from "@/views/Core/KtButton"
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
   import {format, calDate, formatDate, formatDateSimple8} from "@/utils/datetime"
+  import {hasPermission} from '@/permission/index.js'
 
   export default {
     components: {
@@ -395,10 +396,12 @@
         ownerShow: true,
         thirdPartyShow: true,
         djfwConfirmNum: true,
-        ownerName: ''
+        ownerName: '',
+        sys_presales_business_add:false
 
       }
     }, created() {
+      this.sys_presales_business_add = hasPermission('sys:presales:business:add')
       //初始化客户信息
       this.dtlForm = this.$route.params;
       let tmpInfo = JSON.parse(localStorage.getItem("orderDtlInfo"));
@@ -417,7 +420,7 @@
       // 获取分页数据
       findPage: function (data) {
         if (data !== null) {
-          this.pageRequest = data.pageRequest
+          this.pageRequest = data
         }
         this.pageRequest.orderId = this.dtlForm.orderId;
         this.loading = true

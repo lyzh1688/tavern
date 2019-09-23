@@ -340,7 +340,7 @@
           }
         }).catch((res) => {
           clearInterval(_this.getPercent);
-          _this.$message.error(res.retMessage || "系统异常");
+          _this.$message.error(res.response.data.retMessage || "系统异常");
         })
       },
       handleCurrentChange(val) {

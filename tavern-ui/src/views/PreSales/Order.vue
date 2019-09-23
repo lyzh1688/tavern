@@ -4,11 +4,11 @@
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
       <el-form :inline="true" :model="filters" :size="size">
         <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary"
+          <kt-button icon="fa fa-search" :label="$t('action.search')"  type="primary" v-if="sys_presales_order_view"
                      @click="findPage(null)"/>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-plus" :label="$t('action.add')" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-plus" :label="$t('action.add')"  type="primary" v-if="sys_presales_order_add"
                      @click="handleAdd"/>
         </el-form-item>
       </el-form>
@@ -25,11 +25,11 @@
       </el-table-column>
       <el-table-column prop="payableAmt" label="实付金额" header-align="center" align="center">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
+      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500" v-if="sys_presales_order_edit || sys_presales_order_dtl">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-edit" label="修改订单" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-edit" label="修改订单"  type="primary" v-if="sys_presales_order_edit"
                      @click="handleEdit(scope.row)"/>
-          <kt-button icon="fa fa-retweet" label="订单详情" perms="sys:user:add" type="primary"
+          <kt-button icon="fa fa-retweet" label="订单详情" type="primary" v-if="sys_presales_order_dtl"
                      @click="handleDtl(scope.row)"/>
         </template>
       </el-table-column>
@@ -74,6 +74,7 @@
   import KtButton from "@/views/Core/KtButton"
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
   import {format} from "@/utils/datetime"
+  import {hasPermission} from '@/permission/index.js'
 
   export default {
     components: {
@@ -139,8 +140,16 @@
           receivableAmt: '',
           payableAmt: '',
         },
+        sys_presales_order_edit:false,
+        sys_presales_order_dtl:false,
+        sys_presales_order_view:false,
+        sys_presales_order_add:false,
       }
     }, created() {
+      this.sys_presales_order_edit = hasPermission('sys:presales:order:edit')
+      this.sys_presales_order_dtl = hasPermission('sys:presales:order:dtl')
+      this.sys_presales_order_view = hasPermission('sys:presales:order:view')
+      this.sys_presales_order_add = hasPermission('sys:presales:order:add')
       //初始化客户信息
       this.dtlForm = this.$route.params;
       let tmpInfo = JSON.parse(localStorage.getItem("orderInfo"));

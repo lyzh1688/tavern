@@ -146,7 +146,7 @@
         this.$api.login.login(userInfo).then((res) => {
           if (res.retCode != 0) {
             this.$message({
-              message: res.retMessage,
+              message: res.response.data.retMessage,
               type: 'error'
             })
           } else {

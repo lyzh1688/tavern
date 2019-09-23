@@ -2,7 +2,7 @@
   <div class="page-container">
     <!--工具栏-->
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
-      <el-form :inline="true" :model="filters" :size="size" align="left">
+      <el-form :inline="true" :model="filters" :size="size" align="left" v-if="sys_director_biz_view">
         <el-form-item label="市" label-width="100px">
           <el-input v-model="filters.city" placeholder="请输入城市"></el-input>
         </el-form-item>
@@ -13,7 +13,7 @@
           <el-input v-model="filters.companyName" placeholder="请输入公司名称"></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" :size="size" align="left">
+      <el-form :inline="true" :model="filters" :size="size" align="left" v-if="sys_director_biz_view">
         <el-form-item label="客户名称" label-width="100px">
           <el-input v-model="filters.customName" placeholder="请输入客户名称"></el-input>
         </el-form-item>
@@ -29,7 +29,7 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" :size="size" align="left">
+      <el-form :inline="true" :model="filters" :size="size" align="left" v-if="sys_director_biz_view">
         <el-form-item label="微信昵称" label-width="100px">
           <el-input v-model="filters.weixinName" placeholder="请输入微信昵称"></el-input>
         </el-form-item>
@@ -37,7 +37,7 @@
           <el-date-picker v-model="filters.createDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="filters" :size="size" align="left">
+      <el-form :inline="true" :model="filters" :size="size" align="left" v-if="sys_director_biz_view">
         <el-form-item label="业务类型" label-width="100px">
           <el-input v-model="filters.businessName" placeholder="请输入业务类型"></el-input>
         </el-form-item>
@@ -49,15 +49,15 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')" type="primary"
+          <kt-button icon="fa fa-search" :label="$t('action.search')" type="primary" v-if="sys_director_biz_view"
                      @click="findPage(null)"/>
-          <kt-button icon="fa fa-edit" label="批量转授权" type="primary"
+          <kt-button icon="fa fa-edit" label="批量转授权" type="primary"  v-if="sys_director_biz_rechoose"
                      @click="handleBatchReChoose(null)"/>
         </el-form-item>
       </el-form>
     </div>
 
-    <el-table :data="tableData" stripe stripe height="500" size="mini" style="width: 100%;"
+    <el-table :data="tableData" stripe stripe height="600" size="mini" style="width: 100%;"
               v-loading="loading" @selection-change="selectionChange">
       <el-table-column type="selection" width="40"></el-table-column>
       <el-table-column prop="orderId" header-align="center" align="center" label="订单ID" v-if="false">
@@ -100,15 +100,15 @@
       </el-table-column>
       <el-table-column prop="curOperatorName" label="当前处理人" header-align="center" align="center">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
+      <el-table-column fixed="right" label="操作" v-if="sys_director_biz_flow||sys_director_biz_company_view||sys_director_biz_delay_view||sys_director_biz_rechoose" header-align="center" align="center" width="500">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-gears" label="流程日志" type="primary"
+          <kt-button icon="fa fa-gears" label="流程日志" type="primary" v-if="sys_director_biz_flow"
                      @click="showWorkFlow(scope.row)"/>
-          <kt-button icon="fa fa-university" label="公司详情" type="primary"
+          <kt-button icon="fa fa-university" label="公司详情" type="primary" v-if="sys_director_biz_company_view"
                      @click="handleComDtl(scope.row)"/>
-          <kt-button icon="fa fa-battery-2" label="延期" type="primary"
+          <kt-button icon="fa fa-battery-2" label="延期" type="primary" v-if="sys_director_biz_delay_view  && scope.row.curOperatorName == userName"
                      @click="handleDelay(scope.row)"/>
-          <kt-button icon="fa fa-money" label="转授权" type="primary"
+          <kt-button icon="fa fa-money" label="转授权" type="primary" v-if="sys_director_biz_rechoose  && scope.row.curOperatorName == userName"
                      @click="handleReChoose(scope.row)"/>
         </template>
       </el-table-column>
@@ -187,7 +187,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button :size="size" @click.native="delayDialogVisible = false">{{$t('action.cancel')}}</el-button>
-        <el-button :size="size" type="primary" @click.native="submitDelay" :loading="delayLoading">
+        <el-button :size="size" type="primary"  @click.native="submitDelay" :loading="delayLoading">
           {{$t('action.submit')}}
         </el-button>
       </div>
@@ -328,6 +328,7 @@
   import KtButton from "@/views/Core/KtButton"
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
   import {format} from "@/utils/datetime"
+  import {hasPermission} from '@/permission/index.js'
 
   export default {
     components: {
@@ -438,10 +439,22 @@
         handlerDict: [],
         chosenHandler: {},
         chosenBatchHandler: {},
-        selections: []  // 列表选中列
+        selections: [],  // 列表选中列
+        userName: '',
+        sys_director_biz_view:false,
+        sys_director_biz_rechoose:false,
+        sys_director_biz_flow:false,
+        sys_director_biz_company_view:false,
+        sys_director_biz_delay_view:false,
       }
     },
     created() {
+      this.sys_director_biz_view = hasPermission('sys:director:biz:view')
+      this.sys_director_biz_rechoose = hasPermission('sys:director:biz:rechoose')
+      this.sys_director_biz_flow = hasPermission('sys:director:biz:flow')
+      this.sys_director_biz_company_view = hasPermission('sys:director:biz:company:view')
+      this.sys_director_biz_delay_view = hasPermission('sys:director:biz:delay:view')
+      this.userName = sessionStorage.getItem("userName")
       this.findPage(null);
     },
     mounted() {
@@ -449,7 +462,7 @@
     methods: {
       findPage: function (data) {
         if (data !== null) {
-          this.pageRequest = data.pageRequest
+          this.pageRequest = data
         }
         this.loading = true
         let callback = res => {
