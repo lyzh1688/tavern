@@ -221,7 +221,7 @@
             <el-table-column
               prop="attachmentsPath" header-align="center" align="center" label="附件地址">
               <template slot-scope="scope1">
-                <a :href="scope1.row.attachmentsPath" target="_blank">点击{{scope1.row.attachmentsPath}}}</a>
+                <a :href="scope1.row.attachmentsPath" target="_blank">{{scope1.row.attachmentsPath}}</a>
               </template>
             </el-table-column>
           </el-table>
