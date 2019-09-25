@@ -146,7 +146,7 @@
         this.$api.login.login(userInfo).then((res) => {
           if (res.retCode != 0) {
             this.$message({
-              message: res.response.data.retMessage,
+              message: res.retMessage,
               type: 'error'
             })
           } else {
@@ -155,13 +155,14 @@
             sessionStorage.setItem('userId', res.data.userId) // 保存用户到本地会话
             sessionStorage.setItem('roles', res.data.roles) // 保存用户到本地会话
             sessionStorage.setItem('userInfo', JSON.stringify(res.data)) // 保存用户到本地会话
+            sessionStorage.setItem('userName', res.data.userName) // 保存用户到本地会话
             this.$store.commit('menuRouteLoaded', false) // 要求重新加载导航菜单
             this.$router.push('/')  // 登录成功，跳转到主页
           }
           this.loading = false
         }).catch((res) => {
           this.$message({
-            message: res.response.data.retMessage,
+            message: JSON.stringify(res),
             type: 'error'
           })
           this.loading = false

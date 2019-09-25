@@ -33,6 +33,7 @@ public class LoginServiceImpl implements LoginService {
             StaffInfoResponse staffInfoResponse = this.staffService.queryStaffBasicInfo(login.getUserAccnt(), login.getPassword());
             if (staffInfoResponse.getRetCode() == 0) {
                 LoginVO loginVO = new LoginVO();
+                loginVO.setUserId(staffInfoResponse.getData().getUserId());
                 loginVO.setUserAccnt(staffInfoResponse.getData().getUserAccnt());
                 loginVO.setUserName(staffInfoResponse.getData().getUserName());
                 loginVO.setPassword(staffInfoResponse.getData().getPassword());

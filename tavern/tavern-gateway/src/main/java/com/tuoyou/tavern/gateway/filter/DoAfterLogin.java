@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.POST_TYPE;
 
@@ -57,7 +58,7 @@ public class DoAfterLogin extends ZuulFilter {
         InputStream stream = ctx.getResponseDataStream();
         //解析登陆返回结果
         try {
-            String body = IOUtils.toString(stream);
+            String body = IOUtils.toString(stream, Charset.forName("utf-8"));
             loginResponse = JSON.parseObject(body).toJavaObject(LoginResponse.class);
             if (loginResponse.getRetCode() != 0) {
                 ctx.setResponseBody(JSON.toJSONString(new TavernResponse(RetCode.AUTH_FAILED, loginResponse.getRetMessage())));
