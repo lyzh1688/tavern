@@ -7,7 +7,7 @@
       </el-col>
     </el-row>
     <!--工具栏-->
-    <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;" v-if="sys_aftersales_pending_view">
+    <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;" v-if="sys_customermanager_pending_view">
       <el-form :inline="true" :model="filters" :size="size" align="left">
         <el-form-item label="市" label-width="100px">
           <el-input v-model="filters.city" placeholder="请输入城市"></el-input>
@@ -55,7 +55,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')" v-if="sys_aftersales_pending_view" type="primary"
+          <kt-button icon="fa fa-search" :label="$t('action.search')" v-if="sys_customermanager_pending_view" type="primary"
                      @click="findPage(null)"/>
         </el-form-item>
       </el-form>
@@ -108,19 +108,19 @@
       <el-table-column prop="curOperatorName" label="当前处理人" header-align="center" align="center">
       </el-table-column>
       <el-table-column  label="操作"
-                       v-if="sys_aftersales_pending_flow || sys_aftersales_pending_addlog || sys_aftersales_pending_drawback || sys_aftersales_pending_next"
+                       v-if="sys_customermanager_pending_flow || sys_customermanager_pending_addlog || sys_customermanager_pending_drawback || sys_customermanager_pending_next"
                        header-align="center" align="center" width="500">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-gears" label="流程日志" type="primary" v-if="sys_aftersales_pending_flow"
+          <kt-button icon="fa fa-gears" label="流程日志" type="primary" v-if="sys_customermanager_pending_flow"
                      @click="showWorkFlow(scope.row)"/>
           <kt-button icon="fa fa-plus" label="添加备注" type="primary"
-                     v-if="sys_aftersales_pending_addlog && scope.row.curOperatorName == userName "
+                     v-if="sys_customermanager_pending_addlog && scope.row.curOperatorName == userName "
                      @click="handleLog(scope.row)"/>
           <kt-button icon="fa fa-money" label="退款审批" type="primary"
-                     v-if="scope.row.curNodeName == '退款审批' && sys_aftersales_pending_drawback && scope.row.curOperatorName == userName"
+                     v-if="scope.row.curNodeName == '退款审批' && sys_customermanager_pending_drawback && scope.row.curOperatorName == userName"
                      @click="handleDrawBack(scope.row)"/>
           <kt-button icon="fa fa-arrow-right" label="下一步" type="primary"
-                     v-if="sys_aftersales_pending_next && scope.row.curOperatorName == userName"
+                     v-if="sys_customermanager_pending_next && scope.row.curOperatorName == userName"
                      @click="handleNext(scope.row)"/>
         </template>
       </el-table-column>
@@ -165,7 +165,7 @@
             <el-table-column
               prop="attachmentsPath" header-align="center" align="center" label="附件地址">
               <template slot-scope="scope1">
-                <a :href="scope1.row.attachmentsPath" target="_blank">点击{{scope1.row.attachmentsPath}}}</a>
+                <a :href="scope1.row.attachmentsPath" target="_blank">{{scope1.row.attachmentsPath}}}</a>
               </template>
             </el-table-column>
           </el-table>
@@ -519,20 +519,20 @@
         handlerDict: [],
         data: {},
         userName: '',
-        sys_aftersales_pending_view: false,
-        sys_aftersales_pending_flow: false,
-        sys_aftersales_pending_addlog: false,
-        sys_aftersales_pending_drawback: false,
-        sys_aftersales_pending_next: false,
+        sys_customermanager_pending_view: false,
+        sys_customermanager_pending_flow: false,
+        sys_customermanager_pending_addlog: false,
+        sys_customermanager_pending_drawback: false,
+        sys_customermanager_pending_next: false,
 
       }
     },
     created() {
-      this.sys_aftersales_pending_view = hasPermission('sys:aftersales:pending:view')
-      this.sys_aftersales_pending_flow = hasPermission('sys:aftersales:pending:flow')
-      this.sys_aftersales_pending_addlog = hasPermission('sys:aftersales:pending:addlog')
-      this.sys_aftersales_pending_drawback = hasPermission('sys:aftersales:pending:drawback')
-      this.sys_aftersales_pending_next = hasPermission('sys:aftersales:pending:next')
+      this.sys_customermanager_pending_view = hasPermission('sys:customermanager:pending:view')
+      this.sys_customermanager_pending_flow = hasPermission('sys:customermanager:pending:flow')
+      this.sys_customermanager_pending_addlog = hasPermission('sys:customermanager:pending:addlog')
+      this.sys_customermanager_pending_drawback = hasPermission('sys:customermanager:pending:drawback')
+      this.sys_customermanager_pending_next = hasPermission('sys:customermanager:pending:next')
       this.userName = sessionStorage.getItem("userName")
       this.findPage(null);
     },

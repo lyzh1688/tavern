@@ -12,6 +12,7 @@
     <result column="attachments_path" jdbcType="VARCHAR" property="attachmentsPath" />
     <result column="has_refund" jdbcType="VARCHAR" property="hasRefund" />
     <result column="refund_fee" jdbcType="DECIMAL" property="refundFee" />
+    <result column="node_id" jdbcType="VARCHAR" property="nodeId" />
   </resultMap>
   <select id="selectWorkFlowLogMessagePage" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowLogVO">
     select
@@ -30,6 +31,9 @@
       event_id = #{query.eventId}
       <if test="query.operator != null and query.operator != ''">
         and operator = #{query.operator}
+      </if>
+      <if test="query.curNodeId != null and query.curNodeId != ''">
+        and node_id = #{query.curNodeId}
       </if>
     </where>
 
@@ -51,4 +55,20 @@
   and t1.event_id = #{eventId}
   order by t3.root_node
   </select>
+  <insert id="insertRootWorkLog">
+      insert into workflow_log_message (log_id, operator, operator_name,
+    create_time, message, event_id,node_id
+      )
+        select
+        #{log.logId},
+        #{log.operator},
+        #{log.operatorName},
+        #{log.createTime},
+        #{log.message},
+        #{log.eventId},
+        t2.root_node
+        from workflow_def_graph_business_rel t1,workflow_def_graph t2
+        where t1.graph_id = t2.graph_id
+        and t1.business_id = #{businessId}
+  </insert>
 </mapper>

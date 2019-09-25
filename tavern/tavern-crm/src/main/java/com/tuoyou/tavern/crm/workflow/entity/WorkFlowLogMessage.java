@@ -31,4 +31,6 @@ public class WorkFlowLogMessage extends Model<WorkFlowLogMessage> {
     private String hasRefund;
     private BigDecimal refundFee;
 
+    private String nodeId;
+
 }

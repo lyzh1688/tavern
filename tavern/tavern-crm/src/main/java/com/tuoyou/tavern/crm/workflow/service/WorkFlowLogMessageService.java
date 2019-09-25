@@ -21,6 +21,7 @@ public interface WorkFlowLogMessageService extends IService<WorkFlowLogMessage> 
 
     WorkFlowGraphLogVO getWorkFlowGraphLog(String eventId);
 
+    int saveRootWorkLog(WorkFlowLogMessage workFlowLogMessage,String businessId);
 
 
 

@@ -25,7 +25,7 @@
       </el-table-column>
       <el-table-column prop="payableAmt" label="实付金额" header-align="center" align="center">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500" v-if="sys_presales_order_edit || sys_presales_order_dtl">
+      <el-table-column  label="操作" header-align="center" align="center" width="500" v-if="sys_presales_order_edit || sys_presales_order_dtl">
         <template slot-scope="scope">
           <kt-button icon="fa fa-edit" label="修改订单"  type="primary" v-if="sys_presales_order_edit"
                      @click="handleEdit(scope.row)"/>

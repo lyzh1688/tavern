@@ -6,4 +6,5 @@ import lombok.Data;
 public class WorkFlowLogQueryDTO {
     private String eventId;
     private String operator;
+    private String curNodeId;
 }

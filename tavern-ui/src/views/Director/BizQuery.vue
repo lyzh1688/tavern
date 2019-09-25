@@ -100,15 +100,15 @@
       </el-table-column>
       <el-table-column prop="curOperatorName" label="当前处理人" header-align="center" align="center">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" v-if="sys_director_biz_flow||sys_director_biz_company_view||sys_director_biz_delay_view||sys_director_biz_rechoose" header-align="center" align="center" width="500">
+      <el-table-column  label="操作" v-if="sys_director_biz_flow||sys_director_biz_company_view||sys_director_biz_delay_view||sys_director_biz_rechoose" header-align="center" align="center" width="500">
         <template slot-scope="scope">
           <kt-button icon="fa fa-gears" label="流程日志" type="primary" v-if="sys_director_biz_flow"
                      @click="showWorkFlow(scope.row)"/>
           <kt-button icon="fa fa-university" label="公司详情" type="primary" v-if="sys_director_biz_company_view"
                      @click="handleComDtl(scope.row)"/>
-          <kt-button icon="fa fa-battery-2" label="延期" type="primary" v-if="sys_director_biz_delay_view  && scope.row.curOperatorName == userName"
+          <kt-button icon="fa fa-battery-2" label="延期" type="primary" v-if="sys_director_biz_delay_view  "
                      @click="handleDelay(scope.row)"/>
-          <kt-button icon="fa fa-money" label="转授权" type="primary" v-if="sys_director_biz_rechoose  && scope.row.curOperatorName == userName"
+          <kt-button icon="fa fa-money" label="转授权" type="primary" v-if="sys_director_biz_rechoose  "
                      @click="handleReChoose(scope.row)"/>
         </template>
       </el-table-column>
@@ -196,7 +196,7 @@
       <el-form :model="dataForm" :size="size" label-position="center" align="left">
         <el-form-item prop="logHistory" label-width="100px">
           <el-table :data="dataForm.logHistory" stripe size="mini" style="width: 100%;" v-loading="logHisLoading"
-                    :element-loading-text="$t('action.loading')" height="300">
+                    :element-loading-text="$t('action.loading')" height="200">
             <el-table-column
               prop="logId" header-align="center" align="center" label="备注Id" v-if="false">
             </el-table-column>
@@ -221,7 +221,7 @@
             <el-table-column
               prop="attachmentsPath" header-align="center" align="center" label="附件地址">
               <template slot-scope="scope1">
-                <a :href="scope1.row.attachmentsPath" target="_blank">{{scope1.row.attachmentsPath}}</a>
+                <a :href="scope1.row.attachmentsPath" target="_blank">点击{{scope1.row.attachmentsPath}}}</a>
               </template>
             </el-table-column>
           </el-table>

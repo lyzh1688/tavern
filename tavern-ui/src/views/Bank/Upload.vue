@@ -45,7 +45,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        fixed="right" header-align="center" align="center" width="185">
+         header-align="center" align="center" width="185">
         <template slot-scope="scope">
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
                      @click="handleDelete(scope.row)" v-if="sys_bank_upload_del"/>

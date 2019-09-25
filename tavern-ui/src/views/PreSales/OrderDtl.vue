@@ -488,7 +488,7 @@
         label = this.bizDict.find(item => {
           return this.dataForm.business == item.id;
         })
-        let valid = '';
+        let valid = true;
         switch (label.name) {
           case "代理记账":
             this.$refs.dljzForm.validate((bizValid) => {
@@ -496,7 +496,7 @@
             });
             valid = valid && dataFormValid
             break;
-          case "代缴公积金":
+          case "公积金代缴":
             this.$refs.djfwForm.validate((bizValid) => {
               valid = bizValid;
             });
@@ -524,6 +524,7 @@
             params.orderId = this.dtlForm.orderId
             params.companyId = this.dataForm.company
             params.creatorId = sessionStorage.getItem("userId")
+            params.creatorName = sessionStorage.getItem("userName")
             params.ownerId = this.dataForm.owner
             params.owner = this.ownerName;
 
@@ -562,6 +563,8 @@
               this.dialogVisible = false
             })
           })
+        }else {
+          this.$message({message: '操作失败,数据填写有误', type: 'error'})
         }
 
       },
@@ -617,7 +620,7 @@
           case "代理记账":
             this.showHelpBookKeeping = true;
             break;
-          case "代缴公积金":
+          case "公积金代缴":
             this.showHelpPay = true;
             break;
           case "代缴社保":

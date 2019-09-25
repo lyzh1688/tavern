@@ -60,7 +60,7 @@
       </el-table-column>
       <el-table-column prop="endDate" label="到期时间" header-align="center" align="center">
       </el-table-column>
-      <!--<el-table-column fixed="right" label="操作" header-align="center" align="center" width="500">
+      <!--<el-table-column  label="操作" header-align="center" align="center" width="500">
         <template slot-scope="scope">
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
                      @click="handleDeleteBiz(scope.row)"/>
@@ -119,7 +119,7 @@
           <span v-if="scope.row.needSocialServer == '2'">代开中</span>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500"
+      <el-table-column  label="操作" header-align="center" align="center" width="500"
                        v-if="sys_presales_company_staff_edit ||sys_presales_company_staff_del ">
         <template slot-scope="scope">
           <kt-button icon="fa fa-edit" label="修改员工" v-if="sys_presales_company_staff_edit" type="primary"

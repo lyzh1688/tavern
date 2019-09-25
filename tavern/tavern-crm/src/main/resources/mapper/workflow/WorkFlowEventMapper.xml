@@ -7,18 +7,20 @@
         <result column="cur_node_id" jdbcType="VARCHAR" property="curNodeId"/>
         <result column="event_owner" jdbcType="VARCHAR" property="eventOwner"/>
         <result column="cur_operator" jdbcType="VARCHAR" property="curOperator"/>
+        <result column="cur_operator_name" jdbcType="VARCHAR" property="curOperator"/>
         <result column="begin_date" jdbcType="TIMESTAMP" property="beginDate"/>
     </resultMap>
     <insert id="insertWorkFlowEvent">
       insert into workflow_event (event_id, graph_id, cur_node_id,
-      event_owner, cur_operator, begin_date
+      event_owner, cur_operator,cur_operator_name, begin_date
       )
         select
         #{event.eventId},
         t2.graph_id,
         t3.target_node,
-        t3.target_node,
+        #{event.eventOwner},
         #{event.curOperator},
+        #{event.curOperatorName},
         #{event.beginDate}
         from workflow_def_graph_business_rel t1,workflow_def_graph t2,workflow_def_edge t3
         where t1.graph_id = t2.graph_id
@@ -68,6 +70,8 @@
             AND T1.BUSINESS_ID = T5.BUSINESS_ID
             AND T1.BUSINESS_ID = T6.business_id
             AND T7.cur_node_id = T8.node_id
+            and T6.graph_id = T7.graph_id
+            and T6.graph_id = T8.graph_id
             AND not exists(select 1 from work_flow.workflow_event_dependency T9 where T7.event_id = T9.next_event)
             AND (T7.event_owner = #{query.userId} or T7.cur_operator = #{query.userId})
             <if test="query.city != null and query.city != ''">
@@ -145,6 +149,8 @@
             AND T1.BUSINESS_ID = T5.BUSINESS_ID
             AND T1.BUSINESS_ID = T6.business_id
             AND T7.cur_node_id = T8.node_id
+            and T6.graph_id = T7.graph_id
+            and T6.graph_id = T8.graph_id
             AND not exists(select 1 from work_flow.workflow_event_dependency T9 where T7.event_id = T9.next_event)
             <if test="query.city != null and query.city != ''">
                 and T2.CITY like concat('%', #{query.city}, '%')

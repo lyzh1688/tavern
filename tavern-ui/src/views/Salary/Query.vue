@@ -52,7 +52,7 @@
       </el-table-column>
       <el-table-column
         v-if="sys_salary_query_del"
-        fixed="right" header-align="center" align="center" width="185" :label="$t('action.operation')">
+         header-align="center" align="center" width="185" :label="$t('action.operation')">
         <template slot-scope="scope">
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger" v-if="sys_salary_query_del"
                      @click="handleDelete(scope.row)"/>

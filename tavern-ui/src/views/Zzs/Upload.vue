@@ -55,7 +55,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        fixed="right" header-align="center" align="center" width="185" label="操作" v-if="sys_zzs_upload_del">
+         header-align="center" align="center" width="185" label="操作" v-if="sys_zzs_upload_del">
         <template slot-scope="scope">
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"
                      @click="handleDelete(scope.row)" v-if="sys_zzs_upload_del"/>

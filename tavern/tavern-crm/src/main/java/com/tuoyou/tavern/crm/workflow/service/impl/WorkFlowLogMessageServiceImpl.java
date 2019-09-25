@@ -39,7 +39,7 @@ public class WorkFlowLogMessageServiceImpl extends ServiceImpl<WorkFlowLogMessag
 
     @Value("${workflow.log.url.path:http://119.3.19.171:80/workflow/log/attachment/}")
     private String workFlowLogUrlPath;
-    @Value("${workflow.log.path:/mnt/file/workflow/log}")
+    @Value("${workflow.log.path:/mnt/file/workflow/log/}")
     private String workFlowLogPath;
     @Autowired
     private WorkFlowLogAttachmentService workFlowLogAttachmentService;
@@ -59,6 +59,7 @@ public class WorkFlowLogMessageServiceImpl extends ServiceImpl<WorkFlowLogMessag
         String logId = UUIDUtil.randomUUID32();
         WorkFlowLogMessage workFlowLogMessage = new WorkFlowLogMessage();
         BeanUtils.copyProperties(workFlowLogMessageDTO, workFlowLogMessage);
+        workFlowLogMessage.setNodeId(workFlowLogMessageDTO.getCurNodeId());
         workFlowLogMessage.setLogId(logId);
         workFlowLogMessage.setCreateTime(DateUtils.formatDateTime(LocalDateTime.now(), DateUtils.DEFAULT_DATETIME_FORMATTER));
         if (!workFlowLogMessageDTO.getFiles().isEmpty()) {
@@ -120,6 +121,12 @@ public class WorkFlowLogMessageServiceImpl extends ServiceImpl<WorkFlowLogMessag
                 .map(log -> new WorkFLowEdges(log.getSourceNode(), log.getTargetNode()))
                 .collect(Collectors.toList());
         return new WorkFlowGraphLogVO(nodes, edges);
+    }
+
+    @TargetDataSource(name = "workflow")
+    @Override
+    public int saveRootWorkLog(WorkFlowLogMessage workFlowLogMessage, String businessId) {
+        return this.baseMapper.insertRootWorkLog(workFlowLogMessage, businessId);
     }
 
     @TargetDataSource(name = "workflow")

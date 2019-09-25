@@ -31,7 +31,7 @@
             <el-table-column
               prop="attachmentsPath" header-align="center" align="center" label="附件地址">
               <template slot-scope="scope1">
-                <a :href="scope1.row.attachmentsPath" target="_blank">{{scope1.row.attachmentsPath}}</a>
+                <a :href="scope1.row.attachmentsPath" target="_blank">{{scope1.row.attachmentsPath}}}</a>
               </template>
             </el-table-column>
           </el-table>
@@ -72,7 +72,7 @@
         logHisTotal: 0,
         logHisPageRequest: {
           current: 1,
-          size: 100,
+          size: 1000,
         },
         dialogVisible: false,
         logHisLoading: false, // 新增编辑界面是否显示
@@ -168,8 +168,8 @@
 
         var graph = new G6.Graph({
           container: 'mountNode',
-          width: window.innerWidth,
-          height: window.innerHeight,
+          width: 1000,
+          height: 600,
           pixelRatio: 2,
           modes: {
             default: ['drag-canvas', 'zoom-canvas']
@@ -203,6 +203,7 @@
         });
       },
       findLogPage: function (params) {
+
         this.dialogVisible = true
         this.logHisLoading = true
         let callback = res => {
@@ -210,6 +211,7 @@
         }
         this.logHisPageRequest.eventId = this.dtlForm.eventId
         this.logHisPageRequest.operator = params.operatorId
+        this.logHisPageRequest.curNodeId = params.id
         this.$api.workflow.findLog(this.logHisPageRequest).then((res) => {
           this.dataForm.logHistory = res.data.records;
           this.logHisTotal = res.data.total;

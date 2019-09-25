@@ -62,7 +62,7 @@
       </el-table-column>
       <el-table-column
         v-if="sys_extInvoice_edit || sys_extInvoice_del"
-        fixed="right" header-align="center" align="center" width="185" :label="$t('action.operation')">
+         header-align="center" align="center" width="185" :label="$t('action.operation')">
         <template slot-scope="scope">
           <kt-button icon="fa fa-edit" :label="$t('action.edit')" @click="handleEdit(scope.row)"
                      v-if="sys_extInvoice_edit"/>

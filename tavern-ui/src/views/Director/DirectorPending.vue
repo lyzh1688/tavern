@@ -107,7 +107,7 @@
       </el-table-column>
       <el-table-column prop="curOperatorName" label="当前处理人" header-align="center" align="center">
       </el-table-column>
-      <el-table-column fixed="right" label="操作"
+      <el-table-column  label="操作"
                        v-if="sys_director_pending_flow || sys_director_pending_addlog || sys_director_pending_drawback || sys_director_pending_next"
                        header-align="center" align="center" width="500">
         <template slot-scope="scope">
@@ -165,7 +165,7 @@
             <el-table-column
               prop="attachmentsPath" header-align="center" align="center" label="附件地址">
               <template slot-scope="scope1">
-                <a :href="scope1.row.attachmentsPath" target="_blank">{{scope1.row.attachmentsPath}}</a>
+                <a :href="scope1.row.attachmentsPath" target="_blank">点击{{scope1.row.attachmentsPath}}}</a>
               </template>
             </el-table-column>
           </el-table>
@@ -187,7 +187,7 @@
             accept='image/jpeg,image/gif,image/png'
             :auto-upload="false"
             list-type="picture-card"
-            :on-change="handleNextChange"
+            :on-change="handleChange"
             :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove"
             :http-request="handleSendUploadRequest"
@@ -235,7 +235,7 @@
                        :label="item.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="对接人员" label-width="100px" prop="nextOperator">
+        <el-form-item label="对接人员" label-width="100px" prop="nextOperator" v-if="showNextOperator">
           <el-select v-model="nextForm.nextOperator"
                      filterable
                      clearable
@@ -366,7 +366,7 @@
             <el-table-column
               prop="attachmentsPath" header-align="center" align="center" label="附件地址">
               <template slot-scope="scope1">
-                <a :href="scope1.row.attachmentsPath" target="_blank">{{scope1.row.attachmentsPath}}</a>
+                <a :href="scope1.row.attachmentsPath" target="_blank">点击{{scope1.row.attachmentsPath}}}</a>
               </template>
             </el-table-column>
           </el-table>
@@ -457,9 +457,6 @@
           nextNode: [
             {required: true, message: '请选择下一流程', trigger: 'blur'}
           ],
-          nextOperator: [
-            {required: true, message: '请选择对接人', trigger: 'blur'}
-          ],
         },
         drawBackFormRules: {
           message: [
@@ -518,6 +515,7 @@
         chosenHandler: {},
         showRefund: false,
         showHandler: false,
+        showNextOperator: false,
         handlerDict: [],
         data: {},
         userName: '',
@@ -538,8 +536,7 @@
       this.userName = sessionStorage.getItem("userName")
       this.findPage(null);
     },
-    methods: {
-      // 获取分页数据
+    methods: {// 获取分页数据
       findPage: function (data) {
         if (data !== null) {
           this.pageRequest = data
@@ -622,9 +619,13 @@
         this.nextLogFiles = []
         this.nextFileList = []
         this.nextForm = {
+          eventId: '',
+          curNodeId: '',
+          curNodeName: '',
           nextNode: '',
           nextOperator: '',
           message: '',
+          refundFee: '',
           curOperatorName: ''
         }
         this.nextDialogVisible = true
@@ -691,7 +692,7 @@
               formData.append('message', this.dataForm.message);
             }
             formData.append('eventId', this.logRowContent.eventId);
-
+            formData.append('curNodeId', this.logRowContent.curNodeId);
             this.$api.workflow.saveLog(formData).then((res) => {
               this.editLoading = false
               this.$message({message: '操作成功', type: 'success'})
@@ -714,15 +715,26 @@
           this.$message({message: '请输入退款金额！', type: 'error'})
           return
         }
+        if (this.chosenNode.name != '结束' && (this.nextForm.nextOperator == undefined || this.nextForm.nextOperator != '')) {
+          this.$message({message: '请选择对接人员！', type: 'error'})
+          return
+        }
+
         this.$refs.nextForm.validate((valid) => {
           if (valid) {
             this.$confirm('确认提交吗？', '提示', {}).then(() => {
               this.nextEditLoading = true
               let formData = new FormData()
               formData.append('eventId', this.nextForm.eventId);
+              formData.append('preNodeId', this.nextForm.curNodeId);
               formData.append('curNodeId', this.chosenNode.nodeId);
-              formData.append('curOperator', this.chosenOperator.id);
-              formData.append('curOperatorName', this.chosenOperator.name);
+              if (this.chosenOperator == undefined || this.chosenOperator == null || this.chosenOperator == '') {
+                formData.append('curOperator', '');
+                formData.append('curOperatorName', '');
+              } else {
+                formData.append('curOperator', this.chosenOperator.id);
+                formData.append('curOperatorName', this.chosenOperator.name);
+              }
               formData.append('operator', sessionStorage.getItem("userId"));
               formData.append('operatorName', sessionStorage.getItem("userName"));
               if (this.nextForm.message != undefined) {
@@ -740,6 +752,7 @@
                 this.$message({message: '操作成功', type: 'success'})
                 this.nextDialogVisible = false
                 this.nextLogFiles = []
+                this.findPage(null)
               }).catch((res) => {
                 this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
                 this.nextEditLoading = false
@@ -802,7 +815,7 @@
       handleLogHisCurrentChange(val) {
         let _this = this;
         _this.logHisPageRequest.current = val;
-        _this.findPage(_this.logHisPageRequest);
+        _this.findLogPage(_this.logHisPageRequest, this.dataForm);
       }, initNextNodeDict: function (params) {
         let nextNodeRequest = {};
         nextNodeRequest.businessId = params.businessId
@@ -827,12 +840,17 @@
           this.selectedNextNodeDict = [];
         }
       }, linkChange: function (val) {
+
         if (val != undefined && val != '') {
           let nodeName = this.selectedNextNodeDict.find(item => {
             return val == item.nodeId;
           }).name
           if (nodeName == '退款') {
             this.showRefund = false;
+          }
+          this.showNextOperator = true;
+          if (nodeName == '结束') {
+            this.showNextOperator = false;
           }
         }
         if (val != undefined && val != '') {
@@ -965,10 +983,10 @@
         graph.render();
         graph.fitView();
         graph.on('click', function (ev) {
-          _this.findLogPage(ev.item.get('model'))
+          _this.findHisLogPage(ev.item.get('model'))
         });
       },
-      findLogPage: function (params) {
+      findHisLogPage: function (params) {
         this.logDialogVisible = true
         this.logLoading = true
         let callback = res => {

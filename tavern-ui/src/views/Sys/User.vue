@@ -53,7 +53,7 @@
       <el-table-column
         prop="updateDate" header-align="center" align="center" label="更新时间">
       </el-table-column>
-      <el-table-column fixed="right" header-align="center" align="center" width="185" :label="$t('action.operation')">
+      <el-table-column  header-align="center" align="center" width="185" :label="$t('action.operation')">
         <template slot-scope="scope">
           <kt-button icon="fa fa-edit" :label="$t('action.edit')" v-if="sys_user_edit" @click="handleEdit(scope)"/>
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" v-if="sys_user_del" type="danger"

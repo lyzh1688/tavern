@@ -47,7 +47,7 @@
       </el-table-column>
       <el-table-column prop="updateDate" label="创建时间" header-align="center" align="center">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500"
+      <el-table-column  label="操作" header-align="center" align="center" width="500"
                        v-if="sys_presales_customer_edit || sys_presales_customer_dtl
                        || sys_presales_customer_order || sys_presales_customer_del"
       >

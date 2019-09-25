@@ -48,7 +48,7 @@
       <el-table-column
         prop="orderNum" header-align="center" align="center" label="排序">
       </el-table-column>
-      <el-table-column fixed="right" header-align="center" align="center"  :label="$t('action.operation')">
+      <el-table-column  header-align="center" align="center"  :label="$t('action.operation')">
         <template slot-scope="scope">
           <kt-button icon="fa fa-edit" :label="$t('action.edit')" v-if="sys_menu_edit" @click="handleEdit(scope.row)"/>
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" v-if="sys_menu_del" type="danger"

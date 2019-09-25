@@ -28,7 +28,7 @@
       <el-table-column
         prop="roleName" header-align="center" align="center" label="角色名">
       </el-table-column>
-      <el-table-column fixed="right" header-align="center" align="center" width="185" :label="$t('action.operation')">
+      <el-table-column  header-align="center" align="center" width="185" :label="$t('action.operation')">
         <template slot-scope="scope">
           <kt-button icon="fa fa-edit" :label="$t('action.edit')" v-if="sys_role_edit" @click="handleEdit(scope.row)"/>
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" v-if="sys_role_del" type="danger"

@@ -78,7 +78,7 @@
       </el-table-column>
       <el-table-column prop="updateDate" label="创建时间" header-align="center" align="center">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" header-align="center" align="center" width="500"
+      <el-table-column  label="操作" header-align="center" align="center" width="500"
                        v-if="sys_presales_customer_dtl_edit || sys_presales_customer_dtl_view || sys_presales_customer_dtl_del">
         <template slot-scope="scope">
           <kt-button icon="fa fa-edit" label="修改公司信息" v-if="sys_presales_customer_dtl_edit" type="primary"

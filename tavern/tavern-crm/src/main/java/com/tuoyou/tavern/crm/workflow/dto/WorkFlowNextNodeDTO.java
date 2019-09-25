@@ -14,6 +14,7 @@ import java.util.List;
 @Data
 public class WorkFlowNextNodeDTO {
     private String eventId;
+    private String preNodeId;
     private String curNodeId;
     private String curOperator;
     private String curOperatorName;
@@ -23,8 +24,9 @@ public class WorkFlowNextNodeDTO {
     private List<MultipartFile> files = Lists.newArrayList();
     private BigDecimal refundFee;
 
-    public WorkFlowNextNodeDTO(String eventId, String curNodeId, String curOperator, String curOperatorName, String operator,String operatorName,String message, List<MultipartFile> files, BigDecimal refundFee) {
+    public WorkFlowNextNodeDTO(String eventId, String preNodeId, String curNodeId, String curOperator, String curOperatorName, String operator, String operatorName, String message, List<MultipartFile> files, BigDecimal refundFee) {
         this.eventId = eventId;
+        this.preNodeId = preNodeId;
         this.curNodeId = curNodeId;
         this.curOperator = curOperator;
         this.curOperatorName = curOperatorName;

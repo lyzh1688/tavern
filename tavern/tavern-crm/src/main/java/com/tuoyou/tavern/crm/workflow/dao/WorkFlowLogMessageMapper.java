@@ -15,4 +15,6 @@ public interface WorkFlowLogMessageMapper extends BaseMapper<WorkFlowLogMessage>
     IPage<WorkFlowLogVO> selectWorkFlowLogMessagePage(Page page, @Param("query") WorkFlowLogQueryDTO workFlowLogQueryDTO);
 
     List<WorkFlowGraphLog> selectWorkFlowGraphLog(@Param("eventId") String eventId);
+
+    int insertRootWorkLog(@Param("log") WorkFlowLogMessage workFlowLogMessage, @Param("businessId") String businessId);
 }

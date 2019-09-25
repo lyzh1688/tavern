@@ -26,4 +26,6 @@ public class WorkFlowLogMessageDTO {
 
     private BigDecimal refundFee;
 
+    private String curNodeId;
+
 }

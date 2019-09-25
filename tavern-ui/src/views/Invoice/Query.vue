@@ -54,7 +54,7 @@
       <el-table-column prop="updateDate" label="上传时间" header-align="center" align="center">
       </el-table-column>
       <el-table-column
-        fixed="right" header-align="center" align="center" width="185" :label="$t('action.operation')">
+         header-align="center" align="center" width="185" :label="$t('action.operation')">
         <template slot-scope="scope">
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" type="danger"  v-if="sys_invoice_query_del"
                      @click="handleDelete(scope.row)"/>

@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -99,8 +100,21 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         curWorkFlowEventHistory.setEndDate(LocalDateTime.now());
         curWorkFlowEventHistory.setOperator(crmOrderBusinessRelDTO.getOwnerId());
 
+
         this.workFlowEventHistoryService.saveWorkFlowEventFirstNodeHistory(startWorkFlowEventHistory, crmOrderBusinessRelDTO.getBusinessId());
         this.workFlowEventHistoryService.saveWorkFlowEventHistory(curWorkFlowEventHistory, crmOrderBusinessRelDTO.getBusinessId());
+
+        //备注:
+        if (StringUtils.isNotEmpty(crmOrderBusinessRelDTO.getRemark())) {
+            WorkFlowLogMessage workFlowLogMessage = new WorkFlowLogMessage();
+            workFlowLogMessage.setLogId(UUIDUtil.randomUUID32());
+            workFlowLogMessage.setCreateTime(DateUtils.formatDateTime(LocalDateTime.now(),DateUtils.DEFAULT_DATETIME_FORMATTER));
+            workFlowLogMessage.setOperator(crmOrderBusinessRelDTO.getCreatorId());
+            workFlowLogMessage.setOperatorName(crmOrderBusinessRelDTO.getCreatorName());
+            workFlowLogMessage.setMessage(crmOrderBusinessRelDTO.getRemark());
+            workFlowLogMessage.setEventId(eventId);
+            this.workFlowLogMessageService.saveRootWorkLog(workFlowLogMessage, crmOrderBusinessRelDTO.getBusinessId());
+        }
 
     }
 
@@ -154,6 +168,7 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
             workFlowLogMessageDTO.setEventId(workFlowNextNodeDTO.getEventId());
             workFlowLogMessageDTO.setFiles(workFlowNextNodeDTO.getFiles());
             workFlowLogMessageDTO.setRefundFee(workFlowNextNodeDTO.getRefundFee());
+            workFlowLogMessageDTO.setCurNodeId(workFlowNextNodeDTO.getPreNodeId());
             this.workFlowLogMessageService.saveWorkFlowLog(workFlowLogMessageDTO);
         }
 
