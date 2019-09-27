@@ -17,8 +17,13 @@
         <el-form-item label="微信账号" label-width="100px">
           <el-input v-model="dtlForm.weixinAccnt" placeholder="请输入微信账号" :readonly=true></el-input>
         </el-form-item>
+      </el-form>
+      <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="微信昵称" label-width="100px">
           <el-input v-model="dtlForm.weixinName" placeholder="请输入微信昵称" :readonly=true></el-input>
+        </el-form-item>
+        <el-form-item label="客户姓名" label-width="100px" prop="customName">
+          <el-input v-model="dtlForm.customName" placeholder="请输入客户姓名" :readonly=true></el-input>
         </el-form-item>
       </el-form>
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">
@@ -30,9 +35,6 @@
         </el-form-item>
       </el-form>
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">
-        <el-form-item label="客户姓名" label-width="100px" prop="customName">
-          <el-input v-model="dtlForm.customName" placeholder="请输入客户姓名" :readonly=true></el-input>
-        </el-form-item>
         <el-form-item label="客户等级" label-width="100px">
           <el-input v-model="dtlForm.customLevel" clearable auto-complete="off" placeholder="请选择客户等级" :readonly=true>
           </el-input>
