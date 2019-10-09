@@ -3,13 +3,13 @@
     <div class="loginWrap">
       <el-form :model="loginForm" :rules="fieldRules" ref="loginForm" label-position="left" label-width="0px"
                class="demo-ruleForm login-container">
-    <span class="tool-bar">
-      <!-- 主题切换 -->
+   <!-- <span class="tool-bar">
+      &lt;!&ndash; 主题切换 &ndash;&gt;
       <theme-picker style="float:right;" class="theme-picker" :default="themeColor"
                     @onThemeChange="onThemeChange"></theme-picker>
-      <!-- 语言切换 -->
-      <!-- <lang-selector class="lang-selector"></lang-selector>    -->
-    </span>
+      &lt;!&ndash; 语言切换 &ndash;&gt;
+      &lt;!&ndash; <lang-selector class="lang-selector"></lang-selector>    &ndash;&gt;
+    </span>-->
         <h2 class="title" style="padding-left:22px;">拓佑财务管理平台</h2>
         <el-form-item prop="account">
           <el-input type="text" v-model="loginForm.account" auto-complete="off" placeholder="账号"

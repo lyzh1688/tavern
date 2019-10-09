@@ -17,18 +17,18 @@
     <!-- 工具栏 -->
     <span class="toolbar">
       <el-menu class="el-menu-demo" :background-color="themeColor" :text-color="themeColor" :active-text-color="themeColor" mode="horizontal">
-        <el-menu-item index="1">
-          <!-- 主题切换 -->
+        <!--<el-menu-item index="1">
+          &lt;!&ndash; 主题切换 &ndash;&gt;
           <theme-picker class="theme-picker" :default="themeColor" @onThemeChange="onThemeChange"></theme-picker>
         </el-menu-item>
         <el-menu-item index="2" v-popover:popover-lang>
-          <!-- 语言切换 -->
+          &lt;!&ndash; 语言切换 &ndash;&gt;
           <li style="color:#fff;" class="fa fa-language fa-lg"></li>
           <el-popover ref="popover-lang" placement="bottom-start" trigger="click" v-model="langVisible">
             <div class="lang-item" @click="changeLanguage('zh_cn')">简体中文</div>
             <div class="lang-item" @click="changeLanguage('en_us')">English</div>
           </el-popover>
-        </el-menu-item>
+        </el-menu-item>-->
         <el-menu-item index="5" v-popover:popover-personal>
           <!-- 用户信息 -->
           <span class="user-info"><img :src="user.avatar" />{{user.name}}</span>

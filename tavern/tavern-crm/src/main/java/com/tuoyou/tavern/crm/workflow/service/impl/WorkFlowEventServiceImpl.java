@@ -94,15 +94,15 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         startWorkFlowEventHistory.setBeginDate(workFlowEvent.getBeginDate());
         startWorkFlowEventHistory.setEndDate(LocalDateTime.now());
         startWorkFlowEventHistory.setOperator(crmOrderBusinessRelDTO.getCreatorId());
-        WorkFlowEventHistory curWorkFlowEventHistory = new WorkFlowEventHistory();
+        /*WorkFlowEventHistory curWorkFlowEventHistory = new WorkFlowEventHistory();
         curWorkFlowEventHistory.setEventId(eventId);
         curWorkFlowEventHistory.setBeginDate(workFlowEvent.getBeginDate());
         curWorkFlowEventHistory.setEndDate(LocalDateTime.now());
-        curWorkFlowEventHistory.setOperator(crmOrderBusinessRelDTO.getOwnerId());
+        curWorkFlowEventHistory.setOperator(crmOrderBusinessRelDTO.getOwnerId());*/
 
 
         this.workFlowEventHistoryService.saveWorkFlowEventFirstNodeHistory(startWorkFlowEventHistory, crmOrderBusinessRelDTO.getBusinessId());
-        this.workFlowEventHistoryService.saveWorkFlowEventHistory(curWorkFlowEventHistory, crmOrderBusinessRelDTO.getBusinessId());
+//        this.workFlowEventHistoryService.saveWorkFlowEventHistory(curWorkFlowEventHistory, crmOrderBusinessRelDTO.getBusinessId());
 
         //备注:
         if (StringUtils.isNotEmpty(crmOrderBusinessRelDTO.getRemark())) {
@@ -155,7 +155,8 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         curWorkFlowEventHistory.setBeginDate(LocalDateTime.now());
         curWorkFlowEventHistory.setOperator(workFlowNextNodeDTO.getCurOperator());
         curWorkFlowEventHistory.setGraphId(workFlowEvent.getGraphId());
-        curWorkFlowEventHistory.setNodeId(workFlowNextNodeDTO.getCurNodeId());
+        curWorkFlowEventHistory.setNodeId(workFlowNextNodeDTO.getPreNodeId());
+        curWorkFlowEventHistory.setNextNodeId(workFlowNextNodeDTO.getCurNodeId());
         this.workFlowEventHistoryService.save(curWorkFlowEventHistory);
 
         //携带备注信息

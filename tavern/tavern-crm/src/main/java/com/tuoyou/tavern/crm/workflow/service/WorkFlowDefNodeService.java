@@ -6,6 +6,7 @@ import com.tuoyou.tavern.protocol.common.TavernDictResponse;
 import com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowDefNodeVO;
 import com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowNodeQueryDTO;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -19,5 +20,7 @@ public interface WorkFlowDefNodeService extends IService<WorkFlowDefNode> {
     WorkFlowDefNode getWorkFlowOwnerInfoByBusiness(String business);
 
     List<WorkFlowDefNodeVO> getWorkFlowDefNode(WorkFlowNodeQueryDTO workFlowNodeQueryDTO);
+
+    Collection<WorkFlowDefNode> getList(List<String> nodeList);
 
 }

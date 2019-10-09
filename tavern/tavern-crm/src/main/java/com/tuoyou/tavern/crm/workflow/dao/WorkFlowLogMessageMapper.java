@@ -12,7 +12,11 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface WorkFlowLogMessageMapper extends BaseMapper<WorkFlowLogMessage> {
-    IPage<WorkFlowLogVO> selectWorkFlowLogMessagePage(Page page, @Param("query") WorkFlowLogQueryDTO workFlowLogQueryDTO);
+    IPage<WorkFlowLogVO> selectWorkFlowLogMessagePage(Page page,
+                                                      @Param("eventId") String eventId,
+                                                      @Param("operator") List<String> operator,
+                                                      @Param("curNodeId") String curNodeId
+    );
 
     List<WorkFlowGraphLog> selectWorkFlowGraphLog(@Param("eventId") String eventId);
 

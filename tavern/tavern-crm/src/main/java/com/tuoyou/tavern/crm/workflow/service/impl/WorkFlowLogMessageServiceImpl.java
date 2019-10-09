@@ -12,11 +12,13 @@ import com.tuoyou.tavern.crm.workflow.dao.WorkFlowLogMessageMapper;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowLogMessageDTO;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowLogAttachment;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowLogMessage;
+import com.tuoyou.tavern.crm.workflow.service.WorkFlowDefNodeService;
 import com.tuoyou.tavern.crm.workflow.service.WorkFlowLogAttachmentService;
 import com.tuoyou.tavern.crm.workflow.service.WorkFlowLogMessageService;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.WorkFlowLogQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.workflow.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,10 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -44,12 +45,16 @@ public class WorkFlowLogMessageServiceImpl extends ServiceImpl<WorkFlowLogMessag
     @Autowired
     private WorkFlowLogAttachmentService workFlowLogAttachmentService;
     @Autowired
-    private WorkFlowLogMessageService workFlowLogMessageService;
+    private WorkFlowDefNodeService workFlowDefNodeService;
 
     @TargetDataSource(name = "workflow")
     @Override
     public IPage<WorkFlowLogVO> getWorkFlowLogMessagePage(Page page, WorkFlowLogQueryDTO workFlowLogQueryDTO) {
-        return this.baseMapper.selectWorkFlowLogMessagePage(page, workFlowLogQueryDTO);
+        return this.baseMapper.selectWorkFlowLogMessagePage(page,
+                workFlowLogQueryDTO.getEventId(),
+                StringUtils.isEmpty(workFlowLogQueryDTO.getOperator()) ? null : Arrays.asList(StringUtils.split(workFlowLogQueryDTO.getOperator(), ",")),
+                workFlowLogQueryDTO.getCurNodeId()
+        );
     }
 
     @Transactional
@@ -107,6 +112,31 @@ public class WorkFlowLogMessageServiceImpl extends ServiceImpl<WorkFlowLogMessag
     @Override
     public WorkFlowGraphLogVO getWorkFlowGraphLog(String eventId) {
         List<WorkFlowGraphLog> workFlowGraphLogList = this.baseMapper.selectWorkFlowGraphLog(eventId);
+        Map<String, List<WorkFlowGraphLog>> workLogMap = workFlowGraphLogList.stream()
+                .collect(Collectors.groupingBy(WorkFlowGraphLog::getTargetNode));
+        List<String> idList = workFlowGraphLogList.parallelStream()
+                .flatMap(log -> {
+                    if (StringUtils.isNoneEmpty(log.getTargetNode())) {
+                        return Stream.of(log.getTargetNode(), log.getSourceNode());
+                    }
+                    return Stream.of(log.getSourceNode());
+                })
+                .distinct()
+                .collect(Collectors.toList());
+        List<WorkFLowNodes> nodes = this.workFlowDefNodeService.getList(idList)
+                .stream()
+                .map(workFlowDefNode -> {
+                    if (workLogMap.containsKey(workFlowDefNode.getNodeId())) {
+                        List<String> operators = workLogMap.get(workFlowDefNode.getNodeId()).stream().map(WorkFlowGraphLog::getOperator).collect(Collectors.toList());
+                        return new WorkFLowNodes(workFlowDefNode.getNodeId(), workFlowDefNode.getName(), StringUtils.join(operators, ","));
+                    }
+                    return new WorkFLowNodes(workFlowDefNode.getNodeId(), workFlowDefNode.getName(), "");
+                }).collect(Collectors.toList());
+      /*  Map<String, String> edgeMap = workFlowGraphLogList.parallelStream()
+                .filter(workFlowGraphLog -> StringUtils.isNoneEmpty(workFlowGraphLog.getTargetNode()))
+                .map(WorkFlowGraphLog::getSourceNode)
+                .distinct()
+                .collect(Collectors.toMap(k -> k, v -> v));
         Map<String, List<WorkFlowGraphLog>> workFlowGraphLogMap = workFlowGraphLogList
                 .stream()
                 .collect(Collectors.groupingBy(WorkFlowGraphLog::getNodeId));
@@ -114,11 +144,27 @@ public class WorkFlowLogMessageServiceImpl extends ServiceImpl<WorkFlowLogMessag
                 .map(entry -> {
                     WorkFlowGraphLog log = entry.getValue().get(0);
                     return new WorkFLowNodes(log.getNodeId(), log.getName(), log.getOperator());
-                }).collect(Collectors.toList());
-        List<WorkFLowEdges> edges = workFlowGraphLogList
+                }).collect(Collectors.toList());*/
+
+        /*List<WorkFLowEdges> edges = workFlowGraphLogList
                 .stream()
-                .filter(log -> workFlowGraphLogMap.containsKey(log.getTargetNode()))
-                .map(log -> new WorkFLowEdges(log.getSourceNode(), log.getTargetNode()))
+                .filter(workFlowGraphLog -> edgeMap.containsKey(workFlowGraphLog.getTargetNode()) || StringUtils.isEmpty(workFlowGraphLog.getTargetNode()))
+                .map(log -> *//*{
+                    if (entry.getValue().size() == 1) {
+                        WorkFlowGraphLog log = entry.getValue().get(0);
+                        return Collections.singleton(new WorkFLowNodes(log.getNodeId(), log.getName(), log.getOperator())).stream();
+                    }
+                    List<WorkFlowGraphLog> tmpWorkFlowGraphLogList = entry.getValue();
+                    List<WorkFLowNodes> tmpWorkFLowNodesList = tmpWorkFlowGraphLogList.stream()
+                            .filter(workFlowGraphLog -> edgeMap.containsKey(workFlowGraphLog.getTargetNode()))
+                            .map(log -> new WorkFLowNodes(log.getNodeId(), log.getName(), log.getOperator()))
+                            .collect(Collectors.toList());
+                    return tmpWorkFLowNodesList.stream();
+
+                }*//*new WorkFLowEdges(log.getSourceNode(), log.getTargetNode()))
+                .collect(Collectors.toList());*/
+        List<WorkFLowEdges> edges = workFlowGraphLogList.stream()
+                .map(workFlowGraphLog -> new WorkFLowEdges(workFlowGraphLog.getSourceNode(), workFlowGraphLog.getTargetNode()))
                 .collect(Collectors.toList());
         return new WorkFlowGraphLogVO(nodes, edges);
     }

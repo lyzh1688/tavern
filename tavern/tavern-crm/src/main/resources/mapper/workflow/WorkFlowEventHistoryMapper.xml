@@ -11,13 +11,14 @@
   </resultMap>
 
   <insert id="insertWorkFlowEventFirstNodeHistory">
-      insert into workflow_event_history (event_id, graph_id, node_id,
+      insert into workflow_event_history (event_id, graph_id, node_id,next_node_id,
       begin_date, end_date, operator
       )
         select
         #{event.eventId},
         t2.graph_id,
         t2.root_node,
+        t3.target_node,
         #{event.beginDate},
         #{event.endDate},
         #{event.operator}
@@ -27,7 +28,7 @@
         and t1.business_id = #{businessId}
   </insert>
   <insert id="insertWorkFlowEventHistory">
-      insert into workflow_event_history (event_id, graph_id, node_id,
+      insert into workflow_event_history (event_id, graph_id, node_id,next_node_id,
       begin_date, end_date, operator
       )
         select

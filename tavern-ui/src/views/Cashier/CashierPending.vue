@@ -715,7 +715,7 @@
           this.$message({message: '请输入退款金额！', type: 'error'})
           return
         }
-        if (this.chosenNode.name != '结束' && (this.nextForm.nextOperator == undefined || this.nextForm.nextOperator != '')) {
+        if (this.chosenNode.name != '结束' && (this.nextForm.nextOperator == undefined || this.nextForm.nextOperator == '')) {
           this.$message({message: '请选择对接人员！', type: 'error'})
           return
         }

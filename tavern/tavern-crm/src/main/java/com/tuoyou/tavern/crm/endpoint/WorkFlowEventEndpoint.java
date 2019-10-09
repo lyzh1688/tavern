@@ -109,7 +109,8 @@ public class WorkFlowEventEndpoint {
      */
     @GetMapping("/log/graph")
     public WorkFlowGraphLogResponse getWorkFlowGraph(@RequestParam("eventId") String eventId) {
-        return new WorkFlowGraphLogResponse(this.workFlowLogMessageService.getWorkFlowGraphLog(eventId));
+        WorkFlowGraphLogResponse response =  new WorkFlowGraphLogResponse(this.workFlowLogMessageService.getWorkFlowGraphLog(eventId));
+        return response;
     }
 
     /**

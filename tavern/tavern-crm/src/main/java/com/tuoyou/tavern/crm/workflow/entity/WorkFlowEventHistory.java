@@ -16,6 +16,8 @@ public class WorkFlowEventHistory extends Model<WorkFlowEventHistory> {
 
     private String nodeId;
 
+    private String nextNodeId;
+
     private LocalDateTime beginDate;
 
     private LocalDateTime endDate;
