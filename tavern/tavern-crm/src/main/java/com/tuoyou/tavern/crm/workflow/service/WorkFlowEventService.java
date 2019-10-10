@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowDelayNotesDTO;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowNextNodeDTO;
+import com.tuoyou.tavern.protocol.common.TavernDictResponse;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.MyToDoListDTO;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEvent;
 import com.tuoyou.tavern.protocol.crm.dto.CrmOrderBusinessRelDTO;
@@ -31,6 +32,8 @@ public interface WorkFlowEventService extends IService<WorkFlowEvent> {
     void delayWorkEvent(WorkFlowDelayNotesDTO workFlowDelayNotesDTO);
 
     void reChooseHandler(List<WorkFlowNextNodeDTO> workFlowNextNodeDTOList) throws Exception;
+
+    TavernDictResponse getReChooseHandler(String curNodeId, String curNodeName);
 
 
 }

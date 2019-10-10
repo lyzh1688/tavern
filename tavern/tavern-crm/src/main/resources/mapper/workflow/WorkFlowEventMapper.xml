@@ -104,6 +104,9 @@
             <if test="query.businessTag != null and query.businessTag != ''">
                 and T1.BUSINESS_TAG like concat('%', #{query.businessTag}, '%')
             </if>
+            <if test="query.ifOver == false">
+                and T8.name != '结束'
+            </if>
         </where>
     </select>
     <select id="selectAllWorkEvent" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO">
@@ -181,6 +184,9 @@
             </if>
             <if test="query.businessTag != null and query.businessTag != ''">
                 and T1.BUSINESS_TAG like concat('%', #{query.businessTag}, '%')
+            </if>
+            <if test="query.ifOver == false">
+                and T8.name != '结束'
             </if>
         </where>
         order by T1.CREATE_DATE desc

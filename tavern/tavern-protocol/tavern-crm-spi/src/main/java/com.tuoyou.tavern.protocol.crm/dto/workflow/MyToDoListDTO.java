@@ -19,4 +19,5 @@ public class MyToDoListDTO {
     private String createDate;
     private String businessName;
     private String businessTag;
+    private Boolean ifOver;
 }

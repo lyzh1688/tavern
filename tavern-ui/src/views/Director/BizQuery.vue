@@ -48,10 +48,17 @@
             <el-option label="投诉" value='投诉'></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="显示结束待办" label-width="100px">
+          <el-switch
+            v-model="filters.ifOver"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </el-form-item>
         <el-form-item>
           <kt-button icon="fa fa-search" :label="$t('action.search')" type="primary" v-if="sys_director_biz_view"
                      @click="findPage(null)"/>
-          <kt-button icon="fa fa-edit" label="批量转授权" type="primary"  v-if="sys_director_biz_rechoose"
+          <kt-button icon="fa fa-edit" label="批量转授权" type="primary" v-if="sys_director_biz_rechoose"
                      @click="handleBatchReChoose(null)"/>
         </el-form-item>
       </el-form>
@@ -100,7 +107,9 @@
       </el-table-column>
       <el-table-column prop="curOperatorName" label="当前处理人" header-align="center" align="center">
       </el-table-column>
-      <el-table-column  label="操作" v-if="sys_director_biz_flow||sys_director_biz_company_view||sys_director_biz_delay_view||sys_director_biz_rechoose" header-align="center" align="center" width="500">
+      <el-table-column label="操作"
+                       v-if="sys_director_biz_flow||sys_director_biz_company_view||sys_director_biz_delay_view||sys_director_biz_rechoose"
+                       header-align="center" align="center" width="500">
         <template slot-scope="scope">
           <kt-button icon="fa fa-gears" label="流程日志" type="primary" v-if="sys_director_biz_flow"
                      @click="showWorkFlow(scope.row)"/>
@@ -108,7 +117,7 @@
                      @click="handleComDtl(scope.row)"/>
           <kt-button icon="fa fa-battery-2" label="延期" type="primary" v-if="sys_director_biz_delay_view  "
                      @click="handleDelay(scope.row)"/>
-          <kt-button icon="fa fa-money" label="转授权" type="primary" v-if="sys_director_biz_rechoose  "
+          <kt-button icon="fa fa-money" label="转授权" type="primary" v-if="sys_director_biz_rechoose && scope.row.curNodeName != '结束' "
                      @click="handleReChoose(scope.row)"/>
         </template>
       </el-table-column>
@@ -187,7 +196,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button :size="size" @click.native="delayDialogVisible = false">{{$t('action.cancel')}}</el-button>
-        <el-button :size="size" type="primary"  @click.native="submitDelay" :loading="delayLoading">
+        <el-button :size="size" type="primary" @click.native="submitDelay" :loading="delayLoading">
           {{$t('action.submit')}}
         </el-button>
       </div>
@@ -352,6 +361,7 @@
           createDate: '',
           businessName: '',
           businessTag: '',
+          ifOver:false
         },
         dataForm: {
           logHistory: []
@@ -441,11 +451,11 @@
         chosenBatchHandler: {},
         selections: [],  // 列表选中列
         userName: '',
-        sys_director_biz_view:false,
-        sys_director_biz_rechoose:false,
-        sys_director_biz_flow:false,
-        sys_director_biz_company_view:false,
-        sys_director_biz_delay_view:false,
+        sys_director_biz_view: false,
+        sys_director_biz_rechoose: false,
+        sys_director_biz_flow: false,
+        sys_director_biz_company_view: false,
+        sys_director_biz_delay_view: false,
       }
     },
     created() {
@@ -480,6 +490,7 @@
         }
         this.pageRequest.businessName = this.filters.businessName
         this.pageRequest.businessTag = this.filters.businessTag
+        this.pageRequest.ifOver = this.filters.ifOver
         this.$api.workflow.findAllEvent(this.pageRequest).then((res) => {
           this.tableData = res.data.records;
           this.total = res.data.total;
@@ -519,7 +530,10 @@
         this.reChooseForm = {
           handler: ''
         }
-        this.$api.customer.findAllOperator(null).then((res) => {
+        let request = {};
+        request.curNodeId = params.curNodeId;
+        request.curOperatorName = params.curOperatorName;
+        this.$api.workflow.reChooseOperator(request).then((res) => {
           this.handlerDict = res.data
         })
         this.reChooseForm = Object.assign({}, params)
@@ -577,7 +591,7 @@
             this.$confirm('确认提交吗？', '提示', {}).then(() => {
               this.delayLoading = true
               let params = Object.assign({}, this.delayForm)
-              params.operator =  sessionStorage.getItem("userId")
+              params.operator = sessionStorage.getItem("userId")
               params.operatorName = sessionStorage.getItem("userName")
               params.message = this.delayForm.message + ",需要延时" + this.delayForm.delayDays + "天"
               this.$api.workflow.delayNotes(params).then((res) => {
@@ -601,7 +615,7 @@
               let batchRequest = [];
               let request = {};
               request.eventId = this.reChooseForm.eventId
-              request.operator =  sessionStorage.getItem("userId")
+              request.operator = sessionStorage.getItem("userId")
               request.operatorName = sessionStorage.getItem("userName")
               request.message = "订单号: " + this.reChooseForm.orderId
                 + ",业务类型: " + this.reChooseForm.businessName
@@ -634,7 +648,7 @@
               this.reChooseBatchForm.content.forEach((reChoose) => {
                 let request = {};
                 request.eventId = reChoose.eventId
-                request.operator =  sessionStorage.getItem("userId")
+                request.operator = sessionStorage.getItem("userId")
                 request.operatorName = sessionStorage.getItem("userName")
                 request.message = "订单号: " + reChoose.orderId
                   + ",业务类型: " + reChoose.businessName

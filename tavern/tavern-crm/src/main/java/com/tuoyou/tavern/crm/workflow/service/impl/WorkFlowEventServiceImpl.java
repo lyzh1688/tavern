@@ -15,10 +15,13 @@ import com.tuoyou.tavern.crm.workflow.dto.WorkFlowLogMessageDTO;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowNextNodeDTO;
 import com.tuoyou.tavern.crm.workflow.entity.*;
 import com.tuoyou.tavern.crm.workflow.service.*;
+import com.tuoyou.tavern.protocol.common.TavernDictResponse;
+import com.tuoyou.tavern.protocol.common.model.Dict;
 import com.tuoyou.tavern.protocol.crm.dto.CrmOrderBusinessRelDTO;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.MyToDoListDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCompanyBusiness;
 import com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO;
+import com.tuoyou.tavern.protocol.hrm.spi.HrmUserDictService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -46,6 +50,10 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
     private WorkFlowEventDependencyHisService workFlowEventDependencyHisService;
     @Autowired
     private WorkFlowLogMessageService workFlowLogMessageService;
+    @Autowired
+    private WorkFlowDefNodeService workFlowDefNodeService;
+    @Autowired
+    private HrmUserDictService hrmUserDictService;
 
     @Autowired
     private CrmCompanyBusinessInfoService crmCompanyBusinessInfoService;
@@ -108,7 +116,7 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         if (StringUtils.isNotEmpty(crmOrderBusinessRelDTO.getRemark())) {
             WorkFlowLogMessage workFlowLogMessage = new WorkFlowLogMessage();
             workFlowLogMessage.setLogId(UUIDUtil.randomUUID32());
-            workFlowLogMessage.setCreateTime(DateUtils.formatDateTime(LocalDateTime.now(),DateUtils.DEFAULT_DATETIME_FORMATTER));
+            workFlowLogMessage.setCreateTime(DateUtils.formatDateTime(LocalDateTime.now(), DateUtils.DEFAULT_DATETIME_FORMATTER));
             workFlowLogMessage.setOperator(crmOrderBusinessRelDTO.getCreatorId());
             workFlowLogMessage.setOperatorName(crmOrderBusinessRelDTO.getCreatorName());
             workFlowLogMessage.setMessage(crmOrderBusinessRelDTO.getRemark());
@@ -250,5 +258,14 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
             workFlowLogMessage.setCreateTime(DateUtils.formatDateTime(LocalDateTime.now(), DateUtils.DEFAULT_DATETIME_FORMATTER));
             this.workFlowLogMessageService.save(workFlowLogMessage);
         }
+    }
+
+    @TargetDataSource(name = "workflow")
+    @Override
+    public TavernDictResponse getReChooseHandler(String curNodeId, String curNodeName) {
+        WorkFlowDefNode workFlowDefNode = this.workFlowDefNodeService.getByNodeId(curNodeId);
+        TavernDictResponse dictResponse = this.hrmUserDictService.queryStaffByRole(workFlowDefNode.getRole());
+        List<Dict> dictList = dictResponse.getData().stream().filter(dict -> !dict.getName().equals(curNodeName)).collect(Collectors.toList());
+        return new TavernDictResponse(dictList);
     }
 }

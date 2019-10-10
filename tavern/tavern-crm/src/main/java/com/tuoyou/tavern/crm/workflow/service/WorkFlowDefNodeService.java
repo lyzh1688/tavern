@@ -23,4 +23,6 @@ public interface WorkFlowDefNodeService extends IService<WorkFlowDefNode> {
 
     Collection<WorkFlowDefNode> getList(List<String> nodeList);
 
+    WorkFlowDefNode getByNodeId(String nodeId);
+
 }

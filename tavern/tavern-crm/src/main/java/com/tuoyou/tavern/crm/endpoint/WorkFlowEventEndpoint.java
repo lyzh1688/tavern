@@ -8,6 +8,7 @@ import com.tuoyou.tavern.crm.workflow.dto.WorkFlowNextNodeDTO;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowRefundDTO;
 import com.tuoyou.tavern.crm.workflow.service.WorkFlowEventService;
 import com.tuoyou.tavern.crm.workflow.service.WorkFlowLogMessageService;
+import com.tuoyou.tavern.protocol.common.TavernDictResponse;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.MyToDoListDTO;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.WorkFlowLogQueryDTO;
@@ -99,7 +100,7 @@ public class WorkFlowEventEndpoint {
             @RequestParam(name = "message", required = false) String message,
             @RequestParam(name = "files", required = false) MultipartFile[] files,
             @RequestParam(name = "refundFee", required = false) BigDecimal refundFee) throws Exception {
-        WorkFlowNextNodeDTO workFlowNextNodeDTO = new WorkFlowNextNodeDTO(eventId,preNodeId, curNodeId, curOperator, curOperatorName, operator, operatorName, message, Arrays.asList(files), refundFee);
+        WorkFlowNextNodeDTO workFlowNextNodeDTO = new WorkFlowNextNodeDTO(eventId, preNodeId, curNodeId, curOperator, curOperatorName, operator, operatorName, message, Arrays.asList(files), refundFee);
         this.workFlowEventService.startNextWorkFlow(workFlowNextNodeDTO);
         return new TavernResponse();
     }
@@ -109,7 +110,7 @@ public class WorkFlowEventEndpoint {
      */
     @GetMapping("/log/graph")
     public WorkFlowGraphLogResponse getWorkFlowGraph(@RequestParam("eventId") String eventId) {
-        WorkFlowGraphLogResponse response =  new WorkFlowGraphLogResponse(this.workFlowLogMessageService.getWorkFlowGraphLog(eventId));
+        WorkFlowGraphLogResponse response = new WorkFlowGraphLogResponse(this.workFlowLogMessageService.getWorkFlowGraphLog(eventId));
         return response;
     }
 
@@ -127,7 +128,7 @@ public class WorkFlowEventEndpoint {
      */
     @PostMapping("/refund")
     public TavernResponse refundWorkEvent(@RequestBody WorkFlowRefundDTO workFlowRefundDTO) throws Exception {
-        WorkFlowNextNodeDTO workFlowNextNodeDTO = new WorkFlowNextNodeDTO(workFlowRefundDTO.getEventId(),null,
+        WorkFlowNextNodeDTO workFlowNextNodeDTO = new WorkFlowNextNodeDTO(workFlowRefundDTO.getEventId(), null,
                 workFlowRefundDTO.getCurNodeId(),
                 workFlowRefundDTO.getHandlerId(),
                 workFlowRefundDTO.getHandlerName(),
@@ -146,7 +147,7 @@ public class WorkFlowEventEndpoint {
     @PostMapping("/reChoose")
     public TavernResponse reChooseHandler(@RequestBody List<WorkFlowRefundDTO> workFlowRefundDTOList) throws Exception {
         List<WorkFlowNextNodeDTO> workFlowNextNodeDTOList = workFlowRefundDTOList.parallelStream()
-                .map(workFlowRefundDTO -> new WorkFlowNextNodeDTO(workFlowRefundDTO.getEventId(),null,
+                .map(workFlowRefundDTO -> new WorkFlowNextNodeDTO(workFlowRefundDTO.getEventId(), null,
                         workFlowRefundDTO.getCurNodeId(),
                         workFlowRefundDTO.getHandlerId(),
                         workFlowRefundDTO.getHandlerName(),
@@ -157,5 +158,14 @@ public class WorkFlowEventEndpoint {
                 .collect(Collectors.toList());
         this.workFlowEventService.reChooseHandler(workFlowNextNodeDTOList);
         return new TavernResponse();
+    }
+
+    /**
+     * 转授权对接人员
+     */
+    @GetMapping("/reChoose/operator")
+    public TavernDictResponse getReChooseHandler(@RequestParam(name = "curNodeId") String curNodeId,
+                                                 @RequestParam(name = "curOperatorName") String curOperator) {
+        return this.workFlowEventService.getReChooseHandler(curNodeId, curOperator);
     }
 }

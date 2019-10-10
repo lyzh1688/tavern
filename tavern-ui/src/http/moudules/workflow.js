@@ -94,3 +94,11 @@ export const reChoose = (data) => {
     data
   })
 }
+// 查询相关转授权人员
+export const reChooseOperator = (params) => {
+  return axios({
+    url: '/workflow/event/reChoose/operator',
+    method: 'get',
+    params
+  })
+}

@@ -54,6 +54,13 @@
             <el-option label="投诉" value='投诉'></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="显示结束待办" label-width="100px">
+          <el-switch
+            v-model="filters.ifOver"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </el-form-item>
         <el-form-item>
           <kt-button icon="fa fa-search" :label="$t('action.search')" v-if="sys_director_pending_view" type="primary"
                      @click="findPage(null)"/>
@@ -418,6 +425,7 @@
           createDate: '',
           businessName: '',
           businessTag: '',
+          ifOver:false
         },
         dialogImageUrl: '',
         nextDialogImageUrl: '',
@@ -558,6 +566,7 @@
         }
         this.pageRequest.businessName = this.filters.businessName
         this.pageRequest.businessTag = this.filters.businessTag
+        this.pageRequest.ifOVer = this.filters.ifOVer
         this.$api.workflow.findTodo(this.pageRequest).then((res) => {
           this.tableData = res.data.records;
           this.total = res.data.total;
