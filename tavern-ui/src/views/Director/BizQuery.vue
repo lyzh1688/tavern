@@ -115,7 +115,7 @@
                      @click="showWorkFlow(scope.row)"/>
           <kt-button icon="fa fa-university" label="公司详情" type="primary" v-if="sys_director_biz_company_view"
                      @click="handleComDtl(scope.row)"/>
-          <kt-button icon="fa fa-battery-2" label="延期" type="primary" v-if="sys_director_biz_delay_view  "
+          <kt-button icon="fa fa-battery-2" label="延期" type="primary" v-if="sys_director_biz_delay_view && scope.row.curNodeName != '结束' "
                      @click="handleDelay(scope.row)"/>
           <kt-button icon="fa fa-money" label="转授权" type="primary" v-if="sys_director_biz_rechoose && scope.row.curNodeName != '结束' "
                      @click="handleReChoose(scope.row)"/>
