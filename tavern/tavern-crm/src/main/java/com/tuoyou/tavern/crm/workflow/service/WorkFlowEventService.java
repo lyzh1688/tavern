@@ -22,6 +22,8 @@ public interface WorkFlowEventService extends IService<WorkFlowEvent> {
 
     void startWorkFlow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId);
 
+    void removeWorkFlow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId);
+
     int saveWorkFlowEvent(WorkFlowEvent workFlowEvent, String businessId);
 
     IPage<MyTodoListVO> getMyPendingWork(Page page, MyToDoListDTO myToDoListDTO);
@@ -36,7 +38,7 @@ public interface WorkFlowEventService extends IService<WorkFlowEvent> {
 
     TavernDictResponse getReChooseHandler(String curNodeId, String curNodeName);
 
-    List<WorkFlowRefundVO> getWorkFlowRefundOperator(String eventId,String nodeId,String direction);
+    List<WorkFlowRefundVO> getWorkFlowRefundOperator(String eventId, String nodeId, String direction);
 
 
 }

@@ -157,6 +157,14 @@ export const saveOrderBusiness = (data) => {
     data
   })
 }
+// 删除订单业务信息
+export const deleteOrderBusiness = (data) => {
+  return axios({
+    url: '/crm/order/deleteBizRel',
+    method: 'delete',
+    data
+  })
+}
 // 分页查询订单业务信息
 export const findOrderBusinessPage = (params) => {
   return axios({

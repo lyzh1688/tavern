@@ -46,6 +46,8 @@
     <!--表格内容栏-->
     <el-table :data="tableData" stripe stripe height="600" size="mini" style="width: 100%;"
               v-loading="loading">
+      <el-table-column prop="eventId" header-align="center" align="center" label="事件ID" v-if="false">
+      </el-table-column>
       <el-table-column prop="customId" header-align="center" align="center" label="客户ID" v-if="false">
       </el-table-column>
       <el-table-column prop="businessId" label="业务Id" header-align="center" align="center" v-if="false">
@@ -61,6 +63,13 @@
       <el-table-column prop="remark" label="备注" header-align="center" align="center">
       </el-table-column>
       <el-table-column prop="createDate" label="创建时间" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column  label="操作" header-align="center" align="center" width="100"
+                        v-if="sys_presales_business_del">
+        <template slot-scope="scope">
+          <kt-button icon="fa fa-delete" label="删除" v-if="sys_presales_business_del" type="danger"
+                     @click="handleDelete(scope.row)"/>
+        </template>
       </el-table-column>
     </el-table>
     <div class="toolbar" style="padding:10px;">
@@ -397,11 +406,13 @@
         thirdPartyShow: true,
         djfwConfirmNum: true,
         ownerName: '',
-        sys_presales_business_add:false
+        sys_presales_business_add:false,
+        sys_presales_business_del:false
 
       }
     }, created() {
       this.sys_presales_business_add = hasPermission('sys:presales:business:add')
+      this.sys_presales_business_del = hasPermission('sys:presales:business:del')
       //初始化客户信息
       this.dtlForm = this.$route.params;
       let tmpInfo = JSON.parse(localStorage.getItem("orderDtlInfo"));
@@ -433,6 +444,7 @@
           this.pageRequest.current = res.data.current;
           this.pageRequest.size = res.data.size;
           callback(res)
+          this.initDict()
         }).catch((res) => {
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
           callback(res)
@@ -477,6 +489,32 @@
         this.dialogVisible = true
         this.operation = false
         this.dataForm = Object.assign({}, params.row)
+      },
+      handleDelete:function(pa){
+        let params = Object.assign({}, pa)
+        params.orderId = this.dtlForm.orderId
+        params.creatorId = sessionStorage.getItem("userId")
+        params.creatorName = sessionStorage.getItem("userName")
+        params.ownerId = pa.owner
+        params.owner = this.ownerName;
+
+        this.$confirm('确认删除选中记录吗？', '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.loading = true
+          let callback = res => {
+            if (res.retCode == 0) {
+              this.$message({message: '删除成功', type: 'success'})
+              this.findPage(null)
+            } else {
+              this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+            }
+            this.loading = false
+          }
+          this.$api.customer.deleteOrderBusiness(params).then(pa != null ? callback : '')
+        }).catch((res) => {
+          this.loading = false
+        })
       },
       // 编辑
       submitForm: function () {
@@ -648,7 +686,7 @@
             });
           }, 200);
         } else {
-          this.selectedBizDict = [];
+          this.selectedBizDict = this.bizDict
         }
       },
       initCompanyDict: function () {
@@ -671,7 +709,7 @@
             });
           }, 200);
         } else {
-          this.selectedCompanyDict = [];
+          this.selectedCompanyDict = this.companyDict;
         }
       },
       initPreEventDict: function () {
@@ -694,7 +732,7 @@
             });
           }, 200);
         } else {
-          this.selectedPreEventDict = [];
+          this.selectedPreEventDict = this.preEventDict;
         }
       },
       initThirdPartyDict: function () {
@@ -715,7 +753,7 @@
             });
           }, 200);
         } else {
-          this.selectedPartyDict = [];
+          this.selectedPartyDict = this.thirdPartyDict;
         }
       }, linkChange: function (val) {
         if (val != undefined && val != '') {

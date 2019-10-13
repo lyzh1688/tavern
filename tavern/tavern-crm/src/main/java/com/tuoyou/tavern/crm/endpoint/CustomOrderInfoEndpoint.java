@@ -45,18 +45,23 @@ public class CustomOrderInfoEndpoint {
         return new TavernResponse();
     }
 
+    @DeleteMapping("/deleteBizRel")
+    public TavernResponse deleteCrmCustomOrderInfo(@RequestBody @Valid CrmOrderBusinessRelDTO crmOrderBusinessRelDTO) {
+        this.crmCustomOrderBusinessRelService.deleteOrderBusinessAndWorkFlow(crmOrderBusinessRelDTO,crmOrderBusinessRelDTO.getEventId());
+        return new TavernResponse();
+    }
+
     @GetMapping("/bizPage")
     public CrmOrderBusinessPageResponse getCrmOrderBusinessPage(Page page, CustomOrderBizQueryDTO customCompanyOrderQueryDTO) {
         return new CrmOrderBusinessPageResponse(this.crmCustomOrderBusinessRelService.getCrmOrderBusinessPage(page, customCompanyOrderQueryDTO));
     }
 
     @GetMapping("/companyDetail")
-    public CrmCompanyOrderDetailResponse getCrmCompanyOrderDetail(@RequestParam("eventId")String eventId,
-                                                                  @RequestParam("companyId")String companyId){
-        return new CrmCompanyOrderDetailResponse(this.crmCustomOrderBusinessRelService.getCrmCompanyOrderDetail(eventId,companyId));
+    public CrmCompanyOrderDetailResponse getCrmCompanyOrderDetail(@RequestParam("eventId") String eventId,
+                                                                  @RequestParam("companyId") String companyId) {
+        return new CrmCompanyOrderDetailResponse(this.crmCustomOrderBusinessRelService.getCrmCompanyOrderDetail(eventId, companyId));
 
     }
-
 
 
 }

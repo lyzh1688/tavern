@@ -19,12 +19,14 @@ public interface CrmCustomOrderBusinessRelService extends IService<CrmOrderBusin
 
     void saveOrderBusinessAndStartWorkFlow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO);
 
+    void deleteOrderBusinessAndWorkFlow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO,String eventId);
+
     void saveOrderBusiness(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId);
 
     void rollBackOrderBusiness(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId);
 
     IPage getCrmOrderBusinessPage(Page page, CustomOrderBizQueryDTO customCompanyOrderQueryDTO);
 
-    CrmCompanyOrderDetailVO getCrmCompanyOrderDetail(String eventId,String companyId);
+    CrmCompanyOrderDetailVO getCrmCompanyOrderDetail(String eventId, String companyId);
 
 }

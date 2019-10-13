@@ -45,4 +45,6 @@ public class CrmOrderBusinessRelDTO {
 
     //公司注册
     private GszcDetail gszcDetail;
+
+    private String eventId;
 }

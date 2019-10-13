@@ -4,11 +4,11 @@
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
       <el-form :inline="true" :model="filters" :size="size">
         <el-form-item>
-          <kt-button icon="fa fa-search" :label="$t('action.search')"  type="primary" v-if="sys_presales_order_view"
+          <kt-button icon="fa fa-search" :label="$t('action.search')" type="primary" v-if="sys_presales_order_view"
                      @click="findPage(null)"/>
         </el-form-item>
         <el-form-item>
-          <kt-button icon="fa fa-plus" :label="$t('action.add')"  type="primary" v-if="sys_presales_order_add"
+          <kt-button icon="fa fa-plus" :label="$t('action.add')" type="primary" v-if="sys_presales_order_add"
                      @click="handleAdd"/>
         </el-form-item>
       </el-form>
@@ -25,9 +25,10 @@
       </el-table-column>
       <el-table-column prop="payableAmt" label="实付金额" header-align="center" align="center">
       </el-table-column>
-      <el-table-column  label="操作" header-align="center" align="center" width="500" v-if="sys_presales_order_edit || sys_presales_order_dtl">
+      <el-table-column label="操作" header-align="center" align="center" width="500"
+                       v-if="sys_presales_order_edit || sys_presales_order_dtl">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-edit" label="修改订单"  type="primary" v-if="sys_presales_order_edit"
+          <kt-button icon="fa fa-edit" label="修改订单" type="primary" v-if="sys_presales_order_edit"
                      @click="handleEdit(scope.row)"/>
           <kt-button icon="fa fa-retweet" label="订单详情" type="primary" v-if="sys_presales_order_dtl"
                      @click="handleDtl(scope.row)"/>
@@ -140,10 +141,10 @@
           receivableAmt: '',
           payableAmt: '',
         },
-        sys_presales_order_edit:false,
-        sys_presales_order_dtl:false,
-        sys_presales_order_view:false,
-        sys_presales_order_add:false,
+        sys_presales_order_edit: false,
+        sys_presales_order_dtl: false,
+        sys_presales_order_view: false,
+        sys_presales_order_add: false,
       }
     }, created() {
       this.sys_presales_order_edit = hasPermission('sys:presales:order:edit')
@@ -211,8 +212,11 @@
       },
       // 编辑
       submitForm: function () {
-        // if()
-        
+        alert(1)
+        if (this.dataForm.payableAmt > this.dataForm.receivableAmt) {
+          this.$message({message: '实付金额不能大于应付金额', type: 'warn'});
+          return;
+        }
         this.$refs.dataForm.validate((valid) => {
           if (valid) {
             this.$confirm('确认提交吗？', '提示', {}).then(() => {

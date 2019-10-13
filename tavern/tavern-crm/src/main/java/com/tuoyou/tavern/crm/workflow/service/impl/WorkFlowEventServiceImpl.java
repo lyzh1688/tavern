@@ -30,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -125,6 +124,15 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
             workFlowLogMessage.setEventId(eventId);
             this.workFlowLogMessageService.saveRootWorkLog(workFlowLogMessage, crmOrderBusinessRelDTO.getBusinessId());
         }
+
+    }
+
+    @TargetDataSource(name = "workflow")
+    @Transactional
+    @Override
+    public void removeWorkFlow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId) {
+        this.workFlowEventDependencyService.removeById(crmOrderBusinessRelDTO.getPreEventId());
+        this.workFlowEventService.removeById(eventId);
 
     }
 

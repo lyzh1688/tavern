@@ -56,6 +56,12 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
 
     }
 
+    @Override
+    public void deleteOrderBusinessAndWorkFlow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO,String eventId) {
+        this.crmCustomOrderBusinessRelService.rollBackOrderBusiness(crmOrderBusinessRelDTO, eventId);
+        this.workFlowEventService.removeWorkFlow(crmOrderBusinessRelDTO,eventId);
+    }
+
     @Transactional
     @Override
     public void saveOrderBusiness(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId) {

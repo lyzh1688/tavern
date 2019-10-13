@@ -95,7 +95,7 @@
           <el-input v-model="dataForm.contactPerson" placeholder="请输入联系人姓名"></el-input>
         </el-form-item>
         <el-form-item label="联系人电话" label-width="100px" prop="contactNumber">
-          <el-input v-model="dataForm.contactNumber" placeholder="请输入联系人电话"></el-input>
+          <el-input v-model="dataForm.contactNumber" placeholder="请输入联系人电话" ></el-input>
         </el-form-item>
         <el-form-item label="客户姓名" label-width="100px" prop="customName">
           <el-input v-model="dataForm.customName" placeholder="请输入客户姓名"></el-input>
@@ -291,6 +291,11 @@
       },
       // 编辑
       submitForm: function () {
+        const reg = /^((13[0-9])|(14[5,7,9])|(15[^4])|(18[0-9])|(17[0,1,3,5,6,7,8]))\d{8}$/;
+        if (!reg.test(this.dataForm.contactNumber) || this.dataForm.contactNumber.length != 11){
+          this.$message({message: '手机号不合法！', type: 'error'});
+          return
+        }
         this.$refs.dataForm.validate((valid) => {
           if (valid) {
             this.$confirm('确认提交吗？', '提示', {}).then(() => {
