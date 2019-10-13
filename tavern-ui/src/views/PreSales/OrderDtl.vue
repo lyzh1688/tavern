@@ -20,7 +20,8 @@
       </el-form>
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item>
-          <kt-button icon="fa fa-add" label="添加关联业务" v-if="sys_presales_business_add" type="primary" @click="handleAdd"/>
+          <kt-button icon="fa fa-add" label="添加关联业务" v-if="sys_presales_business_add" type="primary"
+                     @click="handleAdd"/>
         </el-form-item>
       </el-form>
     </div>
@@ -64,8 +65,8 @@
       </el-table-column>
       <el-table-column prop="createDate" label="创建时间" header-align="center" align="center">
       </el-table-column>
-      <el-table-column  label="操作" header-align="center" align="center" width="100"
-                        v-if="sys_presales_business_del">
+      <el-table-column label="操作" header-align="center" align="center" width="100"
+                       v-if="sys_presales_business_del">
         <template slot-scope="scope">
           <kt-button icon="fa fa-delete" label="删除" v-if="sys_presales_business_del" type="danger"
                      @click="handleDelete(scope.row)"/>
@@ -106,6 +107,7 @@
                      :remote-method="remoteCompanyDict"
                      placeholder="请输入关联公司"
                      no-data-text="无匹配数据"
+                     @change="linkCompanyDictChange"
                      :loading="remoteCompanyDictLoading"
                      prop="company">
             <el-option v-for="item in selectedCompanyDict"
@@ -237,7 +239,8 @@
           </el-select>
         </el-form-item>
         <el-form-item label="缴款人数" label-width="150px" prop="employeeNum">
-          <el-input v-model="djfwForm.employeeNum" placeholder="请输入缴款人数" :disabled="djfwConfirmNum"></el-input>
+          <el-input v-model="djfwForm.employeeNum" placeholder="请输入缴款人数" :disabled="djfwConfirmNum"
+                    readonly="true"></el-input>
         </el-form-item>
         <el-form-item label="服务结束时间" label-width="150px" prop="endDate">
           <el-date-picker v-model="djfwForm.endDate" type="datetime" :disabled="true"></el-date-picker>
@@ -406,8 +409,9 @@
         thirdPartyShow: true,
         djfwConfirmNum: true,
         ownerName: '',
-        sys_presales_business_add:false,
-        sys_presales_business_del:false
+        sys_presales_business_add: false,
+        sys_presales_business_del: false,
+        staffCnt: ''
 
       }
     }, created() {
@@ -490,7 +494,7 @@
         this.operation = false
         this.dataForm = Object.assign({}, params.row)
       },
-      handleDelete:function(pa){
+      handleDelete: function (pa) {
         let params = Object.assign({}, pa)
         params.orderId = this.dtlForm.orderId
         params.creatorId = sessionStorage.getItem("userId")
@@ -535,12 +539,24 @@
             valid = valid && dataFormValid
             break;
           case "公积金代缴":
+            if (this.djfwForm.confirmNum != '0') {
+              if(this.djfwForm.employeeNum == '' || this.djfwForm.employeeNum == 0){
+                this.$message({message: '若公司人数已确认，需要录入员工信息！方可添加关联业务！', type: 'error'})
+                return
+              }
+            }
             this.$refs.djfwForm.validate((bizValid) => {
               valid = bizValid;
             });
             valid && dataFormValid
             break;
           case "代缴社保":
+            if (this.djfwForm.confirmNum != '0') {
+              if(this.djfwForm.employeeNum == '' || this.djfwForm.employeeNum == 0){
+                this.$message({message: '若公司人数已确认，需要录入员工信息！方可添加关联业务！', type: 'error'})
+                return
+              }
+            }
             this.$refs.djfwForm.validate((bizValid) => {
               valid = bizValid;
             });
@@ -590,6 +606,7 @@
             params.gjjsbdjDetail = gjjsbdjDetail
             params.gszcDetail = gszcDetail
 
+
             this.$api.customer.saveOrderBusiness(params).then((res) => {
               this.editLoading = false
               this.$message({message: '操作成功', type: 'success'})
@@ -601,7 +618,7 @@
               this.dialogVisible = false
             })
           })
-        }else {
+        } else {
           this.$message({message: '操作失败,数据填写有误', type: 'error'})
         }
 
@@ -767,6 +784,17 @@
           this.ownerDict = res.data
         })
         this.selectBiz(val)
+      }, linkCompanyDictChange: function (val) {
+        this.staffCnt = ''
+        let request = {};
+        request.companyId = val
+        this.$api.customer.staffSum(request).then((res) => {
+          if (res.data.count != 0) {
+            this.staffCnt = res.data.count;
+          }
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+        })
       }, linkThirdPartyChange: function () {
         if (this.dataForm.needThirdParty != undefined && this.dataForm.needThirdParty != '' && this.dataForm.needThirdParty != '0') {
           this.thirdPartyShow = false;
@@ -774,10 +802,13 @@
           this.thirdPartyShow = true;
         }
       }, djfwConfirmChange: function (val) {
+        this.djfwForm.employeeNum = ''
         if (val != undefined && val != '' && val != '0') {
           this.djfwConfirmNum = false;
+          this.djfwForm.employeeNum = this.staffCnt
         } else {
           this.djfwConfirmNum = true;
+
         }
       }, djfwEndDateChange: function () {
         if (this.djfwForm.beginDate != '' && this.djfwForm.months != '') {

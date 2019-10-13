@@ -158,7 +158,7 @@
               prop="operator" header-align="center" align="center" label="操作人Id" v-if="false">
             </el-table-column>
             <el-table-column
-              prop="nodeName" header-align="center" align="center" label="节点名称">
+              prop="nodeName" header-align="center" align="center" label="流程节点名称">
             </el-table-column>
             <el-table-column
               prop="operatorName" header-align="center" align="center" label="操作人">
@@ -362,7 +362,7 @@
               prop="operator" header-align="center" align="center" label="操作人Id" v-if="false">
             </el-table-column>
             <el-table-column
-              prop="nodeName" header-align="center" align="center" label="节点名称">
+              prop="nodeName" header-align="center" align="center" label="流程节点名称">
             </el-table-column>
             <el-table-column
               prop="operatorName" header-align="center" align="center" label="操作人">

@@ -85,6 +85,14 @@ export const saveStaff = (data) => {
     data
   })
 }
+// 员工汇总信息
+export const staffSum = (params) => {
+  return axios({
+    url: '/crm/staff/staffSum',
+    method: 'get',
+    params
+  })
+}
 // 删除公司信息
 export const batchDeleteStaff = (data) => {
   return axios({
