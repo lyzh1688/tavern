@@ -14,6 +14,7 @@ import com.tuoyou.tavern.protocol.crm.dto.workflow.MyToDoListDTO;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.WorkFlowLogQueryDTO;
 import com.tuoyou.tavern.protocol.crm.response.WorkFlowGraphLogResponse;
 import com.tuoyou.tavern.protocol.crm.response.WorkFlowLogPageResponse;
+import com.tuoyou.tavern.protocol.crm.response.WorkFlowRefundEdgeResponse;
 import com.tuoyou.tavern.protocol.crm.response.WorkFlowTodoListResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -128,7 +129,7 @@ public class WorkFlowEventEndpoint {
      */
     @PostMapping("/refund")
     public TavernResponse refundWorkEvent(@RequestBody WorkFlowRefundDTO workFlowRefundDTO) throws Exception {
-        WorkFlowNextNodeDTO workFlowNextNodeDTO = new WorkFlowNextNodeDTO(workFlowRefundDTO.getEventId(), null,
+        WorkFlowNextNodeDTO workFlowNextNodeDTO = new WorkFlowNextNodeDTO(workFlowRefundDTO.getEventId(), workFlowRefundDTO.getPreNodeId(),
                 workFlowRefundDTO.getCurNodeId(),
                 workFlowRefundDTO.getHandlerId(),
                 workFlowRefundDTO.getHandlerName(),
@@ -138,6 +139,16 @@ public class WorkFlowEventEndpoint {
                 Lists.newArrayList(), null);
         this.workFlowEventService.startNextWorkFlow(workFlowNextNodeDTO);
         return new TavernResponse();
+    }
+
+    /**
+     * 退款处理人
+     */
+    @GetMapping("/refundOperator")
+    public WorkFlowRefundEdgeResponse refundOperatorWorkEvent(@RequestParam(name = "eventId") String eventId,
+                                                              @RequestParam(name = "nodeId") String nodeId,
+                                                              @RequestParam(name = "direction") String direction) {
+        return new WorkFlowRefundEdgeResponse(this.workFlowEventService.getWorkFlowRefundOperator(eventId, nodeId, direction));
     }
 
 

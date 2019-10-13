@@ -83,7 +83,7 @@ export default {
     // tabs, 关闭全部
     tabsCloseAllHandle () {
       this.mainTabs = []
-      this.$router.push("/")
+      this.$router.push("主页")
     },
     // tabs, 刷新当前
     tabsRefreshCurrentHandle () {

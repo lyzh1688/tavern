@@ -16,4 +16,5 @@ public class WorkFlowRefundDTO {
     private String agreeRefund;
     private String handlerId;
     private String handlerName;
+    private String preNodeId;
 }

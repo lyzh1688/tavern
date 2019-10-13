@@ -55,7 +55,7 @@ export function formatWithSeperator(datetime, dateSeprator, timeSeprator, type) 
       return year + dateSeprator + month + dateSeprator + day;
     }
     if (type === "2") {
-      return year + month + day;
+      return year + "" + month + "" + day;
     }
     const hh = makeupLength(dateMat.getHours());
     const mm = makeupLength(dateMat.getMinutes());

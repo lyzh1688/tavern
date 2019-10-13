@@ -10,6 +10,7 @@ import com.tuoyou.tavern.protocol.crm.dto.workflow.MyToDoListDTO;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowEvent;
 import com.tuoyou.tavern.protocol.crm.dto.CrmOrderBusinessRelDTO;
 import com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO;
+import com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowRefundVO;
 
 import java.util.List;
 
@@ -34,6 +35,8 @@ public interface WorkFlowEventService extends IService<WorkFlowEvent> {
     void reChooseHandler(List<WorkFlowNextNodeDTO> workFlowNextNodeDTOList) throws Exception;
 
     TavernDictResponse getReChooseHandler(String curNodeId, String curNodeName);
+
+    List<WorkFlowRefundVO> getWorkFlowRefundOperator(String eventId,String nodeId,String direction);
 
 
 }

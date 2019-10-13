@@ -29,9 +29,6 @@
     from workflow_log_message
     <where>
       event_id = #{eventId}
-      <if test="operator == null ">
-      and operator is null
-      </if>
       <if test="operator != null ">
         <foreach collection="operator" index="index" item="item" open=" and (" close=" )" separator="or">
           operator = #{item}

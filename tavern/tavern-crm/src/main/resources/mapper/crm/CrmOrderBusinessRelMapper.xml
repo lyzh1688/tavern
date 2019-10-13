@@ -64,5 +64,6 @@
             and t4.COMPANY_ID = t5.COMPANY_ID
             and t5.CUSTOM_ID = t6.CUSTOM_ID
             and t1.EVENT_ID = #{eventId}
+            and t4.COMPANY_ID = #{companyId}
     </select>
 </mapper>

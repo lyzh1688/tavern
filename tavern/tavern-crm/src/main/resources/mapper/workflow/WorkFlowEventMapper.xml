@@ -43,10 +43,10 @@
         T1.REMARK remark,
         T3.WEIXIN_NAME weixinName,
         T4.BUSINESS_NAME businessName,
-        DATEDIFF(NOW(),T5.BEGIN_DATE) cost,
-        DATEDIFF(T5.END_DATE,NOW()) maxLeftDay,
+        DATEDIFF(NOW(),T7.begin_date) cost,
+        DATEDIFF(date_add(T7.begin_date,INTERVAL T9.rest_days day),NOW()) maxLeftDay,
         T1.BUSINESS_TAG businessTag,
-        T1.CREATE_DATE createDate,
+        T7.begin_date createDate,
         T3.CUSTOM_LEVEL customLevel,
         T8.name curNodeName,
         T8.node_id curNodeId,
@@ -60,7 +60,8 @@
         crm.CRM_COMPANY_BUSINESS T5,
         work_flow.workflow_def_graph_business_rel T6,
         work_flow.workflow_event T7,
-        work_flow.workflow_def_node T8
+        work_flow.workflow_def_node T8,
+        workflow_def_node_ext_attr T9
 
         <where>
             T.ORDER_ID = T1.ORDER_ID
@@ -68,10 +69,13 @@
             AND T.CUSTOM_ID = T3.CUSTOM_ID
             AND T1.BUSINESS_ID = T4.BUSINESS_ID
             AND T1.BUSINESS_ID = T5.BUSINESS_ID
+            AND T1.COMPANY_ID = T5.COMPANY_ID
             AND T1.BUSINESS_ID = T6.business_id
             AND T7.cur_node_id = T8.node_id
+            AND T1.EVENT_ID = T7.event_id
             and T6.graph_id = T7.graph_id
             and T6.graph_id = T8.graph_id
+            AND T7.cur_node_id = T9.node_id
             AND not exists(select 1 from work_flow.workflow_event_dependency T9 where T7.event_id = T9.next_event)
             AND (T7.event_owner = #{query.userId} or T7.cur_operator = #{query.userId})
             <if test="query.city != null and query.city != ''">
@@ -108,6 +112,7 @@
                 and T8.name != '结束'
             </if>
         </where>
+        ORDER BY T7.begin_date desc
     </select>
     <select id="selectAllWorkEvent" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO">
         SELECT
@@ -125,8 +130,8 @@
         T1.REMARK remark,
         T3.WEIXIN_NAME weixinName,
         T4.BUSINESS_NAME businessName,
-        DATEDIFF(NOW(),T5.BEGIN_DATE) cost,
-        DATEDIFF(T5.END_DATE,NOW()) maxLeftDay,
+        DATEDIFF(NOW(),T7.begin_date) cost,
+        DATEDIFF(date_add(T7.begin_date,INTERVAL T9.rest_days day),NOW()) maxLeftDay,
         T1.BUSINESS_TAG businessTag,
         T1.CREATE_DATE createDate,
         T3.CUSTOM_LEVEL customLevel,
@@ -142,7 +147,8 @@
         crm.CRM_COMPANY_BUSINESS T5,
         work_flow.workflow_def_graph_business_rel T6,
         work_flow.workflow_event T7,
-        work_flow.workflow_def_node T8
+        work_flow.workflow_def_node T8,
+        workflow_def_node_ext_attr T9
 
         <where>
             T.ORDER_ID = T1.ORDER_ID
@@ -150,10 +156,13 @@
             AND T.CUSTOM_ID = T3.CUSTOM_ID
             AND T1.BUSINESS_ID = T4.BUSINESS_ID
             AND T1.BUSINESS_ID = T5.BUSINESS_ID
+            AND T1.COMPANY_ID = T5.COMPANY_ID
             AND T1.BUSINESS_ID = T6.business_id
             AND T7.cur_node_id = T8.node_id
+            AND T1.EVENT_ID = T7.event_id
             and T6.graph_id = T7.graph_id
             and T6.graph_id = T8.graph_id
+            AND T7.cur_node_id = T9.node_id
             AND not exists(select 1 from work_flow.workflow_event_dependency T9 where T7.event_id = T9.next_event)
             <if test="query.city != null and query.city != ''">
                 and T2.CITY like concat('%', #{query.city}, '%')
@@ -190,5 +199,16 @@
             </if>
         </where>
         order by T1.CREATE_DATE desc
+    </select>
+    <select id="selectPreEdge" resultType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowNodeEdge">
+        SELECT t1.next_node_id preNodeId,t1.node_id curNodeId,t2.role FROM workflow_event_history t1,workflow_def_node t2
+        WHERE t1.node_id = t2.node_id
+        and  t1.event_id = #{eventId}
+        and t1.next_node_id = #{nodeId}
+    </select>
+    <select id="selectNextEdge" resultType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowNodeEdge">
+        SELECT T1.source_node preNodeId,T1.target_node curNodeId,T2.role FROM workflow_def_edge T1,workflow_def_node T2
+        WHERE T1.target_node = T2.node_id
+        AND T1.source_node = #{nodeId}
     </select>
 </mapper>

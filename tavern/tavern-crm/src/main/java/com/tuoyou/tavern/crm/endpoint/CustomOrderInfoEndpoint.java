@@ -51,8 +51,9 @@ public class CustomOrderInfoEndpoint {
     }
 
     @GetMapping("/companyDetail")
-    public CrmCompanyOrderDetailResponse getCrmCompanyOrderDetail(@RequestParam("eventId")String eventId){
-        return new CrmCompanyOrderDetailResponse(this.crmCustomOrderBusinessRelService.getCrmCompanyOrderDetail(eventId));
+    public CrmCompanyOrderDetailResponse getCrmCompanyOrderDetail(@RequestParam("eventId")String eventId,
+                                                                  @RequestParam("companyId")String companyId){
+        return new CrmCompanyOrderDetailResponse(this.crmCustomOrderBusinessRelService.getCrmCompanyOrderDetail(eventId,companyId));
 
     }
 

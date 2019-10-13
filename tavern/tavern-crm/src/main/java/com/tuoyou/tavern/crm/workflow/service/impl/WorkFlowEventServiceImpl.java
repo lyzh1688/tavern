@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dfzq.obgear.framework.spring.db.aspect.anno.TargetDataSource;
+import com.google.common.collect.Lists;
 import com.tuoyou.tavern.common.core.util.DateUtils;
 import com.tuoyou.tavern.common.core.util.UUIDUtil;
 import com.tuoyou.tavern.crm.crm.service.CrmCompanyBusinessInfoService;
@@ -21,6 +22,7 @@ import com.tuoyou.tavern.protocol.crm.dto.CrmOrderBusinessRelDTO;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.MyToDoListDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCompanyBusiness;
 import com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO;
+import com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowRefundVO;
 import com.tuoyou.tavern.protocol.hrm.spi.HrmUserDictService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,6 +146,36 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         return this.baseMapper.selectAllWorkEvent(page, myToDoListDTO);
     }
 
+    @TargetDataSource(name = "workflow")
+    @Override
+    public void delayWorkEvent(WorkFlowDelayNotesDTO workFlowDelayNotesDTO) {
+        String logId = UUIDUtil.randomUUID32();
+        try {
+            WorkFlowLogMessage workFlowLogMessage = new WorkFlowLogMessage();
+            workFlowLogMessage.setLogId(logId);
+            workFlowLogMessage.setOperator(workFlowDelayNotesDTO.getOperator());
+            workFlowLogMessage.setOperatorName(workFlowDelayNotesDTO.getOperatorName());
+            workFlowLogMessage.setCreateTime(DateUtils.formatDateTime(LocalDateTime.now(), DateUtils.DEFAULT_DATETIME_FORMATTER));
+            workFlowLogMessage.setMessage(workFlowDelayNotesDTO.getMessage());
+            workFlowLogMessage.setEventId(workFlowDelayNotesDTO.getEventId());
+            this.workFlowLogMessageService.save(workFlowLogMessage);
+            CrmCompanyBusiness crmCompanyBusiness = this.crmCompanyBusinessInfoService.getOne(Wrappers.<CrmCompanyBusiness>query().lambda()
+                    .eq(CrmCompanyBusiness::getBusinessId, workFlowDelayNotesDTO.getBusinessId())
+                    .eq(CrmCompanyBusiness::getCompanyId, workFlowDelayNotesDTO.getCompanyId()));
+            if (Objects.nonNull(crmCompanyBusiness)) {
+                crmCompanyBusiness.setEndDate(crmCompanyBusiness.getEndDate().plusDays(workFlowDelayNotesDTO.getDelayDays()));
+                crmCompanyBusiness.setUpdateDate(LocalDateTime.now());
+                this.crmCompanyBusinessInfoService.update(crmCompanyBusiness, Wrappers.<CrmCompanyBusiness>query().lambda()
+                        .eq(CrmCompanyBusiness::getBusinessId, workFlowDelayNotesDTO.getBusinessId())
+                        .eq(CrmCompanyBusiness::getCompanyId, workFlowDelayNotesDTO.getCompanyId()));
+            }
+        } catch (Exception e) {
+            this.workFlowLogMessageService.removeById(logId);
+            throw e;
+        }
+
+    }
+
     @Transactional
     @TargetDataSource(name = "workflow")
     @Override
@@ -198,41 +230,13 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
 
     }
 
-    @Override
-    public void delayWorkEvent(WorkFlowDelayNotesDTO workFlowDelayNotesDTO) {
-        String logId = UUIDUtil.randomUUID32();
-        try {
-            WorkFlowLogMessage workFlowLogMessage = new WorkFlowLogMessage();
-            workFlowLogMessage.setLogId(logId);
-            workFlowLogMessage.setOperator(workFlowDelayNotesDTO.getOperator());
-            workFlowLogMessage.setOperatorName(workFlowDelayNotesDTO.getOperatorName());
-            workFlowLogMessage.setCreateTime(DateUtils.formatDateTime(LocalDateTime.now(), DateUtils.DEFAULT_DATETIME_FORMATTER));
-            workFlowLogMessage.setMessage(workFlowDelayNotesDTO.getMessage());
-            workFlowLogMessage.setEventId(workFlowDelayNotesDTO.getEventId());
-            this.workFlowLogMessageService.save(workFlowLogMessage);
-            CrmCompanyBusiness crmCompanyBusiness = this.crmCompanyBusinessInfoService.getOne(Wrappers.<CrmCompanyBusiness>query().lambda()
-                    .eq(CrmCompanyBusiness::getBusinessId, workFlowDelayNotesDTO.getBusinessId())
-                    .eq(CrmCompanyBusiness::getCompanyId, workFlowDelayNotesDTO.getCompanyId()));
-            if (Objects.nonNull(crmCompanyBusiness)) {
-                crmCompanyBusiness.setEndDate(crmCompanyBusiness.getEndDate().plusDays(workFlowDelayNotesDTO.getDelayDays()));
-                crmCompanyBusiness.setUpdateDate(LocalDateTime.now());
-                this.crmCompanyBusinessInfoService.update(crmCompanyBusiness, Wrappers.<CrmCompanyBusiness>query().lambda()
-                        .eq(CrmCompanyBusiness::getBusinessId, workFlowDelayNotesDTO.getBusinessId())
-                        .eq(CrmCompanyBusiness::getCompanyId, workFlowDelayNotesDTO.getCompanyId()));
-            }
-        } catch (Exception e) {
-            this.workFlowLogMessageService.removeById(logId);
-            throw e;
-        }
-
-    }
-
     @TargetDataSource(name = "workflow")
     @Override
     public void reChooseHandler(List<WorkFlowNextNodeDTO> workFlowNextNodeDTOList) throws Exception {
         for (WorkFlowNextNodeDTO workFlowNextNodeDTO : workFlowNextNodeDTOList) {
 
             WorkFlowEvent workFlowEvent = this.getById(workFlowNextNodeDTO.getEventId());
+            String preOperator = workFlowEvent.getCurOperator();
             workFlowEvent.setCurOperator(workFlowNextNodeDTO.getCurOperator());
             workFlowEvent.setCurOperatorName(workFlowNextNodeDTO.getCurOperatorName());
             workFlowEvent.setCurNodeId(workFlowNextNodeDTO.getCurNodeId());
@@ -241,11 +245,18 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
 
             WorkFlowEventHistory curWorkFlowEventHistory = new WorkFlowEventHistory();
             curWorkFlowEventHistory.setEventId(workFlowEvent.getEventId());
-            curWorkFlowEventHistory.setBeginDate(LocalDateTime.now());
             curWorkFlowEventHistory.setOperator(workFlowNextNodeDTO.getCurOperator());
             curWorkFlowEventHistory.setGraphId(workFlowEvent.getGraphId());
-            curWorkFlowEventHistory.setNodeId(workFlowNextNodeDTO.getCurNodeId());
-            this.workFlowEventHistoryService.save(curWorkFlowEventHistory);
+            curWorkFlowEventHistory.setNodeId(workFlowNextNodeDTO.getPreNodeId());
+            curWorkFlowEventHistory.setNextNodeId(workFlowNextNodeDTO.getCurNodeId());
+            this.workFlowEventHistoryService.update(curWorkFlowEventHistory,
+                    Wrappers.<WorkFlowEventHistory>query()
+                            .lambda()
+                            .eq(WorkFlowEventHistory::getEventId, curWorkFlowEventHistory.getEventId())
+                            .eq(WorkFlowEventHistory::getGraphId, curWorkFlowEventHistory.getGraphId())
+                            .eq(WorkFlowEventHistory::getOperator, preOperator)
+                            .eq(WorkFlowEventHistory::getNextNodeId, curWorkFlowEventHistory.getNextNodeId())
+            );
 
             //携带备注信息
 
@@ -267,5 +278,35 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         TavernDictResponse dictResponse = this.hrmUserDictService.queryStaffByRole(workFlowDefNode.getRole());
         List<Dict> dictList = dictResponse.getData().stream().filter(dict -> !dict.getName().equals(curNodeName)).collect(Collectors.toList());
         return new TavernDictResponse(dictList);
+    }
+
+    @TargetDataSource(name = "workflow")
+    @Override
+    public List<WorkFlowRefundVO> getWorkFlowRefundOperator(String eventId, String nodeId, String direction) {
+        WorkFlowNodeEdge workFlowNodeEdge;
+        if (StringUtils.endsWith(direction, "0")) {
+            workFlowNodeEdge = this.baseMapper.selectPreEdge(eventId, nodeId);
+        } else {
+            workFlowNodeEdge = this.baseMapper.selectNextEdge(eventId, nodeId);
+        }
+        if (Objects.isNull(workFlowNodeEdge)) {
+            return Lists.newArrayList();
+        }
+        TavernDictResponse response = this.hrmUserDictService.queryStaffByRole(workFlowNodeEdge.getRole());
+        if (Objects.isNull(response) || response.getData().size() == 0) {
+            return Lists.newArrayList();
+        }
+        List<WorkFlowRefundVO> workFlowRefundVOList = response.getData()
+                .stream()
+                .map(dict -> {
+                    WorkFlowRefundVO workFlowRefundVO = new WorkFlowRefundVO();
+                    workFlowRefundVO.setCurNodeId(workFlowNodeEdge.getCurNodeId());
+                    workFlowRefundVO.setPreNodeId(workFlowNodeEdge.getPreNodeId());
+                    workFlowRefundVO.setId(dict.getId());
+                    workFlowRefundVO.setName(dict.getName());
+                    return workFlowRefundVO;
+                }).collect(Collectors.toList());
+
+        return workFlowRefundVOList;
     }
 }

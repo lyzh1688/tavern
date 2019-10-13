@@ -25,6 +25,6 @@ public interface CrmCustomOrderBusinessRelService extends IService<CrmOrderBusin
 
     IPage getCrmOrderBusinessPage(Page page, CustomOrderBizQueryDTO customCompanyOrderQueryDTO);
 
-    CrmCompanyOrderDetailVO getCrmCompanyOrderDetail(String eventId);
+    CrmCompanyOrderDetailVO getCrmCompanyOrderDetail(String eventId,String companyId);
 
 }

@@ -211,6 +211,8 @@
       },
       // 编辑
       submitForm: function () {
+        // if()
+        
         this.$refs.dataForm.validate((valid) => {
           if (valid) {
             this.$confirm('确认提交吗？', '提示', {}).then(() => {

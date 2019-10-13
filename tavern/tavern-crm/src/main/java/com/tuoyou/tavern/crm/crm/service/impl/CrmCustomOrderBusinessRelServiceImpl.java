@@ -136,8 +136,8 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
     }
 
     @Override
-    public CrmCompanyOrderDetailVO getCrmCompanyOrderDetail(String eventId) {
-        return this.baseMapper.selectCrmCompanyOrderDetail(eventId);
+    public CrmCompanyOrderDetailVO getCrmCompanyOrderDetail(String eventId,String companyId) {
+        return this.baseMapper.selectCrmCompanyOrderDetail(eventId,companyId);
     }
 
     private void cvtCrmOrderGjjsbdjDetail(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId, CrmCompanyBusiness crmCompanyBusiness) {

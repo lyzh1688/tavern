@@ -11,5 +11,6 @@ import org.apache.ibatis.annotations.Param;
 public interface CrmOrderBusinessRelMapper extends BaseMapper<CrmOrderBusinessRel> {
     IPage selectCrmOrderBusinessPage(Page page, @Param("query") CustomOrderBizQueryDTO customCompanyOrderQueryDTO);
 
-    CrmCompanyOrderDetailVO selectCrmCompanyOrderDetail(@Param("eventId") String eventId);
+    CrmCompanyOrderDetailVO selectCrmCompanyOrderDetail(@Param("eventId") String eventId,
+                                                        @Param("companyId") String companyId );
 }

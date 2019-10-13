@@ -114,7 +114,7 @@
       </el-table-column>
       <el-table-column prop="curOperatorName" label="当前处理人" header-align="center" align="center">
       </el-table-column>
-      <el-table-column  label="操作"
+      <el-table-column label="操作"
                        v-if="sys_director_pending_flow || sys_director_pending_addlog || sys_director_pending_drawback || sys_director_pending_next"
                        header-align="center" align="center" width="500">
         <template slot-scope="scope">
@@ -127,7 +127,7 @@
                      v-if="scope.row.curNodeName == '退款审批' && sys_director_pending_drawback && scope.row.curOperatorName == userName"
                      @click="handleDrawBack(scope.row)"/>
           <kt-button icon="fa fa-arrow-right" label="下一步" type="primary"
-                     v-if="sys_director_pending_next && scope.row.curOperatorName == userName"
+                     v-if="sys_director_pending_next && scope.row.curOperatorName == userName && scope.row.curNodeName != '退款审批'"
                      @click="handleNext(scope.row)"/>
         </template>
       </el-table-column>
@@ -319,7 +319,7 @@
             <el-option label="否" value='0'></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="变更处理人" label-width="200px" prop="handler" v-if="showHandler">
+        <el-form-item label="指定处理人" label-width="200px" prop="handler">
           <el-select v-model="drawBackForm.handler"
                      filterable
                      clearable
@@ -336,6 +336,23 @@
                        :label="item.name"/>
           </el-select>
         </el-form-item>
+        <!--<el-form-item label="对接人员" label-width="200px" prop="nextOperator" >
+          <el-select v-model="drawBackForm.nextOperator"
+                     filterable
+                     clearable
+                     placeholder="请选择对接人员"
+                     no-data-text="无匹配数据/请检查是否配置相关人员"
+                     prop="nextOperator"
+                     @change="handleDrawBackOperatorChange"
+                     style="float: left"
+
+          >
+            <el-option v-for="item in nextDrawBackOperatorDict"
+                       :key="item.id"
+                       :value="item.id"
+                       :label="item.name"/>
+          </el-select>
+        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button :size="size" @click.native="drawBackDialogVisible = false">{{$t('action.cancel')}}</el-button>
@@ -413,6 +430,7 @@
         fileList: [],
         nextFileList: [],
         nextOperatorDict: [],
+        nextDrawBackOperatorDict: [],
         filters: {
           userId: '',
           city: '',
@@ -425,7 +443,7 @@
           createDate: '',
           businessName: '',
           businessTag: '',
-          ifOver:false
+          ifOver: false
         },
         dialogImageUrl: '',
         nextDialogImageUrl: '',
@@ -473,6 +491,9 @@
           agreeRefund: [
             {required: true, message: '请选择是否同意退款', trigger: 'blur'}
           ],
+          handler: [
+            {required: true, message: '请选择处理人', trigger: 'blur'}
+          ],
         },
         // 新增编辑界面数据
         dataForm: {
@@ -506,7 +527,8 @@
           agreeRefund: '',
           handler: '',
           mountNode: '',
-          curNodeId: ''
+          curNodeId: '',
+          nextOperator: ''
         },
         files: [],
         logRowContent: {},
@@ -521,6 +543,7 @@
         operatorName: '',
         chosenOperator: '',
         chosenHandler: {},
+        chosenDrawbackOperator: {},
         showRefund: false,
         showHandler: false,
         showNextOperator: false,
@@ -611,15 +634,16 @@
           agreeRefund: '',
           handler: '',
           mountNode: '',
-          curNodeId: ''
+          curNodeId: '',
+          nextOperator: ''
         }
-        this.drawBackDialogVisible = true
         let ele = document.getElementById('mountNode')
         if (ele != null) {
           ele.innerHTML = '';
         }
         this.drawBackForm = Object.assign({}, params)
         this.initG6(params)
+        this.drawBackDialogVisible = true
       },
       showWorkFlow: function (params) {
         this.$router.push({name: '工作流日志', params: params})
@@ -773,32 +797,21 @@
         })
       },
       commitDrawBack: function () {
-        if (this.showHandler) {
-          if (this.drawBackForm.handler == undefined || this.drawBackForm.handler == '') {
-            this.$message({message: '请选择处理人！', type: 'error'})
-            return
-          }
-        }
         this.$refs.drawBackForm.validate((valid) => {
           if (valid) {
             this.$confirm('确认提交吗？', '提示', {}).then(() => {
               this.drawBackEditLoading = true
-
               let request = {};
               request.eventId = this.drawBackForm.eventId
               request.operator = sessionStorage.getItem("userId")
               request.operatorName = sessionStorage.getItem("userName")
               request.message = this.drawBackForm.message
+              request.curNodeId = this.chosenHandler.curNodeId
 
-              if (this.drawBackForm.agreeRefund == '0') {
-                request.handlerId = this.chosenHandler.id
-                request.handlerName = this.chosenHandler.name
-              } else {
-                request.operator = sessionStorage.getItem("userId")
-                request.operatorName = sessionStorage.getItem("userName")
-              }
-              request.curNodeId = this.drawBackForm.curNodeId
-
+              request.handlerId = this.chosenHandler.id
+              request.handlerName = this.chosenHandler.name
+              request.preNodeId = this.chosenHandler.preNodeId
+              console.log(JSON.stringify(request))
               this.$api.workflow.drawBack(request).then((res) => {
                 this.drawBackEditLoading = false
                 this.$message({message: '操作成功', type: 'success'})
@@ -882,11 +895,25 @@
         this.chosenOperator = this.nextOperatorDict.find(item => {
           return val == item.id;
         })
+      }, handleDrawBackOperatorChange: function (val) {
+        this.chosenDrawbackOperator = this.nextDrawBackOperatorDict.find(item => {
+          return val == item.id;
+        })
       }, handleRefundChange: function (val) {
+        let request = {};
+        request.eventId = this.drawBackForm.eventId
+        request.nodeId = this.drawBackForm.curNodeId
         this.showHandler = false
         if (val == '0') {
           this.showHandler = true
-          this.$api.customer.findAllOperator(null).then((res) => {
+          request.direction = '0'
+          this.$api.workflow.drawBackOperator(request).then((res) => {
+            this.handlerDict = res.data
+          })
+        }else if (val == '1') {
+          this.showHandler = true
+          request.direction = '1'
+          this.$api.workflow.drawBackOperator(request).then((res) => {
             this.handlerDict = res.data
           })
         }

@@ -576,6 +576,7 @@
         }
         let request = {}
         request.eventId = params.eventId
+        request.companyId = params.companyId
         this.$api.customer.findOrdercompanyDetail(request).then((res) => {
           this.comDtlForm = res.data;
           this.comDialogVisible = true
@@ -630,6 +631,7 @@
                 this.reChooseEditLoading = false
                 this.reChooseDialogVisible = false
                 this.$message({message: '操作成功', type: 'success'})
+                this.findPage(this.pageRequest)
               }).catch((res) => {
                 this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
                 this.reChooseEditLoading = false
