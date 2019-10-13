@@ -26,5 +26,6 @@ public class WorkFlowEvent extends Model<WorkFlowEvent> {
     private String curOperatorName;
 
     private LocalDateTime beginDate;
+    private LocalDateTime endDate;
 
 }

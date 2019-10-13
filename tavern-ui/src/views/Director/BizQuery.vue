@@ -602,6 +602,7 @@
                 this.delayLoading = false
                 this.delayDialogVisible = false
                 this.$message({message: '操作成功', type: 'success'})
+                this.findPage(null)
               }).catch((res) => {
                 this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
                 this.delayLoading = false

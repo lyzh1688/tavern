@@ -1,33 +1,20 @@
 package com.tuoyou.tavern.crm.workflow.entity;
 
-public class WorkFlowDefNodeExtAttr {
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@TableName("workflow_def_node_ext_attr")
+public class WorkFlowDefNodeExtAttr extends Model<WorkFlowDefNodeExtAttr> {
+    @TableId
     private String nodeId;
 
     private String restDays;
 
     private String nextNodeTriggerHandler;
 
-    public String getNodeId() {
-        return nodeId;
-    }
-
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId == null ? null : nodeId.trim();
-    }
-
-    public String getRestDays() {
-        return restDays;
-    }
-
-    public void setRestDays(String restDays) {
-        this.restDays = restDays == null ? null : restDays.trim();
-    }
-
-    public String getNextNodeTriggerHandler() {
-        return nextNodeTriggerHandler;
-    }
-
-    public void setNextNodeTriggerHandler(String nextNodeTriggerHandler) {
-        this.nextNodeTriggerHandler = nextNodeTriggerHandler == null ? null : nextNodeTriggerHandler.trim();
-    }
 }

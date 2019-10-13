@@ -12,7 +12,7 @@
     </resultMap>
     <insert id="insertWorkFlowEvent">
       insert into workflow_event (event_id, graph_id, cur_node_id,
-      event_owner, cur_operator,cur_operator_name, begin_date
+      event_owner, cur_operator,cur_operator_name, begin_date,end_date
       )
         select
         #{event.eventId},
@@ -21,8 +21,10 @@
         #{event.eventOwner},
         #{event.curOperator},
         #{event.curOperatorName},
-        #{event.beginDate}
-        from workflow_def_graph_business_rel t1,workflow_def_graph t2,workflow_def_edge t3
+        #{event.beginDate},
+        DATE_ADD(#{event.beginDate},INTERVAL t4.rest_days DAY)
+        from workflow_def_graph_business_rel t1,workflow_def_graph t2,workflow_def_edge t3 left join workflow_def_node_ext_attr t4
+        on t3.target_node = t4.node_id
         where t1.graph_id = t2.graph_id
         and t2.root_node = t3.source_node
         and t1.business_id = #{businessId}
@@ -44,7 +46,7 @@
         T3.WEIXIN_NAME weixinName,
         T4.BUSINESS_NAME businessName,
         DATEDIFF(NOW(),T7.begin_date) cost,
-        DATEDIFF(date_add(T7.begin_date,INTERVAL T9.rest_days day),NOW()) maxLeftDay,
+        DATEDIFF(T7.end_date,NOW()) maxLeftDay,
         T1.BUSINESS_TAG businessTag,
         T7.begin_date createDate,
         T3.CUSTOM_LEVEL customLevel,
@@ -131,7 +133,7 @@
         T3.WEIXIN_NAME weixinName,
         T4.BUSINESS_NAME businessName,
         DATEDIFF(NOW(),T7.begin_date) cost,
-        DATEDIFF(date_add(T7.begin_date,INTERVAL T9.rest_days day),NOW()) maxLeftDay,
+        DATEDIFF(T7.end_date,NOW()) maxLeftDay,
         T1.BUSINESS_TAG businessTag,
         T1.CREATE_DATE createDate,
         T3.CUSTOM_LEVEL customLevel,

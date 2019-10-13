@@ -55,6 +55,8 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
     private WorkFlowDefNodeService workFlowDefNodeService;
     @Autowired
     private HrmUserDictService hrmUserDictService;
+    @Autowired
+    private WorkFlowDefNodeExtAttrService workFlowDefNodeExtAttrService;
 
     @Autowired
     private CrmCompanyBusinessInfoService crmCompanyBusinessInfoService;
@@ -154,20 +156,20 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         return this.baseMapper.selectAllWorkEvent(page, myToDoListDTO);
     }
 
+    @Transactional
     @TargetDataSource(name = "workflow")
     @Override
     public void delayWorkEvent(WorkFlowDelayNotesDTO workFlowDelayNotesDTO) {
         String logId = UUIDUtil.randomUUID32();
-        try {
-            WorkFlowLogMessage workFlowLogMessage = new WorkFlowLogMessage();
-            workFlowLogMessage.setLogId(logId);
-            workFlowLogMessage.setOperator(workFlowDelayNotesDTO.getOperator());
-            workFlowLogMessage.setOperatorName(workFlowDelayNotesDTO.getOperatorName());
-            workFlowLogMessage.setCreateTime(DateUtils.formatDateTime(LocalDateTime.now(), DateUtils.DEFAULT_DATETIME_FORMATTER));
-            workFlowLogMessage.setMessage(workFlowDelayNotesDTO.getMessage());
-            workFlowLogMessage.setEventId(workFlowDelayNotesDTO.getEventId());
-            this.workFlowLogMessageService.save(workFlowLogMessage);
-            CrmCompanyBusiness crmCompanyBusiness = this.crmCompanyBusinessInfoService.getOne(Wrappers.<CrmCompanyBusiness>query().lambda()
+        WorkFlowLogMessage workFlowLogMessage = new WorkFlowLogMessage();
+        workFlowLogMessage.setLogId(logId);
+        workFlowLogMessage.setOperator(workFlowDelayNotesDTO.getOperator());
+        workFlowLogMessage.setOperatorName(workFlowDelayNotesDTO.getOperatorName());
+        workFlowLogMessage.setCreateTime(DateUtils.formatDateTime(LocalDateTime.now(), DateUtils.DEFAULT_DATETIME_FORMATTER));
+        workFlowLogMessage.setMessage(workFlowDelayNotesDTO.getMessage());
+        workFlowLogMessage.setEventId(workFlowDelayNotesDTO.getEventId());
+        this.workFlowLogMessageService.save(workFlowLogMessage);
+            /*CrmCompanyBusiness crmCompanyBusiness = this.crmCompanyBusinessInfoService.getOne(Wrappers.<CrmCompanyBusiness>query().lambda()
                     .eq(CrmCompanyBusiness::getBusinessId, workFlowDelayNotesDTO.getBusinessId())
                     .eq(CrmCompanyBusiness::getCompanyId, workFlowDelayNotesDTO.getCompanyId()));
             if (Objects.nonNull(crmCompanyBusiness)) {
@@ -176,12 +178,10 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
                 this.crmCompanyBusinessInfoService.update(crmCompanyBusiness, Wrappers.<CrmCompanyBusiness>query().lambda()
                         .eq(CrmCompanyBusiness::getBusinessId, workFlowDelayNotesDTO.getBusinessId())
                         .eq(CrmCompanyBusiness::getCompanyId, workFlowDelayNotesDTO.getCompanyId()));
-            }
-        } catch (Exception e) {
-            this.workFlowLogMessageService.removeById(logId);
-            throw e;
-        }
-
+            }*/
+        WorkFlowEvent workFlowEvent = this.workFlowEventService.getById(workFlowDelayNotesDTO.getEventId());
+        workFlowEvent.setEndDate(workFlowEvent.getEndDate().plusDays(workFlowDelayNotesDTO.getDelayDays()));
+        this.workFlowEventService.updateById(workFlowEvent);
     }
 
     @Transactional
@@ -192,15 +192,23 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         //更新eventhis状态
         //判断是否有dependency，发起下一个任务
         WorkFlowEvent workFlowEvent = this.getById(workFlowNextNodeDTO.getEventId());
+        WorkFlowDefNodeExtAttr workFlowDefNodeExtAttr = this.workFlowDefNodeExtAttrService.getById(workFlowNextNodeDTO.getCurNodeId());
+        Integer restDays = StringUtils.isEmpty(workFlowDefNodeExtAttr.getRestDays()) ? 2 : Integer.parseInt(workFlowDefNodeExtAttr.getRestDays());
+        LocalDateTime beginDate = workFlowEvent.getBeginDate();
         workFlowEvent.setCurOperator(workFlowNextNodeDTO.getCurOperator());
         workFlowEvent.setCurOperatorName(workFlowNextNodeDTO.getCurOperatorName());
         workFlowEvent.setCurNodeId(workFlowNextNodeDTO.getCurNodeId());
         workFlowEvent.setBeginDate(LocalDateTime.now());
+        if (restDays != null) {
+            workFlowEvent.setEndDate(LocalDateTime.now().plusDays(restDays));
+        }
         this.updateById(workFlowEvent);
+
 
         WorkFlowEventHistory curWorkFlowEventHistory = new WorkFlowEventHistory();
         curWorkFlowEventHistory.setEventId(workFlowEvent.getEventId());
-        curWorkFlowEventHistory.setBeginDate(LocalDateTime.now());
+        curWorkFlowEventHistory.setBeginDate(beginDate);
+        curWorkFlowEventHistory.setEndDate(LocalDateTime.now());
         curWorkFlowEventHistory.setOperator(workFlowNextNodeDTO.getCurOperator());
         curWorkFlowEventHistory.setGraphId(workFlowEvent.getGraphId());
         curWorkFlowEventHistory.setNodeId(workFlowNextNodeDTO.getPreNodeId());
