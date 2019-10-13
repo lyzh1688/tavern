@@ -16,29 +16,29 @@
   </resultMap>
   <select id="selectWorkFlowLogMessagePage" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowLogVO">
     select
-    log_id logId,
-    operator,
-    operator_name operatorName,
-    create_time createTime,
-    message,
-    event_id eventId,
-    has_attachment hasAttachment,
-    attachments_path attachmentsPath,
-    has_refund hasRefund,
-    refund_fee refundFee
-    from workflow_log_message
+    t1.log_id logId,
+    t1.operator,
+    t1.operator_name operatorName,
+    t1.create_time createTime,
+    t1.message,
+    t1.event_id eventId,
+    t1.has_attachment hasAttachment,
+    t1.attachments_path attachmentsPath,
+    t1.has_refund hasRefund,
+    t1.refund_fee refundFee,t2.`name` nodeName
+    from workflow_log_message t1 LEFT JOIN workflow_def_node t2 on t1.node_id = t2.node_id
     <where>
-      event_id = #{eventId}
+      t1.event_id = #{eventId}
       <if test="operator != null ">
         <foreach collection="operator" index="index" item="item" open=" and (" close=" )" separator="or">
-          operator = #{item}
+          t1.operator = #{item}
         </foreach>
       </if>
       <if test="curNodeId != null and curNodeId != ''">
-        and node_id = #{curNodeId}
+        and t1.node_id = #{curNodeId}
       </if>
     </where>
-    order by create_time desc
+    order by t1.create_time desc
   </select>
   <select id="selectWorkFlowGraphLog" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowGraphLog">
   select t4.`name`,

@@ -158,6 +158,9 @@
               prop="operator" header-align="center" align="center" label="操作人Id" v-if="false">
             </el-table-column>
             <el-table-column
+              prop="nodeName" header-align="center" align="center" label="节点名称">
+            </el-table-column>
+            <el-table-column
               prop="operatorName" header-align="center" align="center" label="操作人">
             </el-table-column>
             <el-table-column
@@ -172,7 +175,7 @@
             <el-table-column
               prop="attachmentsPath" header-align="center" align="center" label="附件地址">
               <template slot-scope="scope1">
-                <a :href="scope1.row.attachmentsPath" target="_blank">{{scope1.row.attachmentsPath}}</a>
+                <a :href="scope1.row.attachmentsPath" target="_blank">{{(scope1.row.attachmentsPath != '' && scope1.row.attachmentsPath != null)?'点击查看附件':''}}</a>
               </template>
             </el-table-column>
           </el-table>
@@ -359,6 +362,9 @@
               prop="operator" header-align="center" align="center" label="操作人Id" v-if="false">
             </el-table-column>
             <el-table-column
+              prop="nodeName" header-align="center" align="center" label="节点名称">
+            </el-table-column>
+            <el-table-column
               prop="operatorName" header-align="center" align="center" label="操作人">
             </el-table-column>
             <el-table-column
@@ -373,7 +379,7 @@
             <el-table-column
               prop="attachmentsPath" header-align="center" align="center" label="附件地址">
               <template slot-scope="scope1">
-                <a :href="scope1.row.attachmentsPath" target="_blank">{{scope1.row.attachmentsPath}}</a>
+                <a :href="scope1.row.attachmentsPath" target="_blank">{{(scope1.row.attachmentsPath != '' && scope1.row.attachmentsPath != null)?'点击查看附件':''}}</a>
               </template>
             </el-table-column>
           </el-table>

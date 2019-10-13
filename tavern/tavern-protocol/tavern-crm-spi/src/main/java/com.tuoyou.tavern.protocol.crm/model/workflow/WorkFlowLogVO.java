@@ -20,4 +20,5 @@ public class WorkFlowLogVO {
     private String attachmentsPath;
     private String hasRefund;
     private BigDecimal refundFee;
+    private String nodeName;
 }
