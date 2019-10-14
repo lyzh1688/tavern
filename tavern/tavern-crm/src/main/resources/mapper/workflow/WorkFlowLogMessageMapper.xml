@@ -44,16 +44,33 @@
   select t4.`name`,
   t1.node_id nodeId,
   t1.operator,
-  t2.source_node sourceNode,
-  t2.target_node targetNode,
+  t1.node_id sourceNode,
+  t1.next_node_id targetNode,
   t3.root_node rootNode
-  from workflow_event_history t1,workflow_def_edge t2,workflow_def_graph t3,workflow_def_node t4
-  where t1.graph_id = t2.graph_id
+  from workflow_event_history t1,workflow_def_graph t3,workflow_def_node t4
+  where
+   t1.node_id = t4.node_id
+  and t1.graph_id = t3.graph_id
+  and t1.event_id = #{eventId}
+  order by t3.root_node
+  </select>
+  <select id="selectWorkFlowGraphLog1" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowGraphLog">
+  select t4.`name`,
+  t1.node_id nodeId,
+  t1.operator,
+--   t2.source_node sourceNode,
+--   t2.target_node targetNode,
+  t1.node_id sourceNode,
+  t1.next_node_id targetNode,
+  t3.root_node rootNode
+  from workflow_event_history t1,workflow_def_graph t3,workflow_def_node t4
+  where
+--   t1.graph_id = t2.graph_id
   and t1.node_id = t4.node_id
   and t1.graph_id = t3.graph_id
-  and t2.graph_id = t3.graph_id
-  and t1.node_id = t2.source_node
-  and t1.next_node_id = t2.target_node
+--   and t2.graph_id = t3.graph_id
+--   and t1.node_id = t2.source_node
+--   and t1.next_node_id = t2.target_node
   and t1.event_id = #{eventId}
   order by t3.root_node
   </select>

@@ -817,11 +817,11 @@
               request.handlerId = this.chosenHandler.id
               request.handlerName = this.chosenHandler.name
               request.preNodeId = this.chosenHandler.preNodeId
-              console.log(JSON.stringify(request))
               this.$api.workflow.drawBack(request).then((res) => {
                 this.drawBackEditLoading = false
                 this.$message({message: '操作成功', type: 'success'})
                 this.drawBackDialogVisible = false
+                this.findPage(null)
               }).catch((res) => {
                 this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
                 this.drawBackEditLoading = false

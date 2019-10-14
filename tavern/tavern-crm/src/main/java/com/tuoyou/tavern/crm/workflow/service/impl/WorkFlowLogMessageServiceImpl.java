@@ -166,6 +166,7 @@ public class WorkFlowLogMessageServiceImpl extends ServiceImpl<WorkFlowLogMessag
         List<WorkFLowEdges> edges = workFlowGraphLogList.stream()
                 .map(workFlowGraphLog -> new WorkFLowEdges(workFlowGraphLog.getSourceNode(), workFlowGraphLog.getTargetNode()))
                 .filter(workFLowEdges -> StringUtils.isNoneEmpty(workFLowEdges.getTarget()))
+                .distinct()
                 .collect(Collectors.toList());
         return new WorkFlowGraphLogVO(nodes, edges);
     }

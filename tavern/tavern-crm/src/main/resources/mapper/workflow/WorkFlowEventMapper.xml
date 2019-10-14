@@ -114,7 +114,7 @@
                 and T8.name != '结束'
             </if>
         </where>
-        ORDER BY T7.begin_date desc
+        ORDER BY DATEDIFF(T7.end_date,NOW())
     </select>
     <select id="selectAllWorkEvent" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO">
         SELECT
@@ -200,7 +200,7 @@
                 and T8.name != '结束'
             </if>
         </where>
-        order by T1.CREATE_DATE desc
+        order by DATEDIFF(T7.end_date,NOW())
     </select>
     <select id="selectPreEdge" resultType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowNodeEdge">
         SELECT t1.next_node_id preNodeId,t1.node_id curNodeId,t2.role FROM workflow_event_history t1,workflow_def_node t2
