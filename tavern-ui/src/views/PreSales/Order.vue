@@ -25,6 +25,8 @@
       </el-table-column>
       <el-table-column prop="payableAmt" label="实付金额" header-align="center" align="center">
       </el-table-column>
+      <el-table-column prop="orderSource" label="订单来源" header-align="center" align="center">
+      </el-table-column>
       <el-table-column label="操作" header-align="center" align="center" width="500"
                        v-if="sys_presales_order_edit || sys_presales_order_dtl">
         <template slot-scope="scope">
@@ -57,6 +59,13 @@
         </el-form-item>
         <el-form-item label="实付金额" prop="payableAmt" label-width="100px">
           <el-input v-model="dataForm.payableAmt" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="订单来源" prop="orderSource" label-width="100px">
+          <el-select v-model="dataForm.orderSource" clearable auto-complete="off" placeholder="请选择订单来源" style="float: left">
+            <el-option label="烁翼旗舰店" value='烁翼旗舰店'></el-option>
+            <el-option label="咔嗒旗舰店" value='咔嗒旗舰店'></el-option>
+            <el-option label="美臻明旗舰店" value='美臻明旗舰店'></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
@@ -140,6 +149,7 @@
           orderDate: '',
           receivableAmt: '',
           payableAmt: '',
+          orderSource: '',
         },
         sys_presales_order_edit: false,
         sys_presales_order_dtl: false,
@@ -201,6 +211,7 @@
           orderDate: '',
           receivableAmt: '',
           payableAmt: '',
+          orderSource: '',
         }
       },
       // 显示编辑界面
@@ -212,7 +223,6 @@
       },
       // 编辑
       submitForm: function () {
-        alert(1)
         if (this.dataForm.payableAmt > this.dataForm.receivableAmt) {
           this.$message({message: '实付金额不能大于应付金额', type: 'warn'});
           return;

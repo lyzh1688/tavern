@@ -114,10 +114,8 @@
         </el-form-item>
         <el-form-item label="纳税类型" label-width="100px" prop="taxType">
           <el-select v-model="dataForm.taxType" clearable auto-complete="off" placeholder="请选择纳税类型" style="float: left">
-            <el-option label="纳税类型1" value='0'></el-option>
-            <el-option label="纳税类型2" value='1'></el-option>
-            <el-option label="纳税类型3" value='2'></el-option>
-            <el-option label="纳税类型4" value='3'></el-option>
+            <el-option label="小规模纳税人" value='0'></el-option>
+            <el-option label="一般纳税人" value='1'></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="请选择地区" label-width="100px" prop="area">
@@ -135,10 +133,8 @@
         <el-form-item label="金税盘种类" label-width="100px" prop="financeDiskType">
           <el-select v-model="dataForm.financeDiskType" clearable auto-complete="off" placeholder="请选择金税盘种类"
                      style="float: left">
-            <el-option label="金税1" value='0'></el-option>
-            <el-option label="金税2" value='1'></el-option>
-            <el-option label="金税3" value='2'></el-option>
-            <el-option label="金税4" value='3'></el-option>
+            <el-option label="百旺" value='0'></el-option>
+            <el-option label="航天" value='1'></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="税率" label-width="100px" prop="taxRate">
@@ -421,24 +417,16 @@
       }, handleTaxType(val) {
         switch (val) {
           case '0':
-            return '纳税类型1';
+            return '小规模纳税人';
           case '1':
-            return '纳税类型2';
-          case '2':
-            return '纳税类型3';
-          case '3':
-            return '纳税类型4';
+            return '一般纳税人';
         }
       }, handleFinanceDisType(val) {
         switch (val) {
           case '0':
-            return '金税1';
+            return '百旺';
           case '1':
-            return '金税2';
-          case '2':
-            return '金税3';
-          case '3':
-            return '金税4';
+            return '航天';
         }
       }
     },

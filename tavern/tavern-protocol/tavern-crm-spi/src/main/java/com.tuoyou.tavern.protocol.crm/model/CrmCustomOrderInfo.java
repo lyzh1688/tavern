@@ -23,4 +23,6 @@ public class CrmCustomOrderInfo extends Model<CrmCustomOrderInfo> {
 
     private BigDecimal payableAmt;
 
+    private String orderSource;
+
 }

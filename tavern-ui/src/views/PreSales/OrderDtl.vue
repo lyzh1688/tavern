@@ -105,7 +105,7 @@
                      remote
                      clearable
                      :remote-method="remoteCompanyDict"
-                     placeholder="请输入关联公司"
+                     placeholder="非公司注册必填"
                      no-data-text="无匹配数据"
                      @change="linkCompanyDictChange"
                      :loading="remoteCompanyDictLoading"
@@ -317,9 +317,9 @@
           business: [
             {required: true, message: '请选择业务类型', /*trigger: 'change'*/}
           ],
-          company: [
-            {required: true, message: '请选择关联公司', /*trigger: 'change'*/}
-          ],
+          /*company: [
+            {required: true, message: '请选择关联公司', /!*trigger: 'change'*!/}
+          ],*/
           owner: [
             {required: true, message: '请选择对接人员', /*trigger: 'change'*/}
           ],
@@ -531,6 +531,11 @@
           return this.dataForm.business == item.id;
         })
         let valid = true;
+        if(label.name != '公司注册' &&　(this.dataForm.company == null || this.dataForm.company == '')){
+          this.$message({message: '请选择关联公司信息！', type: 'error'})
+          return
+        }
+
         switch (label.name) {
           case "代理记账":
             this.$refs.dljzForm.validate((bizValid) => {
