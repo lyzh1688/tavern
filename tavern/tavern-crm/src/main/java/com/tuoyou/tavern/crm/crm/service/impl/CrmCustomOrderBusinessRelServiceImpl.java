@@ -107,6 +107,7 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
                     this.crmOrderGszcDetailService.save(crmOrderGszcDetail);
                     break;
             }
+            if(StringUtils.isNoneEmpty(crmOrderBusinessRelDTO.getCompanyId()))
             this.crmCompanyBusinessInfoService.save(crmCompanyBusiness);
         } catch (Exception e) {
             log.error("CrmCustomOrderBusinessRelServiceImpl-->saveOrderBusiness: {}", e.getMessage());

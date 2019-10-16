@@ -55,11 +55,11 @@
         T7.cur_operator_name curOperatorName
         FROM
         crm.CRM_CUSTOM_ORDER_INFO T,
-        crm.CRM_ORDER_BUSINESS_REL T1,
-        crm.CRM_COMPANY_INFO T2,
+        crm.CRM_ORDER_BUSINESS_REL T1
+        left  join  crm.CRM_COMPANY_INFO T2 on T1.COMPANY_ID = T2.COMPANY_ID
+        left  join crm.CRM_COMPANY_BUSINESS T5 on T1.COMPANY_ID = T5.COMPANY_ID  AND T1.BUSINESS_ID = T5.BUSINESS_ID ,
         crm.CRM_CUSTOM_BASIC_INFO T3,
         crm.CRM_BUSINESS_DICT T4,
-        crm.CRM_COMPANY_BUSINESS T5,
         work_flow.workflow_def_graph_business_rel T6,
         work_flow.workflow_event T7,
         work_flow.workflow_def_node T8,
@@ -67,11 +67,8 @@
 
         <where>
             T.ORDER_ID = T1.ORDER_ID
-            AND T1.COMPANY_ID = T2.COMPANY_ID
             AND T.CUSTOM_ID = T3.CUSTOM_ID
             AND T1.BUSINESS_ID = T4.BUSINESS_ID
-            AND T1.BUSINESS_ID = T5.BUSINESS_ID
-            AND T1.COMPANY_ID = T5.COMPANY_ID
             AND T1.BUSINESS_ID = T6.business_id
             AND T7.cur_node_id = T8.node_id
             AND T1.EVENT_ID = T7.event_id
@@ -135,18 +132,18 @@
         DATEDIFF(NOW(),T7.begin_date) cost,
         DATEDIFF(T7.end_date,NOW()) maxLeftDay,
         T1.BUSINESS_TAG businessTag,
-        T1.CREATE_DATE createDate,
+        T7.begin_date createDate,
         T3.CUSTOM_LEVEL customLevel,
         T8.name curNodeName,
         T8.node_id curNodeId,
         T7.cur_operator_name curOperatorName
         FROM
         crm.CRM_CUSTOM_ORDER_INFO T,
-        crm.CRM_ORDER_BUSINESS_REL T1,
-        crm.CRM_COMPANY_INFO T2,
+        crm.CRM_ORDER_BUSINESS_REL T1
+        left  join  crm.CRM_COMPANY_INFO T2 on T1.COMPANY_ID = T2.COMPANY_ID
+        left  join crm.CRM_COMPANY_BUSINESS T5 on T1.COMPANY_ID = T5.COMPANY_ID  AND T1.BUSINESS_ID = T5.BUSINESS_ID ,
         crm.CRM_CUSTOM_BASIC_INFO T3,
         crm.CRM_BUSINESS_DICT T4,
-        crm.CRM_COMPANY_BUSINESS T5,
         work_flow.workflow_def_graph_business_rel T6,
         work_flow.workflow_event T7,
         work_flow.workflow_def_node T8,
@@ -154,11 +151,8 @@
 
         <where>
             T.ORDER_ID = T1.ORDER_ID
-            AND T1.COMPANY_ID = T2.COMPANY_ID
             AND T.CUSTOM_ID = T3.CUSTOM_ID
             AND T1.BUSINESS_ID = T4.BUSINESS_ID
-            AND T1.BUSINESS_ID = T5.BUSINESS_ID
-            AND T1.COMPANY_ID = T5.COMPANY_ID
             AND T1.BUSINESS_ID = T6.business_id
             AND T7.cur_node_id = T8.node_id
             AND T1.EVENT_ID = T7.event_id
