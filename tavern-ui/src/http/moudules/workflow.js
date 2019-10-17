@@ -36,7 +36,7 @@ export const saveLog = (formData) => {
   })
 }
 // 查询下一节点信息
-export const findNextNode = (params) => {
+export const  findNextNode = (params) => {
   return axios({
     url: '/workflow/def/nextNode',
     method: 'get',

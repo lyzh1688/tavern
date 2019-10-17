@@ -852,7 +852,7 @@
             });
           }, 200);
         } else {
-          this.selectedNextNodeDict = [];
+          this.selectedNextNodeDict = this.nextNodeDict;
         }
       }, linkChange: function (val) {
 

@@ -18,6 +18,11 @@
           <el-input v-model="dtlForm.payableAmt" :readonly=true></el-input>
         </el-form-item>
       </el-form>
+      <el-form :inline="true" :model="orderSource" :size="size" align="left">
+        <el-form-item label="订单来源" label-width="100px">
+          <el-input v-model="dtlForm.orderSource" :readonly=true></el-input>
+        </el-form-item>
+      </el-form>
       <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item>
           <kt-button icon="fa fa-add" label="添加关联业务" v-if="sys_presales_business_add" type="primary"
@@ -105,7 +110,7 @@
                      remote
                      clearable
                      :remote-method="remoteCompanyDict"
-                     placeholder="非公司注册必填"
+                     placeholder="请填写关联公司"
                      no-data-text="无匹配数据"
                      @change="linkCompanyDictChange"
                      :loading="remoteCompanyDictLoading"
@@ -300,6 +305,7 @@
           orderDate: '',
           receivableAmt: '',
           payableAmt: '',
+          orderSource:''
         },
         columns: [],
         filterColumns: [],
@@ -531,10 +537,10 @@
           return this.dataForm.business == item.id;
         })
         let valid = true;
-        if(label.name != '公司注册' &&　(this.dataForm.company == null || this.dataForm.company == '')){
+       /* if(label.name != '公司注册' &&　(this.dataForm.company == null || this.dataForm.company == '')){
           this.$message({message: '请选择关联公司信息！', type: 'error'})
           return
-        }
+        }*/
 
         switch (label.name) {
           case "代理记账":

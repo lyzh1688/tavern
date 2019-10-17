@@ -161,9 +161,9 @@
           weixinAccnt: [
             {required: true, message: '请输入微信号', trigger: 'blur'}
           ],
-          wangwangAccnt: [
+      /*    wangwangAccnt: [
             {required: true, message: '请输入旺旺号', trigger: 'blur'}
-          ],
+          ],*/
           contactPerson: [
             {required: true, message: '请输入联系人', trigger: 'blur'}
           ],

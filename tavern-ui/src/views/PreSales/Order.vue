@@ -65,6 +65,8 @@
             <el-option label="烁翼旗舰店" value='烁翼旗舰店'></el-option>
             <el-option label="咔嗒旗舰店" value='咔嗒旗舰店'></el-option>
             <el-option label="美臻明旗舰店" value='美臻明旗舰店'></el-option>
+            <el-option label="银行对公账户" value='银行对公账户'></el-option>
+            <el-option label="支付宝" value='支付宝'></el-option>
           </el-select>
         </el-form-item>
       </el-form>

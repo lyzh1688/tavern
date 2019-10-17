@@ -854,10 +854,9 @@
             });
           }, 200);
         } else {
-          this.selectedNextNodeDict = [];
+          this.selectedNextNodeDict = this.nextNodeDict;
         }
       }, linkChange: function (val) {
-
         if (val != undefined && val != '') {
           let nodeName = this.selectedNextNodeDict.find(item => {
             return val == item.nodeId;
