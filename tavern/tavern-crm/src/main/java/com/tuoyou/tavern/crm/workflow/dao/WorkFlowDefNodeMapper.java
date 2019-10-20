@@ -14,5 +14,7 @@ public interface WorkFlowDefNodeMapper extends BaseMapper<WorkFlowDefNode> {
 
     List<WorkFlowDefNodeVO> selectWorkFlowDefNode(@Param("query") WorkFlowNodeQueryDTO workFlowNodeQueryDTO);
 
+    List<WorkFlowDefNodeVO> selectWorkFlowRootNextNode(@Param("businessId") String businessId);
+
 
 }

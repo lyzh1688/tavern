@@ -54,6 +54,12 @@ public class WorkFlowDefNodeServiceImpl extends ServiceImpl<WorkFlowDefNodeMappe
 
     @TargetDataSource(name = "workflow")
     @Override
+    public List<WorkFlowDefNodeVO> getWorkFlowRootNextNode(String businessId) {
+        return this.baseMapper.selectWorkFlowRootNextNode(businessId);
+    }
+
+    @TargetDataSource(name = "workflow")
+    @Override
     public Collection<WorkFlowDefNode> getList(List<String> nodeList) {
         return this.workFlowDefNodeService.listByIds(nodeList);
     }

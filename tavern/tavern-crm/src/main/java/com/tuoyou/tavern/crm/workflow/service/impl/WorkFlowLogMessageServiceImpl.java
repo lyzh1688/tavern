@@ -113,7 +113,7 @@ public class WorkFlowLogMessageServiceImpl extends ServiceImpl<WorkFlowLogMessag
     public WorkFlowGraphLogVO getWorkFlowGraphLog(String eventId) {
         List<WorkFlowGraphLog> workFlowGraphLogList = this.baseMapper.selectWorkFlowGraphLog(eventId);
         Map<String, List<WorkFlowGraphLog>> workLogMap = workFlowGraphLogList.stream()
-                .collect(Collectors.groupingBy(WorkFlowGraphLog::getTargetNode));
+                .collect(Collectors.groupingBy(WorkFlowGraphLog::getSourceNode));
         List<String> idList = workFlowGraphLogList.parallelStream()
                 .flatMap(log -> {
                     if (StringUtils.isNoneEmpty(log.getTargetNode())) {

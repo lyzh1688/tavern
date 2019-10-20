@@ -17,7 +17,12 @@
         select
         #{event.eventId},
         t2.graph_id,
-        t3.target_node,
+        <if test="event.curNodeId != null and event.curNodeId != ''">
+            #{event.curNodeId},
+        </if>
+        <if test="event.curNodeId == null or event.curNodeId == ''">
+             t3.target_node,
+        </if>
         #{event.eventOwner},
         #{event.curOperator},
         #{event.curOperatorName},
@@ -28,7 +33,10 @@
         where t1.graph_id = t2.graph_id
         and t2.root_node = t3.source_node
         and t1.business_id = #{businessId}
-  </insert>
+        <if test="event.curNodeId != null and event.curNodeId != ''">
+            and t3.target_node =  #{event.curNodeId}
+        </if>
+    </insert>
     <select id="selectMyPendingWork" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO">
         SELECT
         T.ORDER_ID orderId,

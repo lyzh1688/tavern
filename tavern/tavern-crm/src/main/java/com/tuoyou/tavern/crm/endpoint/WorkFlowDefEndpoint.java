@@ -6,6 +6,7 @@ import com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowNodeQueryDTO;
 import com.tuoyou.tavern.protocol.crm.response.WorkFlowDefNodeResponse;
 import com.tuoyou.tavern.protocol.hrm.spi.HrmUserDictService;
 import lombok.AllArgsConstructor;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +30,14 @@ public class WorkFlowDefEndpoint {
     @GetMapping("/nextNode")
     public WorkFlowDefNodeResponse getWorkFlowNode(WorkFlowNodeQueryDTO workFlowNodeQueryDTO) {
         return new WorkFlowDefNodeResponse(this.workFlowDefNodeService.getWorkFlowDefNode(workFlowNodeQueryDTO));
+    }
+
+    /**
+     * 查询ROOT节点
+     */
+    @GetMapping("/rootNextNode")
+    public WorkFlowDefNodeResponse getWorkFlowRootNextNode(@RequestParam(name = "businessId") String businessId) {
+        return new WorkFlowDefNodeResponse(this.workFlowDefNodeService.getWorkFlowRootNextNode(businessId));
     }
 
 

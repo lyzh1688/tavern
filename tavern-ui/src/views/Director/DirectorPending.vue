@@ -868,7 +868,8 @@
           this.selectedNextNodeDict = this.nextNodeDict;
         }
       }, linkChange: function (val) {
-
+        this.nextOperatorShow = true;
+        this.nextForm.nextOperator = '';
         if (val != undefined && val != '') {
           let nodeName = this.selectedNextNodeDict.find(item => {
             return val == item.nodeId;
@@ -901,6 +902,7 @@
         this.chosenOperator = this.nextOperatorDict.find(item => {
           return val == item.id;
         })
+        this.$forceUpdate()
       }, handleDrawBackOperatorChange: function (val) {
         this.chosenDrawbackOperator = this.nextDrawBackOperatorDict.find(item => {
           return val == item.id;

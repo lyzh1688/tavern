@@ -21,6 +21,8 @@ public interface WorkFlowDefNodeService extends IService<WorkFlowDefNode> {
 
     List<WorkFlowDefNodeVO> getWorkFlowDefNode(WorkFlowNodeQueryDTO workFlowNodeQueryDTO);
 
+    List<WorkFlowDefNodeVO> getWorkFlowRootNextNode(String businessId);
+
     Collection<WorkFlowDefNode> getList(List<String> nodeList);
 
     WorkFlowDefNode getByNodeId(String nodeId);

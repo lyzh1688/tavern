@@ -18,7 +18,7 @@
           <el-input v-model="dtlForm.payableAmt" :readonly=true></el-input>
         </el-form-item>
       </el-form>
-      <el-form :inline="true" :model="orderSource" :size="size" align="left">
+      <el-form :inline="true" :model="dtlForm" :size="size" align="left">
         <el-form-item label="订单来源" label-width="100px">
           <el-input v-model="dtlForm.orderSource" :readonly=true></el-input>
         </el-form-item>
@@ -87,7 +87,7 @@
     <el-dialog :title="operation?'添加关联业务':'编辑关联业务'" width="50%" center :visible.sync="dialogVisible"
                :close-on-click-modal="false">
       <el-form :inline="true" :model="dataForm" align="left" ref="dataForm" :rules="dataFormRules">
-        <el-form-item label="业务类型" label-width="100px" prop="business">
+        <el-form-item label="业务类型" label-width="150px" prop="business">
           <el-select v-model="dataForm.business"
                      filterable
                      remote
@@ -121,7 +121,25 @@
                        :label="item.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="对接人员" label-width="100px" prop="owner">
+        <el-form-item label="异常处理方式" label-width="150px" prop="nextNode" v-if="showYccl">
+          <el-select v-model="dataForm.nextNode"
+                     filterable
+                     remote
+                     clearable
+                     :remote-method="remoteNextNodeDict"
+                     placeholder="请选择异常处理方式"
+                     no-data-text="无匹配数据/请检查是否配置相关流程"
+                     @change="linkNextNodeExchange"
+                     :loading="remoteNextNodeDictLoading"
+                     prop="nextNode"
+                     style="float: left">
+            <el-option v-for="item in selectedNextNodeDict"
+                       :key="item.nodeId"
+                       :value="item.nodeId"
+                       :label="item.name"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="对接人员" label-width="150px" prop="owner">
           <el-select v-model="dataForm.owner"
                      :disabled="ownerShow"
                      filterable
@@ -150,7 +168,7 @@
             <el-option label="否" value='0'></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="合作方" label-width="100px" prop="thirdParty">
+        <el-form-item label="合作方" label-width="150px" prop="thirdParty">
           <el-select v-model="dataForm.thirdParty"
                      :disabled="thirdPartyShow"
                      filterable
@@ -170,7 +188,7 @@
         <el-form-item label="支付合作方费用" label-width="150px" prop="thirdPartyFee">
           <el-input v-model="dataForm.thirdPartyFee" placeholder="请输入费用" :disabled="thirdPartyShow"></el-input>
         </el-form-item>
-        <el-form-item label="前置任务" label-width="100px" prop="preEvent">
+        <el-form-item label="前置任务" label-width="150px" prop="preEvent">
           <el-select v-model="dataForm.preEvent"
                      filterable
                      remote
@@ -192,7 +210,7 @@
             <el-option label="投诉" value='投诉'></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="服务内容/备注" prop="remark" label-width="100px">
+        <el-form-item label="服务内容/备注" prop="remark" label-width="150px">
           <el-input v-model="dataForm.remark" auto-complete="off" style="width: 550px" placeholder="输入内容"></el-input>
         </el-form-item>
       </el-form>
@@ -245,7 +263,7 @@
         </el-form-item>
         <el-form-item label="缴款人数" label-width="150px" prop="employeeNum">
           <el-input v-model="djfwForm.employeeNum" placeholder="请输入缴款人数" :disabled="djfwConfirmNum"
-                    readonly="true"></el-input>
+                    :readonly=true></el-input>
         </el-form-item>
         <el-form-item label="服务结束时间" label-width="150px" prop="endDate">
           <el-date-picker v-model="djfwForm.endDate" type="datetime" :disabled="true"></el-date-picker>
@@ -305,7 +323,7 @@
           orderDate: '',
           receivableAmt: '',
           payableAmt: '',
-          orderSource:''
+          orderSource: ''
         },
         columns: [],
         filterColumns: [],
@@ -386,6 +404,7 @@
         dataForm: {
           business: '',
           company: '',
+          nextNode: '',
           owner: '',
           needThirdParty: '',
           thirdParty: '',
@@ -402,22 +421,27 @@
         selectedBizDict: [],
         companyDict: [],
         ownerDict: [],
+        nextNodeDict: [],
         selectedCompanyDict: [],
         thirdPartyDict: [],
         selectedPartyDict: [],
         preEventDict: [],
         selectedPreEventDict: [],
+        selectedNextNodeDict: [],
         remoteBusinessDictLoading: false,
         remoteCompanyDictLoading: false,
+        remoteNextNodeDictLoading: false,
         remotePreEventDictLoading: false,
         remoteThirdPartyDictLoading: false,
         ownerShow: true,
         thirdPartyShow: true,
         djfwConfirmNum: true,
+        showYccl: false,
         ownerName: '',
         sys_presales_business_add: false,
         sys_presales_business_del: false,
-        staffCnt: ''
+        staffCnt: '',
+        chosenNode: {}
 
       }
     }, created() {
@@ -466,6 +490,7 @@
           business: '',
           company: '',
           owner: '',
+          nextNode: '',
           needThirdParty: '',
           thirdParty: '',
           thirdPartyFee: '',
@@ -537,11 +562,10 @@
           return this.dataForm.business == item.id;
         })
         let valid = true;
-       /* if(label.name != '公司注册' &&　(this.dataForm.company == null || this.dataForm.company == '')){
-          this.$message({message: '请选择关联公司信息！', type: 'error'})
+        if (label.name == '异常业务' && (this.dataForm.nextNode == null || this.dataForm.nextNode == '')) {
+          this.$message({message: '请选择异常业务处理方式！', type: 'error'})
           return
-        }*/
-
+        }
         switch (label.name) {
           case "代理记账":
             this.$refs.dljzForm.validate((bizValid) => {
@@ -551,7 +575,7 @@
             break;
           case "公积金代缴":
             if (this.djfwForm.confirmNum != '0') {
-              if(this.djfwForm.employeeNum == '' || this.djfwForm.employeeNum == 0){
+              if (this.djfwForm.employeeNum == '' || this.djfwForm.employeeNum == 0) {
                 this.$message({message: '若公司人数已确认，需要录入员工信息！方可添加关联业务！', type: 'error'})
                 return
               }
@@ -563,7 +587,7 @@
             break;
           case "代缴社保":
             if (this.djfwForm.confirmNum != '0') {
-              if(this.djfwForm.employeeNum == '' || this.djfwForm.employeeNum == 0){
+              if (this.djfwForm.employeeNum == '' || this.djfwForm.employeeNum == 0) {
                 this.$message({message: '若公司人数已确认，需要录入员工信息！方可添加关联业务！', type: 'error'})
                 return
               }
@@ -592,6 +616,7 @@
             params.creatorName = sessionStorage.getItem("userName")
             params.ownerId = this.dataForm.owner
             params.owner = this.ownerName;
+            params.curNode = this.dataForm.nextNode;
 
             let dljzDetail = {}
             if (this.dljzForm.beginDate != '') {
@@ -695,6 +720,10 @@
           case "公司注册":
             this.showHelpRegister = true;
             break;
+          case "异常业务":
+            this.showYccl = true;
+            this.ownerShow = true;
+            break;
         }
       }, initBusinessDict: function () {
         this.$api.customer.findBizDict(null).then((res) => {
@@ -749,7 +778,31 @@
         }).catch((res) => {
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
         })
-      }, remotePreEventDict: function (param) {
+      }, initNextNodeDict: function (params) {
+        let nextNodeRequest = {};
+        nextNodeRequest.businessId = params
+        this.$api.workflow.findRootNextNode(nextNodeRequest).then((res) => {
+          this.nextNodeDict = res.data;
+          this.selectedNextNodeDict = res.data;
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+        })
+      },
+      remoteNextNodeDict: function (param) {
+        if (param != '') {
+          this.remoteNextNodeDictLoading = true;
+          setTimeout(() => {
+            this.remoteNextNodeDictLoading = false;
+            this.selectedNextNodeDict = this.nextNodeDict.filter(item => {
+              return item.name.toLowerCase()
+                .indexOf(param.toLowerCase()) > -1;
+            });
+          }, 200);
+        } else {
+          this.selectedNextNodeDict = this.nextNodeDict;
+        }
+      },
+      remotePreEventDict: function (param) {
         if (param != '') {
           this.remotePreEventDictLoading = true;
           setTimeout(() => {
@@ -784,6 +837,33 @@
           this.selectedPartyDict = this.thirdPartyDict;
         }
       }, linkChange: function (val) {
+        this.dataForm.company = ''
+        this.dataForm.owner = ''
+        this.dataForm.nextNode = ''
+        this.dataForm.needThirdParty = ''
+        this.dataForm.thirdParty = ''
+        this.dataForm.thirdPartyFee = ''
+        this.dataForm.preEvent = ''
+        this.dataForm.businessTag = ''
+        this.dataForm.remark = ''
+        this.dljzForm = {
+          isBegin: '',
+          months: '',
+          beginDate: '',
+          endDate: ''
+        }
+        this.djfwForm = {
+          confirmNum: '',
+          employeeNum: '',
+          months: '',
+          beginDate: '',
+          endDate: ''
+        }
+        this.gszcForm = {
+          absent: '',
+          regLocationType: '',
+        }
+        this.showYccl = false
         if (val != undefined && val != '') {
           this.ownerShow = false;
         } else {
@@ -791,9 +871,14 @@
         }
         let ownerRequest = {};
         ownerRequest.business = val;
-        this.$api.customer.findOwnerDict(ownerRequest).then((res) => {
-          this.ownerDict = res.data
-        })
+        this.ownerDict = []
+        if (val != 'BIZ_11') {
+          this.$api.customer.findOwnerDict(ownerRequest).then((res) => {
+            this.ownerDict = res.data
+          })
+        } else {
+          this.initNextNodeDict(val)
+        }
         this.selectBiz(val)
       }, linkCompanyDictChange: function (val) {
         this.staffCnt = ''
@@ -835,7 +920,30 @@
         this.ownerName = this.ownerDict.find(item => {
           return val == item.id;
         }).name
-      },// 时间格式化
+        this.$forceUpdate()
+      },
+      linkNextNodeExchange: function (val) {
+        this.dataForm.owner = ''
+        if (val != undefined && val != '') {
+          this.ownerShow = false;
+          let role = this.selectedNextNodeDict.find(item => {
+            return val == item.nodeId;
+          }).role
+          let nextOperatorRequest = {}
+          nextOperatorRequest.role = role
+          this.ownerDict = []
+          this.$api.workflow.findNextOperator(nextOperatorRequest).then((res) => {
+            this.ownerDict = res.data
+          })
+        } else {
+          this.ownerShow = true;
+        }
+        this.chosenNode = this.selectedNextNodeDict.find(item => {
+          return val == item.nodeId;
+        })
+
+      },
+      // 时间格式化
       dateFormat: function (date) {
         return formatDateSimple8(date)
       },

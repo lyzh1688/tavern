@@ -85,6 +85,7 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         workFlowEvent.setCurOperator(crmOrderBusinessRelDTO.getOwnerId());
         workFlowEvent.setEventOwner(crmOrderBusinessRelDTO.getOwnerId());
         workFlowEvent.setCurOperatorName(crmOrderBusinessRelDTO.getOwner());
+        workFlowEvent.setCurNodeId(crmOrderBusinessRelDTO.getCurNode());
         switch (crmOrderBusinessRelDTO.getBusinessId()) {
             case "BIZ_1":
                 workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getGjjsbdjDetail().getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
@@ -105,6 +106,7 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         startWorkFlowEventHistory.setBeginDate(workFlowEvent.getBeginDate());
         startWorkFlowEventHistory.setEndDate(LocalDateTime.now());
         startWorkFlowEventHistory.setOperator(crmOrderBusinessRelDTO.getCreatorId());
+        startWorkFlowEventHistory.setNextNodeId(crmOrderBusinessRelDTO.getCurNode());
         /*WorkFlowEventHistory curWorkFlowEventHistory = new WorkFlowEventHistory();
         curWorkFlowEventHistory.setEventId(eventId);
         curWorkFlowEventHistory.setBeginDate(workFlowEvent.getBeginDate());
@@ -209,7 +211,7 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         curWorkFlowEventHistory.setEventId(workFlowEvent.getEventId());
         curWorkFlowEventHistory.setBeginDate(beginDate);
         curWorkFlowEventHistory.setEndDate(LocalDateTime.now());
-        curWorkFlowEventHistory.setOperator(workFlowNextNodeDTO.getCurOperator());
+        curWorkFlowEventHistory.setOperator(workFlowNextNodeDTO.getOperator());
         curWorkFlowEventHistory.setGraphId(workFlowEvent.getGraphId());
         curWorkFlowEventHistory.setNodeId(workFlowNextNodeDTO.getPreNodeId());
         curWorkFlowEventHistory.setNextNodeId(workFlowNextNodeDTO.getCurNodeId());

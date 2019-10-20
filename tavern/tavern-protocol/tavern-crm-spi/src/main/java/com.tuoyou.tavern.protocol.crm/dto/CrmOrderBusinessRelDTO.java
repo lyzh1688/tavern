@@ -47,4 +47,6 @@ public class CrmOrderBusinessRelDTO {
     private GszcDetail gszcDetail;
 
     private String eventId;
+
+    private String curNode;
 }

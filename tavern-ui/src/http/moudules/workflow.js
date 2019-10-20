@@ -43,6 +43,14 @@ export const  findNextNode = (params) => {
     params
   })
 }
+// 查询ROOT下一节点信息
+export const  findRootNextNode = (params) => {
+  return axios({
+    url: '/workflow/def/rootNextNode',
+    method: 'get',
+    params
+  })
+}
 // 查询下一节点操作人信息
 export const findNextOperator = (params) => {
   return axios({

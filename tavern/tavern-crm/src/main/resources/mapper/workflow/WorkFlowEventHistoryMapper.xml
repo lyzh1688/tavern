@@ -5,6 +5,7 @@
     <id column="event_id" jdbcType="VARCHAR" property="eventId" />
     <result column="graph_id" jdbcType="VARCHAR" property="graphId" />
     <result column="node_id" jdbcType="VARCHAR" property="nodeId" />
+    <result column="next_node_id" jdbcType="VARCHAR" property="nextNodeId" />
     <result column="begin_date" jdbcType="TIMESTAMP" property="beginDate" />
     <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
     <result column="operator" jdbcType="VARCHAR" property="operator" />
@@ -26,6 +27,9 @@
         where t1.graph_id = t2.graph_id
         and t2.root_node = t3.source_node
         and t1.business_id = #{businessId}
+      <if test="event.nextNodeId != null and event.nextNodeId != ''">
+        and t3.target_node =  #{event.nextNodeId}
+      </if>
   </insert>
   <insert id="insertWorkFlowEventHistory">
       insert into workflow_event_history (event_id, graph_id, node_id,next_node_id,
