@@ -318,6 +318,7 @@
       return {
         size: 'small',
         dtlForm: {
+          id: '',
           customId: '',
           orderId: '',
           orderDate: '',
@@ -467,7 +468,7 @@
         if (data !== null) {
           this.pageRequest = data
         }
-        this.pageRequest.orderId = this.dtlForm.orderId;
+        this.pageRequest.orderId = this.dtlForm.id;
         this.loading = true
         let callback = res => {
           this.loading = false
@@ -527,7 +528,7 @@
       },
       handleDelete: function (pa) {
         let params = Object.assign({}, pa)
-        params.orderId = this.dtlForm.orderId
+        params.orderId = this.dtlForm.id
         params.creatorId = sessionStorage.getItem("userId")
         params.creatorName = sessionStorage.getItem("userName")
         params.ownerId = pa.owner
@@ -610,7 +611,7 @@
             let params = Object.assign({}, this.dataForm)
             params.businessId = this.dataForm.business
             params.thirdPartyId = this.dataForm.thirdParty
-            params.orderId = this.dtlForm.orderId
+            params.orderId = this.dtlForm.id
             params.companyId = this.dataForm.company
             params.creatorId = sessionStorage.getItem("userId")
             params.creatorName = sessionStorage.getItem("userName")
@@ -771,7 +772,7 @@
       },
       initPreEventDict: function () {
         let param = {};
-        param.orderId = this.dtlForm.orderId;
+        param.orderId = this.dtlForm.id;
         this.$api.customer.findPreEventDict(param).then((res) => {
           this.preEventDict = res.data;
           this.selectedPreEventDict = res.data;

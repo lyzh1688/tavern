@@ -15,6 +15,8 @@
     </div>
     <el-table :data="tableData" stripe stripe height="600" size="mini" style="width: 100%;"
               v-loading="loading">
+      <el-table-column prop="id" header-align="center" align="center" label="订单ID" v-if="false">
+      </el-table-column>
       <el-table-column prop="customId" header-align="center" align="center" label="客户ID" v-if="false">
       </el-table-column>
       <el-table-column prop="orderId" header-align="center" align="center" label="订单号">
@@ -47,8 +49,11 @@
     <el-dialog :title="operation?'新增':'编辑'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
       <el-form :model="dataForm" label-width="80px" :rules="dataFormRules" ref="dataForm" :size="size"
                label-position="right">
-        <el-form-item label="订单号" prop="orderId" :disable="editable" label-width="100px">
-          <el-input v-model="dataForm.orderId" auto-complete="off"></el-input>
+        <el-form-item label="订单ID" prop="id"  label-width="100px" v-if="false">
+          <el-input v-model="dataForm.id" auto-complete="off" ></el-input>
+        </el-form-item>
+        <el-form-item label="订单号" prop="orderId"  label-width="100px">
+          <el-input v-model="dataForm.orderId" auto-complete="off" ></el-input>
         </el-form-item>
         <el-form-item label="订单时间" prop="orderDate" label-width="100px">
           <el-date-picker v-model="dataForm.orderDate" type="datetime" placeholder="选择日期时间"
@@ -146,6 +151,7 @@
         },
         // 新增编辑界面数据
         dataForm: {
+          id: '',
           customId: '',
           orderId: '',
           orderDate: '',
@@ -207,7 +213,9 @@
       handleAdd: function () {
         this.dialogVisible = true
         this.operation = true
+        this.editable = false
         this.dataForm = {
+          id: '',
           customId: '',
           orderId: '',
           orderDate: '',
@@ -220,7 +228,7 @@
       handleEdit: function (params) {
         this.dialogVisible = true
         this.operation = false
-        this.editable = false
+        this.editable = true
         this.dataForm = Object.assign({}, params)
       },
       // 编辑
@@ -245,6 +253,7 @@
               }).catch((res) => {
                 this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'});
                 this.loading = false
+                this.editLoading = false
               })
             })
           }
