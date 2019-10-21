@@ -1,0 +1,10 @@
+ALTER TABLE `crm_custom_order_info`
+ADD COLUMN `ID`  bigint NOT NULL AUTO_INCREMENT AFTER `PAYABLE_AMT`,
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`ID`);
+
+
+ALTER TABLE `crm_custom_order_info`
+DROP INDEX `UK_ORDER_ID`,
+ADD UNIQUE INDEX `UK_ORDER_ID` (`ORDER_ID`) USING BTREE ;
+alter table crm_custom_order_info auto_increment = 25;
