@@ -217,7 +217,10 @@
               this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
             }
           }
-          this.$api.extrainvoice.deleteRecord(data.recordId, "0").then(data != null ? callback : '')
+          this.$api.extrainvoice.deleteRecord(data.recordId, "0").then(data != null ? callback : '').catch((res) => {
+            this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+            this.loading = false
+          })
         })
       },
       // 显示新增界面

@@ -125,7 +125,10 @@
       },
       // 批量删除
       handleDelete: function (data) {
-        this.$api.outer.batchDelete(data.params).then(data != null ? data.callback : '')
+        this.$api.outer.batchDelete(data.params).then(data != null ? data.callback : '').catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+          this.loading = false
+        })
       },
       handleAdd: function () {
         this.$router.push({path: '/preSales/customerDtl'})

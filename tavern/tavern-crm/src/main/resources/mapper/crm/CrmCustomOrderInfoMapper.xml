@@ -19,4 +19,36 @@
             </if>
         </where>
     </select>
+    <insert id="insertOne">
+        insert into CRM_CUSTOM_ORDER_INFO(ORDER_ID, CUSTOM_ID, ORDER_DATE, RECEIVABLE_AMT, PAYABLE_AMT,ORDER_SOURCE)
+        values
+        (#{orderId},#{customId},#{orderDate},#{receivableAmt},#{payableAmt},#{orderSource})
+    </insert>
+    <update id="updateOne">
+        update CRM_CUSTOM_ORDER_INFO
+        <set>
+            <if test="orderId != null and orderId != ''">
+                ORDER_ID =#{orderId},
+            </if>
+            <if test="customId != null and customId != ''">
+                CUSTOM_ID =#{customId},
+            </if>
+            <if test="orderDate != null and orderDate != ''">
+                ORDER_DATE =#{orderDate},
+            </if>
+            <if test="receivableAmt != null ">
+                RECEIVABLE_AMT =#{receivableAmt},
+            </if>
+            <if test="payableAmt != null">
+                PAYABLE_AMT =#{payableAmt},
+            </if>
+            <if test="orderSource != null and orderSource != ''">
+                ORDER_SOURCE =#{orderSource},
+            </if>
+
+
+        </set>
+        where ID = #{id}
+
+    </update>
 </mapper>

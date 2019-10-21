@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @TableName("CRM_CUSTOM_ORDER_INFO")
 public class CrmCustomOrderInfo extends Model<CrmCustomOrderInfo> {
     @TableId
-    private Integer id;
+    private Long id;
 
     private String orderId;
 

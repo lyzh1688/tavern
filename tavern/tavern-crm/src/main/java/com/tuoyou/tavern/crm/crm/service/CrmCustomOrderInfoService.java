@@ -16,6 +16,7 @@ import javax.validation.Valid;
 public interface CrmCustomOrderInfoService extends IService<CrmCustomOrderInfo> {
 
     void createCrmCustomOrderInfo(CrmCustomOrderInfo crmCustomOrderInfo) throws Exception;
+    void deleteCrmCustomOrderInfo(String orderId) throws Exception;
 
     IPage<CrmCustomOrderInfo> getCrmOrderPage(Page page, CustomCompanyOrderQueryDTO customCompanyOrderQueryDTO);
 

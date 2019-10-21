@@ -539,17 +539,14 @@
         }).then(() => {
           this.loading = true
           let callback = res => {
-            if (res.retCode == 0) {
-              this.$message({message: '删除成功', type: 'success'})
-              this.findPage(null)
-            } else {
-              this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
-            }
+            this.$message({message: '删除成功', type: 'success'})
+            this.findPage(null)
             this.loading = false
           }
-          this.$api.customer.deleteOrderBusiness(params).then(pa != null ? callback : '')
-        }).catch((res) => {
-          this.loading = false
+          this.$api.customer.deleteOrderBusiness(params).then(pa != null ? callback : '').catch((res) => {
+            this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+            this.loading = false
+          })
         })
       },
       // 编辑

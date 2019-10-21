@@ -194,7 +194,10 @@
               this.findPage(null)
               this.loading = false
           }
-          this.$api.role.batchDelete(data).then(data != null ? callback : '')
+          this.$api.role.batchDelete(data).then(data != null ? callback : '').catch((res) => {
+            this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+            this.loading = false
+          })
         }).catch((res) => {
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
         })

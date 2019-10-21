@@ -12,4 +12,8 @@ import java.util.List;
 public interface CrmCustomOrderInfoMapper extends BaseMapper<CrmCustomOrderInfo> {
 
     IPage<CrmCustomOrderInfo> selectCrmOrderPage(Page page, @Param("query") CustomCompanyOrderQueryDTO customCompanyOrderQueryDTO);
+
+    void insertOne(CrmCustomOrderInfo crmCustomOrderInfo);
+
+    void updateOne(CrmCustomOrderInfo crmCustomOrderInfo);
 }

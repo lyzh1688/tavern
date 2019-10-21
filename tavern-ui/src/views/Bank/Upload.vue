@@ -351,10 +351,10 @@
             this.queryBankStatement(null)
             this.loading = false
           }
-          this.$api.fileManager.batchDelete(data.batchId).then(data != null ? callback : '')
-        }).catch((res) => {
-          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
-          this.loading = false
+          this.$api.fileManager.batchDelete(data.batchId).then(data != null ? callback : '').catch((res) => {
+            this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+            this.loading = false
+          })
         })
       },
       closeDialog: function () {

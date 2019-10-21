@@ -36,6 +36,8 @@
                      @click="handleEdit(scope.row)"/>
           <kt-button icon="fa fa-retweet" label="订单详情" type="primary" v-if="sys_presales_order_dtl"
                      @click="handleDtl(scope.row)"/>
+          <kt-button icon="fa fa-delete" label="订单删除" type="danger" v-if="sys_presales_order_del"
+                     @click="handleDelete(scope.row)"/>
         </template>
       </el-table-column>
     </el-table>
@@ -49,11 +51,11 @@
     <el-dialog :title="operation?'新增':'编辑'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
       <el-form :model="dataForm" label-width="80px" :rules="dataFormRules" ref="dataForm" :size="size"
                label-position="right">
-        <el-form-item label="订单ID" prop="id"  label-width="100px" v-if="false">
-          <el-input v-model="dataForm.id" auto-complete="off" ></el-input>
+        <el-form-item label="订单ID" prop="id" label-width="100px" v-if="false">
+          <el-input v-model="dataForm.id" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="订单号" prop="orderId"  label-width="100px">
-          <el-input v-model="dataForm.orderId" auto-complete="off" ></el-input>
+        <el-form-item label="订单号" prop="orderId" label-width="100px">
+          <el-input v-model="dataForm.orderId" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="订单时间" prop="orderDate" label-width="100px">
           <el-date-picker v-model="dataForm.orderDate" type="datetime" placeholder="选择日期时间"
@@ -66,7 +68,8 @@
           <el-input v-model="dataForm.payableAmt" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="订单来源" prop="orderSource" label-width="100px">
-          <el-select v-model="dataForm.orderSource" clearable auto-complete="off" placeholder="请选择订单来源" style="float: left">
+          <el-select v-model="dataForm.orderSource" clearable auto-complete="off" placeholder="请选择订单来源"
+                     style="float: left">
             <el-option label="烁翼旗舰店" value='烁翼旗舰店'></el-option>
             <el-option label="咔嗒旗舰店" value='咔嗒旗舰店'></el-option>
             <el-option label="美臻明旗舰店" value='美臻明旗舰店'></el-option>
@@ -163,12 +166,14 @@
         sys_presales_order_dtl: false,
         sys_presales_order_view: false,
         sys_presales_order_add: false,
+        sys_presales_order_del: false,
       }
     }, created() {
       this.sys_presales_order_edit = hasPermission('sys:presales:order:edit')
       this.sys_presales_order_dtl = hasPermission('sys:presales:order:dtl')
       this.sys_presales_order_view = hasPermission('sys:presales:order:view')
       this.sys_presales_order_add = hasPermission('sys:presales:order:add')
+      this.sys_presales_order_del = hasPermission('sys:presales:order:del')
       //初始化客户信息
       this.dtlForm = this.$route.params;
       let tmpInfo = JSON.parse(localStorage.getItem("orderInfo"));
@@ -230,6 +235,24 @@
         this.operation = false
         this.editable = true
         this.dataForm = Object.assign({}, params)
+      },
+      handleDelete: function (pa) {
+        this.$confirm('确认删除选中记录吗？', '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.loading = true
+          let callback = res => {
+            this.$message({message: '删除成功', type: 'success'})
+            this.findPage(null)
+            this.loading = false
+          }
+          let request = {}
+          request.orderId = pa.id;
+          this.$api.customer.deleteOrder(request).then(pa != null ? callback : '').catch((res) => {
+            this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+            this.loading = false
+          })
+        })
       },
       // 编辑
       submitForm: function () {

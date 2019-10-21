@@ -117,6 +117,14 @@ export const saveOrder = (data) => {
     data
   })
 }
+// 删除订单信息
+export const deleteOrder = (params) => {
+  return axios({
+    url: '/crm/order/delete',
+    method: 'delete',
+    params
+  })
+}
 // 查询业务字典
 export const findBizDict = (params) => {
   return axios({

@@ -33,6 +33,11 @@ public class CustomOrderInfoEndpoint {
         this.crmCustomOrderInfoService.createCrmCustomOrderInfo(crmCustomOrderInfo);
         return new TavernResponse();
     }
+    @DeleteMapping("/delete")
+    public TavernResponse deleteCrmCustomOrderInfo(@RequestParam("orderId") String orderId) throws Exception {
+        this.crmCustomOrderInfoService.deleteCrmCustomOrderInfo(orderId);
+        return new TavernResponse();
+    }
 
     @GetMapping("/page")
     public CrmCustomOrderPageResponse getCrmOrderPage(Page page, CustomCompanyOrderQueryDTO customCompanyOrderQueryDTO) {

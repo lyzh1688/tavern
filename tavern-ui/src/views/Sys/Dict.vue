@@ -16,7 +16,7 @@
 	</div>
 	<!--表格内容栏-->
 	<kt-table :height="350" permsEdit="sys:dict:edit" permsDelete="sys:dict:delete"
-		:data="pageResult" :columns="columns" 
+		:data="pageResult" :columns="columns"
 		@findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete">
 	</kt-table>
 	<!--新增编辑界面-->
@@ -116,7 +116,10 @@ export default {
 		},
 		// 批量删除
 		handleDelete: function (data) {
-			this.$api.dict.batchDelete(data.params).then(data!=null?data.callback:'')
+			this.$api.dict.batchDelete(data.params).then(data!=null?data.callback:'').catch((res) => {
+        this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+        this.loading = false
+      })
 		},
 		// 显示新增界面
 		handleAdd: function () {

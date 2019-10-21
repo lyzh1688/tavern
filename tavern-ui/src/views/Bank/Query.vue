@@ -154,7 +154,10 @@
             }
             this.loading = false
           }
-          this.$api.bank.batchDelete(data.batchId,'0').then(data != null ? callback : '')
+          this.$api.bank.batchDelete(data.batchId,'0').then(data != null ? callback : '').catch((res) => {
+            this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+            this.loading = false
+          })
         })
       },
       // 时间格式化
