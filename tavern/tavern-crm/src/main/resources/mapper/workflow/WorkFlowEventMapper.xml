@@ -74,7 +74,7 @@
         workflow_def_node_ext_attr T9
 
         <where>
-            T.ORDER_ID = T1.ORDER_ID
+            T.ID = T1.ORDER_ID
             AND T.CUSTOM_ID = T3.CUSTOM_ID
             AND T1.BUSINESS_ID = T4.BUSINESS_ID
             AND T1.BUSINESS_ID = T6.business_id
@@ -158,7 +158,7 @@
         workflow_def_node_ext_attr T9
 
         <where>
-            T.ORDER_ID = T1.ORDER_ID
+            T.ID = T1.ORDER_ID
             AND T.CUSTOM_ID = T3.CUSTOM_ID
             AND T1.BUSINESS_ID = T4.BUSINESS_ID
             AND T1.BUSINESS_ID = T6.business_id

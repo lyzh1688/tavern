@@ -29,7 +29,7 @@ public class CustomOrderInfoEndpoint {
     private CrmCustomOrderBusinessRelService crmCustomOrderBusinessRelService;
 
     @PostMapping("/save")
-    public TavernResponse createCrmCustomOrderInfo(@RequestBody @Valid CrmCustomOrderInfo crmCustomOrderInfo) {
+    public TavernResponse createCrmCustomOrderInfo(@RequestBody @Valid CrmCustomOrderInfo crmCustomOrderInfo) throws Exception {
         this.crmCustomOrderInfoService.createCrmCustomOrderInfo(crmCustomOrderInfo);
         return new TavernResponse();
     }

@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tuoyou.tavern.crm.crm.dao.CrmCustomOrderInfoMapper">
     <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.crm.model.CrmCustomOrderInfo">
-        <id column="ORDER_ID" jdbcType="VARCHAR" property="orderId"/>
+        <id column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="ORDER_ID" jdbcType="VARCHAR" property="orderId"/>
         <result column="CUSTOM_ID" jdbcType="VARCHAR" property="customId"/>
         <result column="ORDER_DATE" jdbcType="VARCHAR" property="orderDate"/>
         <result column="RECEIVABLE_AMT" jdbcType="DECIMAL" property="receivableAmt"/>
@@ -10,7 +11,7 @@
         <result column="ORDER_SOURCE" jdbcType="VARCHAR" property="orderSource"/>
     </resultMap>
     <select id="selectCrmOrderPage" resultMap="BaseResultMap">
-        select ORDER_ID, CUSTOM_ID, ORDER_DATE, RECEIVABLE_AMT, PAYABLE_AMT,ORDER_SOURCE
+        select ID,ORDER_ID, CUSTOM_ID, ORDER_DATE, RECEIVABLE_AMT, PAYABLE_AMT,ORDER_SOURCE
         from CRM_CUSTOM_ORDER_INFO
         <where>
             <if test="query.customId != null and query.customId != ''">

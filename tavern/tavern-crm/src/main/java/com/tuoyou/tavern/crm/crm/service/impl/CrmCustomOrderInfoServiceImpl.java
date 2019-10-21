@@ -1,6 +1,7 @@
 package com.tuoyou.tavern.crm.crm.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tuoyou.tavern.crm.crm.service.CrmCustomOrderInfoService;
@@ -8,7 +9,10 @@ import com.tuoyou.tavern.crm.crm.dao.CrmCustomOrderInfoMapper;
 import com.tuoyou.tavern.protocol.crm.dto.CustomCompanyOrderQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCustomOrderInfo;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 /**
  * Code Monkey: 何彪 <br>
@@ -20,8 +24,22 @@ public class CrmCustomOrderInfoServiceImpl extends ServiceImpl<CrmCustomOrderInf
 
 
     @Override
-    public void createCrmCustomOrderInfo(CrmCustomOrderInfo crmCustomOrderInfo) {
+    public void createCrmCustomOrderInfo(CrmCustomOrderInfo crmCustomOrderInfo) throws Exception {
+        if (Objects.isNull(crmCustomOrderInfo.getId())) {
+            CrmCustomOrderInfo orderInfo = this.getOne(Wrappers.<CrmCustomOrderInfo>query().lambda()
+                    .eq(CrmCustomOrderInfo::getOrderId, crmCustomOrderInfo.getOrderId()));
+            if (Objects.nonNull(orderInfo)) {
+                throw new Exception("已有相同的订单号，添加错误！");
+            }
+        } else {
+            CrmCustomOrderInfo orderInfo = this.getOne(Wrappers.<CrmCustomOrderInfo>query().lambda()
+                    .eq(CrmCustomOrderInfo::getOrderId, crmCustomOrderInfo.getOrderId()));
+            if (Objects.nonNull(orderInfo) && !orderInfo.getId().equals(crmCustomOrderInfo.getId())) {
+                throw new Exception("已有相同的订单号，添加错误！");
+            }
+        }
         this.saveOrUpdate(crmCustomOrderInfo);
+
     }
 
     @Override

@@ -19,7 +19,7 @@
     <select id="selectCrmOrderBusinessPage" resultType="com.tuoyou.tavern.protocol.crm.model.CrmOrderBusinessRelVO">
         select
             t1.EVENT_ID eventId,
-            t1.ORDER_ID orderId,
+            t4.ORDER_ID orderId,
             t1.BUSINESS_ID businessId,
             t3.BUSINESS_NAME businessName,
             t2.COMPANY_ID companyId,
@@ -33,13 +33,15 @@
             t1.PRE_EVENT_ID preEventId,
             t1.REMARK remark,
             DATE_FORMAT(t1.CREATE_DATE,'%Y-%m-%d %H:%i:%s') createDate
-        from CRM_ORDER_BUSINESS_REL t1 LEFT JOIN CRM_COMPANY_INFO t2 on t1.COMPANY_ID = t2.COMPANY_ID,CRM_BUSINESS_DICT t3
+        from CRM_ORDER_BUSINESS_REL t1 LEFT JOIN CRM_COMPANY_INFO t2 on t1.COMPANY_ID = t2.COMPANY_ID,CRM_BUSINESS_DICT t3,
+        CRM_CUSTOM_ORDER_INFO t4
         where t1.BUSINESS_ID = t3.BUSINESS_ID
+        and t1.ORDER_ID = t4.ID
         and t1.ORDER_ID = #{query.orderId}
   </select>
     <select id="selectCrmCompanyOrderDetail" resultType="com.tuoyou.tavern.protocol.crm.model.CrmCompanyOrderDetailVO">
         select
-            t1.ORDER_ID orderId,
+            t2.ORDER_ID orderId,
             t2.RECEIVABLE_AMT receivableAmt,
             t4.COMPANY_NAME companyName,
            t6.CUSTOM_NAME customName,
@@ -58,7 +60,7 @@
             CRM_CUSTOM_ORDER_INFO t2,
 			CRM_CUSTOM_BASIC_INFO t6
             where
-            t1.ORDER_ID = t2.ORDER_ID
+            t1.ORDER_ID = t2.ID
 			and t2.CUSTOM_ID = t6.CUSTOM_ID
             and t1.EVENT_ID = #{eventId}
             and t4.COMPANY_ID = #{companyId}
