@@ -9,6 +9,19 @@
         <el-form-item label="客户姓名" label-width="100px" prop="customName" v-if="sys_presales_customer_view">
           <el-input v-model="filters.customName" placeholder="请输入客户姓名"></el-input>
         </el-form-item>
+        <el-form-item  label-width="100px">
+          <el-switch
+            v-model="filters.myCustomer"
+            active-color="#00A854"
+            active-text="我的客户"
+            active-value="1"
+            inactive-color="#F04134"
+            inactive-text="全部客户"
+            inactive-value="0"
+            @change="changeSwitch"
+            >
+          </el-switch>
+        </el-form-item>
         <el-form-item>
           <kt-button icon="fa fa-search" :label="$t('action.search')" v-if="sys_presales_customer_view" type="primary"
                      @click="findPage(null)"/>
@@ -36,6 +49,8 @@
       <el-table-column prop="customId" header-align="center" align="center" label="客户ID" v-if="false">
       </el-table-column>
       <el-table-column prop="customName" label="客户姓名" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="companyName" label="公司名称" header-align="center" align="center" width="200px">
       </el-table-column>
       <el-table-column prop="wangwangAccnt" label="旺旺账号" header-align="center" align="center">
       </el-table-column>
@@ -140,7 +155,8 @@
         size: 'small',
         filters: {
           wangwangAccnt: '',
-          customName: ''
+          customName: '',
+          myCustomer: ''
         },
         tableData: [],
         loading: false,
@@ -158,9 +174,9 @@
         editLoading: false,
         editShow: false,
         dataFormRules: {
-          weixinAccnt: [
+          /*weixinAccnt: [
             {required: true, message: '请输入微信号', trigger: 'blur'}
-          ],
+          ],*/
       /*    wangwangAccnt: [
             {required: true, message: '请输入旺旺号', trigger: 'blur'}
           ],*/
@@ -220,6 +236,11 @@
         }
         this.pageRequest.wangwangAccnt = this.filters.wangwangAccnt;
         this.pageRequest.customName = this.filters.customName;
+        if(this.filters.myCustomer == 1){
+          this.pageRequest.userId = sessionStorage.getItem("userId");
+        }else {
+          this.pageRequest.userId = ''
+        }
         this.$api.customer.findPage(this.pageRequest).then((res) => {
           this.tableData = res.data.records;
           this.total = res.data.total;
@@ -301,6 +322,7 @@
             this.$confirm('确认提交吗？', '提示', {}).then(() => {
               this.editLoading = true
               let params = Object.assign({}, this.dataForm)
+              params.userId = sessionStorage.getItem("userId")
               this.$api.customer.save(params).then((res) => {
                 this.editLoading = false
                 this.$message({message: '操作成功', type: 'success'})
@@ -328,6 +350,9 @@
         let _this = this;
         _this.pageRequest.current = val;
         _this.findPage(_this.pageRequest);
+      },
+      changeSwitch(val){
+        this.findPage(null)
       }
     },
     mounted() {

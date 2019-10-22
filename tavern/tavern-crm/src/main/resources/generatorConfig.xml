@@ -13,17 +13,17 @@
         </commentGenerator>
 
        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://119.3.19.171:3306/work_flow?characterEncoding=UTF-8"
+                        connectionURL="jdbc:mysql://119.3.19.171:3306/crm?characterEncoding=UTF-8"
                         userId="root"
                         password="y2iaciej" />
 
-        <javaModelGenerator targetPackage="com.tuoyou.tavern.crm.workflow.entity" targetProject="src/main/java" >
+        <javaModelGenerator targetPackage="com.tuoyou.tavern.crm.crm.entity" targetProject="src/main/java" >
             <property name="trimStrings" value = "true"></property>
         </javaModelGenerator>
 
         <sqlMapGenerator targetPackage="mapper/workflow" targetProject="src/main/resources" />
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.tuoyou.tavern.crm.workflow.dao" targetProject="src/main/java" />
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.tuoyou.tavern.crm.crm.dao" targetProject="src/main/java" />
 
         <!--<table tableName="CRM_BANK_INFO" domainObjectName="CrmBankInfo">
         </table>
@@ -72,7 +72,9 @@
 
         <table tableName="workflow_log_message" domainObjectName="WorkFlowLogMessage">
         </table>-->
-        <table tableName="workflow_log_attachment" domainObjectName="WorkFlowLogAttachment">
+        <!--<table tableName="workflow_log_attachment" domainObjectName="WorkFlowLogAttachment">
+        </table>-->
+        <table tableName="CRM_USER_CUSTOMER_INFO" domainObjectName="CrmUserCustomerInfo">
         </table>
 
 

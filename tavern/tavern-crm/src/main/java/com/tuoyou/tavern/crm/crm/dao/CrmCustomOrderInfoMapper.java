@@ -5,13 +5,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tuoyou.tavern.protocol.crm.dto.CustomCompanyOrderQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCustomOrderInfo;
+import com.tuoyou.tavern.protocol.crm.model.CrmCustomOrderInfoVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface CrmCustomOrderInfoMapper extends BaseMapper<CrmCustomOrderInfo> {
 
-    IPage<CrmCustomOrderInfo> selectCrmOrderPage(Page page, @Param("query") CustomCompanyOrderQueryDTO customCompanyOrderQueryDTO);
+    IPage<CrmCustomOrderInfoVO> selectCrmOrderPage(Page page, @Param("query") CustomCompanyOrderQueryDTO customCompanyOrderQueryDTO);
 
     void insertOne(CrmCustomOrderInfo crmCustomOrderInfo);
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuoyou.tavern.crm.crm.dao.CrmUserCustomerInfoMapper">
+  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.crm.model.CrmUserCustomerInfo">
+    <id column="CUSTOMER_ID" jdbcType="VARCHAR" property="customerId" />
+    <id column="USER_ID" jdbcType="VARCHAR" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from CRM_USER_CUSTOMER_INFO
+    where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+      and USER_ID = #{userId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tuoyou.tavern.protocol.crm.model.CrmUserCustomerInfo">
+    insert into CRM_USER_CUSTOMER_INFO (CUSTOMER_ID, USER_ID)
+    values (#{customerId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select CUSTOMER_ID, USER_ID
+    from CRM_USER_CUSTOMER_INFO
+  </select>
+</mapper>

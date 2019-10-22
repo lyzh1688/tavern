@@ -9,13 +9,16 @@ import com.tuoyou.tavern.common.core.util.UUIDUtil;
 import com.tuoyou.tavern.crm.crm.service.CrmCustomBankInfoService;
 import com.tuoyou.tavern.crm.crm.service.CrmCustomBasicInfoService;
 import com.tuoyou.tavern.crm.crm.dao.CrmCustomBasicInfoMapper;
+import com.tuoyou.tavern.crm.crm.service.CrmUserCustomerService;
 import com.tuoyou.tavern.protocol.crm.dto.CustomInfoDTO;
 import com.tuoyou.tavern.protocol.crm.dto.CustomQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCustomBasicInfo;
+import com.tuoyou.tavern.protocol.crm.model.CrmUserCustomerInfo;
 import com.tuoyou.tavern.protocol.crm.model.CustomBasicInfoVO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -32,8 +35,9 @@ public class CrmCustomBasicInfoServiceImpl extends ServiceImpl<CrmCustomBasicInf
 
     private final CrmCustomBankInfoService crmCustomBankInfoService;
     private final CrmCustomBankInfoService crmBankInfoService;
+    private final CrmUserCustomerService crmUserCustomerService;
 
-
+    @Transactional
     @Override
     public void createCustom(CustomInfoDTO customInfoDTO) {
         CrmCustomBasicInfo crmCustomBasicInfo = new CrmCustomBasicInfo();
@@ -41,21 +45,20 @@ public class CrmCustomBasicInfoServiceImpl extends ServiceImpl<CrmCustomBasicInf
         crmCustomBasicInfo.setCustomId(StringUtils.isEmpty(customInfoDTO.getCustomId()) ? UUIDUtil.randomUUID32() : customInfoDTO.getCustomId());
         crmCustomBasicInfo.setIsValid("1");
         crmCustomBasicInfo.setUpdateDate(LocalDateTime.now());
+
+        if (StringUtils.isEmpty(customInfoDTO.getCustomId())) {
+            CrmUserCustomerInfo crmUserCustomerInfo = new CrmUserCustomerInfo();
+            crmUserCustomerInfo.setCustomerId(crmCustomBasicInfo.getCustomId());
+            crmUserCustomerInfo.setUserId(customInfoDTO.getUserId());
+            this.crmUserCustomerService.save(crmUserCustomerInfo);
+        }
+
         this.saveOrUpdate(crmCustomBasicInfo);
     }
 
     @Override
     public IPage<CustomBasicInfoVO> getBasicInfoPage(Page page, CustomQueryDTO customQueryDTO) {
-        IPage<CrmCustomBasicInfo> infoIPage = this.baseMapper.selectBasicInfoPage(page, customQueryDTO);
-        List<CustomBasicInfoVO> customBasicInfoVOList = infoIPage.getRecords()
-                .stream()
-                .map(record -> {
-                    CustomBasicInfoVO customBasicInfoVO = new CustomBasicInfoVO();
-                    BeanUtils.copyProperties(record, customBasicInfoVO);
-                    customBasicInfoVO.setUpdateDate(DateUtils.formatDateTime(record.getUpdateDate(), DateUtils.DEFAULT_DATETIME_FORMATTER));
-                    return customBasicInfoVO;
-                }).collect(Collectors.toList());
-        return CommonUtils.newIPage(infoIPage, customBasicInfoVOList);
+        return  this.baseMapper.selectBasicInfoPage(page, customQueryDTO);
     }
 
 }

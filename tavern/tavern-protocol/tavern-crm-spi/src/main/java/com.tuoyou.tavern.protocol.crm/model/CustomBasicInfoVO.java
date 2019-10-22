@@ -33,5 +33,7 @@ public class CustomBasicInfoVO {
 
     private String updateDate;
 
+    private String companyName;
+
 
 }

@@ -9,6 +9,7 @@ import com.tuoyou.tavern.crm.crm.service.CrmCustomOrderInfoService;
 import com.tuoyou.tavern.crm.crm.dao.CrmCustomOrderInfoMapper;
 import com.tuoyou.tavern.protocol.crm.dto.CustomCompanyOrderQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCustomOrderInfo;
+import com.tuoyou.tavern.protocol.crm.model.CrmCustomOrderInfoVO;
 import com.tuoyou.tavern.protocol.crm.model.CrmOrderBusinessRel;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -60,7 +61,7 @@ public class CrmCustomOrderInfoServiceImpl extends ServiceImpl<CrmCustomOrderInf
     }
 
     @Override
-    public IPage<CrmCustomOrderInfo> getCrmOrderPage(Page page, CustomCompanyOrderQueryDTO customCompanyOrderQueryDTO) {
+    public IPage<CrmCustomOrderInfoVO> getCrmOrderPage(Page page, CustomCompanyOrderQueryDTO customCompanyOrderQueryDTO) {
         return this.baseMapper.selectCrmOrderPage(page, customCompanyOrderQueryDTO);
     }
 }

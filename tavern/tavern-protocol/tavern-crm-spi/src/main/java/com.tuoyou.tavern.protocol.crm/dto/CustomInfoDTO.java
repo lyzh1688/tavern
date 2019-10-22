@@ -32,6 +32,7 @@ public class CustomInfoDTO {
 
     private String updateDate;
 
+    private String userId;
 
 
 }

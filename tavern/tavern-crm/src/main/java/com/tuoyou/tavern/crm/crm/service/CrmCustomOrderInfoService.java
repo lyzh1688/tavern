@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tuoyou.tavern.protocol.crm.dto.CustomCompanyOrderQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCustomOrderInfo;
+import com.tuoyou.tavern.protocol.crm.model.CrmCustomOrderInfoVO;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
@@ -18,6 +19,6 @@ public interface CrmCustomOrderInfoService extends IService<CrmCustomOrderInfo> 
     void createCrmCustomOrderInfo(CrmCustomOrderInfo crmCustomOrderInfo) throws Exception;
     void deleteCrmCustomOrderInfo(String orderId) throws Exception;
 
-    IPage<CrmCustomOrderInfo> getCrmOrderPage(Page page, CustomCompanyOrderQueryDTO customCompanyOrderQueryDTO);
+    IPage<CrmCustomOrderInfoVO> getCrmOrderPage(Page page, CustomCompanyOrderQueryDTO customCompanyOrderQueryDTO);
 
 }

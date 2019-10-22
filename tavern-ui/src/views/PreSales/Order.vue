@@ -21,6 +21,8 @@
       </el-table-column>
       <el-table-column prop="orderId" header-align="center" align="center" label="订单号">
       </el-table-column>
+      <el-table-column prop="businessName" header-align="center" align="center" label="业务类型">
+      </el-table-column>
       <el-table-column prop="orderDate" label="订单时间" header-align="center" align="center">
       </el-table-column>
       <el-table-column prop="receivableAmt" label="应付金额" header-align="center" align="center">

@@ -5,8 +5,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tuoyou.tavern.protocol.crm.dto.CustomQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCustomBasicInfo;
+import com.tuoyou.tavern.protocol.crm.model.CustomBasicInfoVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface CrmCustomBasicInfoMapper extends BaseMapper<CrmCustomBasicInfo> {
-    IPage<CrmCustomBasicInfo> selectBasicInfoPage(Page page, @Param("query") CustomQueryDTO customQueryDTO);
+    IPage<CustomBasicInfoVO> selectBasicInfoPage(Page page, @Param("query") CustomQueryDTO customQueryDTO);
 }

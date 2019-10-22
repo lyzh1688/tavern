@@ -3,6 +3,7 @@ package com.tuoyou.tavern.protocol.crm.response;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import com.tuoyou.tavern.protocol.crm.model.CrmCustomOrderInfo;
+import com.tuoyou.tavern.protocol.crm.model.CrmCustomOrderInfoVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,5 +16,5 @@ import lombok.EqualsAndHashCode;
 @Data
 @AllArgsConstructor
 public class CrmCustomOrderPageResponse extends TavernResponse {
-    private IPage<CrmCustomOrderInfo> data;
+    private IPage<CrmCustomOrderInfoVO> data;
 }

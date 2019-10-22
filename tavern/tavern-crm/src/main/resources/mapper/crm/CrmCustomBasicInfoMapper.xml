@@ -1,32 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tuoyou.tavern.crm.crm.dao.CrmCustomBasicInfoMapper">
-  <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.crm.model.CrmCustomBasicInfo">
-    <id column="CUSTOM_ID" jdbcType="VARCHAR" property="customId" />
-    <result column="WEIXIN_ACCNT" jdbcType="VARCHAR" property="weixinAccnt" />
-    <result column="WEIXIN_NAME" jdbcType="VARCHAR" property="weixinName" />
-    <result column="WANGWANG_ACCNT" jdbcType="VARCHAR" property="wangwangAccnt" />
-    <result column="CONTACT_PERSON" jdbcType="VARCHAR" property="contactPerson" />
-    <result column="CONTACT_NUMBER" jdbcType="VARCHAR" property="contactNumber" />
-    <result column="CORPORATION" jdbcType="VARCHAR" property="corporation" />
-    <result column="CORPORATION_NUMBER" jdbcType="VARCHAR" property="corporationNumber" />
-    <result column="CUSTOM_LEVEL" jdbcType="VARCHAR" property="customLevel" />
-    <result column="CUSTOM_NAME" jdbcType="VARCHAR" property="customName" />
-    <result column="IS_VALID" jdbcType="VARCHAR" property="isValid" />
-    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.crm.model.CrmCustomBasicInfo">
+        <id column="CUSTOM_ID" jdbcType="VARCHAR" property="customId"/>
+        <result column="WEIXIN_ACCNT" jdbcType="VARCHAR" property="weixinAccnt"/>
+        <result column="WEIXIN_NAME" jdbcType="VARCHAR" property="weixinName"/>
+        <result column="WANGWANG_ACCNT" jdbcType="VARCHAR" property="wangwangAccnt"/>
+        <result column="CONTACT_PERSON" jdbcType="VARCHAR" property="contactPerson"/>
+        <result column="CONTACT_NUMBER" jdbcType="VARCHAR" property="contactNumber"/>
+        <result column="CORPORATION" jdbcType="VARCHAR" property="corporation"/>
+        <result column="CORPORATION_NUMBER" jdbcType="VARCHAR" property="corporationNumber"/>
+        <result column="CUSTOM_LEVEL" jdbcType="VARCHAR" property="customLevel"/>
+        <result column="CUSTOM_NAME" jdbcType="VARCHAR" property="customName"/>
+        <result column="IS_VALID" jdbcType="VARCHAR" property="isValid"/>
+        <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate"/>
+    </resultMap>
 
-  <select id="selectBasicInfoPage" resultMap="BaseResultMap">
-    select CUSTOM_ID, WEIXIN_ACCNT, WEIXIN_NAME, WANGWANG_ACCNT, CONTACT_PERSON, CONTACT_NUMBER,
-    CORPORATION, CORPORATION_NUMBER, CUSTOM_LEVEL, CUSTOM_NAME, IS_VALID, UPDATE_DATE
-    from CRM_CUSTOM_BASIC_INFO
-    where IS_VALID = '1'
-    <if test="query.customName != null and query.customName != ''">
-      and CUSTOM_NAME like concat('%',  #{query.customName}, '%')
-    </if>
-    <if test="query.wangwangAccnt != null and query.wangwangAccnt != ''">
-      and WANGWANG_ACCNT like concat('%',  #{query.wangwangAccnt}, '%')
-    </if>
-  </select>
-
+    <select id="selectBasicInfoPage" resultType="com.tuoyou.tavern.protocol.crm.model.CustomBasicInfoVO">
+        select GROUP_CONCAT(t4.company_name) companyName,t1.CUSTOM_ID customId,
+        WEIXIN_ACCNT weixinAccnt, WEIXIN_NAME weixinName, WANGWANG_ACCNT wangwangAccnt, CONTACT_PERSON contactPerson,
+        CONTACT_NUMBER contactNumber,
+        CORPORATION, CORPORATION_NUMBER corporationNumber, CUSTOM_LEVEL customLevel,
+        CUSTOM_NAME customName, IS_VALID, DATE_FORMAT(t1.UPDATE_DATE,'%Y-%m-%d %H:%i:%s') updateDate
+        from CRM_CUSTOM_BASIC_INFO t1 left join CRM_USER_CUSTOMER_INFO t2 on t1.CUSTOM_ID = t2.CUSTOMER_ID
+        left join CRM_CUSTOM_COMPANY_REL t3 on t1.CUSTOM_ID = t3.CUSTOM_ID
+        LEFT JOIN CRM_COMPANY_INFO t4 on t3.company_id = t4.company_id
+        where IS_VALID = '1'
+        <if test="query.customName != null and query.customName != ''">
+            and CUSTOM_NAME like concat('%', #{query.customName}, '%')
+        </if>
+        <if test="query.wangwangAccnt != null and query.wangwangAccnt != ''">
+            and WANGWANG_ACCNT like concat('%', #{query.wangwangAccnt}, '%')
+        </if>
+        <if test="query.userId != null and query.userId != ''">
+            and t2.USER_ID = #{query.userId}
+        </if>
+        group by t1.CUSTOM_ID
+        order by t1.UPDATE_DATE desc
+    </select>
 </mapper>

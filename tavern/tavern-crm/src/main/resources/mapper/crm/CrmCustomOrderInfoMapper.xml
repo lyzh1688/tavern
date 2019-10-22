@@ -10,14 +10,19 @@
         <result column="PAYABLE_AMT" jdbcType="DECIMAL" property="payableAmt"/>
         <result column="ORDER_SOURCE" jdbcType="VARCHAR" property="orderSource"/>
     </resultMap>
-    <select id="selectCrmOrderPage" resultMap="BaseResultMap">
-        select ID,ORDER_ID, CUSTOM_ID, ORDER_DATE, RECEIVABLE_AMT, PAYABLE_AMT,ORDER_SOURCE
-        from CRM_CUSTOM_ORDER_INFO
+    <select id="selectCrmOrderPage" resultType="com.tuoyou.tavern.protocol.crm.model.CrmCustomOrderInfoVO">
+        select GROUP_CONCAT(t3.BUSINESS_NAME) businessName,ID id,t1.ORDER_ID orderId,
+        CUSTOM_ID customId, ORDER_DATE orderDate, RECEIVABLE_AMT receivableAmt, PAYABLE_AMT payableAmt,ORDER_SOURCE orderSource
+        from CRM_CUSTOM_ORDER_INFO t1 LEFT JOIN CRM_ORDER_BUSINESS_REL t2 on t1.ID = t2.ORDER_ID
+        LEFT JOIN CRM_BUSINESS_DICT t3 on t2.BUSINESS_ID = t3.BUSINESS_ID
+
         <where>
             <if test="query.customId != null and query.customId != ''">
                 and CUSTOM_ID = #{query.customId}
             </if>
         </where>
+        group by t1.ID
+        order by t1.ORDER_DATE
     </select>
     <insert id="insertOne">
         insert into CRM_CUSTOM_ORDER_INFO(ORDER_ID, CUSTOM_ID, ORDER_DATE, RECEIVABLE_AMT, PAYABLE_AMT,ORDER_SOURCE)
