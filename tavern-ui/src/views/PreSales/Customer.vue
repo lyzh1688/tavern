@@ -9,7 +9,7 @@
         <el-form-item label="客户姓名" label-width="100px" prop="customName" v-if="sys_presales_customer_view">
           <el-input v-model="filters.customName" placeholder="请输入客户姓名"></el-input>
         </el-form-item>
-        <el-form-item  label-width="100px">
+        <!--<el-form-item  label-width="100px">
           <el-switch
             v-model="filters.myCustomer"
             active-color="#00A854"
@@ -19,9 +19,10 @@
             inactive-text="全部客户"
             inactive-value="0"
             @change="changeSwitch"
+
             >
           </el-switch>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item>
           <kt-button icon="fa fa-search" :label="$t('action.search')" v-if="sys_presales_customer_view" type="primary"
                      @click="findPage(null)"/>
@@ -52,12 +53,12 @@
       </el-table-column>
       <el-table-column prop="companyName" label="公司名称" header-align="center" align="center" width="200px">
       </el-table-column>
-      <el-table-column prop="wangwangAccnt" label="旺旺账号" header-align="center" align="center">
+      <!--<el-table-column prop="wangwangAccnt" label="旺旺账号" header-align="center" align="center">
       </el-table-column>
       <el-table-column prop="weixinAccnt" label="微信账号" header-align="center" align="center">
       </el-table-column>
       <el-table-column prop="weixinName" label="微信昵称" header-align="center" align="center">
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column prop="contactNumber" label="联系电话" header-align="center" align="center">
       </el-table-column>
       <el-table-column prop="updateDate" label="创建时间" header-align="center" align="center">
@@ -213,6 +214,7 @@
         sys_presales_customer_edit:false,
         sys_presales_customer_dtl:false,
         sys_presales_customer_order:false,
+        sys_presales_customer_order_all:false,
       }
     },
     created() {
@@ -222,6 +224,7 @@
       this.sys_presales_customer_edit = hasPermission('sys:presales:customer:edit')
       this.sys_presales_customer_dtl = hasPermission('sys:presales:customer:dtl')
       this.sys_presales_customer_order = hasPermission('sys:presales:customer:order')
+      this.sys_presales_customer_order_all = hasPermission('sys:presales:customer:order:all')
       this.findPage(null);
     },
     methods: {
@@ -236,7 +239,7 @@
         }
         this.pageRequest.wangwangAccnt = this.filters.wangwangAccnt;
         this.pageRequest.customName = this.filters.customName;
-        if(this.filters.myCustomer == 1){
+        if(!this.sys_presales_customer_order_all){
           this.pageRequest.userId = sessionStorage.getItem("userId");
         }else {
           this.pageRequest.userId = ''

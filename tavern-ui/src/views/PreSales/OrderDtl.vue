@@ -244,8 +244,14 @@
           <el-form-item label="公积金代缴/社保代缴" label-width="150px">
           </el-form-item>
         </el-form>
-        <el-form-item label="服务开始时间" label-width="150px" prop="beginDate"
-                      :rules="{required: true, message: '请填写服务开始时间', trigger: 'change'}">
+        <el-form-item label="托管状态" label-width="150px" prop="isTrust"
+                      :rules="{required: true, message: '请选择托管状态', trigger: 'change'}">
+          <el-select v-model="djfwForm.isTrust" clearable auto-complete="off" placeholder="请选择">
+            <el-option label="未开始" value='0'></el-option>
+            <el-option label="已开始" value='1'></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="服务开始时间" label-width="150px" prop="beginDate">
           <el-date-picker v-model="djfwForm.beginDate" type="datetime" placeholder="选择日期时间"
                           @change="djfwEndDateChange"></el-date-picker>
         </el-form-item>
@@ -365,6 +371,7 @@
           beginDate: [
             {required: true, message: '请选择服务开始时间', /*trigger: 'change'*/}
           ],
+
         },
         djfwFormRules: {
           isBegin: [
@@ -376,6 +383,9 @@
           beginDate: [
             {required: true, message: '请选择服务开始时间', /*trigger: 'change'*/}
           ],
+          isTrust: [
+            {required: true, message: '请选择是否开始托管', /*trigger: 'change'*/}
+          ],
         },
         gszcFormRules: {
           absent: [
@@ -383,12 +393,14 @@
           ],
         },
         dljzForm: {
+
           isBegin: '',
           months: '',
           beginDate: '',
           endDate: ''
         },
         djfwForm: {
+          isTrust: '',
           confirmNum: '',
           employeeNum: '',
           months: '',
@@ -506,6 +518,7 @@
           endDate: ''
         }
         this.djfwForm = {
+          isTrust: '',
           confirmNum: '',
           employeeNum: '',
           months: '',
@@ -572,6 +585,10 @@
             valid = valid && dataFormValid
             break;
           case "公积金代缴":
+            if(this.djfwForm.isTrust == '1' && (this.djfwForm.beginDate == null || this.djfwForm.beginDate == undefined || this.djfwForm.beginDate == '')){
+                this.$message({message: '若选择已托管，请输入开始日期！', type: 'error'})
+                return
+            }
             if (this.djfwForm.confirmNum != '0') {
               if (this.djfwForm.employeeNum == '' || this.djfwForm.employeeNum == 0) {
                 this.$message({message: '若公司人数已确认，需要录入员工信息！方可添加关联业务！', type: 'error'})
@@ -584,6 +601,10 @@
             valid && dataFormValid
             break;
           case "代缴社保":
+            if(this.djfwForm.isTrust == 1 && (this.djfwForm.beginDate == null || this.djfwForm.beginDate == undefined || this.djfwForm.beginDate == '')){
+              this.$message({message: '若选择已托管，请输入开始日期！', type: 'error'})
+              return
+            }
             if (this.djfwForm.confirmNum != '0') {
               if (this.djfwForm.employeeNum == '' || this.djfwForm.employeeNum == 0) {
                 this.$message({message: '若公司人数已确认，需要录入员工信息！方可添加关联业务！', type: 'error'})

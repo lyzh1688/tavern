@@ -4,5 +4,16 @@
   <resultMap id="BaseResultMap" type="com.tuoyou.tavern.protocol.crm.model.CrmThirdPartyInfo">
     <id column="THIRD_PARTY_ID" jdbcType="VARCHAR" property="thirdPartyId" />
     <result column="THIRD_PARTY_NAME" jdbcType="VARCHAR" property="thirdPartyName" />
+    <result column="PROVINCE" jdbcType="VARCHAR" property="province" />
+    <result column="CITY" jdbcType="VARCHAR" property="city" />
+    <result column="DISTRICT" jdbcType="VARCHAR" property="district" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="DELIVERY_ADDR" jdbcType="VARCHAR" property="deliveryAddr" />
+    <result column="CONTACT1" jdbcType="VARCHAR" property="contact1" />
+    <result column="CONTACT_NUMBER1" jdbcType="VARCHAR" property="contactNumber1" />
+    <result column="CONTACT_WECHAT1" jdbcType="VARCHAR" property="contactWechat1" />
+    <result column="CONTACT2" jdbcType="VARCHAR" property="contact2" />
+    <result column="CONTACT_NUMBER2" jdbcType="VARCHAR" property="contactNumber2" />
+    <result column="CONTACT_WECHAT2" jdbcType="VARCHAR" property="contactWechat2" />
   </resultMap>
 </mapper>

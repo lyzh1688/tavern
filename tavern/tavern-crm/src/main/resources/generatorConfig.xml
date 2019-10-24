@@ -74,7 +74,7 @@
         </table>-->
         <!--<table tableName="workflow_log_attachment" domainObjectName="WorkFlowLogAttachment">
         </table>-->
-        <table tableName="CRM_USER_CUSTOMER_INFO" domainObjectName="CrmUserCustomerInfo">
+        <table tableName="CRM_CUSTOM_THIRD_PARTY_INFO" domainObjectName="CrmThirdPartyInfo">
         </table>
 
 

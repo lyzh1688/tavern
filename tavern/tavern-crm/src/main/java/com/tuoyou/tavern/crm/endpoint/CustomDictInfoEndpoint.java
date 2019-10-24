@@ -8,6 +8,7 @@ import com.tuoyou.tavern.protocol.common.TavernDictResponse;
 import com.tuoyou.tavern.protocol.common.model.Dict;
 import com.tuoyou.tavern.protocol.hrm.spi.HrmUserDictService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -90,7 +91,17 @@ public class CustomDictInfoEndpoint {
                 .map(d -> {
                     Dict dict = new Dict();
                     dict.setId(d.getThirdPartyId());
-                    dict.setName(d.getThirdPartyName());
+                    if (StringUtils.isNoneEmpty(d.getDistrict())) {
+                        dict.setName(StringUtils.join(d.getDistrict(), "  ", d.getThirdPartyName()));
+                    } else {
+                        if (StringUtils.isNoneEmpty(d.getCity())) {
+                            dict.setName(StringUtils.join(d.getCity(), "  ", d.getThirdPartyName()));
+                        } else if (StringUtils.isNoneEmpty(d.getProvince())) {
+                            dict.setName(StringUtils.join(d.getProvince(), "  ", d.getThirdPartyName()));
+                        } else {
+                            dict.setName(d.getThirdPartyName());
+                        }
+                    }
                     return dict;
                 }).collect(Collectors.toList());
         return new TavernDictResponse(dictList);
