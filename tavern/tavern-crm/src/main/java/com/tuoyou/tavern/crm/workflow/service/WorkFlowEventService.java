@@ -22,6 +22,8 @@ public interface WorkFlowEventService extends IService<WorkFlowEvent> {
 
     void startWorkFlow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId);
 
+    void updateWorkFlow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId);
+
     void removeWorkFlow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId);
 
     int saveWorkFlowEvent(WorkFlowEvent workFlowEvent, String businessId);

@@ -70,10 +70,14 @@
       </el-table-column>
       <el-table-column prop="createDate" label="创建时间" header-align="center" align="center">
       </el-table-column>
-      <el-table-column label="操作" header-align="center" align="center" width="100"
-                       v-if="sys_presales_business_del">
+      <el-table-column label="操作" header-align="center" align="center" width="400px"
+                       v-if="sys_presales_business_del || sys_presales_business_dtl || sys_presales_business_edit">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-delete" label="删除" v-if="sys_presales_business_del" type="danger"
+          <kt-button icon="fa fa-search" label="业务详情" v-if="sys_presales_business_dtl" type="primary"
+                     @click="handleDtl(scope.row)"/>
+          <kt-button icon="fa fa-edit" label="业务修改" v-if="sys_presales_business_edit"
+                     @click="handleEdit(scope.row)"/>
+          <kt-button icon="fa fa-delete" label="业务删除" v-if="sys_presales_business_del" type="danger"
                      @click="handleDelete(scope.row)"/>
         </template>
       </el-table-column>
@@ -97,11 +101,13 @@
                      no-data-text="无匹配数据"
                      @change="linkChange"
                      :loading="remoteBusinessDictLoading"
-                     prop="business">
+                     prop="business"
+                     :disabled="!operation">
             <el-option v-for="item in selectedBizDict"
                        :key="item.id"
                        :value="item.id"
-                       :label="item.name"/>
+                       :label="item.name"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="关联公司" label-width="150px" prop="company">
@@ -221,8 +227,8 @@
         </el-form>
         <el-form-item label="服务开始时间" label-width="150px" prop="beginDate"
                       :rules="{required: true, message: '请选择是否开始服务', trigger: 'change'}">
-          <el-date-picker v-model="dljzForm.beginDate" type="datetime" placeholder="选择日期时间"
-                          @change="dljzEndDateChange"></el-date-picker>
+          <el-date-picker v-model="dljzForm.beginDate" type="datetime" placeholder="选择日期时间" clearable
+                          @change="$forceUpdate()"></el-date-picker>
         </el-form-item>
         <el-form-item label="服务期限(月)" label-width="150px" prop="months"
                       :rules="{required: true, message: '请填写服务期限(月)', trigger: 'change'}">
@@ -230,7 +236,8 @@
         </el-form-item>
         <el-form-item label="服务开始" label-width="150px" prop="isBegin"
                       :rules="{required: true, message: '请填写服务开始', trigger: 'change'}">
-          <el-select v-model="dljzForm.isBegin" clearable auto-complete="off" placeholder="请选择">
+          <el-select v-model="dljzForm.isBegin" clearable auto-complete="off" placeholder="请选择"
+                     @change="$forceUpdate()">
             <el-option label="未开始" value='0'></el-option>
             <el-option label="已开始" value='1'></el-option>
           </el-select>
@@ -246,13 +253,14 @@
         </el-form>
         <el-form-item label="托管状态" label-width="150px" prop="isTrust"
                       :rules="{required: true, message: '请选择托管状态', trigger: 'change'}">
-          <el-select v-model="djfwForm.isTrust" clearable auto-complete="off" placeholder="请选择">
+          <el-select v-model="djfwForm.isTrust" clearable auto-complete="off" placeholder="请选择"
+                     @change="$forceUpdate()">
             <el-option label="未开始" value='0'></el-option>
             <el-option label="已开始" value='1'></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="服务开始时间" label-width="150px" prop="beginDate">
-          <el-date-picker v-model="djfwForm.beginDate" type="datetime" placeholder="选择日期时间"
+          <el-date-picker v-model="djfwForm.beginDate" type="datetime" placeholder="选择日期时间" clearable
                           @change="djfwEndDateChange"></el-date-picker>
         </el-form-item>
         <el-form-item label="服务期限(月)" label-width="150px" prop="months"
@@ -268,8 +276,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="缴款人数" label-width="150px" prop="employeeNum">
-          <el-input v-model="djfwForm.employeeNum" placeholder="请输入缴款人数" :disabled="djfwConfirmNum"
-                    :readonly=true></el-input>
+          <el-input v-model="djfwForm.employeeNum" placeholder="请输入缴款人数" :disabled="djfwConfirmNum"></el-input>
         </el-form-item>
         <el-form-item label="服务结束时间" label-width="150px" prop="endDate">
           <el-date-picker v-model="djfwForm.endDate" type="datetime" :disabled="true"></el-date-picker>
@@ -295,9 +302,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button :size="size" @click.native="dialogVisible = false">{{$t('action.cancel')}}</el-button>
-        <el-button :size="size" type="primary" @click="submitForm()" :loading="editLoading">
+        <el-button :size="size" @click.native="dialogVisible = false" v-if="!showDtl">{{$t('action.cancel')}}</el-button>
+        <el-button :size="size" type="primary" @click="submitForm()" :loading="editLoading" v-if="!showDtl">
           {{$t('action.submit')}}
+        </el-button>
+        <el-button :size="size" type="primary"  @click.native="dialogVisible = false" v-if="showDtl">
+          关闭
         </el-button>
       </div>
     </el-dialog>
@@ -453,6 +463,9 @@
         ownerName: '',
         sys_presales_business_add: false,
         sys_presales_business_del: false,
+        sys_presales_business_dtl: false,
+        sys_presales_business_edit: false,
+        showDtl: false,
         staffCnt: '',
         chosenNode: {}
 
@@ -460,6 +473,8 @@
     }, created() {
       this.sys_presales_business_add = hasPermission('sys:presales:business:add')
       this.sys_presales_business_del = hasPermission('sys:presales:business:del')
+      this.sys_presales_business_dtl = hasPermission('sys:presales:business:dtl')
+      this.sys_presales_business_edit = hasPermission('sys:presales:business:edit')
       //初始化客户信息
       this.dtlForm = this.$route.params;
       let tmpInfo = JSON.parse(localStorage.getItem("orderDtlInfo"));
@@ -499,6 +514,8 @@
       },
       // 显示新增界面
       handleAdd: function () {
+        this.showDtl = false
+        this.initDict()
         this.dataForm = {
           business: '',
           company: '',
@@ -534,10 +551,94 @@
         this.selectBiz(null)
       },
       // 显示编辑界面
-      handleEdit: function (params) {
+      handleDtl: function (params) {
+        this.showDtl = true;
+
+        this.initDict()
+        this.remoteBusinessDict(params.businessName)
+        this.linkChange(params.businessId)
+        this.dataForm = Object.assign({}, params)
+        // this.dljzForm = Object.assign({}, params)
+        this.dljzForm.beginDate = params.dljzBeginDate
+        this.dljzForm.endDate = params.dljzEndDate
+        this.dljzForm.months = params.dljzDiff
+        if(params.dljzBeginDate != null){
+          this.dljzForm.isBegin = '1'
+        }
+
+        // this.djfwForm = Object.assign({}, params)
+        if (params.gjjsbdjBeginDate != null) {
+          this.djfwForm.beginDate = params.gjjsbdjBeginDate + " 00:00:00"
+          this.djfwForm.isTrust = '1'
+          this.djfwEndDateChange()
+        }
+        if (params.employeeNum != null && params.employeeNum != 0) {
+          this.djfwForm.confirmNum = '1'
+          this.djfwConfirmChange('1')
+          this.djfwForm.employeeNum = params.employeeNum
+        }
+        this.djfwForm.endDate = params.gjjsbdjEndDate
+        this.djfwForm.months = params.gjjsbdjDiff
+        this.gszcForm = Object.assign({}, params)
+        this.dataForm.business = params.businessName
+        this.linkThirdPartyChange()
+        this.findThirdPartyDictById(params.thirdPartyId + '')
+        if (this.selectedPartyDict.length != 0) {
+          this.dataForm.thirdParty = this.selectedPartyDict[0].name
+        }
+        this.deletePreEventDict(params.businessId)
+        this.findPreEventDictById(params.preEventId + '')
+        if (this.selectedPreEventDict.length != 0) {
+          this.dataForm.preEvent = this.selectedPreEventDict[0].name
+        }
         this.dialogVisible = true
         this.operation = false
-        this.dataForm = Object.assign({}, params.row)
+
+        // this.dataForm.owner= params.owner
+      },
+      handleEdit: function (params) {
+        this.showDtl = false
+        this.initDict()
+        this.remoteBusinessDict(params.businessName)
+        this.linkChange(params.businessId)
+        this.dataForm = Object.assign({}, params)
+        // this.dljzForm = Object.assign({}, params)
+        this.dljzForm.beginDate = params.dljzBeginDate
+        this.dljzForm.endDate = params.dljzEndDate
+        this.dljzForm.months = params.dljzDiff
+        if(params.dljzBeginDate != null){
+          this.dljzForm.isBegin = '1'
+        }
+
+        // this.djfwForm = Object.assign({}, params)
+        if (params.gjjsbdjBeginDate != null) {
+          this.djfwForm.beginDate = params.gjjsbdjBeginDate + " 00:00:00"
+          this.djfwForm.isTrust = '1'
+          this.djfwEndDateChange()
+        }
+        if (params.employeeNum != null && params.employeeNum != 0) {
+          this.djfwForm.confirmNum = '1'
+          this.djfwConfirmChange('1')
+          this.djfwForm.employeeNum = params.employeeNum
+        }
+         this.djfwForm.endDate = params.gjjsbdjEndDate
+         this.djfwForm.months = params.gjjsbdjDiff
+        this.gszcForm = Object.assign({}, params)
+        this.dataForm.business = params.businessName
+        this.linkThirdPartyChange()
+        this.findThirdPartyDictById(params.thirdPartyId + '')
+        if (this.selectedPartyDict.length != 0) {
+          this.dataForm.thirdParty = this.selectedPartyDict[0].name
+        }
+        this.deletePreEventDict(params.businessId)
+        this.findPreEventDictById(params.preEventId + '')
+        if (this.selectedPreEventDict.length != 0) {
+          this.dataForm.preEvent = this.selectedPreEventDict[0].name
+        }
+        this.dialogVisible = true
+        this.operation = false
+
+        // this.dataForm.owner= params.owner
       },
       handleDelete: function (pa) {
         let params = Object.assign({}, pa)
@@ -570,7 +671,11 @@
         });
         let label = {}
         label = this.bizDict.find(item => {
-          return this.dataForm.business == item.id;
+          if (this.operation) {
+            return this.dataForm.business == item.id;
+          } else {
+            return this.dataForm.business == item.name;
+          }
         })
         let valid = true;
         if (label.name == '异常业务' && (this.dataForm.nextNode == null || this.dataForm.nextNode == '')) {
@@ -585,9 +690,9 @@
             valid = valid && dataFormValid
             break;
           case "公积金代缴":
-            if(this.djfwForm.isTrust == '1' && (this.djfwForm.beginDate == null || this.djfwForm.beginDate == undefined || this.djfwForm.beginDate == '')){
-                this.$message({message: '若选择已托管，请输入开始日期！', type: 'error'})
-                return
+            if (this.djfwForm.isTrust == '1' && (this.djfwForm.beginDate == null || this.djfwForm.beginDate == undefined || this.djfwForm.beginDate == '')) {
+              this.$message({message: '若选择已托管，请输入开始日期！', type: 'error'})
+              return
             }
             if (this.djfwForm.confirmNum != '0') {
               if (this.djfwForm.employeeNum == '' || this.djfwForm.employeeNum == 0) {
@@ -601,7 +706,7 @@
             valid && dataFormValid
             break;
           case "代缴社保":
-            if(this.djfwForm.isTrust == 1 && (this.djfwForm.beginDate == null || this.djfwForm.beginDate == undefined || this.djfwForm.beginDate == '')){
+            if (this.djfwForm.isTrust == 1 && (this.djfwForm.beginDate == null || this.djfwForm.beginDate == undefined || this.djfwForm.beginDate == '')) {
               this.$message({message: '若选择已托管，请输入开始日期！', type: 'error'})
               return
             }
@@ -625,54 +730,92 @@
         }
         if (valid) {
           this.$confirm('确认提交吗？', '提示', {}).then(() => {
-            this.editLoading = true
-            let params = Object.assign({}, this.dataForm)
-            params.businessId = this.dataForm.business
-            params.thirdPartyId = this.dataForm.thirdParty
-            params.orderId = this.dtlForm.id
-            params.companyId = this.dataForm.company
-            params.creatorId = sessionStorage.getItem("userId")
-            params.creatorName = sessionStorage.getItem("userName")
-            params.ownerId = this.dataForm.owner
-            params.owner = this.ownerName;
-            params.curNode = this.dataForm.nextNode;
+              this.editLoading = true
+              let params = Object.assign({}, this.dataForm)
+              params.businessId = this.dataForm.business
+              params.thirdPartyId = this.dataForm.thirdParty
+              params.orderId = this.dtlForm.id
+              params.companyId = this.dataForm.company
+              params.creatorId = sessionStorage.getItem("userId")
+              params.creatorName = sessionStorage.getItem("userName")
+              params.ownerId = this.dataForm.owner
+              params.owner = this.ownerName;
+              params.curNode = this.dataForm.nextNode;
 
-            let dljzDetail = {}
-            if (this.dljzForm.beginDate != '') {
-              dljzDetail.dljzBeginDate = this.dateFormat(this.dljzForm.beginDate)
-            }
-            if (this.dljzForm.endDate != '') {
-              dljzDetail.dljzEndDate = this.dljzForm.endDate
-            }
-            dljzDetail.isBegin = this.dljzForm.isBegin
-            let gjjsbdjDetail = {}
-            if (this.djfwForm.beginDate != '') {
-              gjjsbdjDetail.gjjsbdjBeginDate = this.dateFormat(this.djfwForm.beginDate)
-            }
-            if (this.djfwForm.endDate != '') {
-              gjjsbdjDetail.gjjsbdjEndDate = this.djfwForm.endDate
-            }
-            gjjsbdjDetail.employeeNum = this.djfwForm.employeeNum
-            let gszcDetail = {}
-            gszcDetail.absent = this.gszcForm.absent
-            gszcDetail.regLocationType = this.gszcForm.regLocationType
+              let dljzDetail = {}
+              if (this.dljzForm.beginDate != '') {
+                dljzDetail.dljzBeginDate = this.dateFormat(this.dljzForm.beginDate)
+              }
+              if (this.dljzForm.endDate != '') {
+                dljzDetail.dljzEndDate = this.dljzForm.endDate
+              }
+              dljzDetail.isBegin = this.dljzForm.isBegin
+              dljzDetail.diff = this.dljzForm.months
+              let gjjsbdjDetail = {}
+              if (this.djfwForm.beginDate != '') {
+                gjjsbdjDetail.gjjsbdjBeginDate = this.dateFormat(this.djfwForm.beginDate)
+              }
+              if (this.djfwForm.endDate != '') {
+                gjjsbdjDetail.gjjsbdjEndDate = this.djfwForm.endDate
+              }
+              gjjsbdjDetail.employeeNum = this.djfwForm.employeeNum
+              gjjsbdjDetail.diff = this.djfwForm.months
+              let gszcDetail = {}
+              gszcDetail.absent = this.gszcForm.absent
+              gszcDetail.regLocationType = this.gszcForm.regLocationType
 
-            params.dljzDetail = dljzDetail
-            params.gjjsbdjDetail = gjjsbdjDetail
-            params.gszcDetail = gszcDetail
+              params.dljzDetail = dljzDetail
+              params.gjjsbdjDetail = gjjsbdjDetail
+              params.gszcDetail = gszcDetail
 
+              if (this.operation) {
+                this.$api.customer.saveOrderBusiness(params).then((res) => {
+                  this.editLoading = false
+                  this.$message({message: '操作成功', type: 'success'})
+                  this.dialogVisible = false
+                  this.findPage(null)
+                }).catch(res => {
+                  this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+                  this.editLoading = false
+                  this.dialogVisible = false
+                })
+              } else {
+                this.bizDict.find(item => {
+                  if (this.dataForm.business == item.name) {
+                    params.businessId = item.id
+                  }
+                  ;
+                })
 
-            this.$api.customer.saveOrderBusiness(params).then((res) => {
-              this.editLoading = false
-              this.$message({message: '操作成功', type: 'success'})
-              this.dialogVisible = false
-              this.findPage(null)
-            }).catch(res => {
-              this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
-              this.editLoading = false
-              this.dialogVisible = false
-            })
-          })
+                this.thirdPartyDict.find(item =>{
+
+                  if (this.dataForm.thirdParty == item.name) {
+                    params.thirdPartyId = item.id
+                  }
+                  ;
+                })
+
+                this.ownerDict.find(item => {
+                  if (this.dataForm.owner == item.name) {
+                    params.ownerId = item.id
+                    params.owner = item.name
+                  }
+                  ;
+                })
+                this.$api.customer.editOrderBusiness(params).then((res) => {
+                  this.editLoading = false
+                  this.$message({message: '操作成功', type: 'success'})
+                  this.dialogVisible = false
+                  this.findPage(null)
+                }).catch(res => {
+                  this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+                  this.editLoading = false
+                  this.dialogVisible = false
+                })
+                this.editLoading = false
+              }
+            }
+          )
         } else {
           this.$message({message: '操作失败,数据填写有误', type: 'error'})
         }
@@ -681,12 +824,14 @@
       // 处理表格列过滤显示
       displayFilterColumnsDialog: function () {
         this.$refs.tableColumnFilterDialog.setDialogVisible(true)
-      },
+      }
+      ,
       // 处理表格列过滤显示
       handleFilterColumns: function (data) {
         this.filterColumns = data.filterColumns
         this.$refs.tableColumnFilterDialog.setDialogVisible(false)
-      },
+      }
+      ,
       // 处理表格列过滤显示
       initColumns: function () {
         this.columns = [
@@ -697,7 +842,8 @@
           {prop: "createDate", label: "创建时间", minWidth: 120},
         ]
         this.filterColumns = JSON.parse(JSON.stringify(this.columns));
-      },
+      }
+      ,
       selectBiz: function (e) {
 
         this.showHelpBookKeeping = false
@@ -744,14 +890,18 @@
             this.ownerShow = true;
             break;
         }
-      }, initBusinessDict: function () {
+      }
+      ,
+      initBusinessDict: function () {
         this.$api.customer.findBizDict(null).then((res) => {
           this.bizDict = res.data;
           this.selectedBizDict = res.data;
         }).catch((res) => {
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
         })
-      }, remoteBusinessDict: function (param) {
+      }
+      ,
+      remoteBusinessDict: function (param) {
         if (param != '') {
           this.remoteBusinessDictLoading = true;
           setTimeout(() => {
@@ -764,7 +914,8 @@
         } else {
           this.selectedBizDict = this.bizDict
         }
-      },
+      }
+      ,
       initCompanyDict: function () {
         let param = {};
         param.customId = this.dtlForm.customId;
@@ -774,7 +925,9 @@
         }).catch((res) => {
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
         })
-      }, remoteCompanyDict: function (param) {
+      }
+      ,
+      remoteCompanyDict: function (param) {
         if (param != '') {
           this.remoteCompanyDictLoading = true;
           setTimeout(() => {
@@ -787,7 +940,8 @@
         } else {
           this.selectedCompanyDict = this.companyDict;
         }
-      },
+      }
+      ,
       initPreEventDict: function () {
         let param = {};
         param.orderId = this.dtlForm.id;
@@ -797,7 +951,9 @@
         }).catch((res) => {
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
         })
-      }, initNextNodeDict: function (params) {
+      }
+      ,
+      initNextNodeDict: function (params) {
         let nextNodeRequest = {};
         nextNodeRequest.businessId = params
         this.$api.workflow.findRootNextNode(nextNodeRequest).then((res) => {
@@ -806,7 +962,8 @@
         }).catch((res) => {
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
         })
-      },
+      }
+      ,
       remoteNextNodeDict: function (param) {
         if (param != '') {
           this.remoteNextNodeDictLoading = true;
@@ -820,7 +977,8 @@
         } else {
           this.selectedNextNodeDict = this.nextNodeDict;
         }
-      },
+      }
+      ,
       remotePreEventDict: function (param) {
         if (param != '') {
           this.remotePreEventDictLoading = true;
@@ -834,7 +992,31 @@
         } else {
           this.selectedPreEventDict = this.preEventDict;
         }
-      },
+      }
+      ,
+      deletePreEventDict: function (param) {
+        if (param != '') {
+          this.remotePreEventDictLoading = true;
+          this.remotePreEventDictLoading = false;
+          for (let k = 0; k < this.preEventDict.length; k++) {
+            if (this.preEventDict[k].id == param) {
+              this.preEventDict.splice(k, 1);
+              k--;
+            }
+          }
+        }
+      }
+      ,
+      findPreEventDictById: function (param) {
+        if (param != '') {
+          this.remotePreEventDictLoading = true;
+          this.remotePreEventDictLoading = false;
+          this.selectedPreEventDict = this.preEventDict.filter(item => {
+            return item.id == param;
+          });
+        }
+      }
+      ,
       initThirdPartyDict: function () {
         this.$api.customer.findThirdPartyDict().then((res) => {
           this.thirdPartyDict = res.data;
@@ -842,7 +1024,9 @@
         }).catch((res) => {
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
         })
-      }, remoteThirdPartyDict: function (param) {
+      }
+      ,
+      remoteThirdPartyDict: function (param) {
         if (param != '') {
           this.remoteThirdPartyDictLoading = true;
           setTimeout(() => {
@@ -855,7 +1039,19 @@
         } else {
           this.selectedPartyDict = this.thirdPartyDict;
         }
-      }, linkChange: function (val) {
+      }
+      ,
+      findThirdPartyDictById: function (param) {
+        if (param != '') {
+          this.remoteThirdPartyDictLoading = true;
+          this.remoteThirdPartyDictLoading = false;
+          this.selectedPartyDict = this.thirdPartyDict.filter(item => {
+            return item.id == param;
+          });
+        }
+      }
+      ,
+      linkChange: function (val) {
         this.dataForm.company = ''
         this.dataForm.owner = ''
         this.dataForm.nextNode = ''
@@ -899,7 +1095,9 @@
           this.initNextNodeDict(val)
         }
         this.selectBiz(val)
-      }, linkCompanyDictChange: function (val) {
+      }
+      ,
+      linkCompanyDictChange: function (val) {
         this.staffCnt = ''
         let request = {};
         request.companyId = val
@@ -910,13 +1108,17 @@
         }).catch((res) => {
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
         })
-      }, linkThirdPartyChange: function () {
+      }
+      ,
+      linkThirdPartyChange: function () {
         if (this.dataForm.needThirdParty != undefined && this.dataForm.needThirdParty != '' && this.dataForm.needThirdParty != '0') {
           this.thirdPartyShow = false;
         } else {
           this.thirdPartyShow = true;
         }
-      }, djfwConfirmChange: function (val) {
+      }
+      ,
+      djfwConfirmChange: function (val) {
         this.djfwForm.employeeNum = ''
         if (val != undefined && val != '' && val != '0') {
           this.djfwConfirmNum = false;
@@ -925,22 +1127,34 @@
           this.djfwConfirmNum = true;
 
         }
-      }, djfwEndDateChange: function () {
+      }
+      ,
+      djfwEndDateChange: function () {
         if (this.djfwForm.beginDate != '' && this.djfwForm.months != '') {
           this.djfwForm.endDate = this.calEndDate(this.djfwForm.beginDate, this.djfwForm.months);
         }
-      }, dljzEndDateChange: function () {
+        this.$forceUpdate();
+
+      }
+      ,
+      dljzEndDateChange: function () {
         if (this.dljzForm.beginDate != '' && this.dljzForm.months != '') {
           this.dljzForm.endDate = this.calEndDate(this.dljzForm.beginDate, this.dljzForm.months);
         }
-      }, calEndDate: function (beginDate, months) {
+        this.$forceUpdate();
+      }
+      ,
+      calEndDate: function (beginDate, months) {
         return calDate(beginDate, months);
-      }, handleItemChange: function (val) {
+      }
+      ,
+      handleItemChange: function (val) {
         this.ownerName = this.ownerDict.find(item => {
           return val == item.id;
         }).name
         this.$forceUpdate()
-      },
+      }
+      ,
       linkNextNodeExchange: function (val) {
         this.dataForm.owner = ''
         if (val != undefined && val != '') {
@@ -961,11 +1175,13 @@
           return val == item.nodeId;
         })
 
-      },
+      }
+      ,
       // 时间格式化
       dateFormat: function (date) {
         return formatDateSimple8(date)
-      },
+      }
+      ,
       initDict: function () {
         //1. 初始化业务类型
         this.initBusinessDict();
@@ -979,11 +1195,13 @@
         //4. 初始化前置任务/orderId
 
 
-      },
+      }
+      ,
       handleCurrentChange(val) {
         this.pageRequest.current = val;
         this.findPage(this.pageRequest);
-      },
+      }
+      ,
     },
     mounted() {
       this.initColumns()

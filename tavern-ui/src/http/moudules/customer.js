@@ -173,6 +173,13 @@ export const saveOrderBusiness = (data) => {
     data
   })
 }
+export const editOrderBusiness = (data) => {
+  return axios({
+    url: '/crm/order/editBizRel',
+    method: 'put',
+    data
+  })
+}
 // 删除订单业务信息/companyDetail
 export const deleteOrderBusiness = (data) => {
   return axios({

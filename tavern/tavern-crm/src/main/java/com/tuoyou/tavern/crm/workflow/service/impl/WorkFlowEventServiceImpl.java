@@ -130,6 +130,44 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         }
 
     }
+    @TargetDataSource(name = "workflow")
+    @Transactional
+    @Override
+    public void updateWorkFlow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId) {
+        //检查是否需要前置条件
+        //1. 有：则先检查前置条件有没有结束
+        //2. 无：直接
+        if (StringUtils.isNotEmpty(crmOrderBusinessRelDTO.getPreEventId())) {
+            //1. 插入前置条件
+            WorkFlowEventDependency workFlowEventDependency = new WorkFlowEventDependency();
+            workFlowEventDependency.setCreateDate(LocalDateTime.now());
+            workFlowEventDependency.setPreEvent(crmOrderBusinessRelDTO.getPreEventId());
+            workFlowEventDependency.setNextEvent(eventId);
+            this.workFlowEventDependencyService.saveOrUpdate(workFlowEventDependency);
+        }
+
+        //1.work_event 建立数据
+        WorkFlowEvent workFlowEvent = new WorkFlowEvent();
+        workFlowEvent.setEventId(eventId);
+        workFlowEvent.setBeginDate(LocalDateTime.now());
+        workFlowEvent.setCurOperator(crmOrderBusinessRelDTO.getOwnerId());
+        workFlowEvent.setEventOwner(crmOrderBusinessRelDTO.getOwnerId());
+        workFlowEvent.setCurOperatorName(crmOrderBusinessRelDTO.getOwner());
+        workFlowEvent.setCurNodeId(crmOrderBusinessRelDTO.getCurNode());
+        switch (crmOrderBusinessRelDTO.getBusinessId()) {
+            case "BIZ_1":
+                workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getGjjsbdjDetail().getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                break;
+            case "BIZ_2":
+                workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getGjjsbdjDetail().getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                break;
+            case "BIZ_3":
+                workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getDljzDetail().getDljzBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                break;
+        }
+        this.workFlowEventService.updateById(workFlowEvent);
+
+    }
 
     @TargetDataSource(name = "workflow")
     @Transactional

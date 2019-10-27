@@ -49,6 +49,11 @@ public class CustomOrderInfoEndpoint {
         this.crmCustomOrderBusinessRelService.saveOrderBusinessAndStartWorkFlow(crmOrderBusinessRelDTO);
         return new TavernResponse();
     }
+    @PutMapping("/editBizRel")
+    public TavernResponse updateCrmCustomOrderInfo(@RequestBody @Valid CrmOrderBusinessRelDTO crmOrderBusinessRelDTO) {
+        this.crmCustomOrderBusinessRelService.updateOrderBusinessAndStartWorkFlow(crmOrderBusinessRelDTO);
+        return new TavernResponse();
+    }
 
     @DeleteMapping("/deleteBizRel")
     public TavernResponse deleteCrmCustomOrderInfo(@RequestBody @Valid CrmOrderBusinessRelDTO crmOrderBusinessRelDTO) {

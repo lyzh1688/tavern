@@ -20,6 +20,7 @@ import * as customer from './moudules/customer'
 import * as order from './moudules/order'
 import * as outer from './moudules/outer'
 import * as workflow from './moudules/workflow'
+import * as thirdParty from './moudules/thirdParty'
 
 
 // 默认全部导出
@@ -43,4 +44,5 @@ export default {
   order,
   outer,
   workflow,
+  thirdParty,
 }

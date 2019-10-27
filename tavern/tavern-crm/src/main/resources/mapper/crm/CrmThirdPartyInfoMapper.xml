@@ -16,4 +16,21 @@
     <result column="CONTACT_NUMBER2" jdbcType="VARCHAR" property="contactNumber2" />
     <result column="CONTACT_WECHAT2" jdbcType="VARCHAR" property="contactWechat2" />
   </resultMap>
+  <select id="selectPage" resultMap="BaseResultMap">
+    SELECT  * FROM CRM_CUSTOM_THIRD_PARTY_INFO
+    <where>
+      <if test="query.thirdPartyName != null and query.thirdPartyName != ''">
+        and THIRD_PARTY_NAME like concat('%', #{query.thirdPartyName}, '%')
+      </if>
+      <if test="query.province != null and query.province != ''">
+        and PROVINCE like concat('%', #{query.province}, '%')
+      </if>
+      <if test="query.city != null and query.city != ''">
+        and CITY like concat('%', #{query.city}, '%')
+      </if>
+      <if test="query.district != null and query.district != ''">
+        and DISTRICT like concat('%', #{query.district}, '%')
+      </if>
+    </where>
+  </select>
 </mapper>

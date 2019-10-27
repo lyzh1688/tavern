@@ -11,4 +11,5 @@ public class GjjsbdjDetail {
     private String gjjsbdjBeginDate;
     private String gjjsbdjEndDate;
     private int employeeNum;
+    private String diff;
 }

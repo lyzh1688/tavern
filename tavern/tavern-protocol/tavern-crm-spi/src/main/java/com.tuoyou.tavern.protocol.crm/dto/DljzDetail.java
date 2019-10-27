@@ -11,4 +11,5 @@ public class DljzDetail {
     private String dljzBeginDate;
     private String dljzEndDate;
     private String isBegin;
+    private String diff;
 }

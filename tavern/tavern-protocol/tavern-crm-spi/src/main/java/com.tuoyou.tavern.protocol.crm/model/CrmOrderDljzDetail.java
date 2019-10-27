@@ -22,4 +22,6 @@ public class CrmOrderDljzDetail extends Model<CrmOrderDljzDetail> {
 
     private String isBegin;
 
+    private String diff;
+
 }

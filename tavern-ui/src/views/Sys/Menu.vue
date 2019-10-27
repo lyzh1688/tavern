@@ -119,7 +119,7 @@
                 </div>
               </el-popover> -->
               <el-input v-model="dataForm.icon" v-popover:iconListPopover :readonly="false"
-                        placeholder="菜单图标名称（如：fa fa-home fa-lg）" class="icon-list__input"></el-input>
+                        placeholder="菜单图标名称（此处使用ELement官方图标）" class="icon-list__input"></el-input>
             </el-col>
             <el-col :span="2" class="icon-list__tips">
               <fa-icon-tooltip/>

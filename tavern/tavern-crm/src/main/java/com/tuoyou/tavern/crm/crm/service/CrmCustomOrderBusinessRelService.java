@@ -19,9 +19,13 @@ public interface CrmCustomOrderBusinessRelService extends IService<CrmOrderBusin
 
     void saveOrderBusinessAndStartWorkFlow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO);
 
-    void deleteOrderBusinessAndWorkFlow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO,String eventId);
+    void updateOrderBusinessAndStartWorkFlow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO);
+
+    void deleteOrderBusinessAndWorkFlow(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId);
 
     void saveOrderBusiness(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId);
+
+    void updateOrderBusiness(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId);
 
     void rollBackOrderBusiness(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId);
 

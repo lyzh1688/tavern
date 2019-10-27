@@ -32,8 +32,24 @@
             t1.BUSINESS_TAG businessTag,
             t1.PRE_EVENT_ID preEventId,
             t1.REMARK remark,
-            DATE_FORMAT(t1.CREATE_DATE,'%Y-%m-%d %H:%i:%s') createDate
-        from CRM_ORDER_BUSINESS_REL t1 LEFT JOIN CRM_COMPANY_INFO t2 on t1.COMPANY_ID = t2.COMPANY_ID,CRM_BUSINESS_DICT t3,
+            DATE_FORMAT(t1.CREATE_DATE,'%Y-%m-%d %H:%i:%s') createDate,
+            t5.BEGIN_DATE dljzBeginDate,
+            t5.END_DATE dljzEndDate,
+            t5.IS_BEGIN dljzEndDate,
+            t5.DIFF dljzDiff,
+            t6.BEGIN_DATE gjjsbdjBeginDate,
+            t6.END_DATE gjjsbdjEndDate,
+             t6.DIFF gjjsbdjDiff,
+            t6.EMPLOYEE_NUM employeeNum,
+            t7. ABSENT absent,
+            t7.REG_LOCATION_TYPE regLocationType
+        from CRM_ORDER_BUSINESS_REL t1
+         LEFT JOIN CRM_COMPANY_INFO t2 on t1.COMPANY_ID = t2.COMPANY_ID
+         LEFT JOIN CRM_ORDER_DLJZ_DETAIL t5 on t1.EVENT_ID = t5.EVENT_ID
+         LEFT JOIN CRM_ORDER_GJJSBDJ_DETAIL t6 on t1.EVENT_ID = t6.EVENT_ID
+         LEFT JOIN CRM_ORDER_GSZC_DETAIL t7 on t1.EVENT_ID = t7.EVENT_ID
+        ,
+        CRM_BUSINESS_DICT t3,
         CRM_CUSTOM_ORDER_INFO t4
         where t1.BUSINESS_ID = t3.BUSINESS_ID
         and t1.ORDER_ID = t4.ID
