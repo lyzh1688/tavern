@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -130,6 +131,7 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         }
 
     }
+
     @TargetDataSource(name = "workflow")
     @Transactional
     @Override
@@ -187,13 +189,31 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
     @TargetDataSource(name = "workflow")
     @Override
     public IPage<MyTodoListVO> getMyPendingWork(Page page, MyToDoListDTO myToDoListDTO) {
-        return this.baseMapper.selectMyPendingWork(page, myToDoListDTO);
+        IPage<MyTodoListVO> iPage = this.baseMapper.selectMyPendingWork(page, myToDoListDTO);
+        return getMyTodoListVOIPage(iPage);
     }
 
     @TargetDataSource(name = "workflow")
     @Override
     public IPage<MyTodoListVO> getAllWorkEvent(Page page, MyToDoListDTO myToDoListDTO) {
-        return this.baseMapper.selectAllWorkEvent(page, myToDoListDTO);
+        IPage<MyTodoListVO> iPage = this.baseMapper.selectAllWorkEvent(page, myToDoListDTO);
+        return getMyTodoListVOIPage(iPage);
+    }
+
+    private IPage<MyTodoListVO> getMyTodoListVOIPage(IPage<MyTodoListVO> iPage) {
+        Map<String, String> userMap = this.hrmUserDictService.queryStaffByRole("")
+                .getData()
+                .parallelStream()
+                .collect(Collectors.toMap(Dict::getId, Dict::getName));
+        List<MyTodoListVO> myTodoListVOList = iPage.getRecords()
+                .stream()
+                .peek(vo -> {
+                    if (StringUtils.isNotEmpty(vo.getPreSalesId()) && userMap.containsKey(vo.getPreSalesId())) {
+                        vo.setPreSales(userMap.get(vo.getPreSalesId()));
+                    }
+                }).collect(Collectors.toList());
+        iPage.setRecords(myTodoListVOList);
+        return iPage;
     }
 
     @Transactional

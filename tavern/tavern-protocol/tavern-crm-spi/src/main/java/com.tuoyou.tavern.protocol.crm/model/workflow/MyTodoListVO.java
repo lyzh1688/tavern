@@ -32,4 +32,10 @@ public class MyTodoListVO {
     private String curNodeName;
     private String curNodeId;
     private String curOperatorName;
+    //售前
+    private String preSalesId;
+    private String preSales;
+    //对接人
+    private String ownerId;
+    private String owner;
 }

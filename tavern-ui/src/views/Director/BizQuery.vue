@@ -79,18 +79,16 @@
       </el-table-column>
       <el-table-column prop="customName" label="客户姓名" header-align="center" align="center">
       </el-table-column>
-      <el-table-column prop="wangwangAccnt" label="旺旺账号" header-align="center" align="center">
-      </el-table-column>
+      <!--<el-table-column prop="wangwangAccnt" label="旺旺账号" header-align="center" align="center">
+    </el-table-column>-->
       <el-table-column prop="companyName" label="公司名称" header-align="center" align="center">
       </el-table-column>
       <el-table-column prop="city" label="市" header-align="center" align="center">
       </el-table-column>
       <el-table-column prop="district" label="区" header-align="center" align="center">
       </el-table-column>
-      <el-table-column prop="remark" label="服务内容/备注" header-align="center" align="center" width="300px">
-      </el-table-column>
-      <el-table-column prop="weixinName" label="微信昵称" header-align="center" align="center">
-      </el-table-column>
+      <!--  <el-table-column prop="weixinName" label="微信昵称" header-align="center" align="center">
+        </el-table-column>-->
       <el-table-column prop="businessName" label="业务类型" header-align="center" align="center">
       </el-table-column>
       <el-table-column prop="cost" label="耗时(天)" header-align="center" align="center">
@@ -106,6 +104,10 @@
       <el-table-column prop="customLevel" label="客户级别" header-align="center" align="center">
       </el-table-column>
       <el-table-column prop="curOperatorName" label="当前处理人" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="preSales" label="售前" header-align="center" align="center">
+      </el-table-column>
+      <el-table-column prop="owner" label="对接人" header-align="center" align="center">
       </el-table-column>
       <el-table-column label="操作"
                        v-if="sys_director_biz_flow||sys_director_biz_company_view||sys_director_biz_delay_view||sys_director_biz_rechoose"

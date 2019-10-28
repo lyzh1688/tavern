@@ -60,9 +60,13 @@
         T3.CUSTOM_LEVEL customLevel,
         T8.name curNodeName,
         T8.node_id curNodeId,
-        T7.cur_operator_name curOperatorName
+        T7.cur_operator_name curOperatorName,
+        T1.OWNER_ID ownerId,
+        T1.OWNER owner,
+        T10.USER_ID preSalesId
+
         FROM
-        crm.CRM_CUSTOM_ORDER_INFO T,
+        crm.CRM_CUSTOM_ORDER_INFO T left join crm.CRM_USER_CUSTOMER_INFO T10 ON T.CUSTOM_ID = T10.CUSTOMER_ID,
         crm.CRM_ORDER_BUSINESS_REL T1
         left  join  crm.CRM_COMPANY_INFO T2 on T1.COMPANY_ID = T2.COMPANY_ID
         left  join crm.CRM_COMPANY_BUSINESS T5 on T1.COMPANY_ID = T5.COMPANY_ID  AND T1.BUSINESS_ID = T5.BUSINESS_ID ,
@@ -144,9 +148,13 @@
         T3.CUSTOM_LEVEL customLevel,
         T8.name curNodeName,
         T8.node_id curNodeId,
-        T7.cur_operator_name curOperatorName
+        T7.cur_operator_name curOperatorName,
+        T1.OWNER_ID ownerId,
+        T1.OWNER owner,
+        T10.USER_ID preSalesId
+
         FROM
-        crm.CRM_CUSTOM_ORDER_INFO T,
+        crm.CRM_CUSTOM_ORDER_INFO T left join crm.CRM_USER_CUSTOMER_INFO T10 ON T.CUSTOM_ID = T10.CUSTOMER_ID,
         crm.CRM_ORDER_BUSINESS_REL T1
         left  join  crm.CRM_COMPANY_INFO T2 on T1.COMPANY_ID = T2.COMPANY_ID
         left  join crm.CRM_COMPANY_BUSINESS T5 on T1.COMPANY_ID = T5.COMPANY_ID  AND T1.BUSINESS_ID = T5.BUSINESS_ID ,

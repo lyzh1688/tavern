@@ -239,6 +239,7 @@
         }
         this.pageRequest.wangwangAccnt = this.filters.wangwangAccnt;
         this.pageRequest.customName = this.filters.customName;
+        alert(this.sys_presales_customer_order_all)
         if(!this.sys_presales_customer_order_all){
           this.pageRequest.userId = sessionStorage.getItem("userId");
         }else {
