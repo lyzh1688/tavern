@@ -89,13 +89,19 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         workFlowEvent.setCurNodeId(crmOrderBusinessRelDTO.getCurNode());
         switch (crmOrderBusinessRelDTO.getBusinessId()) {
             case "BIZ_1":
-                workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getGjjsbdjDetail().getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                if (StringUtils.isNotEmpty(crmOrderBusinessRelDTO.getGjjsbdjDetail().getGjjsbdjBeginDate())) {
+                    workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getGjjsbdjDetail().getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                }
                 break;
             case "BIZ_2":
-                workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getGjjsbdjDetail().getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                if (StringUtils.isNotEmpty(crmOrderBusinessRelDTO.getGjjsbdjDetail().getGjjsbdjBeginDate())) {
+                    workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getGjjsbdjDetail().getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                }
                 break;
             case "BIZ_3":
-                workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getDljzDetail().getDljzBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                if (StringUtils.isNotEmpty(crmOrderBusinessRelDTO.getDljzDetail().getDljzBeginDate())) {
+                    workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getDljzDetail().getDljzBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                }
                 break;
         }
         this.workFlowEventService.saveWorkFlowEvent(workFlowEvent, crmOrderBusinessRelDTO.getBusinessId());
@@ -158,13 +164,19 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         workFlowEvent.setCurNodeId(crmOrderBusinessRelDTO.getCurNode());
         switch (crmOrderBusinessRelDTO.getBusinessId()) {
             case "BIZ_1":
-                workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getGjjsbdjDetail().getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                if (StringUtils.isNotEmpty(crmOrderBusinessRelDTO.getGjjsbdjDetail().getGjjsbdjBeginDate())) {
+                    workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getGjjsbdjDetail().getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                }
                 break;
             case "BIZ_2":
-                workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getGjjsbdjDetail().getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                if (StringUtils.isNotEmpty(crmOrderBusinessRelDTO.getGjjsbdjDetail().getGjjsbdjBeginDate())) {
+                    workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getGjjsbdjDetail().getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                }
                 break;
             case "BIZ_3":
-                workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getDljzDetail().getDljzBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                if (StringUtils.isNotEmpty(crmOrderBusinessRelDTO.getDljzDetail().getDljzBeginDate())) {
+                    workFlowEvent.setBeginDate(DateUtils.parseDateTime(crmOrderBusinessRelDTO.getDljzDetail().getDljzBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                }
                 break;
         }
         this.workFlowEventService.updateById(workFlowEvent);

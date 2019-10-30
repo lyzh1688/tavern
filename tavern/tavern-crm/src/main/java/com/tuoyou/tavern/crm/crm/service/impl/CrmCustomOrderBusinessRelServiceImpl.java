@@ -97,11 +97,15 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
                     crmOrderDljzDetail.setEventId(eventId);
                     crmOrderDljzDetail.setOrderId(crmOrderBusinessRelDTO.getOrderId());
                     crmOrderDljzDetail.setIsBegin(dljzDetail.getIsBegin());
-                    crmOrderDljzDetail.setBeginDate(DateUtils.parseDate(dljzDetail.getDljzBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
-                    crmOrderDljzDetail.setEndDate(DateUtils.parseDate(StringUtils.replacePattern(dljzDetail.getDljzEndDate(), "/", ""), DateUtils.SIMPLE_8_FORMATTER));
+                    if(StringUtils.isNoneEmpty(dljzDetail.getDljzBeginDate())){
+                        crmOrderDljzDetail.setBeginDate(DateUtils.parseDate(dljzDetail.getDljzBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
+                        crmCompanyBusiness.setBeginDate(DateUtils.parseDateTime(dljzDetail.getDljzBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                    }
+                    if(StringUtils.isNoneEmpty(dljzDetail.getDljzEndDate())){
+                        crmOrderDljzDetail.setEndDate(DateUtils.parseDate(StringUtils.replacePattern(dljzDetail.getDljzEndDate(), "/", ""), DateUtils.SIMPLE_8_FORMATTER));
+                        crmCompanyBusiness.setEndDate(DateUtils.parseDateTime(StringUtils.replacePattern(dljzDetail.getDljzEndDate(), "/", "") + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                    }
                     this.crmOrderDljzDetailService.save(crmOrderDljzDetail);
-                    crmCompanyBusiness.setBeginDate(DateUtils.parseDateTime(dljzDetail.getDljzBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
-                    crmCompanyBusiness.setEndDate(DateUtils.parseDateTime(StringUtils.replacePattern(dljzDetail.getDljzEndDate(), "/", "") + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
                     break;
                 case "BIZ_4":
                     GszcDetail gszcDetail = crmOrderBusinessRelDTO.getGszcDetail();
@@ -150,12 +154,20 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
                     crmOrderDljzDetail.setEventId(eventId);
                     crmOrderDljzDetail.setOrderId(crmOrderBusinessRelDTO.getOrderId());
                     crmOrderDljzDetail.setIsBegin(dljzDetail.getIsBegin());
-                    crmOrderDljzDetail.setBeginDate(DateUtils.parseDate(dljzDetail.getDljzBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
-                    crmOrderDljzDetail.setEndDate(DateUtils.parseDate(StringUtils.replacePattern(dljzDetail.getDljzEndDate(), "/", ""), DateUtils.SIMPLE_8_FORMATTER));
+                    if(StringUtils.isNoneEmpty(dljzDetail.getDljzBeginDate())){
+                        crmOrderDljzDetail.setBeginDate(DateUtils.parseDate(dljzDetail.getDljzBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
+                    }
+                    if(StringUtils.isNoneEmpty(dljzDetail.getDljzEndDate())){
+                        crmOrderDljzDetail.setEndDate(DateUtils.parseDate(StringUtils.replacePattern(dljzDetail.getDljzEndDate(), "/", ""), DateUtils.SIMPLE_8_FORMATTER));
+                    }
                     crmOrderDljzDetail.setDiff(crmOrderBusinessRelDTO.getDljzDetail().getDiff());
                     this.crmOrderDljzDetailService.saveOrUpdate(crmOrderDljzDetail);
-                    crmCompanyBusiness.setBeginDate(DateUtils.parseDateTime(dljzDetail.getDljzBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
-                    crmCompanyBusiness.setEndDate(DateUtils.parseDateTime(StringUtils.replacePattern(dljzDetail.getDljzEndDate(), "/", "") + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                    if(StringUtils.isNoneEmpty(dljzDetail.getDljzBeginDate())){
+                        crmCompanyBusiness.setBeginDate(DateUtils.parseDateTime(dljzDetail.getDljzBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                    }
+                    if(StringUtils.isNoneEmpty(dljzDetail.getDljzEndDate())){
+                        crmCompanyBusiness.setEndDate(DateUtils.parseDateTime(StringUtils.replacePattern(dljzDetail.getDljzEndDate(), "/", "") + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+                    }
                     break;
                 case "BIZ_4":
                     GszcDetail gszcDetail = crmOrderBusinessRelDTO.getGszcDetail();
@@ -213,15 +225,23 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
         crmOrderGjjsbdjDetail.setEventId(eventId);
         crmOrderGjjsbdjDetail.setOrderId(crmOrderBusinessRelDTO.getOrderId());
         crmOrderGjjsbdjDetail.setBusinessId(crmOrderBusinessRelDTO.getBusinessId());
-        crmOrderGjjsbdjDetail.setBeginDate(DateUtils.parseDate(detail.getGjjsbdjBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
-        String endDate = StringUtils.replacePattern(detail.getGjjsbdjEndDate(), "-", "");
-        endDate = StringUtils.replacePattern(endDate, "/", "");
-        crmOrderGjjsbdjDetail.setEndDate(DateUtils.parseDate(endDate, DateUtils.SIMPLE_8_FORMATTER));
+        if(StringUtils.isNoneEmpty(detail.getGjjsbdjBeginDate())){
+            crmOrderGjjsbdjDetail.setBeginDate(DateUtils.parseDate(detail.getGjjsbdjBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
+        }
+        if(StringUtils.isNoneEmpty(detail.getGjjsbdjEndDate())){
+            String endDate = StringUtils.replacePattern(detail.getGjjsbdjEndDate(), "-", "");
+            endDate = StringUtils.replacePattern(endDate, "/", "");
+            crmOrderGjjsbdjDetail.setEndDate(DateUtils.parseDate(endDate, DateUtils.SIMPLE_8_FORMATTER));
+        }
         crmOrderGjjsbdjDetail.setEmployeeNum(detail.getEmployeeNum());
         crmOrderGjjsbdjDetail.setDiff(crmOrderBusinessRelDTO.getGjjsbdjDetail().getDiff());
         this.crmOrderGjjsbdjDetailService.save(crmOrderGjjsbdjDetail);
-        crmCompanyBusiness.setBeginDate(DateUtils.parseDateTime(detail.getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
-        crmCompanyBusiness.setEndDate(DateUtils.parseDateTime(StringUtils.replacePattern(detail.getGjjsbdjEndDate(), "/", "") + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+        if(StringUtils.isNoneEmpty(detail.getGjjsbdjBeginDate())){
+            crmCompanyBusiness.setBeginDate(DateUtils.parseDateTime(detail.getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+        }
+        if(StringUtils.isNoneEmpty(detail.getGjjsbdjEndDate())){
+            crmCompanyBusiness.setEndDate(DateUtils.parseDateTime(StringUtils.replacePattern(detail.getGjjsbdjEndDate(), "/", "") + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+        }
     }
 
     private void cvtUpdateCrmOrderGjjsbdjDetail(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId, CrmCompanyBusiness crmCompanyBusiness) {
@@ -230,14 +250,22 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
         crmOrderGjjsbdjDetail.setEventId(eventId);
         crmOrderGjjsbdjDetail.setOrderId(crmOrderBusinessRelDTO.getOrderId());
         crmOrderGjjsbdjDetail.setBusinessId(crmOrderBusinessRelDTO.getBusinessId());
-        crmOrderGjjsbdjDetail.setBeginDate(DateUtils.parseDate(detail.getGjjsbdjBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
-        String endDate = StringUtils.replacePattern(detail.getGjjsbdjEndDate(), "-", "");
-         endDate = StringUtils.replacePattern(endDate, "/", "");
-        crmOrderGjjsbdjDetail.setEndDate(DateUtils.parseDate(endDate, DateUtils.SIMPLE_8_FORMATTER));
+        if(StringUtils.isNoneEmpty(detail.getGjjsbdjBeginDate())){
+            crmOrderGjjsbdjDetail.setBeginDate(DateUtils.parseDate(detail.getGjjsbdjBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
+        }
+        if(StringUtils.isNoneEmpty(detail.getGjjsbdjEndDate())){
+            String endDate = StringUtils.replacePattern(detail.getGjjsbdjEndDate(), "-", "");
+            endDate = StringUtils.replacePattern(endDate, "/", "");
+            crmOrderGjjsbdjDetail.setEndDate(DateUtils.parseDate(endDate, DateUtils.SIMPLE_8_FORMATTER));
+        }
         crmOrderGjjsbdjDetail.setEmployeeNum(detail.getEmployeeNum());
         crmOrderGjjsbdjDetail.setDiff(crmOrderBusinessRelDTO.getGjjsbdjDetail().getDiff());
         this.crmOrderGjjsbdjDetailService.saveOrUpdate(crmOrderGjjsbdjDetail);
-        crmCompanyBusiness.setBeginDate(DateUtils.parseDateTime(detail.getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
-        crmCompanyBusiness.setEndDate(DateUtils.parseDateTime(StringUtils.replacePattern(detail.getGjjsbdjEndDate(), "/", "") + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+        if(StringUtils.isNoneEmpty(detail.getGjjsbdjBeginDate())){
+            crmCompanyBusiness.setBeginDate(DateUtils.parseDateTime(detail.getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+        }
+        if(StringUtils.isNoneEmpty(detail.getGjjsbdjEndDate())){
+            crmCompanyBusiness.setEndDate(DateUtils.parseDateTime(StringUtils.replacePattern(detail.getGjjsbdjEndDate(), "/", "") + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
+        }
     }
 }

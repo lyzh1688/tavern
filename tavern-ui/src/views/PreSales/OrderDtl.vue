@@ -553,12 +553,44 @@
       // 显示编辑界面
       handleDtl: function (params) {
         this.showDtl = true;
-
+        this.dataForm = {
+          business: '',
+          company: '',
+          owner: '',
+          nextNode: '',
+          needThirdParty: '',
+          thirdParty: '',
+          thirdPartyFee: '',
+          preEvent: '',
+          businessTag: '',
+          remark: '',
+        }
+        this.dljzForm = {
+          isBegin: '',
+          months: '',
+          beginDate: '',
+          endDate: ''
+        }
+        this.djfwForm = {
+          isTrust: '',
+          confirmNum: '',
+          employeeNum: '',
+          months: '',
+          beginDate: '',
+          endDate: ''
+        }
+        this.gszcForm = {
+          absent: '',
+          regLocationType: '',
+        }
         this.initDict()
+
         this.remoteBusinessDict(params.businessName)
         this.linkChange(params.businessId)
         this.dataForm = Object.assign({}, params)
         // this.dljzForm = Object.assign({}, params)
+
+
         this.dljzForm.beginDate = params.dljzBeginDate
         this.dljzForm.endDate = params.dljzEndDate
         this.dljzForm.months = params.dljzDiff
@@ -579,18 +611,27 @@
         }
         this.djfwForm.endDate = params.gjjsbdjEndDate
         this.djfwForm.months = params.gjjsbdjDiff
+
+
         this.gszcForm = Object.assign({}, params)
         this.dataForm.business = params.businessName
         this.linkThirdPartyChange()
         this.findThirdPartyDictById(params.thirdPartyId + '')
         if (this.selectedPartyDict.length != 0) {
+          this.dataForm.needThirdParty = '1'
           this.dataForm.thirdParty = this.selectedPartyDict[0].name
         }
+
+
         this.deletePreEventDict(params.businessId)
         this.findPreEventDictById(params.preEventId + '')
         if (this.selectedPreEventDict.length != 0) {
           this.dataForm.preEvent = this.selectedPreEventDict[0].name
         }
+
+        this.remoteCompanyDict(params.companyName)
+        this.dataForm.company = params.companyName
+
         this.dialogVisible = true
         this.operation = false
 
@@ -598,10 +639,42 @@
       },
       handleEdit: function (params) {
         this.showDtl = false
+        this.dataForm = {
+          business: '',
+          company: '',
+          owner: '',
+          nextNode: '',
+          needThirdParty: '',
+          thirdParty: '',
+          thirdPartyFee: '',
+          preEvent: '',
+          businessTag: '',
+          remark: '',
+        }
+        this.dljzForm = {
+          isBegin: '',
+          months: '',
+          beginDate: '',
+          endDate: ''
+        }
+        this.djfwForm = {
+          isTrust: '',
+          confirmNum: '',
+          employeeNum: '',
+          months: '',
+          beginDate: '',
+          endDate: ''
+        }
+        this.gszcForm = {
+          absent: '',
+          regLocationType: '',
+        }
         this.initDict()
+
         this.remoteBusinessDict(params.businessName)
         this.linkChange(params.businessId)
         this.dataForm = Object.assign({}, params)
+
         // this.dljzForm = Object.assign({}, params)
         this.dljzForm.beginDate = params.dljzBeginDate
         this.dljzForm.endDate = params.dljzEndDate
@@ -623,18 +696,29 @@
         }
          this.djfwForm.endDate = params.gjjsbdjEndDate
          this.djfwForm.months = params.gjjsbdjDiff
+
+
         this.gszcForm = Object.assign({}, params)
         this.dataForm.business = params.businessName
+
+
         this.linkThirdPartyChange()
         this.findThirdPartyDictById(params.thirdPartyId + '')
         if (this.selectedPartyDict.length != 0) {
+          this.dataForm.needThirdParty = '1'
           this.dataForm.thirdParty = this.selectedPartyDict[0].name
         }
+
+
         this.deletePreEventDict(params.businessId)
         this.findPreEventDictById(params.preEventId + '')
         if (this.selectedPreEventDict.length != 0) {
           this.dataForm.preEvent = this.selectedPreEventDict[0].name
         }
+
+        this.remoteCompanyDict(params.companyName)
+        this.dataForm.company = params.companyName
+
         this.dialogVisible = true
         this.operation = false
 
