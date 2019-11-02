@@ -123,7 +123,9 @@
                 and T8.name != '结束'
             </if>
         </where>
+        group by T7.event_id
         ORDER BY DATEDIFF(T7.end_date,NOW())
+
     </select>
     <select id="selectAllWorkEvent" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO">
         SELECT
@@ -210,6 +212,7 @@
                 and T8.name != '结束'
             </if>
         </where>
+        group by T7.event_id
         order by DATEDIFF(T7.end_date,NOW())
     </select>
     <select id="selectPreEdge" resultType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowNodeEdge">
