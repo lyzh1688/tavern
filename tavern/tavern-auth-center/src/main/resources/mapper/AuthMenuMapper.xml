@@ -37,4 +37,5 @@
         DATE_FORMAT(UPDATE_DATE,'%Y-%m-%d %H:%i:%s') updateDate
     from AUTH_MENU
   </select>
+
 </mapper>

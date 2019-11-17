@@ -10,6 +10,7 @@ import com.tuoyou.tavern.protocol.authcenter.model.AuthMenuRoleRel;
 import com.tuoyou.tavern.protocol.authcenter.model.AuthMenuVO;
 import com.tuoyou.tavern.protocol.authcenter.reponse.AuthMenuPermissionResponse;
 import com.tuoyou.tavern.protocol.authcenter.reponse.AuthMenuResponse;
+import com.tuoyou.tavern.protocol.authcenter.reponse.AuthRoleInfoResponse;
 import com.tuoyou.tavern.protocol.common.TavernRequestAuthFields;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import com.tuoyou.tavern.protocol.hrm.constants.HrmUserConstant;
@@ -98,4 +99,12 @@ public class AuthMenuEndpoint {
         this.authMenuRoleRelService.saveBatch(authMenuRoleRelList);
         return new TavernResponse();
     }
+
+    @GetMapping("/findPageRole")
+    public AuthRoleInfoResponse getAuthRoleInfo(@RequestParam(name = "roleId") String roleId,
+                                                @RequestParam(name = "pageUrl") String pageUrl) {
+
+        return new AuthRoleInfoResponse(this.authMenuRoleRelService.getAuthRoleInfo(roleId, pageUrl));
+    }
+
 }

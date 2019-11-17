@@ -2,7 +2,7 @@
   <div class="personal-panel">
     <div class="personal-desc" :style="{'background':this.$store.state.app.themeColor}">
         <div class="avatar-container">
-          <img class="avatar" :src="require('@/assets/user2.jpg')" />
+          <img class="avatar" :src="require('@/assets/user1.png')" />
         </div>
         <div class="name-role">
           <span class="sender">{{ user.name }} - {{ user.role }}</span>

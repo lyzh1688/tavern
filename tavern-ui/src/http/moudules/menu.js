@@ -4,29 +4,29 @@ import axios from '../axios'
  * 菜单管理模块
  */
 
- // 保存
+// 保存
 export const save = (data) => {
-    return axios({
-        url: '/auth/menu/save',
-        method: 'post',
-        data
-    })
+  return axios({
+    url: '/auth/menu/save',
+    method: 'post',
+    data
+  })
 }
 // 删除
 export const batchDelete = (data) => {
-    return axios({
-        url: '/auth/menu/delete',
-        method: 'post',
-        data
-    })
+  return axios({
+    url: '/auth/menu/delete',
+    method: 'post',
+    data
+  })
 }
 // 查找导航菜单树
 export const findNavTree = (params) => {
-     return axios({
-        url: '/auth/menu/findNavTree',
-        method: 'get',
-        params
-    })
+  return axios({
+    url: '/auth/menu/findNavTree',
+    method: 'get',
+    params
+  })
   // const navTreeData = {
   //   "code": 200,
   //   "msg": null,
@@ -493,8 +493,16 @@ export const findNavTree = (params) => {
 }
 // 查找导航菜单树
 export const findMenuTree = () => {
-    return axios({
-        url: '/auth/menu/findMenuTree',
-        method: 'get'
-    })
+  return axios({
+    url: '/auth/menu/findMenuTree',
+    method: 'get'
+  })
+}
+//查找页面角色
+export const findPageRole = (params) => {
+  return  axios({
+    url: '/auth/menu/findPageRole',
+    method: 'get',
+    params
+  })
 }

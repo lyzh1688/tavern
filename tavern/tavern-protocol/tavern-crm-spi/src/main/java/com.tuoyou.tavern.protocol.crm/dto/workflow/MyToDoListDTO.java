@@ -20,4 +20,5 @@ public class MyToDoListDTO {
     private String businessName;
     private String businessTag;
     private Boolean ifOver;
+    private String pageRole;
 }

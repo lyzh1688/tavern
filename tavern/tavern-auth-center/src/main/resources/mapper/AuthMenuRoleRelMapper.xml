@@ -10,4 +10,14 @@
     select MENU_ID, ROLE_ID, UPDATE_DATE
     from AUTH_MENU_ROLE_REL
   </select>
+  <select id="selectPageRole" resultType="com.tuoyou.tavern.protocol.authcenter.model.AuthRoleInfo">
+    select t1.role_id roleId from AUTH_MENU_ROLE_REL t1,AUTH_MENU t2
+    where t1.MENU_ID = t2.MENU_ID
+    and t2.TYPE = 1
+    AND t2.MENU_URL = #{pageUrl}
+    <foreach collection="list" separator=" or " open=" and ( " close=" )" item="item" index="index">
+      t1.ROLE_ID = #{item}
+    </foreach>
+    limit 1
+  </select>
 </mapper>

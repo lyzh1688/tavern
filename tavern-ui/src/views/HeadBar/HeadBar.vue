@@ -102,7 +102,7 @@ export default {
       this.user.name = user.userName
       this.user.role = user.roleName
       this.user.registeInfo = "注册时间： " + user.updateDate
-      this.user.avatar = require("@/assets/user2.jpg")
+      this.user.avatar = require("@/assets/user1.png")
     }
   },
   computed:{

@@ -116,7 +116,7 @@
       </el-table-column>
       <el-table-column prop="owner" label="对接人" header-align="center" align="center">
       </el-table-column>
-      <el-table-column  label="操作"
+      <el-table-column label="操作"
                        v-if="sys_cashier_pending_flow || sys_cashier_pending_addlog || sys_cashier_pending_drawback || sys_cashier_pending_next"
                        header-align="center" align="center" width="500">
         <template slot-scope="scope">
@@ -177,7 +177,8 @@
             <el-table-column
               prop="attachmentsPath" header-align="center" align="center" label="附件地址">
               <template slot-scope="scope1">
-                <a :href="scope1.row.attachmentsPath" target="_blank">{{(scope1.row.attachmentsPath != '' && scope1.row.attachmentsPath != null)?'点击查看附件':''}}</a>
+                <a :href="scope1.row.attachmentsPath" target="_blank">{{(scope1.row.attachmentsPath != '' &&
+                  scope1.row.attachmentsPath != null)?'点击查看附件':''}}</a>
               </template>
             </el-table-column>
           </el-table>
@@ -381,7 +382,8 @@
             <el-table-column
               prop="attachmentsPath" header-align="center" align="center" label="附件地址">
               <template slot-scope="scope1">
-                <a :href="scope1.row.attachmentsPath" target="_blank">{{(scope1.row.attachmentsPath != '' && scope1.row.attachmentsPath != null)?'点击查看附件':''}}</a>
+                <a :href="scope1.row.attachmentsPath" target="_blank">{{(scope1.row.attachmentsPath != '' &&
+                  scope1.row.attachmentsPath != null)?'点击查看附件':''}}</a>
               </template>
             </el-table-column>
           </el-table>
@@ -415,6 +417,8 @@
     },
     data() {
       return {
+        pageUrl: "/Cashier/cashierPending",
+        pageRole: "",
         _file: null,
         size: 'small',
         uploadUrl: '',
@@ -433,7 +437,7 @@
           createDate: '',
           businessName: '',
           businessTag: '',
-          ifOver:false
+          ifOver: false
         },
         dialogImageUrl: '',
         nextDialogImageUrl: '',
@@ -550,7 +554,8 @@
       this.sys_cashier_pending_drawback = hasPermission('sys:cashier:pending:drawback')
       this.sys_cashier_pending_next = hasPermission('sys:cashier:pending:next')
       this.userName = sessionStorage.getItem("userName")
-      this.findPage(null);
+      this.findPageRole();
+
     },
     methods: {// 获取分页数据
       findPage: function (data) {
@@ -575,6 +580,7 @@
         this.pageRequest.businessName = this.filters.businessName
         this.pageRequest.businessTag = this.filters.businessTag
         this.pageRequest.ifOver = this.filters.ifOver
+        this.pageRequest.pageRole = this.pageRole
         this.$api.workflow.findTodo(this.pageRequest).then((res) => {
           this.tableData = res.data.records;
           this.total = res.data.total;
@@ -1024,6 +1030,24 @@
           callback(res)
         })
       },
+      findPageRole: async function () {
+        let roles = sessionStorage.getItem("roles");
+        let roleList = roles.split(",");
+        if (roleList.length > 1) {
+          let pageRoleRequest = {};
+          pageRoleRequest.roleId = sessionStorage.getItem("roles");
+          pageRoleRequest.pageUrl = this.pageUrl;
+          await this.$api.menu.findPageRole(pageRoleRequest).then((res) => {
+            if (res.data.roleId != null) {
+              this.pageRole = res.data.roleId
+            }
+            this.findPage(null)
+          }).catch((res) => {
+            this.findPage(null)
+            // this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+          })
+        }
+      }
     },
     mounted() {
     }

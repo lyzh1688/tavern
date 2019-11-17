@@ -8,6 +8,7 @@ import com.tuoyou.tavern.auth.dao.AuthMenuMapper;
 import com.tuoyou.tavern.auth.service.AuthMenuService;
 import com.tuoyou.tavern.protocol.authcenter.model.AuthMenu;
 import com.tuoyou.tavern.protocol.authcenter.model.AuthMenuVO;
+import com.tuoyou.tavern.protocol.authcenter.model.AuthRoleInfo;
 import com.tuoyou.tavern.protocol.hrm.constants.HrmUserConstant;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -71,6 +72,8 @@ public class AuthMenuServiceImpl extends ServiceImpl<AuthMenuMapper, AuthMenu> i
         List<AuthMenuVO> authMenuVOList=  this.baseMapper.selectByRoleIds(Arrays.asList(StringUtils.split(roles, ",")));
         return authMenuVOList;
     }
+
+
 
     private boolean exists(List<AuthMenuVO> menuList, AuthMenuVO authMenu) {
         boolean exist = false;

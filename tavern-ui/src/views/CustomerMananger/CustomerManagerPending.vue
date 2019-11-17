@@ -415,6 +415,8 @@
     },
     data() {
       return {
+        pageUrl: "/customerMananger/customerManagerPending",
+        pageRole: "",
         _file: null,
         size: 'small',
         uploadUrl: '',
@@ -550,7 +552,7 @@
       this.sys_customermanager_pending_drawback = hasPermission('sys:customermanager:pending:drawback')
       this.sys_customermanager_pending_next = hasPermission('sys:customermanager:pending:next')
       this.userName = sessionStorage.getItem("userName")
-      this.findPage(null);
+      this.findPageRole();
     },
     methods: {// 获取分页数据
       findPage: function (data) {
@@ -575,6 +577,7 @@
         this.pageRequest.businessName = this.filters.businessName
         this.pageRequest.businessTag = this.filters.businessTag
         this.pageRequest.ifOver = this.filters.ifOver
+        this.pageRequest.pageRole = this.pageRole
         this.$api.workflow.findTodo(this.pageRequest).then((res) => {
           this.tableData = res.data.records;
           this.total = res.data.total;
@@ -1023,7 +1026,24 @@
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
           callback(res)
         })
-      },
+      }, findPageRole:  function () {
+        let roles = sessionStorage.getItem("roles");
+        let roleList = roles.split(",");
+        if (roleList.length > 1) {
+          let pageRoleRequest = {};
+          pageRoleRequest.roleId = sessionStorage.getItem("roles");
+          pageRoleRequest.pageUrl = this.pageUrl;
+           this.$api.menu.findPageRole(pageRoleRequest).then((res) => {
+            if (res.data.roleId != null) {
+              this.pageRole = res.data.roleId
+            }
+            this.findPage(null)
+          }).catch((res) => {
+            this.findPage(null)
+            // this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+          })
+        }
+      }
     },
     mounted() {
     }
