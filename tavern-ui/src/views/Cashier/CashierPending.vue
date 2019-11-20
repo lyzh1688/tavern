@@ -1046,6 +1046,8 @@
             this.findPage(null)
             // this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
           })
+        }else {
+          this.findPage(null)
         }
       }
     },

@@ -177,7 +177,8 @@
             <el-table-column
               prop="attachmentsPath" header-align="center" align="center" label="附件地址">
               <template slot-scope="scope1">
-                <a :href="scope1.row.attachmentsPath" target="_blank">{{(scope1.row.attachmentsPath != '' && scope1.row.attachmentsPath != null)?'点击查看附件':''}}</a>
+                <a :href="scope1.row.attachmentsPath" target="_blank">{{(scope1.row.attachmentsPath != '' &&
+                  scope1.row.attachmentsPath != null)?'点击查看附件':''}}</a>
               </template>
             </el-table-column>
           </el-table>
@@ -398,7 +399,8 @@
             <el-table-column
               prop="attachmentsPath" header-align="center" align="center" label="附件地址">
               <template slot-scope="scope1">
-                <a :href="scope1.row.attachmentsPath" target="_blank">{{(scope1.row.attachmentsPath != '' && scope1.row.attachmentsPath != null)?'点击查看附件':''}}</a>
+                <a :href="scope1.row.attachmentsPath" target="_blank">{{(scope1.row.attachmentsPath != '' &&
+                  scope1.row.attachmentsPath != null)?'点击查看附件':''}}</a>
               </template>
             </el-table-column>
           </el-table>
@@ -923,7 +925,7 @@
           this.$api.workflow.drawBackOperator(request).then((res) => {
             this.handlerDict = res.data
           })
-        }else if (val == '1') {
+        } else if (val == '1') {
           this.showHandler = true
           request.direction = '1'
           this.$api.workflow.drawBackOperator(request).then((res) => {
@@ -1053,7 +1055,7 @@
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
           callback(res)
         })
-      },findPageRole:  function () {
+      }, findPageRole: function () {
         let roles = sessionStorage.getItem("roles");
         let roleList = roles.split(",");
         if (roleList.length > 1) {
@@ -1069,6 +1071,8 @@
             this.findPage(null)
             // this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
           })
+        } else {
+          this.findPage(null)
         }
       }
     },
