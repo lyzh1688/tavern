@@ -40,4 +40,6 @@ public class MyTodoListVO {
     private String ownerId;
     private String owner;
     private String thirdPartyInfo;
+    private String thirdPartyId;
+    private BigDecimal thirdPartyFee;
 }

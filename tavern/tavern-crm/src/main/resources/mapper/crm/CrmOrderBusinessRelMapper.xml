@@ -82,4 +82,13 @@
             and t1.EVENT_ID = #{eventId}
             and t4.COMPANY_ID = #{companyId}
     </select>
+
+    <update id="updateThirdPartyInfo">
+        update CRM_ORDER_BUSINESS_REL t
+        set
+         NEED_THIRD_PARTY = #{needThirdParty},
+        THIRD_PARTY_ID = #{thirdPartyId},
+        THIRD_PARTY_FEE = #{thirdPartyFee}
+        where EVENT_ID = #{eventId}
+    </update>
 </mapper>

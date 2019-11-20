@@ -65,7 +65,9 @@
         T1.OWNER_ID ownerId,
         T1.OWNER owner,
         T10.USER_ID preSalesId,
-        (CASE WHEN T1.NEED_THIRD_PARTY = '1' THEN concat(T12.DISTRICT,' ',T12.THIRD_PARTY_NAME) ELSE '' END) as thirdPartyInfo
+        (CASE WHEN T1.NEED_THIRD_PARTY = '1' THEN concat(T12.DISTRICT,' ',T12.THIRD_PARTY_NAME) ELSE '' END) as thirdPartyInfo,
+        T12.THIRD_PARTY_ID thirdPartyId,
+        T1.THIRD_PARTY_FEE thirdPartyFee
 
         FROM
         crm.CRM_CUSTOM_ORDER_INFO T left join crm.CRM_USER_CUSTOMER_INFO T10 ON T.CUSTOM_ID = T10.CUSTOMER_ID,
@@ -162,7 +164,9 @@
         T1.OWNER_ID ownerId,
         T1.OWNER owner,
         T10.USER_ID preSalesId,
-        (CASE WHEN T1.NEED_THIRD_PARTY = '1' THEN concat(T12.DISTRICT,' ',T12.THIRD_PARTY_NAME) ELSE '' END) as thirdPartyInfo
+        (CASE WHEN T1.NEED_THIRD_PARTY = '1' THEN concat(T12.DISTRICT,' ',T12.THIRD_PARTY_NAME) ELSE '' END) as thirdPartyInfo,
+        T12.THIRD_PARTY_ID thirdPartyId,
+        T1.THIRD_PARTY_FEE thirdPartyFee
 
         FROM
         crm.CRM_CUSTOM_ORDER_INFO T left join crm.CRM_USER_CUSTOMER_INFO T10 ON T.CUSTOM_ID = T10.CUSTOMER_ID,

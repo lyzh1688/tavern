@@ -33,4 +33,6 @@ public interface CrmCustomOrderBusinessRelService extends IService<CrmOrderBusin
 
     CrmCompanyOrderDetailVO getCrmCompanyOrderDetail(String eventId, String companyId);
 
+    void updateThirdPartyInfo(CrmOrderBusinessRel crmOrderBusinessRel);
+
 }

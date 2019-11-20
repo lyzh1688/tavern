@@ -220,6 +220,11 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
         return this.baseMapper.selectCrmCompanyOrderDetail(eventId, companyId);
     }
 
+    @Override
+    public void updateThirdPartyInfo(CrmOrderBusinessRel crmOrderBusinessRel) {
+
+    }
+
     private void cvtCrmOrderGjjsbdjDetail(CrmOrderBusinessRelDTO crmOrderBusinessRelDTO, String eventId, CrmCompanyBusiness crmCompanyBusiness) {
         GjjsbdjDetail detail = crmOrderBusinessRelDTO.getGjjsbdjDetail();
         CrmOrderGjjsbdjDetail crmOrderGjjsbdjDetail = new CrmOrderGjjsbdjDetail();

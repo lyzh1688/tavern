@@ -269,6 +269,40 @@
                        :label="item.name"/>
           </el-select>
         </el-form-item>
+        <el-form-item label="合作方选项" label-width="100px" prop="thirdPartyChoose" v-if="showthirdPartyInfo">
+          <el-select v-model="nextForm.thirdPartyChoose"
+                     clearable auto-complete="off"
+                     placeholder="请选择"
+                     @change="linkThirdPartyChange"
+                     prop="thirdPartyChoose"
+                     style="float: left">
+            <el-option label="当前合作方" value='0'></el-option>
+            <el-option label="变更合作方" value='1'></el-option>
+            <el-option label="取消合作方" value='2'></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="合作方" label-width="100px" prop="thirdPartyInfo" v-if="showthirdPartyInfo">
+          <el-select v-model="nextForm.thirdPartyInfo"
+                     :disabled="thirdPartyShow"
+                     filterable
+                     remote
+                     clearable
+                     :remote-method="remoteThirdPartyDict"
+                     placeholder="请选择合作方"
+                     no-data-text="无匹配数据/请检查是否配置相关人员"
+                     :loading="remoteThirdPartyDictLoading"
+                     prop="thirdPartyInfo"
+                     style="float: left">
+            <el-option v-for="item in selectedPartyDict"
+                       :key="item.id"
+                       :value="item.id"
+                       :label="item.name"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="合作方费用" label-width="100px" prop="thirdPartyFee" v-if="showthirdPartyInfo">
+          <el-input v-model="nextForm.thirdPartyFee" placeholder="请输入费用" :disabled="thirdPartyShow"
+                    style="float: left;width: 215px"></el-input>
+        </el-form-item>
         <el-form-item label="备注: " label-width="100px">
           <el-input type="textarea" v-model="nextForm.message" style="width: 500px;float: left"></el-input>
         </el-form-item>
@@ -509,7 +543,11 @@
           nextOperator: '',
           message: '',
           refundFee: '',
-          curOperatorName: ''
+          curOperatorName: '',
+          thirdPartyChoose: '',
+        thirdPartyInfo: '',
+        thirdPartyFee: '',
+        thirdPartyId: ''
         },
         drawBackForm: {
           orderId: '',
@@ -547,6 +585,11 @@
         sys_outer_pending_addlog: false,
         sys_outer_pending_drawback: false,
         sys_outer_pending_next: false,
+        thirdPartyShow: true,
+        showthirdPartyInfo: false,
+        thirdPartyDict: [],
+        selectedPartyDict: [],
+        remoteThirdPartyDictLoading: false,
 
       }
     },
@@ -559,6 +602,7 @@
       this.userName = sessionStorage.getItem("userName")
       this.findPage(null);
       this.findPageRole();
+      this.initThirdPartyDict()
     },
     methods: {
       // 获取分页数据
@@ -653,8 +697,16 @@
           nextOperator: '',
           message: '',
           refundFee: '',
-          curOperatorName: ''
-        }
+          curOperatorName: '',
+          thirdPartyChoose: '',
+          thirdParty: '',
+          thirdPartyFee: '',
+          thirdPartyId: ''
+
+        };
+        this.thirdPartyShow = true
+        this.showthirdPartyInfo = false
+        this.nextOperatorDict = []
         this.nextDialogVisible = true
         this.operation = false
         this.nextForm = Object.assign({}, params)
@@ -774,6 +826,10 @@
                 formData.append('refundFee', this.nextForm.refundFee);
               }
 
+              formData.append("thirdPartyFlag", this.nextForm.thirdPartyChoose)
+              formData.append("thirdPartyId", this.nextForm.thirdPartyId)
+              formData.append("thirdPartyInfo", this.nextForm.thirdPartyInfo)
+              formData.append("thirdPartyFee", this.nextForm.thirdPartyFee)
               this.$api.workflow.saveNextEvent(formData).then((res) => {
                 this.nextEditLoading = false
                 this.$message({message: '操作成功', type: 'success'})
@@ -867,6 +923,8 @@
           this.selectedNextNodeDict = this.nextNodeDict;
         }
       }, linkChange: function (val) {
+        this.thirdPartyShow = true
+        this.showthirdPartyInfo = false
         this.nextOperatorShow = true;
         this.nextForm.nextOperator = '';
         if (val != undefined && val != '') {
@@ -879,6 +937,9 @@
           this.showNextOperator = true;
           if (nodeName == '结束') {
             this.showNextOperator = false;
+          }
+          if (nodeName.indexOf('合作方') >= 0) {
+            this.showthirdPartyInfo = true;
           }
         }
         if (val != undefined && val != '') {
@@ -897,7 +958,53 @@
         this.chosenNode = this.selectedNextNodeDict.find(item => {
           return val == item.nodeId;
         })
-      }, handleItemChange: function (val) {
+      }, linkThirdPartyChange: function () {
+        if (this.nextForm.thirdPartyChoose != undefined && this.nextForm.thirdPartyChoose != '') {
+          this.thirdPartyShow = true;
+        }
+        if (this.nextForm.thirdPartyChoose == '1') {
+          this.thirdPartyShow = false;
+          return
+        }
+        if (this.nextForm.thirdPartyChoose == '2') {
+          this.thirdPartyShow = true;
+          return
+        }
+      },
+      findThirdPartyDictById: function (param) {
+        if (param != '') {
+          this.remoteThirdPartyDictLoading = true;
+          this.remoteThirdPartyDictLoading = false;
+          this.selectedPartyDict = this.thirdPartyDict.filter(item => {
+            return item.id == param;
+          });
+        }
+      }
+      ,
+      remoteThirdPartyDict: function (param) {
+        if (param != '') {
+          this.remoteThirdPartyDictLoading = true;
+          setTimeout(() => {
+            this.remoteThirdPartyDictLoading = false;
+            this.selectedPartyDict = this.thirdPartyDict.filter(item => {
+              return item.name.toLowerCase()
+                .indexOf(param.toLowerCase()) > -1;
+            });
+          }, 200);
+        } else {
+          this.selectedPartyDict = this.thirdPartyDict;
+        }
+      }
+      ,
+      initThirdPartyDict: function () {
+        this.$api.customer.findThirdPartyDict().then((res) => {
+          this.thirdPartyDict = res.data;
+          this.selectedPartyDict = res.data;
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+        })
+      }
+      ,handleItemChange: function (val) {
         this.chosenOperator = this.nextOperatorDict.find(item => {
           return val == item.id;
         })

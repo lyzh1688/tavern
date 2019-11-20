@@ -96,7 +96,7 @@
       </el-table-column>
       <!--  <el-table-column prop="weixinName" label="微信昵称" header-align="center" align="center">
         </el-table-column>-->
-      <el-table-column prop="businessName" label="业务类型" header-align="center" align="center" >
+      <el-table-column prop="businessName" label="业务类型" header-align="center" align="center">
       </el-table-column>
       <el-table-column prop="businessInfo" label="业务备注信息" header-align="center" align="center" width="255">
       </el-table-column>
@@ -122,7 +122,7 @@
       </el-table-column>
       <el-table-column prop="thirdPartyInfo" label="合作方信息" header-align="center" align="center" width="100">
       </el-table-column>
-      <el-table-column  label="操作"
+      <el-table-column label="操作"
                        v-if="sys_aftersales_pending_flow || sys_aftersales_pending_addlog || sys_aftersales_pending_drawback || sys_aftersales_pending_next"
                        header-align="center" align="center" width="500">
         <template slot-scope="scope">
@@ -183,7 +183,8 @@
             <el-table-column
               prop="attachmentsPath" header-align="center" align="center" label="附件地址">
               <template slot-scope="scope1">
-                <a :href="scope1.row.attachmentsPath" target="_blank">{{(scope1.row.attachmentsPath != '' && scope1.row.attachmentsPath != null)?'点击查看附件':''}}</a>
+                <a :href="scope1.row.attachmentsPath" target="_blank">{{(scope1.row.attachmentsPath != '' &&
+                  scope1.row.attachmentsPath != null)?'点击查看附件':''}}</a>
               </template>
             </el-table-column>
           </el-table>
@@ -270,6 +271,40 @@
                        :value="item.id"
                        :label="item.name"/>
           </el-select>
+        </el-form-item>
+        <el-form-item label="合作方选项" label-width="100px" prop="thirdPartyChoose" v-if="showthirdPartyInfo">
+          <el-select v-model="nextForm.thirdPartyChoose"
+                     clearable auto-complete="off"
+                     placeholder="请选择"
+                     @change="linkThirdPartyChange"
+                     prop="thirdPartyChoose"
+                     style="float: left">
+            <el-option label="当前合作方" value='0'></el-option>
+            <el-option label="变更合作方" value='1'></el-option>
+            <el-option label="取消合作方" value='2'></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="合作方" label-width="100px" prop="thirdPartyInfo" v-if="showthirdPartyInfo">
+          <el-select v-model="nextForm.thirdPartyInfo"
+                     :disabled="thirdPartyShow"
+                     filterable
+                     remote
+                     clearable
+                     :remote-method="remoteThirdPartyDict"
+                     placeholder="请选择合作方"
+                     no-data-text="无匹配数据/请检查是否配置相关人员"
+                     :loading="remoteThirdPartyDictLoading"
+                     prop="thirdPartyInfo"
+                     style="float: left">
+            <el-option v-for="item in selectedPartyDict"
+                       :key="item.id"
+                       :value="item.id"
+                       :label="item.name"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="合作方费用" label-width="100px" prop="thirdPartyFee" v-if="showthirdPartyInfo">
+          <el-input v-model="nextForm.thirdPartyFee" placeholder="请输入费用" :disabled="thirdPartyShow"
+                    style="float: left;width: 215px"></el-input>
         </el-form-item>
         <el-form-item label="备注: " label-width="100px">
           <el-input type="textarea" v-model="nextForm.message" style="width: 500px;float: left"></el-input>
@@ -387,7 +422,8 @@
             <el-table-column
               prop="attachmentsPath" header-align="center" align="center" label="附件地址">
               <template slot-scope="scope1">
-                <a :href="scope1.row.attachmentsPath" target="_blank">{{(scope1.row.attachmentsPath != '' && scope1.row.attachmentsPath != null)?'点击查看附件':''}}</a>
+                <a :href="scope1.row.attachmentsPath" target="_blank">{{(scope1.row.attachmentsPath != '' &&
+                  scope1.row.attachmentsPath != null)?'点击查看附件':''}}</a>
               </template>
             </el-table-column>
           </el-table>
@@ -441,7 +477,7 @@
           createDate: '',
           businessName: '',
           businessTag: '',
-          ifOver:false
+          ifOver: false
         },
         dialogImageUrl: '',
         nextDialogImageUrl: '',
@@ -510,7 +546,12 @@
           nextOperator: '',
           message: '',
           refundFee: '',
-          curOperatorName: ''
+          curOperatorName: '',
+          thirdPartyChoose: '',
+          thirdPartyInfo: '',
+          thirdPartyFee: '',
+          thirdPartyId: ''
+
         },
         drawBackForm: {
           orderId: '',
@@ -548,7 +589,11 @@
         sys_aftersales_pending_addlog: false,
         sys_aftersales_pending_drawback: false,
         sys_aftersales_pending_next: false,
-
+        thirdPartyShow: true,
+        showthirdPartyInfo: false,
+        thirdPartyDict: [],
+        selectedPartyDict: [],
+        remoteThirdPartyDictLoading: false,
       }
     },
     created() {
@@ -559,6 +604,8 @@
       this.sys_aftersales_pending_next = hasPermission('sys:aftersales:pending:next')
       this.userName = sessionStorage.getItem("userName")
       this.findPageRole();
+      this.initThirdPartyDict()
+
     },
     methods: {// 获取分页数据
       findPage: function (data) {
@@ -646,14 +693,21 @@
         this.nextFileList = []
         this.nextForm = {
           eventId: '',
-          curNodeId: '',
           curNodeName: '',
           nextNode: '',
           nextOperator: '',
           message: '',
           refundFee: '',
-          curOperatorName: ''
-        }
+          curOperatorName: '',
+          thirdPartyChoose: '',
+          thirdParty: '',
+          thirdPartyFee: '',
+          thirdPartyId: ''
+
+        };
+        this.thirdPartyShow = true
+        this.showthirdPartyInfo = false
+        this.nextOperatorDict = []
         this.nextDialogVisible = true
         this.operation = false
         this.nextForm = Object.assign({}, params)
@@ -773,6 +827,10 @@
                 formData.append('refundFee', this.nextForm.refundFee);
               }
 
+              formData.append("thirdPartyFlag", this.nextForm.thirdPartyChoose)
+              formData.append("thirdPartyId", this.nextForm.thirdPartyId)
+              formData.append("thirdPartyInfo", this.nextForm.thirdPartyInfo)
+              formData.append("thirdPartyFee", this.nextForm.thirdPartyFee)
               this.$api.workflow.saveNextEvent(formData).then((res) => {
                 this.nextEditLoading = false
                 this.$message({message: '操作成功', type: 'success'})
@@ -866,6 +924,8 @@
           this.selectedNextNodeDict = this.nextNodeDict;
         }
       }, linkChange: function (val) {
+        this.thirdPartyShow = true
+        this.showthirdPartyInfo = false
         this.nextOperatorShow = true;
         this.nextForm.nextOperator = '';
         if (val != undefined && val != '') {
@@ -879,8 +939,12 @@
           if (nodeName == '结束') {
             this.showNextOperator = false;
           }
+          if (nodeName.indexOf('合作方') >= 0) {
+            this.showthirdPartyInfo = true;
+          }
         }
-        if (val != undefined && val != '') {
+        if (val != undefined && val != ''
+        ) {
           this.nextOperatorShow = false;
           let role = this.selectedNextNodeDict.find(item => {
             return val == item.nodeId;
@@ -890,18 +954,69 @@
           this.$api.workflow.findNextOperator(nextOperatorRequest).then((res) => {
             this.nextOperatorDict = res.data
           })
-        } else {
+        }
+        else {
           this.nextOperatorShow = true;
         }
         this.chosenNode = this.selectedNextNodeDict.find(item => {
           return val == item.nodeId;
         })
-      }, handleItemChange: function (val) {
+      },
+      linkThirdPartyChange: function () {
+        if (this.nextForm.thirdPartyChoose != undefined && this.nextForm.thirdPartyChoose != '') {
+          this.thirdPartyShow = true;
+        }
+        if (this.nextForm.thirdPartyChoose == '1') {
+          this.thirdPartyShow = false;
+          return
+        }
+        if (this.nextForm.thirdPartyChoose == '2') {
+          this.thirdPartyShow = true;
+          return
+        }
+      },
+      findThirdPartyDictById: function (param) {
+        if (param != '') {
+          this.remoteThirdPartyDictLoading = true;
+          this.remoteThirdPartyDictLoading = false;
+          this.selectedPartyDict = this.thirdPartyDict.filter(item => {
+            return item.id == param;
+          });
+        }
+      }
+      ,
+      remoteThirdPartyDict: function (param) {
+        if (param != '') {
+          this.remoteThirdPartyDictLoading = true;
+          setTimeout(() => {
+            this.remoteThirdPartyDictLoading = false;
+            this.selectedPartyDict = this.thirdPartyDict.filter(item => {
+              return item.name.toLowerCase()
+                .indexOf(param.toLowerCase()) > -1;
+            });
+          }, 200);
+        } else {
+          this.selectedPartyDict = this.thirdPartyDict;
+        }
+      }
+      ,
+      initThirdPartyDict: function () {
+        this.$api.customer.findThirdPartyDict().then((res) => {
+          this.thirdPartyDict = res.data;
+          this.selectedPartyDict = res.data;
+        }).catch((res) => {
+          this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+        })
+      }
+      ,
+      handleItemChange: function (val) {
         this.chosenOperator = this.nextOperatorDict.find(item => {
           return val == item.id;
         })
         this.$forceUpdate()
-      }, handleRefundChange: function (val) {
+      }
+      ,
+      handleRefundChange: function (val) {
         this.showHandler = false
         if (val == '0') {
           this.showHandler = true
@@ -909,11 +1024,15 @@
             this.handlerDict = res.data
           })
         }
-      }, handlerChange: function (val) {
+      }
+      ,
+      handlerChange: function (val) {
         this.chosenHandler = this.handlerDict.find(item => {
           return val == item.id;
         })
-      }, initG6(params) {
+      }
+      ,
+      initG6(params) {
         let request = {}
         request.eventId = params.eventId
         this.$api.workflow.findGraphLog(request).then((res) => {
@@ -922,7 +1041,8 @@
         }).catch((res) => {
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
         })
-      },
+      }
+      ,
       presentG6() {
         let _this = this
         let data = {
@@ -1013,7 +1133,8 @@
         graph.on('click', function (ev) {
           _this.findHisLogPage(ev.item.get('model'))
         });
-      },
+      }
+      ,
       findHisLogPage: function (params) {
         this.logDialogVisible = true
         this.logLoading = true
@@ -1032,7 +1153,9 @@
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
           callback(res)
         })
-      },findPageRole:  function () {
+      }
+      ,
+      findPageRole: function () {
         let roles = sessionStorage.getItem("roles");
         let roleList = roles.split(",");
         if (roleList.length > 1) {
@@ -1048,12 +1171,13 @@
             this.findPage(null)
             // this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
           })
-        }else {
+        } else {
           this.findPage(null)
         }
       }
     },
     mounted() {
+
     }
   }
 </script>

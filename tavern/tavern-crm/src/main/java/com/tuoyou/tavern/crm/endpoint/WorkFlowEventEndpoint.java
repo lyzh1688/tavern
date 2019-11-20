@@ -100,8 +100,13 @@ public class WorkFlowEventEndpoint {
             @RequestParam("operatorName") String operatorName,
             @RequestParam(name = "message", required = false) String message,
             @RequestParam(name = "files", required = false) MultipartFile[] files,
-            @RequestParam(name = "refundFee", required = false) BigDecimal refundFee) throws Exception {
-        WorkFlowNextNodeDTO workFlowNextNodeDTO = new WorkFlowNextNodeDTO(eventId, preNodeId, curNodeId, curOperator, curOperatorName, operator, operatorName, message, Arrays.asList(files), refundFee);
+            @RequestParam(name = "refundFee", required = false) BigDecimal refundFee,
+            @RequestParam(name = "thirdPartyFlag", required = false) String thirdPartyFlag,
+            @RequestParam(name = "thirdPartyId", required = false) String thirdPartyId,
+            @RequestParam(name = "thirdPartyInfo", required = false) String thirdPartyInfo,
+            @RequestParam(name = "thirdPartyFee", required = false) String thirdPartyFee
+    ) throws Exception {
+        WorkFlowNextNodeDTO workFlowNextNodeDTO = new WorkFlowNextNodeDTO(eventId, preNodeId, curNodeId, curOperator, curOperatorName, operator, operatorName, message, Arrays.asList(files), refundFee,thirdPartyFlag,thirdPartyId,thirdPartyInfo,thirdPartyFee);
         this.workFlowEventService.startNextWorkFlow(workFlowNextNodeDTO);
         return new TavernResponse();
     }
