@@ -126,7 +126,7 @@
         <template slot-scope="scope">
           <kt-button icon="fa fa-gears" label="流程日志" type="primary" v-if="sys_director_pending_flow"
                      @click="showWorkFlow(scope.row)"/>
-          <kt-button icon="fa fa-plus" label="添加备注" type="primary"
+          <kt-button icon="fa fa-plus" label="备注" type="primary"
                      v-if="sys_director_pending_addlog && scope.row.curOperatorName == userName "
                      @click="handleLog(scope.row)"/>
           <kt-button icon="fa fa-money" label="退款审批" type="primary"
