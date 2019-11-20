@@ -81,7 +81,7 @@
       </el-table-column>
       <!--<el-table-column prop="wangwangAccnt" label="旺旺账号" header-align="center" align="center">
     </el-table-column>-->
-      <el-table-column prop="companyName" label="公司名称" header-align="center" align="center">
+      <el-table-column prop="companyName" label="公司名称" header-align="center" align="center" width="180">
       </el-table-column>
       <el-table-column prop="city" label="市" header-align="center" align="center">
       </el-table-column>
@@ -89,7 +89,9 @@
       </el-table-column>
       <!--  <el-table-column prop="weixinName" label="微信昵称" header-align="center" align="center">
         </el-table-column>-->
-      <el-table-column prop="businessName" label="业务类型" header-align="center" align="center">
+      <el-table-column prop="businessName" label="业务类型" header-align="center" align="center" >
+      </el-table-column>
+      <el-table-column prop="businessInfo" label="业务备注信息" header-align="center" align="center" width="255">
       </el-table-column>
       <el-table-column prop="cost" label="耗时(天)" header-align="center" align="center">
       </el-table-column>

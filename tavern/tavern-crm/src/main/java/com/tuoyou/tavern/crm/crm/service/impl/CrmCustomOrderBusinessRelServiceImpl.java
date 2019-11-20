@@ -97,6 +97,7 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
                     crmOrderDljzDetail.setEventId(eventId);
                     crmOrderDljzDetail.setOrderId(crmOrderBusinessRelDTO.getOrderId());
                     crmOrderDljzDetail.setIsBegin(dljzDetail.getIsBegin());
+                    crmOrderDljzDetail.setDiff(dljzDetail.getDiff());
                     if(StringUtils.isNoneEmpty(dljzDetail.getDljzBeginDate())){
                         crmOrderDljzDetail.setBeginDate(DateUtils.parseDate(dljzDetail.getDljzBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
                         crmCompanyBusiness.setBeginDate(DateUtils.parseDateTime(dljzDetail.getDljzBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));

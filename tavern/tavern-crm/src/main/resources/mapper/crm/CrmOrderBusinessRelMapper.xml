@@ -54,6 +54,7 @@
         where t1.BUSINESS_ID = t3.BUSINESS_ID
         and t1.ORDER_ID = t4.ID
         and t1.ORDER_ID = #{query.orderId}
+        order by t1.CREATE_DATE desc
   </select>
     <select id="selectCrmCompanyOrderDetail" resultType="com.tuoyou.tavern.protocol.crm.model.CrmCompanyOrderDetailVO">
         select

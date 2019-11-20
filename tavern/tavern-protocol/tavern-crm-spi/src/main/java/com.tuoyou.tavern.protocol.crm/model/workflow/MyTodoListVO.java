@@ -24,6 +24,7 @@ public class MyTodoListVO {
     private String remark;
     private String weixinName;
     private String businessName;
+    private String businessInfo;
     private String cost;
     private String maxLeftDay;
     private String businessTag;

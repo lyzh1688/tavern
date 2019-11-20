@@ -53,6 +53,7 @@
         T1.REMARK remark,
         T3.WEIXIN_NAME weixinName,
         T4.BUSINESS_NAME businessName,
+        (CASE WHEN T4.BUSINESS_NAME = '代理记账' THEN concat('代账开始:', DATE_FORMAT(T11.BEGIN_DATE,'%Y-%m-%d'), ' 代账结束:', DATE_FORMAT(T11.END_DATE,'%Y-%m-%d')) ELSE '' END) as businessInfo,
         DATEDIFF(NOW(),T7.begin_date) cost,
         DATEDIFF(T7.end_date,NOW()) maxLeftDay,
         T1.BUSINESS_TAG businessTag,
@@ -67,7 +68,7 @@
 
         FROM
         crm.CRM_CUSTOM_ORDER_INFO T left join crm.CRM_USER_CUSTOMER_INFO T10 ON T.CUSTOM_ID = T10.CUSTOMER_ID,
-        crm.CRM_ORDER_BUSINESS_REL T1
+        crm.CRM_ORDER_BUSINESS_REL T1 left join crm.CRM_ORDER_DLJZ_DETAIL T11 on T1.EVENT_ID = T11.EVENT_ID
         left  join  crm.CRM_COMPANY_INFO T2 on T1.COMPANY_ID = T2.COMPANY_ID
         left  join crm.CRM_COMPANY_BUSINESS T5 on T1.COMPANY_ID = T5.COMPANY_ID  AND T1.BUSINESS_ID = T5.BUSINESS_ID ,
         crm.CRM_CUSTOM_BASIC_INFO T3,
@@ -75,7 +76,7 @@
         work_flow.workflow_def_graph_business_rel T6,
         work_flow.workflow_event T7,
         work_flow.workflow_def_node T8,
-        workflow_def_node_ext_attr T9
+        work_flow.workflow_def_node_ext_attr T9
 
         <where>
             T.ID = T1.ORDER_ID
@@ -147,6 +148,7 @@
         T1.REMARK remark,
         T3.WEIXIN_NAME weixinName,
         T4.BUSINESS_NAME businessName,
+        (CASE WHEN T4.BUSINESS_NAME = '代理记账' THEN concat('代账开始:', DATE_FORMAT(T11.BEGIN_DATE,'%Y-%m-%d'), '代账结束:', DATE_FORMAT(T11.END_DATE,'%Y-%m-%d')) ELSE '' END) as businessInfo,
         DATEDIFF(NOW(),T7.begin_date) cost,
         DATEDIFF(T7.end_date,NOW()) maxLeftDay,
         T1.BUSINESS_TAG businessTag,
@@ -161,7 +163,7 @@
 
         FROM
         crm.CRM_CUSTOM_ORDER_INFO T left join crm.CRM_USER_CUSTOMER_INFO T10 ON T.CUSTOM_ID = T10.CUSTOMER_ID,
-        crm.CRM_ORDER_BUSINESS_REL T1
+        crm.CRM_ORDER_BUSINESS_REL T1 left join crm.CRM_ORDER_DLJZ_DETAIL T11 on T1.EVENT_ID = T11.EVENT_ID
         left  join  crm.CRM_COMPANY_INFO T2 on T1.COMPANY_ID = T2.COMPANY_ID
         left  join crm.CRM_COMPANY_BUSINESS T5 on T1.COMPANY_ID = T5.COMPANY_ID  AND T1.BUSINESS_ID = T5.BUSINESS_ID ,
         crm.CRM_CUSTOM_BASIC_INFO T3,
@@ -169,7 +171,7 @@
         work_flow.workflow_def_graph_business_rel T6,
         work_flow.workflow_event T7,
         work_flow.workflow_def_node T8,
-        workflow_def_node_ext_attr T9
+        work_flow.workflow_def_node_ext_attr T9
 
         <where>
             T.ID = T1.ORDER_ID
