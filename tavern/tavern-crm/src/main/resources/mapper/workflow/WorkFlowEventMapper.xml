@@ -133,7 +133,7 @@
             </if>
         </where>
         group by T7.event_id
-        ORDER BY DATEDIFF(T7.end_date,NOW())
+        ORDER BY T1.CREATE_DATE DESC
 
     </select>
     <select id="selectAllWorkEvent" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO">
@@ -227,7 +227,7 @@
             </if>
         </where>
         group by T7.event_id
-        order by DATEDIFF(T7.end_date,NOW())
+        ORDER BY T1.CREATE_DATE DESC
     </select>
     <select id="selectPreEdge" resultType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowNodeEdge">
         SELECT t1.next_node_id preNodeId,t1.node_id curNodeId,t2.role FROM workflow_event_history t1,workflow_def_node t2
