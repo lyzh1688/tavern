@@ -89,6 +89,7 @@
             AND T7.cur_node_id = T9.node_id
             AND not exists(select 1 from work_flow.workflow_event_dependency T9 where T7.event_id = T9.next_event)
             AND (T7.event_owner = #{query.userId} or T7.cur_operator = #{query.userId})
+            AND T7.BEGIN_DATE <![CDATA[ <= ]]> now()
             <if test="query.pageRole != null and query.pageRole != ''">
                 and (T8.ROLE = #{query.pageRole} OR T8.ROLE = '')
             </if>
