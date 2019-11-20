@@ -118,6 +118,8 @@
       </el-table-column>
       <el-table-column prop="owner" label="对接人" header-align="center" align="center">
       </el-table-column>
+      <el-table-column prop="thirdPartyInfo" label="合作方信息" header-align="center" align="center" width="100">
+      </el-table-column>
       <el-table-column label="操作"
                        v-if="sys_director_pending_flow || sys_director_pending_addlog || sys_director_pending_drawback || sys_director_pending_next"
                        header-align="center" align="center" width="500">

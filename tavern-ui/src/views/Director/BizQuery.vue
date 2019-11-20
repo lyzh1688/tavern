@@ -111,6 +111,8 @@
       </el-table-column>
       <el-table-column prop="owner" label="对接人" header-align="center" align="center">
       </el-table-column>
+      <el-table-column prop="thirdPartyInfo" label="合作方信息" header-align="center" align="center" width="100">
+      </el-table-column>
       <el-table-column label="操作"
                        v-if="sys_director_biz_flow||sys_director_biz_company_view||sys_director_biz_delay_view||sys_director_biz_rechoose"
                        header-align="center" align="center" width="500">

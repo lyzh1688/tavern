@@ -39,4 +39,5 @@ public class MyTodoListVO {
     //对接人
     private String ownerId;
     private String owner;
+    private String thirdPartyInfo;
 }

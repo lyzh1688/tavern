@@ -64,13 +64,15 @@
         T7.cur_operator_name curOperatorName,
         T1.OWNER_ID ownerId,
         T1.OWNER owner,
-        T10.USER_ID preSalesId
+        T10.USER_ID preSalesId,
+        (CASE WHEN T1.NEED_THIRD_PARTY = '1' THEN concat(T12.DISTRICT,' ',T12.THIRD_PARTY_NAME) ELSE '' END) as thirdPartyInfo
 
         FROM
         crm.CRM_CUSTOM_ORDER_INFO T left join crm.CRM_USER_CUSTOMER_INFO T10 ON T.CUSTOM_ID = T10.CUSTOMER_ID,
         crm.CRM_ORDER_BUSINESS_REL T1 left join crm.CRM_ORDER_DLJZ_DETAIL T11 on T1.EVENT_ID = T11.EVENT_ID
         left  join  crm.CRM_COMPANY_INFO T2 on T1.COMPANY_ID = T2.COMPANY_ID
-        left  join crm.CRM_COMPANY_BUSINESS T5 on T1.COMPANY_ID = T5.COMPANY_ID  AND T1.BUSINESS_ID = T5.BUSINESS_ID ,
+        left  join crm.CRM_COMPANY_BUSINESS T5 on T1.COMPANY_ID = T5.COMPANY_ID  AND T1.BUSINESS_ID = T5.BUSINESS_ID
+        left join crm.CRM_CUSTOM_THIRD_PARTY_INFO T12 on T1.THIRD_PARTY_ID = T12.THIRD_PARTY_ID,
         crm.CRM_CUSTOM_BASIC_INFO T3,
         crm.CRM_BUSINESS_DICT T4,
         work_flow.workflow_def_graph_business_rel T6,
@@ -159,13 +161,15 @@
         T7.cur_operator_name curOperatorName,
         T1.OWNER_ID ownerId,
         T1.OWNER owner,
-        T10.USER_ID preSalesId
+        T10.USER_ID preSalesId,
+        (CASE WHEN T1.NEED_THIRD_PARTY = '1' THEN concat(T12.DISTRICT,' ',T12.THIRD_PARTY_NAME) ELSE '' END) as thirdPartyInfo
 
         FROM
         crm.CRM_CUSTOM_ORDER_INFO T left join crm.CRM_USER_CUSTOMER_INFO T10 ON T.CUSTOM_ID = T10.CUSTOMER_ID,
         crm.CRM_ORDER_BUSINESS_REL T1 left join crm.CRM_ORDER_DLJZ_DETAIL T11 on T1.EVENT_ID = T11.EVENT_ID
         left  join  crm.CRM_COMPANY_INFO T2 on T1.COMPANY_ID = T2.COMPANY_ID
-        left  join crm.CRM_COMPANY_BUSINESS T5 on T1.COMPANY_ID = T5.COMPANY_ID  AND T1.BUSINESS_ID = T5.BUSINESS_ID ,
+        left  join crm.CRM_COMPANY_BUSINESS T5 on T1.COMPANY_ID = T5.COMPANY_ID  AND T1.BUSINESS_ID = T5.BUSINESS_ID
+        left join crm.CRM_CUSTOM_THIRD_PARTY_INFO T12 on T1.THIRD_PARTY_ID = T12.THIRD_PARTY_ID,
         crm.CRM_CUSTOM_BASIC_INFO T3,
         crm.CRM_BUSINESS_DICT T4,
         work_flow.workflow_def_graph_business_rel T6,
