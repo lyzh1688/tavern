@@ -1,11 +1,15 @@
 package com.tuoyou.tavern.crm.endpoint;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tuoyou.tavern.crm.crm.service.CrmCustomBasicInfoService;
+import com.tuoyou.tavern.crm.crm.service.CrmCustomOrderInfoService;
 import com.tuoyou.tavern.protocol.common.TavernResponse;
 import com.tuoyou.tavern.protocol.crm.dto.CustomInfoDTO;
 import com.tuoyou.tavern.protocol.crm.dto.CustomQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCustomBasicInfo;
+import com.tuoyou.tavern.protocol.crm.model.CrmCustomOrderInfo;
+import com.tuoyou.tavern.protocol.crm.model.CrmOrderBusinessRel;
 import com.tuoyou.tavern.protocol.crm.response.CustomInfoPageResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +29,7 @@ import java.util.stream.Collectors;
 public class CustomInfoEndpoint {
 
     private final CrmCustomBasicInfoService crmCustomBasicInfoService;
+    private final CrmCustomOrderInfoService crmCustomOrderInfoService;
 
     /**
      * 新增或修改客户
@@ -39,8 +44,15 @@ public class CustomInfoEndpoint {
      * 删除客户
      */
     @DeleteMapping("/delete")
-    public TavernResponse deleteCustom(@RequestBody List<String> customIdList) {
+    public TavernResponse deleteCustom(@RequestBody List<String> customIdList) throws Exception {
         if (!customIdList.isEmpty()) {
+            for (String customerId : customIdList) {
+                int count = this.crmCustomOrderInfoService.count(Wrappers.<CrmCustomOrderInfo>query().lambda()
+                        .eq(CrmCustomOrderInfo::getCustomId, customerId));
+                if (count != 0) {
+                    throw new Exception("该客户尚有关联订单，不可删除！");
+                }
+            }
             List<CrmCustomBasicInfo> crmCustomBasicInfoList = customIdList.stream()
                     .map(info -> {
                         CrmCustomBasicInfo crmCustomBasicInfo = new CrmCustomBasicInfo();
@@ -49,6 +61,7 @@ public class CustomInfoEndpoint {
                         crmCustomBasicInfo.setIsValid("0");
                         return crmCustomBasicInfo;
                     }).collect(Collectors.toList());
+
             this.crmCustomBasicInfoService.updateBatchById(crmCustomBasicInfoList);
         }
         return new TavernResponse();
