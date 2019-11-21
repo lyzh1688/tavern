@@ -356,6 +356,9 @@
         <el-form-item label="审批意见: " label-width="200px" prop="message">
           <el-input type="textarea" v-model="drawBackForm.message" style="width: 500px"></el-input>
         </el-form-item>
+        <el-form-item label="退款金额" label-width="200px" prop="refundFee">
+          <el-input v-model="drawBackForm.refundFee" :readonly=true></el-input>
+        </el-form-item>
         <el-form-item label="是否同意退款" label-width="200px" prop="agreeRefund">
           <el-select v-model="drawBackForm.agreeRefund" clearable auto-complete="off" placeholder="请选择"
                      @change="handleRefundChange">
@@ -582,7 +585,8 @@
           handler: '',
           mountNode: '',
           curNodeId: '',
-          nextOperator: ''
+          nextOperator: '',
+          refundFee:''
         },
         files: [],
         logRowContent: {},
@@ -696,7 +700,8 @@
           handler: '',
           mountNode: '',
           curNodeId: '',
-          nextOperator: ''
+          nextOperator: '',
+          refundFee:''
         }
         let ele = document.getElementById('mountNode')
         if (ele != null) {
