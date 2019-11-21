@@ -230,9 +230,6 @@
         <el-form-item label="当前流程: " label-width="100px" prop="curNodeName">
           <span style="text-align: left;float: left;color: #a71d5d">{{nextForm.curNodeName}}</span>
         </el-form-item>
-        <el-form-item label="退款金额" label-width="100px" v-if="showRefund">
-          <el-input v-model="nextForm.refundFee" placeholder="请输入退款金额"></el-input>
-        </el-form-item>
         <el-form-item label="下一流程" label-width="100px" prop="nextNode">
           <el-select v-model="nextForm.nextNode"
                      filterable
@@ -250,6 +247,9 @@
                        :value="item.nodeId"
                        :label="item.name"/>
           </el-select>
+        </el-form-item>
+        <el-form-item label="退款金额" label-width="100px" v-if="showRefund">
+          <el-input v-model="nextForm.refundFee" placeholder="请输入退款金额" style="width: 215px;float: left"></el-input>
         </el-form-item>
         <el-form-item label="对接人员" label-width="100px" prop="nextOperator" v-if="showNextOperator">
           <el-select v-model="nextForm.nextOperator"
@@ -923,12 +923,13 @@
         this.showthirdPartyInfo = false
         this.nextOperatorShow = true;
         this.nextForm.nextOperator = '';
+        this.showRefund = false;
         if (val != undefined && val != '') {
           let nodeName = this.selectedNextNodeDict.find(item => {
             return val == item.nodeId;
           }).name
-          if (nodeName == '退款') {
-            this.showRefund = false;
+          if (nodeName.indexOf('退款')>=0) {
+            this.showRefund = true;
           }
           this.showNextOperator = true;
           if (nodeName == '结束') {

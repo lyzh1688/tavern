@@ -42,4 +42,5 @@ public class MyTodoListVO {
     private String thirdPartyInfo;
     private String thirdPartyId;
     private BigDecimal thirdPartyFee;
+    private BigDecimal refundFee;
 }
