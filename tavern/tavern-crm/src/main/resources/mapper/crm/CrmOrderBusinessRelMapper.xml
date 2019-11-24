@@ -16,31 +16,75 @@
         <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate"/>
         <result column="OWNER" jdbcType="VARCHAR" property="owner"/>
     </resultMap>
-    <select id="selectCrmOrderBusinessPage" resultType="com.tuoyou.tavern.protocol.crm.model.CrmOrderBusinessRelVO">
+    <resultMap id="BaseResultVOMap" type="com.tuoyou.tavern.protocol.crm.model.CrmOrderBusinessRelVO">
+        <id column="EVENT_ID" jdbcType="VARCHAR" property="eventId"/>
+        <result column="ORDER_ID" jdbcType="VARCHAR" property="orderId"/>
+        <result column="BUSINESS_ID" jdbcType="VARCHAR" property="businessId"/>
+        <result column="BUSINESS_NAME" jdbcType="VARCHAR" property="businessName"/>
+        <result column="BUSINESS" jdbcType="VARCHAR" property="business"/>
+        <result column="COMPANY_ID" jdbcType="VARCHAR" property="companyId"/>
+        <result column="COMPANY_NAME" jdbcType="VARCHAR" property="companyName"/>
+        <result column="COMPANY" jdbcType="VARCHAR" property="company"/>
+        <result column="OWNER_ID" jdbcType="VARCHAR" property="ownerId"/>
+        <result column="OWNER" jdbcType="VARCHAR" property="owner"/>
+        <result column="NEED_THIRD_PARTY" jdbcType="VARCHAR" property="needThirdParty"/>
+        <result column="THIRD_PARTY" jdbcType="VARCHAR" property="thirdParty"/>
+        <result column="THIRD_PARTY_ID" jdbcType="VARCHAR" property="thirdPartyId"/>
+        <result column="THIRD_PARTY_FEE" jdbcType="DECIMAL" property="thirdPartyFee"/>
+        <result column="BUSINESS_TAG" jdbcType="VARCHAR" property="businessTag"/>
+        <result column="PRE_EVENT_ID" jdbcType="VARCHAR" property="preEventId"/>
+        <result column="PRE_EVENT" jdbcType="VARCHAR" property="preEvent"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate"/>
+        <association property="dlfw" javaType="com.tuoyou.tavern.protocol.crm.model.CrmOrderBusinessDljzVO">
+            <result column="dlfwBeginDate" jdbcType="VARCHAR" property="beginDate"/>
+            <result column="dlfwEndDate" jdbcType="VARCHAR" property="endDate"/>
+            <result column="dlfwIsBegin" jdbcType="VARCHAR" property="isBegin"/>
+            <result column="dlfwMonths" jdbcType="VARCHAR" property="months"/>
+        </association>
+        <association property="djfw" javaType="com.tuoyou.tavern.protocol.crm.model.CrmOrderBusinessDjfwVO">
+            <result column="djfwBeginDate" jdbcType="VARCHAR" property="beginDate"/>
+            <result column="djfwEndDate" jdbcType="VARCHAR" property="endDate"/>
+            <result column="djfwMonths" jdbcType="VARCHAR" property="months"/>
+            <result column="djfwEmployeeNum" jdbcType="VARCHAR" property="employeeNum"/>
+            <result column="djfwIsTrust" jdbcType="VARCHAR" property="isTrust"/>
+            <result column="djfwEmployeeNum" jdbcType="VARCHAR" property="confirmNum"/>
+        </association>
+        <association property="gszc" javaType="com.tuoyou.tavern.protocol.crm.model.CrmOrderBusinessGszcVO">
+            <result column="absent" jdbcType="VARCHAR" property="absent"/>
+            <result column="regLocationType" jdbcType="VARCHAR" property="regLocationType"/>
+        </association>
+    </resultMap>
+    <select id="selectCrmOrderBusinessPage" resultMap="BaseResultVOMap">
         select
-            t1.EVENT_ID eventId,
-            t4.ORDER_ID orderId,
-            t1.BUSINESS_ID businessId,
-            t3.BUSINESS_NAME businessName,
-            t2.COMPANY_ID companyId,
-            t2.COMPANY_NAME companyName,
-            t1.OWNER_ID ownerId,
-            t1.OWNER owner,
-            t1.NEED_THIRD_PARTY needThirdParty,
-            t1.THIRD_PARTY_ID thirdPartyId,
-            t1.THIRD_PARTY_FEE thirdPartyFee,
-            t1.BUSINESS_TAG businessTag,
-            t1.PRE_EVENT_ID preEventId,
-            t1.REMARK remark,
-            DATE_FORMAT(t1.CREATE_DATE,'%Y-%m-%d %H:%i:%s') createDate,
-            t5.BEGIN_DATE dljzBeginDate,
-            t5.END_DATE dljzEndDate,
-            t5.IS_BEGIN dljzEndDate,
-            t5.DIFF dljzDiff,
-            t6.BEGIN_DATE gjjsbdjBeginDate,
-            t6.END_DATE gjjsbdjEndDate,
-             t6.DIFF gjjsbdjDiff,
-            t6.EMPLOYEE_NUM employeeNum,
+            t1.EVENT_ID ,
+            t4.ORDER_ID ,
+            t1.BUSINESS_ID ,
+            t3.BUSINESS_NAME ,
+            t3.BUSINESS_NAME BUSINESS,
+            t2.COMPANY_ID ,
+            t2.COMPANY_NAME ,
+            t2.COMPANY_NAME COMPANY,
+            t1.OWNER_ID ,
+            t1.OWNER ,
+            t1.NEED_THIRD_PARTY ,
+            concat(t8.DISTRICT,' ',t8.THIRD_PARTY_NAME) THIRD_PARTY,
+            t1.THIRD_PARTY_ID ,
+            t1.THIRD_PARTY_FEE ,
+            t1.BUSINESS_TAG ,
+            t1.PRE_EVENT_ID ,
+            t10.BUSINESS_NAME PRE_EVENT ,
+            t1.REMARK ,
+            DATE_FORMAT(t1.CREATE_DATE,'%Y-%m-%d %H:%i:%s') CREATE_DATE,
+            t5.BEGIN_DATE dlfwBeginDate,
+            t5.END_DATE dlfwEndDate,
+            t5.IS_BEGIN dlfwIsBegin,
+            t5.DIFF dlfwMonths,
+            t6.BEGIN_DATE djfwBeginDate,
+            t6.END_DATE djfwEndDate,
+            t6.DIFF djfwMonths,
+            t6.EMPLOYEE_NUM djfwEmployeeNum,
+            t6.IS_TRUST djfwIsTrust,
             t7. ABSENT absent,
             t7.REG_LOCATION_TYPE regLocationType
         from CRM_ORDER_BUSINESS_REL t1
@@ -48,6 +92,9 @@
          LEFT JOIN CRM_ORDER_DLJZ_DETAIL t5 on t1.EVENT_ID = t5.EVENT_ID
          LEFT JOIN CRM_ORDER_GJJSBDJ_DETAIL t6 on t1.EVENT_ID = t6.EVENT_ID
          LEFT JOIN CRM_ORDER_GSZC_DETAIL t7 on t1.EVENT_ID = t7.EVENT_ID
+         left join CRM_CUSTOM_THIRD_PARTY_INFO t8 on t1.THIRD_PARTY_ID = t8.THIRD_PARTY_ID
+				LEFT JOIN CRM_ORDER_BUSINESS_REL t9 on t1.PRE_EVENT_ID = t9.EVENT_ID
+				LEFT JOIN CRM_BUSINESS_DICT t10 on t9.BUSINESS_ID = t10.BUSINESS_ID
         ,
         CRM_BUSINESS_DICT t3,
         CRM_CUSTOM_ORDER_INFO t4

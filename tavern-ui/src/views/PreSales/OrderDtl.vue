@@ -302,11 +302,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button :size="size" @click.native="dialogVisible = false" v-if="!showDtl">{{$t('action.cancel')}}</el-button>
+        <el-button :size="size" @click.native="dialogVisible = false" v-if="!showDtl">{{$t('action.cancel')}}
+        </el-button>
         <el-button :size="size" type="primary" @click="submitForm()" :loading="editLoading" v-if="!showDtl">
           {{$t('action.submit')}}
         </el-button>
-        <el-button :size="size" type="primary"  @click.native="dialogVisible = false" v-if="showDtl">
+        <el-button :size="size" type="primary" @click.native="dialogVisible = false" v-if="showDtl">
           关闭
         </el-button>
       </div>
@@ -583,59 +584,20 @@
           absent: '',
           regLocationType: '',
         }
-        this.initDict()
-
-        this.remoteBusinessDict(params.businessName)
-        this.linkChange(params.businessId)
         this.dataForm = Object.assign({}, params)
-        // this.dljzForm = Object.assign({}, params)
-
-
-        this.dljzForm.beginDate = params.dljzBeginDate
-        this.dljzForm.endDate = params.dljzEndDate
-        this.dljzForm.months = params.dljzDiff
-        if(params.dljzBeginDate != null){
-          this.dljzForm.isBegin = '1'
+        if(params.djfw != null ){
+          this.djfwForm = Object.assign({}, params.djfw)
         }
-
-        // this.djfwForm = Object.assign({}, params)
-        if (params.gjjsbdjBeginDate != null) {
-          this.djfwForm.beginDate = params.gjjsbdjBeginDate + " 00:00:00"
-          this.djfwForm.isTrust = '1'
-          this.djfwEndDateChange()
+        if(params.dlfw != null ){
+          this.dljzForm=Object.assign({}, params.dlfw)
         }
-        if (params.employeeNum != null && params.employeeNum != 0) {
-          this.djfwForm.confirmNum = '1'
-          this.djfwConfirmChange('1')
-          this.djfwForm.employeeNum = params.employeeNum
+        if(params.gszc != null ){
+          this.gszcForm = Object.assign({}, params.gszc)
         }
-        this.djfwForm.endDate = params.gjjsbdjEndDate
-        this.djfwForm.months = params.gjjsbdjDiff
-
-
-        this.gszcForm = Object.assign({}, params)
-        this.dataForm.business = params.businessName
+        this.linkChange(params.businessId)
         this.linkThirdPartyChange()
-        this.findThirdPartyDictById(params.thirdPartyId + '')
-        if (this.selectedPartyDict.length != 0) {
-          this.dataForm.needThirdParty = '1'
-          this.dataForm.thirdParty = this.selectedPartyDict[0].name
-        }
-
-
-        this.deletePreEventDict(params.businessId)
-        this.findPreEventDictById(params.preEventId + '')
-        if (this.selectedPreEventDict.length != 0) {
-          this.dataForm.preEvent = this.selectedPreEventDict[0].name
-        }
-
-        this.remoteCompanyDict(params.companyName)
-        this.dataForm.company = params.companyName
-
         this.dialogVisible = true
         this.operation = false
-
-        // this.dataForm.owner= params.owner
       },
       handleEdit: function (params) {
         this.showDtl = false
@@ -669,60 +631,21 @@
           absent: '',
           regLocationType: '',
         }
-        this.initDict()
-
-        this.remoteBusinessDict(params.businessName)
-        this.linkChange(params.businessId)
+        alert(JSON.stringify(params))
         this.dataForm = Object.assign({}, params)
-
-        // this.dljzForm = Object.assign({}, params)
-        this.dljzForm.beginDate = params.dljzBeginDate
-        this.dljzForm.endDate = params.dljzEndDate
-        this.dljzForm.months = params.dljzDiff
-        if(params.dljzBeginDate != null){
-          this.dljzForm.isBegin = '1'
+        if(params.djfw != null ){
+          this.djfwForm = Object.assign({}, params.djfw)
         }
-
-        // this.djfwForm = Object.assign({}, params)
-        if (params.gjjsbdjBeginDate != null) {
-          this.djfwForm.beginDate = params.gjjsbdjBeginDate + " 00:00:00"
-          this.djfwForm.isTrust = '1'
-          this.djfwEndDateChange()
+        if(params.dlfw != null ){
+          this.dljzForm=Object.assign({}, params.dlfw)
         }
-        if (params.employeeNum != null && params.employeeNum != 0) {
-          this.djfwForm.confirmNum = '1'
-          this.djfwConfirmChange('1')
-          this.djfwForm.employeeNum = params.employeeNum
+        if(params.gszc != null ){
+          this.gszcForm = Object.assign({}, params.gszc)
         }
-         this.djfwForm.endDate = params.gjjsbdjEndDate
-         this.djfwForm.months = params.gjjsbdjDiff
-
-
-        this.gszcForm = Object.assign({}, params)
-        this.dataForm.business = params.businessName
-
-
+        this.linkChange(params.businessId)
         this.linkThirdPartyChange()
-        this.findThirdPartyDictById(params.thirdPartyId + '')
-        if (this.selectedPartyDict.length != 0) {
-          this.dataForm.needThirdParty = '1'
-          this.dataForm.thirdParty = this.selectedPartyDict[0].name
-        }
-
-
-        this.deletePreEventDict(params.businessId)
-        this.findPreEventDictById(params.preEventId + '')
-        if (this.selectedPreEventDict.length != 0) {
-          this.dataForm.preEvent = this.selectedPreEventDict[0].name
-        }
-
-        this.remoteCompanyDict(params.companyName)
-        this.dataForm.company = params.companyName
-
         this.dialogVisible = true
         this.operation = false
-
-        // this.dataForm.owner= params.owner
       },
       handleDelete: function (pa) {
         let params = Object.assign({}, pa)
@@ -825,6 +748,7 @@
               params.ownerId = this.dataForm.owner
               params.owner = this.ownerName;
               params.curNode = this.dataForm.nextNode;
+              params.preEventId = this.dataForm.preEvent;
 
               let dljzDetail = {}
               if (this.dljzForm.beginDate != '') {
@@ -844,6 +768,7 @@
               }
               gjjsbdjDetail.employeeNum = this.djfwForm.employeeNum
               gjjsbdjDetail.diff = this.djfwForm.months
+              gjjsbdjDetail.isTrust = this.djfwForm.isTrust
               let gszcDetail = {}
               gszcDetail.absent = this.gszcForm.absent
               gszcDetail.regLocationType = this.gszcForm.regLocationType
@@ -871,7 +796,7 @@
                   ;
                 })
 
-                this.thirdPartyDict.find(item =>{
+                this.thirdPartyDict.find(item => {
 
                   if (this.dataForm.thirdParty == item.name) {
                     params.thirdPartyId = item.id
@@ -883,6 +808,19 @@
                   if (this.dataForm.owner == item.name) {
                     params.ownerId = item.id
                     params.owner = item.name
+                  }
+                  ;
+                })
+
+                this.companyDict.find(item => {
+                  if (this.dataForm.company == item.name) {
+                    params.companyId = item.id
+                  }
+                  ;
+                })
+                this.preEventDict.find(item => {
+                  if (this.dataForm.preEvent == item.name) {
+                    params.preEventId = item.id
                   }
                   ;
                 })
@@ -933,23 +871,6 @@
         this.showHelpBookKeeping = false
         this.showHelpPay = false
         this.showHelpRegister = false
-        this.dljzForm = {
-          isBegin: '',
-          months: '',
-          beginDate: '',
-          endDate: ''
-        }
-        this.djfwForm = {
-          confirmNum: '',
-          employeeNum: '',
-          months: '',
-          beginDate: '',
-          endDate: ''
-        }
-        this.gszcForm = {
-          absent: '',
-          regLocationType: '',
-        }
         if (e == undefined || e == null) {
           return
         }
@@ -1129,39 +1050,17 @@
         if (param != '') {
           this.remoteThirdPartyDictLoading = true;
           this.remoteThirdPartyDictLoading = false;
-          this.selectedPartyDict = this.thirdPartyDict.filter(item => {
+          let thirdDict = this.thirdPartyDict.filter(item => {
             return item.id == param;
           });
+          if(thirdDict != null && thirdDict.length != 0){
+            this.dataForm.needThirdParty = '1'
+            // this.dataForm.thirdParty = thirdDict[0].name
+          }
         }
       }
       ,
       linkChange: function (val) {
-        this.dataForm.company = ''
-        this.dataForm.owner = ''
-        this.dataForm.nextNode = ''
-        this.dataForm.needThirdParty = ''
-        this.dataForm.thirdParty = ''
-        this.dataForm.thirdPartyFee = ''
-        this.dataForm.preEvent = ''
-        this.dataForm.businessTag = ''
-        this.dataForm.remark = ''
-        this.dljzForm = {
-          isBegin: '',
-          months: '',
-          beginDate: '',
-          endDate: ''
-        }
-        this.djfwForm = {
-          confirmNum: '',
-          employeeNum: '',
-          months: '',
-          beginDate: '',
-          endDate: ''
-        }
-        this.gszcForm = {
-          absent: '',
-          regLocationType: '',
-        }
         this.showYccl = false
         if (val != undefined && val != '') {
           this.ownerShow = false;

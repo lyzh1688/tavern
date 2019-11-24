@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("CRM_ORDER_GJJSBDJ_DETAIL")
@@ -25,5 +26,6 @@ public class CrmOrderGjjsbdjDetail extends Model<CrmOrderGjjsbdjDetail> {
     private Integer employeeNum;
 
     private String diff;
+    private String isTrust;
 
 }

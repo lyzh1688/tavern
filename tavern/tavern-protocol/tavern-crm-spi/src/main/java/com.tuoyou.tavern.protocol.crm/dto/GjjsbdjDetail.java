@@ -12,4 +12,5 @@ public class GjjsbdjDetail {
     private String gjjsbdjEndDate;
     private int employeeNum;
     private String diff;
+    private String isTrust;
 }

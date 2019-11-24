@@ -1,12 +1,8 @@
 package com.tuoyou.tavern.protocol.crm.model;
 
-import com.tuoyou.tavern.protocol.crm.dto.DljzDetail;
-import com.tuoyou.tavern.protocol.crm.dto.GjjsbdjDetail;
-import com.tuoyou.tavern.protocol.crm.dto.GszcDetail;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Data
 public class CrmOrderBusinessRelVO {
@@ -19,9 +15,12 @@ public class CrmOrderBusinessRelVO {
 
     private String businessName;
 
+    private String business;
+
     private String companyId;
 
     private String companyName;
+    private String company;
 
     private String ownerId;
 
@@ -30,30 +29,24 @@ public class CrmOrderBusinessRelVO {
     private String needThirdParty;
 
     private String thirdPartyId;
+    private String thirdParty;
 
     private BigDecimal thirdPartyFee;
 
     private String businessTag;
 
     private String preEventId;
+    private String preEvent;
 
     private String remark;
 
     private String createDate;
 
     //代理记账
-    private String dljzBeginDate;
-    private String dljzEndDate;
-    private String dljzDiff;
-    private String isBegin;
+    private CrmOrderBusinessDljzVO dlfw;
 
     //公积金代缴/社保代缴
-    private String gjjsbdjBeginDate;
-    private String gjjsbdjEndDate;
-    private String gjjsbdjDiff;
-    private int employeeNum;
+    private CrmOrderBusinessDjfwVO djfw;
     //公司注册
-    private String absent;
-    private String regLocationType;
-
+    private CrmOrderBusinessGszcVO gszc;
 }
