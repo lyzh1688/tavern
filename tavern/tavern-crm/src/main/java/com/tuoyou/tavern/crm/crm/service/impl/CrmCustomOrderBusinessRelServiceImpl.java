@@ -77,6 +77,7 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
             BeanUtils.copyProperties(crmOrderBusinessRelDTO, crmOrderBusinessRel);
             crmOrderBusinessRel.setEventId(eventId);
             crmOrderBusinessRel.setCreateDate(LocalDateTime.now());
+            crmOrderBusinessRel.setUpdateDate(LocalDateTime.now());
             this.save(crmOrderBusinessRel);
             CrmCompanyBusiness crmCompanyBusiness = new CrmCompanyBusiness();
             crmCompanyBusiness.setBusinessId(crmOrderBusinessRelDTO.getBusinessId());
@@ -134,7 +135,7 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
             CrmOrderBusinessRel crmOrderBusinessRel = new CrmOrderBusinessRel();
             BeanUtils.copyProperties(crmOrderBusinessRelDTO, crmOrderBusinessRel);
             crmOrderBusinessRel.setEventId(eventId);
-            crmOrderBusinessRel.setCreateDate(LocalDateTime.now());
+            crmOrderBusinessRel.setUpdateDate(LocalDateTime.now());
             this.updateById(crmOrderBusinessRel);
             CrmCompanyBusiness crmCompanyBusiness = new CrmCompanyBusiness();
             crmCompanyBusiness.setBusinessId(crmOrderBusinessRelDTO.getBusinessId());

@@ -40,5 +40,6 @@ public class CrmOrderBusinessRel extends Model<CrmOrderBusinessRel> {
     private LocalDateTime createDate;
 
     private String owner;
+    private LocalDateTime updateDate;
 
 }
