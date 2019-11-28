@@ -96,7 +96,7 @@
       </el-table-column>
       <!--  <el-table-column prop="weixinName" label="微信昵称" header-align="center" align="center">
         </el-table-column>-->
-      <el-table-column prop="businessName" label="业务类型" header-align="center" align="center" >
+      <el-table-column prop="businessName" label="业务类型" header-align="center" align="center">
       </el-table-column>
       <el-table-column prop="businessInfo" label="业务备注信息" header-align="center" align="center" width="255">
       </el-table-column>
@@ -510,6 +510,7 @@
         drawBackEditLoading: false,
         logLoading: false,
         logDialogVisible: false,
+        chosenThirdParty: '',
         tableData: [],
         filterColumns: [],
         pageRequest: {
@@ -586,7 +587,7 @@
           mountNode: '',
           curNodeId: '',
           nextOperator: '',
-          refundFee:''
+          refundFee: ''
         },
         files: [],
         logRowContent: {},
@@ -701,7 +702,7 @@
           mountNode: '',
           curNodeId: '',
           nextOperator: '',
-          refundFee:''
+          refundFee: ''
         }
         let ele = document.getElementById('mountNode')
         if (ele != null) {
@@ -853,10 +854,12 @@
               if (this.showRefund && this.nextForm.refundFee != undefined && this.nextForm.refundFee != '') {
                 formData.append('refundFee', this.nextForm.refundFee);
               }
-              formData.append("thirdPartyFlag", this.nextForm.thirdPartyChoose)
-              formData.append("thirdPartyId", this.nextForm.thirdPartyId)
-              formData.append("thirdPartyInfo", this.nextForm.thirdPartyInfo)
-              formData.append("thirdPartyFee", this.nextForm.thirdPartyFee)
+              if (this.nextForm.thirdPartyChoose != undefined && this.nextForm.thirdPartyChoose != null) {
+                formData.append("thirdPartyFlag", this.nextForm.thirdPartyChoose)
+                formData.append("thirdPartyId", this.chosenThirdParty.id)
+                formData.append("thirdPartyInfo", this.chosenThirdParty.name)
+                formData.append("thirdPartyFee", this.nextForm.thirdPartyFee)
+              }
               this.$api.workflow.saveNextEvent(formData).then((res) => {
                 this.nextEditLoading = false
                 this.$message({message: '操作成功', type: 'success'})
@@ -948,7 +951,7 @@
           let nodeName = this.selectedNextNodeDict.find(item => {
             return val == item.nodeId;
           }).name
-          if (nodeName.indexOf('退款')>=0) {
+          if (nodeName.indexOf('退款') >= 0) {
             this.showRefund = true;
           }
           this.showNextOperator = true;
@@ -975,7 +978,10 @@
         this.chosenNode = this.selectedNextNodeDict.find(item => {
           return val == item.nodeId;
         })
-      }, linkThirdPartyChange: function () {
+      }, linkThirdPartyChange: function (val) {
+        this.chosenThirdParty = this.thirdPartyDict.find(item => {
+          return val == item.id;
+        })
         if (this.nextForm.thirdPartyChoose != undefined && this.nextForm.thirdPartyChoose != '') {
           this.thirdPartyShow = true;
         }
@@ -1021,7 +1027,7 @@
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
         })
       }
-      ,handleItemChange: function (val) {
+      , handleItemChange: function (val) {
         this.chosenOperator = this.nextOperatorDict.find(item => {
           return val == item.id;
         })

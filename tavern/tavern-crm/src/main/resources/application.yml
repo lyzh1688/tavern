@@ -6,24 +6,28 @@ mybatis-plus:
   mapper-locations: classpath*:mapper/*/*Mapper.xml
 # 数据源
 custom.jdbc:
-            crm:
-              driverClassName: com.mysql.cj.jdbc.Driver
-              username: root
-              password: y2iaciej
-              url: jdbc:mysql://119.3.19.171:3306/crm?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true
-              max-idle: 5
-              max-wait: 10000
-              min-idle: 1
-              initial-size: 5
-            workflow:
-              driverClassName: com.mysql.cj.jdbc.Driver
-              username: root
-              password: y2iaciej
-              url: jdbc:mysql://119.3.19.171:3306/work_flow?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true
-              max-idle: 5
-              max-wait: 10000
-              min-idle: 1
-              initial-size: 5
-            names: crm,workflow
+  crm:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: y2iaciej
+    url: jdbc:mysql://119.3.19.171:3306/crm?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true
+    max-idle: 5
+    max-wait: 10000
+    min-idle: 1
+    initial-size: 5
+  workflow:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: y2iaciej
+    url: jdbc:mysql://119.3.19.171:3306/work_flow?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true
+    max-idle: 5
+    max-wait: 10000
+    min-idle: 1
+    initial-size: 5
+  names: crm,workflow
 spring.application:
-    name: tavern-crm
+  name: tavern-crm
+
+dynamic:
+  ds:
+    debug: false

@@ -578,6 +578,7 @@
         chosenNode: {},
         operatorName: '',
         chosenOperator: '',
+        chosenThirdParty: '',
         chosenHandler: {},
         showRefund: false,
         showHandler: false,
@@ -829,10 +830,12 @@
               if (this.showRefund && this.nextForm.refundFee != undefined && this.nextForm.refundFee != '') {
                 formData.append('refundFee', this.nextForm.refundFee);
               }
-              formData.append("thirdPartyFlag", this.nextForm.thirdPartyChoose)
-              formData.append("thirdPartyId", this.nextForm.thirdPartyId)
-              formData.append("thirdPartyInfo", this.nextForm.thirdPartyInfo)
-              formData.append("thirdPartyFee", this.nextForm.thirdPartyFee)
+              if(this.nextForm.thirdPartyChoose != undefined && this.nextForm.thirdPartyChoose != null){
+                formData.append("thirdPartyFlag", this.nextForm.thirdPartyChoose)
+                formData.append("thirdPartyId", this.chosenThirdParty.id)
+                formData.append("thirdPartyInfo", this.chosenThirdParty.name)
+                formData.append("thirdPartyFee", this.nextForm.thirdPartyFee)
+              }
               this.$api.workflow.saveNextEvent(formData).then((res) => {
                 this.nextEditLoading = false
                 this.$message({message: '操作成功', type: 'success'})
@@ -963,7 +966,10 @@
           return val == item.nodeId;
         })
       },
-      linkThirdPartyChange: function () {
+      linkThirdPartyChange: function (val) {
+        this.chosenThirdParty = this.thirdPartyDict.find(item => {
+          return val == item.id;
+        })
         if (this.nextForm.thirdPartyChoose != undefined && this.nextForm.thirdPartyChoose != '') {
           this.thirdPartyShow = true;
         }

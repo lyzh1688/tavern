@@ -330,17 +330,18 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
     public void startNextWorkFlow(WorkFlowNextNodeDTO workFlowNextNodeDTO) throws Exception {
         this.workFlowEventService.startNextWorkFlowInfo(workFlowNextNodeDTO);
         //更新第三方消息
+        if(StringUtils.isEmpty(workFlowNextNodeDTO.getThirdPartyFlag())){
+            return;
+        }
+        CrmOrderBusinessRel crmOrderBusinessRel = new CrmOrderBusinessRel();
+        crmOrderBusinessRel.setEventId(workFlowNextNodeDTO.getEventId());
         if (workFlowNextNodeDTO.getThirdPartyFlag().equals("1") ) {
-            CrmOrderBusinessRel crmOrderBusinessRel = new CrmOrderBusinessRel();
-            crmOrderBusinessRel.setEventId(workFlowNextNodeDTO.getEventId());
             crmOrderBusinessRel.setThirdPartyFee(StringUtils.isEmpty(workFlowNextNodeDTO.getThirdPartyFee()) ? null : new BigDecimal(workFlowNextNodeDTO.getThirdPartyFee()));
             crmOrderBusinessRel.setNeedThirdParty("1");
-            crmOrderBusinessRel.setThirdPartyId(workFlowNextNodeDTO.getThirdPartyInfo());
+            crmOrderBusinessRel.setThirdPartyId(workFlowNextNodeDTO.getThirdPartyId());
             this.crmCustomOrderBusinessRelService.updateById(crmOrderBusinessRel);
         }
         if (workFlowNextNodeDTO.getThirdPartyFlag().equals("2") ) {
-            CrmOrderBusinessRel crmOrderBusinessRel = new CrmOrderBusinessRel();
-            crmOrderBusinessRel.setEventId(workFlowNextNodeDTO.getEventId());
             crmOrderBusinessRel.setNeedThirdParty("0");
             this.crmCustomOrderBusinessRelService.cancelThirdPartyInfo(crmOrderBusinessRel);
         }

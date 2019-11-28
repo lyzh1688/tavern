@@ -631,7 +631,6 @@
           absent: '',
           regLocationType: '',
         }
-        alert(JSON.stringify(params))
         this.dataForm = Object.assign({}, params)
         if(params.djfw != null ){
           this.djfwForm = Object.assign({}, params.djfw)
