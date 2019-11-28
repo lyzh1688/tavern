@@ -35,4 +35,6 @@ public interface CrmCustomOrderBusinessRelService extends IService<CrmOrderBusin
 
     void updateThirdPartyInfo(CrmOrderBusinessRel crmOrderBusinessRel);
 
+    void cancelThirdPartyInfo(CrmOrderBusinessRel crmOrderBusinessRel);
+
 }

@@ -130,7 +130,7 @@
             and t4.COMPANY_ID = #{companyId}
     </select>
 
-    <update id="updateThirdPartyInfo">
+    <update id="cancelThirdPartyInfo">
         update CRM_ORDER_BUSINESS_REL t
         set
          NEED_THIRD_PARTY = #{needThirdParty},

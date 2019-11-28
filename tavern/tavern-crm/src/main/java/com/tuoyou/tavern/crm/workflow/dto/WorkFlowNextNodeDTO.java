@@ -60,4 +60,24 @@ public class WorkFlowNextNodeDTO {
         this.files = files;
         this.refundFee = refundFee;
     }
+
+    @Override
+    public String toString() {
+        return "WorkFlowNextNodeDTO{" +
+                "eventId='" + eventId + '\'' +
+                ", preNodeId='" + preNodeId + '\'' +
+                ", curNodeId='" + curNodeId + '\'' +
+                ", curOperator='" + curOperator + '\'' +
+                ", curOperatorName='" + curOperatorName + '\'' +
+                ", operator='" + operator + '\'' +
+                ", operatorName='" + operatorName + '\'' +
+                ", message='" + message + '\'' +
+                ", files=" + files +
+                ", refundFee=" + refundFee +
+                ", thirdPartyFlag='" + thirdPartyFlag + '\'' +
+                ", thirdPartyId='" + thirdPartyId + '\'' +
+                ", thirdPartyInfo='" + thirdPartyInfo + '\'' +
+                ", thirdPartyFee='" + thirdPartyFee + '\'' +
+                '}';
+    }
 }

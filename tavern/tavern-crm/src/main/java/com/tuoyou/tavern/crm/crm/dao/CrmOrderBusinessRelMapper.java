@@ -14,5 +14,7 @@ public interface CrmOrderBusinessRelMapper extends BaseMapper<CrmOrderBusinessRe
     CrmCompanyOrderDetailVO selectCrmCompanyOrderDetail(@Param("eventId") String eventId,
                                                         @Param("companyId") String companyId );
 
-    void updateThirdPartyInfo(CrmOrderBusinessRel crmOrderBusinessRel);
+    void cancelThirdPartyInfo(CrmOrderBusinessRel crmOrderBusinessRel);
+
+
 }

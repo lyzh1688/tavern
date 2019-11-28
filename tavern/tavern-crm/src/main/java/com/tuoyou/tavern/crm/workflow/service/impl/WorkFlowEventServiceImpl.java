@@ -26,6 +26,8 @@ import com.tuoyou.tavern.protocol.crm.model.CrmOrderBusinessRel;
 import com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO;
 import com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowRefundVO;
 import com.tuoyou.tavern.protocol.hrm.spi.HrmUserDictService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, WorkFlowEvent> implements WorkFlowEventService {
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private WorkFlowEventService workFlowEventService;
@@ -264,7 +267,8 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
     @Transactional
     @TargetDataSource(name = "workflow")
     @Override
-    public void startNextWorkFlow(WorkFlowNextNodeDTO workFlowNextNodeDTO) throws Exception {
+    public void startNextWorkFlowInfo(WorkFlowNextNodeDTO workFlowNextNodeDTO) throws Exception {
+        this.LOGGER.info("workFlowNextNodeDTO: {}", workFlowNextNodeDTO.toString());
         //更新event状态
         //更新eventhis状态
         //判断是否有dependency，发起下一个任务
@@ -320,17 +324,26 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
             this.workFlowEventDependencyHisService.save(workFlowEventDependencyHis);
         }
 
+    }
+
+    @Override
+    public void startNextWorkFlow(WorkFlowNextNodeDTO workFlowNextNodeDTO) throws Exception {
+        this.workFlowEventService.startNextWorkFlowInfo(workFlowNextNodeDTO);
         //更新第三方消息
-        if (workFlowNextNodeDTO.getThirdPartyFlag().equals("0")) {
-            return;
+        if (workFlowNextNodeDTO.getThirdPartyFlag().equals("1") ) {
+            CrmOrderBusinessRel crmOrderBusinessRel = new CrmOrderBusinessRel();
+            crmOrderBusinessRel.setEventId(workFlowNextNodeDTO.getEventId());
+            crmOrderBusinessRel.setThirdPartyFee(StringUtils.isEmpty(workFlowNextNodeDTO.getThirdPartyFee()) ? null : new BigDecimal(workFlowNextNodeDTO.getThirdPartyFee()));
+            crmOrderBusinessRel.setNeedThirdParty("1");
+            crmOrderBusinessRel.setThirdPartyId(workFlowNextNodeDTO.getThirdPartyInfo());
+            this.crmCustomOrderBusinessRelService.updateById(crmOrderBusinessRel);
         }
-        CrmOrderBusinessRel crmOrderBusinessRel = new CrmOrderBusinessRel();
-        crmOrderBusinessRel.setEventId(workFlowNextNodeDTO.getEventId());
-        crmOrderBusinessRel.setThirdPartyFee(StringUtils.isEmpty(workFlowNextNodeDTO.getThirdPartyFee()) ? null : new BigDecimal(workFlowNextNodeDTO.getThirdPartyFee()));
-        crmOrderBusinessRel.setNeedThirdParty("1");
-        crmOrderBusinessRel.setThirdPartyId(workFlowNextNodeDTO.getThirdPartyId());
-        crmOrderBusinessRel.setThirdPartyId(workFlowNextNodeDTO.getThirdPartyId());
-        this.crmCustomOrderBusinessRelService.updateThirdPartyInfo(crmOrderBusinessRel);
+        if (workFlowNextNodeDTO.getThirdPartyFlag().equals("2") ) {
+            CrmOrderBusinessRel crmOrderBusinessRel = new CrmOrderBusinessRel();
+            crmOrderBusinessRel.setEventId(workFlowNextNodeDTO.getEventId());
+            crmOrderBusinessRel.setNeedThirdParty("0");
+            this.crmCustomOrderBusinessRelService.cancelThirdPartyInfo(crmOrderBusinessRel);
+        }
     }
 
     @TargetDataSource(name = "workflow")
