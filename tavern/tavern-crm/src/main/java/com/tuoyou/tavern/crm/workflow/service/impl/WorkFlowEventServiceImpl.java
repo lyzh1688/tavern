@@ -11,6 +11,7 @@ import com.tuoyou.tavern.common.core.util.DateUtils;
 import com.tuoyou.tavern.common.core.util.UUIDUtil;
 import com.tuoyou.tavern.crm.crm.service.CrmCompanyBusinessInfoService;
 import com.tuoyou.tavern.crm.crm.service.CrmCustomOrderBusinessRelService;
+import com.tuoyou.tavern.crm.crm.service.CrmOrderGszcDetailService;
 import com.tuoyou.tavern.crm.workflow.dao.WorkFlowEventMapper;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowDelayNotesDTO;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowLogMessageDTO;
@@ -23,6 +24,7 @@ import com.tuoyou.tavern.protocol.crm.dto.CrmOrderBusinessRelDTO;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.MyToDoListDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCompanyBusiness;
 import com.tuoyou.tavern.protocol.crm.model.CrmOrderBusinessRel;
+import com.tuoyou.tavern.protocol.crm.model.CrmOrderGszcDetail;
 import com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO;
 import com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowRefundVO;
 import com.tuoyou.tavern.protocol.hrm.spi.HrmUserDictService;
@@ -66,6 +68,8 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
     private WorkFlowDefNodeExtAttrService workFlowDefNodeExtAttrService;
     @Autowired
     private CrmCustomOrderBusinessRelService crmCustomOrderBusinessRelService;
+    @Autowired
+    private CrmOrderGszcDetailService crmOrderGszcDetailService;
 
     @Autowired
     private CrmCompanyBusinessInfoService crmCompanyBusinessInfoService;
@@ -206,16 +210,55 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         return this.baseMapper.insertWorkFlowEvent(workFlowEvent, businessId);
     }
 
-    @TargetDataSource(name = "workflow")
+
     @Override
     public IPage<MyTodoListVO> getMyPendingWork(Page page, MyToDoListDTO myToDoListDTO) {
+        IPage<MyTodoListVO> iPage = this.workFlowEventService.getMyPendingWorkWithoutDetail(page, myToDoListDTO);
+        iPage.getRecords().forEach(record -> this.workFlowEventService.setBusinessInfo(record));
+        return iPage;
+    }
+
+    @TargetDataSource(name = "workflow")
+    @Override
+    public IPage<MyTodoListVO> getMyPendingWorkWithoutDetail(Page page, MyToDoListDTO myToDoListDTO) {
         IPage<MyTodoListVO> iPage = this.baseMapper.selectMyPendingWork(page, myToDoListDTO);
         return getMyTodoListVOIPage(iPage);
+    }
+
+    @Override
+    public void setBusinessInfo(MyTodoListVO myTodoListVO) {
+        switch (myTodoListVO.getBusinessId()) {
+            case "BIZ_4":
+                CrmOrderGszcDetail crmOrderGszcDetail = this.crmOrderGszcDetailService.getById(myTodoListVO.getEventId());
+                if (Objects.nonNull(crmOrderGszcDetail)) {
+                    String tips;
+                    if (crmOrderGszcDetail.getAbsent().equals("1")) {
+                        tips = "银行需要到场,注册类型：";
+                    } else {
+                        tips = "银行无需到场,注册类型：";
+                    }
+                    if (Objects.nonNull(crmOrderGszcDetail.getRegLocationType())) {
+                        tips = tips + crmOrderGszcDetail.getRegLocationType();
+                    } else {
+                        tips = tips + "未选择注册类型";
+                    }
+                    myTodoListVO.setBusinessInfo(tips);
+                }
+                return;
+        }
     }
 
     @TargetDataSource(name = "workflow")
     @Override
     public IPage<MyTodoListVO> getAllWorkEvent(Page page, MyToDoListDTO myToDoListDTO) {
+        IPage<MyTodoListVO> iPage = this.workFlowEventService.getAllWorkEventWithoutDetail(page, myToDoListDTO);
+        iPage.getRecords().forEach(record -> this.workFlowEventService.setBusinessInfo(record));
+        return iPage;
+    }
+
+    @TargetDataSource(name = "workflow")
+    @Override
+    public IPage<MyTodoListVO> getAllWorkEventWithoutDetail(Page page, MyToDoListDTO myToDoListDTO) {
         IPage<MyTodoListVO> iPage = this.baseMapper.selectAllWorkEvent(page, myToDoListDTO);
         return getMyTodoListVOIPage(iPage);
     }
@@ -330,18 +373,18 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
     public void startNextWorkFlow(WorkFlowNextNodeDTO workFlowNextNodeDTO) throws Exception {
         this.workFlowEventService.startNextWorkFlowInfo(workFlowNextNodeDTO);
         //更新第三方消息
-        if(StringUtils.isEmpty(workFlowNextNodeDTO.getThirdPartyFlag())){
+        if (StringUtils.isEmpty(workFlowNextNodeDTO.getThirdPartyFlag())) {
             return;
         }
         CrmOrderBusinessRel crmOrderBusinessRel = new CrmOrderBusinessRel();
         crmOrderBusinessRel.setEventId(workFlowNextNodeDTO.getEventId());
-        if (workFlowNextNodeDTO.getThirdPartyFlag().equals("1") ) {
+        if (workFlowNextNodeDTO.getThirdPartyFlag().equals("1")) {
             crmOrderBusinessRel.setThirdPartyFee(StringUtils.isEmpty(workFlowNextNodeDTO.getThirdPartyFee()) ? null : new BigDecimal(workFlowNextNodeDTO.getThirdPartyFee()));
             crmOrderBusinessRel.setNeedThirdParty("1");
             crmOrderBusinessRel.setThirdPartyId(workFlowNextNodeDTO.getThirdPartyId());
             this.crmCustomOrderBusinessRelService.updateById(crmOrderBusinessRel);
         }
-        if (workFlowNextNodeDTO.getThirdPartyFlag().equals("2") ) {
+        if (workFlowNextNodeDTO.getThirdPartyFlag().equals("2")) {
             crmOrderBusinessRel.setNeedThirdParty("0");
             this.crmCustomOrderBusinessRelService.cancelThirdPartyInfo(crmOrderBusinessRel);
         }

@@ -30,7 +30,13 @@ public interface WorkFlowEventService extends IService<WorkFlowEvent> {
 
     IPage<MyTodoListVO> getMyPendingWork(Page page, MyToDoListDTO myToDoListDTO);
 
+    IPage<MyTodoListVO> getMyPendingWorkWithoutDetail(Page page, MyToDoListDTO myToDoListDTO);
+
+    void setBusinessInfo(MyTodoListVO myTodoListVO);
+
     IPage<MyTodoListVO> getAllWorkEvent(Page page, MyToDoListDTO myToDoListDTO);
+
+    IPage<MyTodoListVO> getAllWorkEventWithoutDetail(Page page, MyToDoListDTO myToDoListDTO);
 
     void startNextWorkFlowInfo(WorkFlowNextNodeDTO workFlowNextNodeDTO) throws Exception;
 
