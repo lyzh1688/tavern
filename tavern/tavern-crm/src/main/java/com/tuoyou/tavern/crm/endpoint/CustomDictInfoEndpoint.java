@@ -91,17 +91,7 @@ public class CustomDictInfoEndpoint {
                 .map(d -> {
                     Dict dict = new Dict();
                     dict.setId(d.getThirdPartyId());
-                    if (StringUtils.isNoneEmpty(d.getDistrict())) {
-                        dict.setName(StringUtils.join(d.getDistrict(), "  ", d.getThirdPartyName()));
-                    } else {
-                        if (StringUtils.isNoneEmpty(d.getCity())) {
-                            dict.setName(StringUtils.join(d.getCity(), "  ", d.getThirdPartyName()));
-                        } else if (StringUtils.isNoneEmpty(d.getProvince())) {
-                            dict.setName(StringUtils.join(d.getProvince(), "  ", d.getThirdPartyName()));
-                        } else {
-                            dict.setName(d.getThirdPartyName());
-                        }
-                    }
+                    dict.setName(StringUtils.join(d.getDistrict(), " ", d.getThirdPartyName()));
                     return dict;
                 }).collect(Collectors.toList());
         return new TavernDictResponse(dictList);

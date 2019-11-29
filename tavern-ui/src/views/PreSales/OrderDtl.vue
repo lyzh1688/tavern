@@ -127,7 +127,7 @@
                        :label="item.name"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="异常处理方式" label-width="150px" prop="nextNode" v-if="showYccl">
+        <!--<el-form-item label="异常处理方式" label-width="150px" prop="nextNode" v-if="showYccl">
           <el-select v-model="dataForm.nextNode"
                      filterable
                      remote
@@ -144,7 +144,7 @@
                        :value="item.nodeId"
                        :label="item.name"/>
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="对接人员" label-width="150px" prop="owner">
           <el-select v-model="dataForm.owner"
                      :disabled="ownerShow"
@@ -684,10 +684,10 @@
           }
         })
         let valid = true;
-        if (label.name == '异常业务' && (this.dataForm.nextNode == null || this.dataForm.nextNode == '')) {
+      /*  if (label.name == '异常业务' && (this.dataForm.nextNode == null || this.dataForm.nextNode == '')) {
           this.$message({message: '请选择异常业务处理方式！', type: 'error'})
           return
-        }
+        }*/
         switch (label.name) {
           case "代理记账":
             this.$refs.dljzForm.validate((bizValid) => {
@@ -890,8 +890,8 @@
             this.showHelpRegister = true;
             break;
           case "异常业务":
-            this.showYccl = true;
-            this.ownerShow = true;
+            // this.showYccl = true;
+            // this.ownerShow = true;
             break;
         }
       }
@@ -1060,7 +1060,7 @@
       }
       ,
       linkChange: function (val) {
-        this.showYccl = false
+        // this.showYccl = false
         if (val != undefined && val != '') {
           this.ownerShow = false;
         } else {
@@ -1069,13 +1069,13 @@
         let ownerRequest = {};
         ownerRequest.business = val;
         this.ownerDict = []
-        if (val != 'BIZ_11') {
+        // if (val != 'BIZ_11') {
           this.$api.customer.findOwnerDict(ownerRequest).then((res) => {
             this.ownerDict = res.data
           })
-        } else {
-          this.initNextNodeDict(val)
-        }
+        // } else {
+        //   this.initNextNodeDict(val)
+        // }
         this.selectBiz(val)
       }
       ,

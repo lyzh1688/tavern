@@ -291,6 +291,7 @@
                      :remote-method="remoteThirdPartyDict"
                      placeholder="请选择合作方"
                      no-data-text="无匹配数据/请检查是否配置相关人员"
+                     @change="linkThirdPartyInfoChange"
                      :loading="remoteThirdPartyDictLoading"
                      prop="thirdPartyInfo"
                      style="float: left">
@@ -854,7 +855,8 @@
               if (this.showRefund && this.nextForm.refundFee != undefined && this.nextForm.refundFee != '') {
                 formData.append('refundFee', this.nextForm.refundFee);
               }
-              if (this.nextForm.thirdPartyChoose != undefined && this.nextForm.thirdPartyChoose != null) {
+              if(this.nextForm.thirdPartyChoose != undefined && this.nextForm.thirdPartyChoose != null
+                && this.chosenThirdParty != undefined && this.chosenThirdParty != "" && this.chosenThirdParty != null){
                 formData.append("thirdPartyFlag", this.nextForm.thirdPartyChoose)
                 formData.append("thirdPartyId", this.chosenThirdParty.id)
                 formData.append("thirdPartyInfo", this.chosenThirdParty.name)
@@ -978,10 +980,10 @@
         this.chosenNode = this.selectedNextNodeDict.find(item => {
           return val == item.nodeId;
         })
-      }, linkThirdPartyChange: function (val) {
+      }, linkThirdPartyChange:  function () {
         this.chosenThirdParty = this.thirdPartyDict.find(item => {
-          return val == item.id;
-        })
+          return (this.nextForm.thirdPartyInfo == item.name || this.nextForm.thirdPartyInfo == item.id);
+        });
         if (this.nextForm.thirdPartyChoose != undefined && this.nextForm.thirdPartyChoose != '') {
           this.thirdPartyShow = true;
         }
@@ -993,6 +995,12 @@
           this.thirdPartyShow = true;
           return
         }
+      },
+      linkThirdPartyInfoChange: function (val) {
+        this.chosenThirdParty = this.thirdPartyDict.find(item => {
+          return val == item.id;
+        })
+
       },
       findThirdPartyDictById: function (param) {
         if (param != '') {
