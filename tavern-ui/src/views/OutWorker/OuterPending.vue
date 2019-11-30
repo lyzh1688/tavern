@@ -606,7 +606,6 @@
       this.sys_outer_pending_drawback = hasPermission('sys:outer:pending:drawback')
       this.sys_outer_pending_next = hasPermission('sys:outer:pending:next')
       this.userName = sessionStorage.getItem("userName")
-      this.findPage(null);
       this.findPageRole();
       this.initThirdPartyDict()
     },
@@ -711,6 +710,8 @@
           thirdPartyId: ''
 
         };
+        this.showNextOperator = true;
+        this.showRefund = false;
         this.thirdPartyShow = true
         this.showthirdPartyInfo = false
         this.nextOperatorDict = []
@@ -947,6 +948,7 @@
           }
           this.showNextOperator = true;
           if (nodeName == '结束') {
+            this.chosenOperator = '';
             this.showNextOperator = false;
           }
           if (nodeName.indexOf('合作方') >= 0) {
@@ -1148,8 +1150,11 @@
         let callback = res => {
           this.logLoading = false
         }
+
         this.logPageRequest.eventId = this.drawBackForm.eventId
         this.logPageRequest.operator = params.operatorId
+        this.logPageRequest.curNodeId = params.id
+
         this.$api.workflow.findLog(this.logPageRequest).then((res) => {
           this.logDataForm.logHistory = res.data.records;
           this.logTotal = res.data.total;
@@ -1160,7 +1165,8 @@
           this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
           callback(res)
         })
-      },findPageRole: async function () {
+      },
+      findPageRole: async function () {
         let roles = sessionStorage.getItem("roles");
         let roleList = roles.split(",");
         if (roleList.length > 1) {
@@ -1171,8 +1177,10 @@
             if (res.data.roleId != null) {
               this.pageRole = res.data.roleId
             }
+            this.findPage(null)
           }).catch((res) => {
-            this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
+            this.findPage(null)
+            // this.$message({message: '操作失败, ' + res.response.data.retMessage, type: 'error'})
           })
         }else {
           this.findPage(null)
