@@ -316,16 +316,19 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
         //更新eventhis状态
         //判断是否有dependency，发起下一个任务
         WorkFlowEvent workFlowEvent = this.getById(workFlowNextNodeDTO.getEventId());
+        int restDays;
         WorkFlowDefNodeExtAttr workFlowDefNodeExtAttr = this.workFlowDefNodeExtAttrService.getById(workFlowNextNodeDTO.getCurNodeId());
-        Integer restDays = StringUtils.isEmpty(workFlowDefNodeExtAttr.getRestDays()) ? 2 : Integer.parseInt(workFlowDefNodeExtAttr.getRestDays());
+        if (Objects.nonNull(workFlowDefNodeExtAttr)) {
+            restDays = StringUtils.isEmpty(workFlowDefNodeExtAttr.getRestDays()) ? 2 : Integer.parseInt(workFlowDefNodeExtAttr.getRestDays());
+        } else {
+            restDays = 2;
+        }
         LocalDateTime beginDate = workFlowEvent.getBeginDate();
         workFlowEvent.setCurOperator(workFlowNextNodeDTO.getCurOperator());
         workFlowEvent.setCurOperatorName(workFlowNextNodeDTO.getCurOperatorName());
         workFlowEvent.setCurNodeId(workFlowNextNodeDTO.getCurNodeId());
         workFlowEvent.setBeginDate(LocalDateTime.now());
-        if (restDays != null) {
-            workFlowEvent.setEndDate(LocalDateTime.now().plusDays(restDays));
-        }
+        workFlowEvent.setEndDate(LocalDateTime.now().plusDays(restDays));
         this.updateById(workFlowEvent);
 
 

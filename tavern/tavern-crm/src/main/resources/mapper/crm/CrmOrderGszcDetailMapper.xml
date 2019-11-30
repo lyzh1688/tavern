@@ -7,30 +7,4 @@
     <result column="ABSENT" jdbcType="VARCHAR" property="absent" />
     <result column="REG_LOCATION_TYPE" jdbcType="VARCHAR" property="regLocationType" />
   </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from CRM_ORDER_GSZC_DETAIL
-    where EVENT_ID = #{eventId,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.tuoyou.tavern.protocol.crm.model.CrmOrderGszcDetail">
-    insert into CRM_ORDER_GSZC_DETAIL (EVENT_ID, ORDER_ID, ABSENT, 
-      REG_LOCATION_TYPE)
-    values (#{eventId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{absent,jdbcType=VARCHAR}, 
-      #{regLocationType,jdbcType=VARCHAR})
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.tuoyou.tavern.protocol.crm.model.CrmOrderGszcDetail">
-    update CRM_ORDER_GSZC_DETAIL
-    set ORDER_ID = #{orderId,jdbcType=VARCHAR},
-      ABSENT = #{absent,jdbcType=VARCHAR},
-      REG_LOCATION_TYPE = #{regLocationType,jdbcType=VARCHAR}
-    where EVENT_ID = #{eventId,jdbcType=VARCHAR}
-  </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select EVENT_ID, ORDER_ID, ABSENT, REG_LOCATION_TYPE
-    from CRM_ORDER_GSZC_DETAIL
-    where EVENT_ID = #{eventId,jdbcType=VARCHAR}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select EVENT_ID, ORDER_ID, ABSENT, REG_LOCATION_TYPE
-    from CRM_ORDER_GSZC_DETAIL
-  </select>
 </mapper>

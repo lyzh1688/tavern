@@ -258,7 +258,7 @@
       },
       // 编辑
       submitForm: function () {
-        if (this.dataForm.payableAmt > this.dataForm.receivableAmt) {
+        if (eval(this.dataForm.payableAmt) > eval(this.dataForm.receivableAmt)) {
           this.$message({message: '实付金额不能大于应付金额', type: 'warn'});
           return;
         }

@@ -585,16 +585,16 @@
           regLocationType: '',
         }
         this.dataForm = Object.assign({}, params)
-        if(params.djfw != null ){
+        if (params.djfw != null) {
           this.djfwForm = Object.assign({}, params.djfw)
         }
-        if(params.dlfw != null ){
-          this.dljzForm=Object.assign({}, params.dlfw)
+        if (params.dlfw != null) {
+          this.dljzForm = Object.assign({}, params.dlfw)
         }
-        if(params.gszc != null ){
+        if (params.gszc != null) {
           this.gszcForm = Object.assign({}, params.gszc)
         }
-        this.linkChange(params.businessId)
+        this.linkDtlQuery(params.businessId)
         this.linkThirdPartyChange()
         this.dialogVisible = true
         this.operation = false
@@ -632,16 +632,16 @@
           regLocationType: '',
         }
         this.dataForm = Object.assign({}, params)
-        if(params.djfw != null ){
+        if (params.djfw != null) {
           this.djfwForm = Object.assign({}, params.djfw)
         }
-        if(params.dlfw != null ){
-          this.dljzForm=Object.assign({}, params.dlfw)
+        if (params.dlfw != null) {
+          this.dljzForm = Object.assign({}, params.dlfw)
         }
-        if(params.gszc != null ){
+        if (params.gszc != null) {
           this.gszcForm = Object.assign({}, params.gszc)
         }
-        this.linkChange(params.businessId)
+        this.linkDtlQuery(params.businessId)
         this.linkThirdPartyChange()
         this.dialogVisible = true
         this.operation = false
@@ -684,10 +684,10 @@
           }
         })
         let valid = true;
-      /*  if (label.name == '异常业务' && (this.dataForm.nextNode == null || this.dataForm.nextNode == '')) {
-          this.$message({message: '请选择异常业务处理方式！', type: 'error'})
-          return
-        }*/
+        /*  if (label.name == '异常业务' && (this.dataForm.nextNode == null || this.dataForm.nextNode == '')) {
+            this.$message({message: '请选择异常业务处理方式！', type: 'error'})
+            return
+          }*/
         switch (label.name) {
           case "代理记账":
             this.$refs.dljzForm.validate((bizValid) => {
@@ -1052,7 +1052,7 @@
           let thirdDict = this.thirdPartyDict.filter(item => {
             return item.id == param;
           });
-          if(thirdDict != null && thirdDict.length != 0){
+          if (thirdDict != null && thirdDict.length != 0) {
             this.dataForm.needThirdParty = '1'
             // this.dataForm.thirdParty = thirdDict[0].name
           }
@@ -1071,15 +1071,33 @@
         ownerRequest.business = val;
         this.ownerDict = []
         // if (val != 'BIZ_11') {
-          this.$api.customer.findOwnerDict(ownerRequest).then((res) => {
-            this.ownerDict = res.data
-          })
+        this.$api.customer.findOwnerDict(ownerRequest).then((res) => {
+          this.ownerDict = res.data
+        })
         // } else {
         //   this.initNextNodeDict(val)
         // }
         this.selectBiz(val)
       }
       ,
+      linkDtlQuery: function (val) {
+        if (val != undefined && val != '') {
+          this.ownerShow = false;
+        } else {
+          this.ownerShow = true;
+        }
+        let ownerRequest = {};
+        ownerRequest.business = val;
+        this.ownerDict = []
+        // if (val != 'BIZ_11') {
+        this.$api.customer.findOwnerDict(ownerRequest).then((res) => {
+          this.ownerDict = res.data
+        })
+        // } else {
+        //   this.initNextNodeDict(val)
+        // }
+        this.selectBiz(val)
+      },
       linkCompanyDictChange: function (val) {
         this.staffCnt = ''
         let request = {};
@@ -1184,7 +1202,7 @@
         this.pageRequest.current = val;
         this.findPage(this.pageRequest);
       },
-      flushFormData(){
+      flushFormData() {
         this.dljzForm = {
           isBegin: '',
           months: 12,

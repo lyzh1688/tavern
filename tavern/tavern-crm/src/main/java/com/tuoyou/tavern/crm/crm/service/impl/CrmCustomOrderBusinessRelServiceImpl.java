@@ -107,7 +107,7 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
                         crmOrderDljzDetail.setEndDate(DateUtils.parseDate(StringUtils.replacePattern(dljzDetail.getDljzEndDate(), "/", ""), DateUtils.SIMPLE_8_FORMATTER));
                         crmCompanyBusiness.setEndDate(DateUtils.parseDateTime(StringUtils.replacePattern(dljzDetail.getDljzEndDate(), "/", "") + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
                     }
-                    this.crmOrderDljzDetailService.save(crmOrderDljzDetail);
+                    this.crmOrderDljzDetailService.saveOrUpdate(crmOrderDljzDetail);
                     break;
                 case "BIZ_4":
                     GszcDetail gszcDetail = crmOrderBusinessRelDTO.getGszcDetail();
@@ -116,7 +116,7 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
                     crmOrderGszcDetail.setOrderId(crmOrderBusinessRelDTO.getOrderId());
                     crmOrderGszcDetail.setAbsent(gszcDetail.getAbsent());
                     crmOrderGszcDetail.setRegLocationType(gszcDetail.getRegLocationType());
-                    this.crmOrderGszcDetailService.save(crmOrderGszcDetail);
+                    this.crmOrderGszcDetailService.saveOrUpdate(crmOrderGszcDetail);
                     break;
             }
             if (StringUtils.isNoneEmpty(crmOrderBusinessRelDTO.getCompanyId()))
@@ -251,7 +251,7 @@ public class CrmCustomOrderBusinessRelServiceImpl extends ServiceImpl<CrmOrderBu
         crmOrderGjjsbdjDetail.setEmployeeNum(detail.getEmployeeNum());
         crmOrderGjjsbdjDetail.setDiff(crmOrderBusinessRelDTO.getGjjsbdjDetail().getDiff());
         crmOrderGjjsbdjDetail.setIsTrust(crmOrderBusinessRelDTO.getGjjsbdjDetail().getIsTrust());
-        this.crmOrderGjjsbdjDetailService.save(crmOrderGjjsbdjDetail);
+        this.crmOrderGjjsbdjDetailService.saveOrUpdate(crmOrderGjjsbdjDetail);
         if(StringUtils.isNoneEmpty(detail.getGjjsbdjBeginDate())){
             crmCompanyBusiness.setBeginDate(DateUtils.parseDateTime(detail.getGjjsbdjBeginDate() + " 00:00:00", DateUtils.SIMPLE_DATETIME_FORMATTER));
         }

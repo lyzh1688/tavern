@@ -26,6 +26,7 @@ public class CrmOrderGjjsbdjDetail extends Model<CrmOrderGjjsbdjDetail> {
     private Integer employeeNum;
 
     private String diff;
+
     private String isTrust;
 
 }

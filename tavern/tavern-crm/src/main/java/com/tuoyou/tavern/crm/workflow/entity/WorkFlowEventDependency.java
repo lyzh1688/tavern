@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 @Data
 @TableName("workflow_event_dependency")
 public class WorkFlowEventDependency extends Model<WorkFlowEventDependency> {
-    @TableId
     private String preEvent;
 
+    @TableId
     private String nextEvent;
 
     private LocalDateTime createDate;

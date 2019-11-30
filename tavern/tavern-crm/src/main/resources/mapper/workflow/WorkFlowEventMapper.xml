@@ -94,7 +94,11 @@
             and T6.graph_id = T7.graph_id
             and T6.graph_id = T8.graph_id
             AND T7.cur_node_id = T9.node_id
-            AND not exists(select 1 from work_flow.workflow_event_dependency T9 where T7.event_id = T9.next_event)
+            AND not exists(select 1 from work_flow.workflow_event_dependency T9
+            LEFT JOIN work_flow.workflow_event t14 on T9.pre_event = t14.event_id
+            LEFT JOIN work_flow.workflow_def_graph t15 on t14.graph_id = t15.graph_id
+            where T7.event_id = T9.next_event
+            and t14.cur_node_id != t15.end_node)
             AND (T7.event_owner = #{query.userId} or T7.cur_operator = #{query.userId})
             AND T7.BEGIN_DATE <![CDATA[ <= ]]> now()
             <if test="query.pageRole != null and query.pageRole != ''">
@@ -195,7 +199,6 @@
             and T6.graph_id = T7.graph_id
             and T6.graph_id = T8.graph_id
             AND T7.cur_node_id = T9.node_id
-            AND not exists(select 1 from work_flow.workflow_event_dependency T9 where T7.event_id = T9.next_event)
             <if test="query.city != null and query.city != ''">
                 and T2.CITY like concat('%', #{query.city}, '%')
             </if>

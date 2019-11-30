@@ -798,7 +798,7 @@
       },
       submitNextLogForm: function () {
 
-        if (this.showRefund && this.nextForm.refundFee == undefined && this.nextForm.refundFee == '') {
+        if (this.showRefund && (this.nextForm.refundFee == undefined || this.nextForm.refundFee == '' || this.nextForm.refundFee == null)) {
           this.$message({message: '请输入退款金额！', type: 'error'})
           return
         }
