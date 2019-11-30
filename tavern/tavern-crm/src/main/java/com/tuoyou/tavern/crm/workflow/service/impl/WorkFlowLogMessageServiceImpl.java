@@ -4,10 +4,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dfzq.obgear.framework.spring.db.aspect.anno.TargetDataSource;
-import com.google.common.collect.Lists;
 import com.tuoyou.tavern.common.core.util.DateUtils;
 import com.tuoyou.tavern.common.core.util.FileUtils;
 import com.tuoyou.tavern.common.core.util.UUIDUtil;
+import com.tuoyou.tavern.crm.util.ListUtils;
 import com.tuoyou.tavern.crm.workflow.dao.WorkFlowLogMessageMapper;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowLogMessageDTO;
 import com.tuoyou.tavern.crm.workflow.entity.WorkFlowLogAttachment;
@@ -18,7 +18,6 @@ import com.tuoyou.tavern.crm.workflow.service.WorkFlowLogMessageService;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.WorkFlowLogQueryDTO;
 import com.tuoyou.tavern.protocol.crm.model.workflow.*;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -168,6 +167,9 @@ public class WorkFlowLogMessageServiceImpl extends ServiceImpl<WorkFlowLogMessag
                 .filter(workFLowEdges -> StringUtils.isNoneEmpty(workFLowEdges.getTarget()))
                 .distinct()
                 .collect(Collectors.toList());
+        ListUtils.sortWorkFLowNodesFirstIndex(nodes, "登记", "公司注册");
+        ListUtils.sortWorkFLowEdgesFirstIndex(edges, "sq", "dj");
+
         return new WorkFlowGraphLogVO(nodes, edges);
     }
 
@@ -182,4 +184,6 @@ public class WorkFlowLogMessageServiceImpl extends ServiceImpl<WorkFlowLogMessag
     public boolean save(WorkFlowLogMessage entity) {
         return super.save(entity);
     }
+
+
 }

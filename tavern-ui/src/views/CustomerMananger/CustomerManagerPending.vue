@@ -708,6 +708,8 @@
           thirdPartyId: ''
 
         };
+        this.showNextOperator = true;
+        this.showRefund = false;
         this.thirdPartyShow = true
         this.showthirdPartyInfo = false
         this.nextOperatorDict = []
@@ -943,6 +945,7 @@
           }
           this.showNextOperator = true;
           if (nodeName == '结束') {
+            this.chosenOperator = '';
             this.showNextOperator = false;
           }
           if (nodeName.indexOf('合作方') >= 0) {
@@ -1148,6 +1151,7 @@
         }
         this.logPageRequest.eventId = this.drawBackForm.eventId
         this.logPageRequest.operator = params.operatorId
+        this.logPageRequest.curNodeId = params.id
         this.$api.workflow.findLog(this.logPageRequest).then((res) => {
           this.logDataForm.logHistory = res.data.records;
           this.logTotal = res.data.total;
