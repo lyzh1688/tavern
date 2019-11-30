@@ -228,7 +228,7 @@
         <el-form-item label="服务开始时间" label-width="150px" prop="beginDate"
                       :rules="{required: true, message: '请选择是否开始服务', trigger: 'change'}">
           <el-date-picker v-model="dljzForm.beginDate" type="datetime" placeholder="选择日期时间" clearable
-                          @change="$forceUpdate()"></el-date-picker>
+                          @change="dljzEndDateChange"></el-date-picker>
         </el-form-item>
         <el-form-item label="服务期限(月)" label-width="150px" prop="months"
                       :rules="{required: true, message: '请填写服务期限(月)', trigger: 'change'}">
@@ -531,7 +531,7 @@
         }
         this.dljzForm = {
           isBegin: '',
-          months: '',
+          months: 12,
           beginDate: '',
           endDate: ''
         }
@@ -1060,6 +1060,7 @@
       }
       ,
       linkChange: function (val) {
+        this.flushFormData()
         // this.showYccl = false
         if (val != undefined && val != '') {
           this.ownerShow = false;
@@ -1182,8 +1183,27 @@
       handleCurrentChange(val) {
         this.pageRequest.current = val;
         this.findPage(this.pageRequest);
+      },
+      flushFormData(){
+        this.dljzForm = {
+          isBegin: '',
+          months: 12,
+          beginDate: '',
+          endDate: ''
+        }
+        this.djfwForm = {
+          isTrust: '',
+          confirmNum: '',
+          employeeNum: '',
+          months: '',
+          beginDate: '',
+          endDate: ''
+        }
+        this.gszcForm = {
+          absent: '',
+          regLocationType: '',
+        }
       }
-      ,
     },
     mounted() {
       this.initColumns()
