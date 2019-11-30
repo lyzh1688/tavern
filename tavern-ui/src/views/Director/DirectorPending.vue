@@ -655,7 +655,7 @@
         }
         this.pageRequest.businessName = this.filters.businessName
         this.pageRequest.businessTag = this.filters.businessTag
-        this.pageRequest.ifOVer = this.filters.ifOVer
+        this.pageRequest.ifOver = this.filters.ifOver
         this.pageRequest.pageRole = this.pageRole
         this.$api.workflow.findTodo(this.pageRequest).then((res) => {
           this.tableData = res.data.records;
