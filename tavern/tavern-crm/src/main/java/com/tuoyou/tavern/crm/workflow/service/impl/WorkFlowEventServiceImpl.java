@@ -233,9 +233,9 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
                 if (Objects.nonNull(crmOrderGszcDetail)) {
                     String tips;
                     if (crmOrderGszcDetail.getAbsent().equals("1")) {
-                        tips = "银行需要到场,注册类型：";
+                        tips = "银行开户需要到场,注册类型：";
                     } else {
-                        tips = "银行无需到场,注册类型：";
+                        tips = "银行开户无需到场,注册类型：";
                     }
                     if (Objects.nonNull(crmOrderGszcDetail.getRegLocationType())) {
                         tips = tips + crmOrderGszcDetail.getRegLocationType();
