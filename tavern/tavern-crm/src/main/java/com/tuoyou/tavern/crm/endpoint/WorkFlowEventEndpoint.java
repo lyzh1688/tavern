@@ -104,9 +104,18 @@ public class WorkFlowEventEndpoint {
             @RequestParam(name = "thirdPartyFlag", required = false) String thirdPartyFlag,
             @RequestParam(name = "thirdPartyId", required = false) String thirdPartyId,
             @RequestParam(name = "thirdPartyInfo", required = false) String thirdPartyInfo,
-            @RequestParam(name = "thirdPartyFee", required = false) String thirdPartyFee
+            @RequestParam(name = "thirdPartyFee", required = false) String thirdPartyFee,
+            @RequestParam(name = "isDjfw", required = false) boolean isDjfw,
+            @RequestParam(name = "isTrust", required = false) String isTrust,
+            @RequestParam(name = "employeeNum", required = false) Integer employeeNum,
+            @RequestParam(name = "months", required = false) String months,
+            @RequestParam(name = "beginDate", required = false) String beginDate,
+            @RequestParam(name = "endDate", required = false) String endDate
     ) throws Exception {
-        WorkFlowNextNodeDTO workFlowNextNodeDTO = new WorkFlowNextNodeDTO(eventId, preNodeId, curNodeId, curOperator, curOperatorName, operator, operatorName, message, Arrays.asList(files), refundFee,thirdPartyFlag,thirdPartyId,thirdPartyInfo,thirdPartyFee);
+        WorkFlowNextNodeDTO workFlowNextNodeDTO = new WorkFlowNextNodeDTO(eventId, preNodeId, curNodeId, curOperator, curOperatorName, operator,
+                operatorName, message, Arrays.asList(files), refundFee,thirdPartyFlag,
+                thirdPartyId,thirdPartyInfo,thirdPartyFee,
+                isDjfw,isTrust,employeeNum,months,beginDate,endDate);
         this.workFlowEventService.startNextWorkFlow(workFlowNextNodeDTO);
         return new TavernResponse();
     }

@@ -11,6 +11,7 @@ import com.tuoyou.tavern.common.core.util.DateUtils;
 import com.tuoyou.tavern.common.core.util.UUIDUtil;
 import com.tuoyou.tavern.crm.crm.service.CrmCompanyBusinessInfoService;
 import com.tuoyou.tavern.crm.crm.service.CrmCustomOrderBusinessRelService;
+import com.tuoyou.tavern.crm.crm.service.CrmOrderGjjsbdjDetailService;
 import com.tuoyou.tavern.crm.crm.service.CrmOrderGszcDetailService;
 import com.tuoyou.tavern.crm.workflow.dao.WorkFlowEventMapper;
 import com.tuoyou.tavern.crm.workflow.dto.WorkFlowDelayNotesDTO;
@@ -21,9 +22,11 @@ import com.tuoyou.tavern.crm.workflow.service.*;
 import com.tuoyou.tavern.protocol.common.TavernDictResponse;
 import com.tuoyou.tavern.protocol.common.model.Dict;
 import com.tuoyou.tavern.protocol.crm.dto.CrmOrderBusinessRelDTO;
+import com.tuoyou.tavern.protocol.crm.dto.GjjsbdjDetail;
 import com.tuoyou.tavern.protocol.crm.dto.workflow.MyToDoListDTO;
 import com.tuoyou.tavern.protocol.crm.model.CrmCompanyBusiness;
 import com.tuoyou.tavern.protocol.crm.model.CrmOrderBusinessRel;
+import com.tuoyou.tavern.protocol.crm.model.CrmOrderGjjsbdjDetail;
 import com.tuoyou.tavern.protocol.crm.model.CrmOrderGszcDetail;
 import com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO;
 import com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowRefundVO;
@@ -73,6 +76,9 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
 
     @Autowired
     private CrmCompanyBusinessInfoService crmCompanyBusinessInfoService;
+
+    @Autowired
+    private CrmOrderGjjsbdjDetailService crmOrderGjjsbdjDetailService;
 
     @TargetDataSource(name = "workflow")
     @Transactional
@@ -376,21 +382,42 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
     public void startNextWorkFlow(WorkFlowNextNodeDTO workFlowNextNodeDTO) throws Exception {
         this.workFlowEventService.startNextWorkFlowInfo(workFlowNextNodeDTO);
         //更新第三方消息
-        if (StringUtils.isEmpty(workFlowNextNodeDTO.getThirdPartyFlag())) {
-            return;
+        if (StringUtils.isNotEmpty(workFlowNextNodeDTO.getThirdPartyFlag())) {
+            CrmOrderBusinessRel crmOrderBusinessRel = new CrmOrderBusinessRel();
+            crmOrderBusinessRel.setEventId(workFlowNextNodeDTO.getEventId());
+            if (workFlowNextNodeDTO.getThirdPartyFlag().equals("1")) {
+                crmOrderBusinessRel.setThirdPartyFee(StringUtils.isEmpty(workFlowNextNodeDTO.getThirdPartyFee()) ? null : new BigDecimal(workFlowNextNodeDTO.getThirdPartyFee()));
+                crmOrderBusinessRel.setNeedThirdParty("1");
+                crmOrderBusinessRel.setThirdPartyId(workFlowNextNodeDTO.getThirdPartyId());
+                this.crmCustomOrderBusinessRelService.updateById(crmOrderBusinessRel);
+            }
+            if (workFlowNextNodeDTO.getThirdPartyFlag().equals("2")) {
+                crmOrderBusinessRel.setNeedThirdParty("0");
+                this.crmCustomOrderBusinessRelService.cancelThirdPartyInfo(crmOrderBusinessRel);
+            }
         }
-        CrmOrderBusinessRel crmOrderBusinessRel = new CrmOrderBusinessRel();
-        crmOrderBusinessRel.setEventId(workFlowNextNodeDTO.getEventId());
-        if (workFlowNextNodeDTO.getThirdPartyFlag().equals("1")) {
-            crmOrderBusinessRel.setThirdPartyFee(StringUtils.isEmpty(workFlowNextNodeDTO.getThirdPartyFee()) ? null : new BigDecimal(workFlowNextNodeDTO.getThirdPartyFee()));
-            crmOrderBusinessRel.setNeedThirdParty("1");
-            crmOrderBusinessRel.setThirdPartyId(workFlowNextNodeDTO.getThirdPartyId());
-            this.crmCustomOrderBusinessRelService.updateById(crmOrderBusinessRel);
+
+        //更新代缴服务信息
+        if (workFlowNextNodeDTO.isDjfw()) {
+            CrmOrderGjjsbdjDetail crmOrderGjjsbdjDetail = this.crmOrderGjjsbdjDetailService.getById(workFlowNextNodeDTO.getEventId());
+            if (Objects.isNull(crmOrderGjjsbdjDetail)) {
+                return;
+            }
+            if (StringUtils.isNotEmpty(workFlowNextNodeDTO.getBeginDate())) {
+                crmOrderGjjsbdjDetail.setBeginDate(DateUtils.parseDate(workFlowNextNodeDTO.getBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
+            }
+            if (StringUtils.isNotEmpty(workFlowNextNodeDTO.getEndDate())) {
+                String endDate = org.apache.commons.lang3.StringUtils.replacePattern(workFlowNextNodeDTO.getEndDate(), "-", "");
+                endDate = org.apache.commons.lang3.StringUtils.replacePattern(endDate, "/", "");
+                crmOrderGjjsbdjDetail.setEndDate(DateUtils.parseDate(endDate, DateUtils.SIMPLE_8_FORMATTER));
+            }
+            crmOrderGjjsbdjDetail.setEmployeeNum(workFlowNextNodeDTO.getEmployeeNum() == null ? 0 : workFlowNextNodeDTO.getEmployeeNum());
+            crmOrderGjjsbdjDetail.setDiff(workFlowNextNodeDTO.getMonths());
+            crmOrderGjjsbdjDetail.setIsTrust(workFlowNextNodeDTO.getIsTrust());
+            this.crmOrderGjjsbdjDetailService.updateById(crmOrderGjjsbdjDetail);
         }
-        if (workFlowNextNodeDTO.getThirdPartyFlag().equals("2")) {
-            crmOrderBusinessRel.setNeedThirdParty("0");
-            this.crmCustomOrderBusinessRelService.cancelThirdPartyInfo(crmOrderBusinessRel);
-        }
+
+
     }
 
     @TargetDataSource(name = "workflow")

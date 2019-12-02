@@ -307,6 +307,44 @@
           <el-input v-model="nextForm.thirdPartyFee" placeholder="请输入费用" :disabled="thirdPartyShow"
                     style="float: left;width: 215px"></el-input>
         </el-form-item>
+
+
+        <el-form-item label="公积金代缴/社保代缴" label-width="150px" v-if="showHelpPay">
+        </el-form-item>
+        <el-form-item label="托管状态" label-width="100px" prop="isTrust"
+                      v-if="showHelpPay">
+          <el-select v-model="nextForm.isTrust" clearable auto-complete="off" placeholder="请选择" style="float: left">
+            <el-option label="未开始" value='0'></el-option>
+            <el-option label="已开始" value='1'></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="服务开始时间" label-width="100px" prop="beginDate" v-if="showHelpPay">
+          <el-date-picker v-model="nextForm.beginDate" type="datetime" placeholder="选择日期时间" clearable
+                          @change="djfwEndDateChange" style="float: left"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="服务期限(月)" label-width="100px" prop="months"
+                      v-if="showHelpPay">
+          <el-input v-model="nextForm.months" placeholder="请输入服务期限(月)" @change="djfwEndDateChange"
+                    style="float: left;width: 215px"></el-input>
+        </el-form-item>
+        <el-form-item label="公司人数确认" label-width="100px" prop="confirmNum"
+                      v-if="showHelpPay">
+          <el-select v-model="nextForm.confirmNum" clearable auto-complete="off" placeholder="请选择"
+                     @change="djfwConfirmChange" style="float: left">
+            <el-option label="已确认" value='1'></el-option>
+            <el-option label="未确认" value='0'></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="缴款人数" label-width="100px" prop="employeeNum" v-if="showHelpPay">
+          <el-input v-model="nextForm.employeeNum" placeholder="请输入缴款人数" :disabled="djfwConfirmNum"
+                    style="float: left;width: 215px"></el-input>
+        </el-form-item>
+        <el-form-item label="服务结束时间" label-width="100px" prop="endDate" v-if="showHelpPay">
+          <el-date-picker v-model="nextForm.endDate" type="datetime" :disabled="true"
+                          style="float: left"></el-date-picker>
+        </el-form-item>
+
+
         <el-form-item label="备注: " label-width="100px">
           <el-input type="textarea" v-model="nextForm.message" style="width: 500px;float: left"></el-input>
         </el-form-item>
@@ -449,7 +487,7 @@
   import KtTable from "@/views/Core/KtTable"
   import KtButton from "@/views/Core/KtButton"
   import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
-  import {format, formatDateSimple8} from "@/utils/datetime"
+  import {format, calDate, formatDate, formatDateSimple8} from "@/utils/datetime"
   import {hasPermission} from '@/permission/index.js'
 
   export default {
@@ -554,7 +592,14 @@
           thirdPartyChoose: '',
           thirdPartyInfo: '',
           thirdPartyFee: '',
-          thirdPartyId: ''
+          thirdPartyId: '',
+
+          isTrust: '',
+          confirmNum: '',
+          employeeNum: '',
+          months: '',
+          beginDate: '',
+          endDate: ''
 
         },
         drawBackForm: {
@@ -568,7 +613,7 @@
           handler: '',
           mountNode: '',
           curNodeId: '',
-          refundFee:''
+          refundFee: ''
         },
         files: [],
         logRowContent: {},
@@ -600,6 +645,8 @@
         thirdPartyDict: [],
         selectedPartyDict: [],
         remoteThirdPartyDictLoading: false,
+        showHelpPay: true,
+        djfwConfirmNum: true
       }
     },
     created() {
@@ -682,7 +729,7 @@
           handler: '',
           mountNode: '',
           curNodeId: '',
-          refundFee:''
+          refundFee: ''
         }
         this.drawBackDialogVisible = true
         let ele = document.getElementById('mountNode')
@@ -707,19 +754,34 @@
           refundFee: '',
           curOperatorName: '',
           thirdPartyChoose: '',
-          thirdParty: '',
+          thirdPartyInfo: '',
           thirdPartyFee: '',
-          thirdPartyId: ''
+          thirdPartyId: '',
+
+          isTrust: '',
+          confirmNum: '',
+          employeeNum: '',
+          months: '',
+          beginDate: '',
+          endDate: ''
 
         };
+        this.showHelpPay = false;
+        this.djfwConfirmNum = true;
         this.showNextOperator = true;
         this.showRefund = false;
         this.thirdPartyShow = true
         this.showthirdPartyInfo = false
         this.nextOperatorDict = []
-        this.nextDialogVisible = true
         this.operation = false
         this.nextForm = Object.assign({}, params)
+        if (this.nextForm.curNodeName.indexOf('客户公司人数确认') >= 0) {
+          this.showHelpPay = true;
+        }
+        if (this.nextForm.confirmNum != '' && this.nextForm.confirmNum != 0 && this.nextForm.confirmNum != null) {
+          this.djfwConfirmNum = false;
+        }
+        this.nextDialogVisible = true
         this.initNextNodeDict(params)
       },
       handleSendUploadRequest(file) {
@@ -782,6 +844,7 @@
             }
             formData.append('eventId', this.logRowContent.eventId);
             formData.append('curNodeId', this.logRowContent.curNodeId);
+
             this.$api.workflow.saveLog(formData).then((res) => {
               this.editLoading = false
               this.$message({message: '操作成功', type: 'success'})
@@ -836,13 +899,34 @@
                 formData.append('refundFee', this.nextForm.refundFee);
               }
 
-              if(this.nextForm.thirdPartyChoose != undefined && this.nextForm.thirdPartyChoose != null
-                && this.chosenThirdParty != undefined && this.chosenThirdParty != "" && this.chosenThirdParty != null){
+              if (this.nextForm.thirdPartyChoose != undefined && this.nextForm.thirdPartyChoose != null
+                && this.chosenThirdParty != undefined && this.chosenThirdParty != "" && this.chosenThirdParty != null) {
                 formData.append("thirdPartyFlag", this.nextForm.thirdPartyChoose)
                 formData.append("thirdPartyId", this.chosenThirdParty.id)
                 formData.append("thirdPartyInfo", this.chosenThirdParty.name)
                 formData.append("thirdPartyFee", this.nextForm.thirdPartyFee)
               }
+
+              if (this.showHelpPay) {
+                formData.append('isDjfw', true);
+                if(this.nextForm.isTrust != null && this.nextForm.isTrust != undefined && this.nextForm.isTrust != ''){
+                  formData.append('isTrust', this.nextForm.isTrust);
+                }
+                if(this.nextForm.confirmNum != null && this.nextForm.confirmNum != undefined && this.nextForm.confirmNum != ''){
+                  formData.append('confirmNum', this.nextForm.confirmNum);
+                }
+                if(this.nextForm.employeeNum != null && this.nextForm.employeeNum != undefined && this.nextForm.employeeNum != ''){
+                  formData.append('employeeNum', this.nextForm.employeeNum);
+                }
+                if(this.nextForm.months != null && this.nextForm.months != undefined && this.nextForm.months != ''){
+                  formData.append('months', this.nextForm.months);
+                }
+                if(this.nextForm.beginDate != null && this.nextForm.beginDate != undefined && this.nextForm.beginDate != ''){
+                  formData.append('beginDate', this.dateFormat(this.nextForm.beginDate));
+                  formData.append('endDate', this.dateFormat(this.nextForm.endDate));
+                }
+              }
+              formData.append('isDjfw', false);
               this.$api.workflow.saveNextEvent(formData).then((res) => {
                 this.nextEditLoading = false
                 this.$message({message: '操作成功', type: 'success'})
@@ -1199,7 +1283,29 @@
         } else {
           this.findPage(null)
         }
+      }, djfwEndDateChange: function () {
+        if (this.nextForm.beginDate != '' && this.nextForm.months != '') {
+          this.nextForm.endDate = this.calEndDate(this.nextForm.beginDate, this.nextForm.months);
+        }
       }
+      ,
+      dljzEndDateChange: function () {
+        if (this.nextForm.beginDate != '' && this.nextForm.months != '') {
+          this.nextForm.endDate = this.calEndDate(this.nextForm.beginDate, this.nextForm.months);
+        }
+      }, calEndDate: function (beginDate, months) {
+        return calDate(beginDate, months);
+      }
+      , djfwConfirmChange: function (val) {
+        this.nextForm.employeeNum = ''
+        if (val != undefined && val != '' && val != '0') {
+          this.djfwConfirmNum = false;
+        } else {
+          this.djfwConfirmNum = true;
+
+        }
+      }
+      ,
     },
     mounted() {
 

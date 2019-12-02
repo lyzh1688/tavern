@@ -31,6 +31,13 @@ public class WorkFlowNextNodeDTO {
     private String thirdPartyInfo;
     private String thirdPartyFee;
 
+    private boolean isDjfw;
+    private String isTrust;
+    private Integer employeeNum;
+    private String months;
+    private String beginDate;
+    private String endDate;
+
     public WorkFlowNextNodeDTO(String eventId, String preNodeId, String curNodeId, String curOperator, String curOperatorName, String operator, String operatorName, String message, List<MultipartFile> files, BigDecimal refundFee, String thirdPartyFlag, String thirdPartyId, String thirdPartyInfo, String thirdPartyFee) {
         this.eventId = eventId;
         this.preNodeId = preNodeId;
@@ -61,6 +68,29 @@ public class WorkFlowNextNodeDTO {
         this.refundFee = refundFee;
     }
 
+    public WorkFlowNextNodeDTO(String eventId, String preNodeId, String curNodeId, String curOperator, String curOperatorName, String operator, String operatorName, String message, List<MultipartFile> files, BigDecimal refundFee, String thirdPartyFlag, String thirdPartyId, String thirdPartyInfo, String thirdPartyFee, boolean isDjfw, String isTrust, Integer employeeNum, String months, String beginDate, String endDate) {
+        this.eventId = eventId;
+        this.preNodeId = preNodeId;
+        this.curNodeId = curNodeId;
+        this.curOperator = curOperator;
+        this.curOperatorName = curOperatorName;
+        this.operator = operator;
+        this.operatorName = operatorName;
+        this.message = message;
+        this.files = files;
+        this.refundFee = refundFee;
+        this.thirdPartyFlag = thirdPartyFlag;
+        this.thirdPartyId = thirdPartyId;
+        this.thirdPartyInfo = thirdPartyInfo;
+        this.thirdPartyFee = thirdPartyFee;
+        this.isDjfw = isDjfw;
+        this.isTrust = isTrust;
+        this.employeeNum = employeeNum;
+        this.months = months;
+        this.beginDate = beginDate;
+        this.endDate = endDate;
+    }
+
     @Override
     public String toString() {
         return "WorkFlowNextNodeDTO{" +
@@ -78,6 +108,12 @@ public class WorkFlowNextNodeDTO {
                 ", thirdPartyId='" + thirdPartyId + '\'' +
                 ", thirdPartyInfo='" + thirdPartyInfo + '\'' +
                 ", thirdPartyFee='" + thirdPartyFee + '\'' +
+                ", isDjfw=" + isDjfw +
+                ", isTrust='" + isTrust + '\'' +
+                ", employeeNum='" + employeeNum + '\'' +
+                ", months='" + months + '\'' +
+                ", beginDate='" + beginDate + '\'' +
+                ", endDate='" + endDate + '\'' +
                 '}';
     }
 }

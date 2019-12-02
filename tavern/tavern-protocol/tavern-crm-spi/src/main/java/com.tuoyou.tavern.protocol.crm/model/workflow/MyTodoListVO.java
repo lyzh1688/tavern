@@ -43,4 +43,12 @@ public class MyTodoListVO {
     private String thirdPartyId;
     private BigDecimal thirdPartyFee;
     private BigDecimal refundFee;
+
+    //代缴服务
+    private String beginDate;
+    private String endDate;
+    private Integer employeeNum;
+    private String months;
+    private String isTrust;
+    private String confirmNum;
 }

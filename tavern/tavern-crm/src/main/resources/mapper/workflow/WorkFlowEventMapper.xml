@@ -11,9 +11,9 @@
         <result column="begin_date" jdbcType="TIMESTAMP" property="beginDate"/>
     </resultMap>
     <insert id="insertWorkFlowEvent">
-      insert into workflow_event (event_id, graph_id, cur_node_id,
-      event_owner, cur_operator,cur_operator_name, begin_date,end_date
-      )
+        insert into workflow_event (event_id, graph_id, cur_node_id,
+        event_owner, cur_operator,cur_operator_name, begin_date,end_date
+        )
         select
         #{event.eventId},
         t2.graph_id,
@@ -21,20 +21,21 @@
             #{event.curNodeId},
         </if>
         <if test="event.curNodeId == null or event.curNodeId == ''">
-             t3.target_node,
+            t3.target_node,
         </if>
         #{event.eventOwner},
         #{event.curOperator},
         #{event.curOperatorName},
         #{event.beginDate},
         DATE_ADD(#{event.beginDate},INTERVAL t4.rest_days DAY)
-        from workflow_def_graph_business_rel t1,workflow_def_graph t2,workflow_def_edge t3 left join workflow_def_node_ext_attr t4
+        from workflow_def_graph_business_rel t1,workflow_def_graph t2,workflow_def_edge t3 left join
+        workflow_def_node_ext_attr t4
         on t3.target_node = t4.node_id
         where t1.graph_id = t2.graph_id
         and t2.root_node = t3.source_node
         and t1.business_id = #{businessId}
         <if test="event.curNodeId != null and event.curNodeId != ''">
-            and t3.target_node =  #{event.curNodeId}
+            and t3.target_node = #{event.curNodeId}
         </if>
     </insert>
     <select id="selectMyPendingWork" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO">
@@ -68,15 +69,24 @@
         (CASE WHEN T1.NEED_THIRD_PARTY = '1' THEN concat(T12.DISTRICT,' ',T12.THIRD_PARTY_NAME) ELSE '' END) as thirdPartyInfo,
         T12.THIRD_PARTY_ID thirdPartyId,
         T1.THIRD_PARTY_FEE thirdPartyFee,
-        t13.refund_fee refundFee
+        t13.refund_fee refundFee,
+        DATE_FORMAT(t14.BEGIN_DATE,'%Y-%m-%d') beginDate,
+        DATE_FORMAT(t14.END_DATE,'%Y-%m-%d') endDate,
+        (CASE WHEN t14.EMPLOYEE_NUM != 0 THEN t14.EMPLOYEE_NUM ELSE null END) as employeeNum,
+        t14.DIFF months,
+        t14.IS_TRUST isTrust,
+        (CASE WHEN t14.EMPLOYEE_NUM != 0 THEN '1' ELSE '0' END) as confirmNum
+
 
         FROM
         crm.CRM_CUSTOM_ORDER_INFO T left join crm.CRM_USER_CUSTOMER_INFO T10 ON T.CUSTOM_ID = T10.CUSTOMER_ID,
         crm.CRM_ORDER_BUSINESS_REL T1 left join crm.CRM_ORDER_DLJZ_DETAIL T11 on T1.EVENT_ID = T11.EVENT_ID
-        left  join  crm.CRM_COMPANY_INFO T2 on T1.COMPANY_ID = T2.COMPANY_ID
-        left  join crm.CRM_COMPANY_BUSINESS T5 on T1.COMPANY_ID = T5.COMPANY_ID  AND T1.BUSINESS_ID = T5.BUSINESS_ID
+        left join crm.CRM_COMPANY_INFO T2 on T1.COMPANY_ID = T2.COMPANY_ID
+        left join crm.CRM_COMPANY_BUSINESS T5 on T1.COMPANY_ID = T5.COMPANY_ID AND T1.BUSINESS_ID = T5.BUSINESS_ID
         left join crm.CRM_CUSTOM_THIRD_PARTY_INFO T12 on T1.THIRD_PARTY_ID = T12.THIRD_PARTY_ID
-        LEFT JOIN (SELECT * from work_flow.workflow_log_message where has_refund = 1 group by event_id) t13 on T1.EVENT_ID = t13.event_id,
+        LEFT JOIN (SELECT * from work_flow.workflow_log_message where has_refund = 1 group by event_id) t13 on
+        T1.EVENT_ID = t13.event_id
+        left join crm.CRM_ORDER_GJJSBDJ_DETAIL t14 on T1.EVENT_ID = t14.EVENT_ID,
         crm.CRM_CUSTOM_BASIC_INFO T3,
         crm.CRM_BUSINESS_DICT T4,
         work_flow.workflow_def_graph_business_rel T6,
@@ -158,7 +168,7 @@
         T1.REMARK remark,
         T3.WEIXIN_NAME weixinName,
         T4.BUSINESS_NAME businessName,
-        (CASE WHEN T4.BUSINESS_NAME = '代理记账' THEN concat('代账开始:', DATE_FORMAT(T11.BEGIN_DATE,'%Y-%m-%d'), '代账结束:', DATE_FORMAT(T11.END_DATE,'%Y-%m-%d')) ELSE '' END) as businessInfo,
+        (CASE WHEN T4.BUSINESS_NAME = '代理记账' THEN concat('代账开始:', DATE_FORMAT(T11.BEGIN_DATE,'%Y-%m-%d'), '代账结束:',DATE_FORMAT(T11.END_DATE,'%Y-%m-%d')) ELSE '' END) as businessInfo,
         DATEDIFF(NOW(),T7.begin_date) cost,
         DATEDIFF(T7.end_date,NOW()) maxLeftDay,
         T1.BUSINESS_TAG businessTag,
@@ -170,7 +180,7 @@
         T1.OWNER_ID ownerId,
         T1.OWNER owner,
         T10.USER_ID preSalesId,
-        (CASE WHEN T1.NEED_THIRD_PARTY = '1' THEN concat(T12.DISTRICT,' ',T12.THIRD_PARTY_NAME) ELSE '' END) as thirdPartyInfo,
+        (CASE WHEN T1.NEED_THIRD_PARTY = '1' THEN concat(T12.DISTRICT,' ',T12.THIRD_PARTY_NAME) ELSE '' END) as  thirdPartyInfo,
         T12.THIRD_PARTY_ID thirdPartyId,
         T1.THIRD_PARTY_FEE thirdPartyFee,
         t13.refund_fee refundFee
@@ -178,10 +188,11 @@
         FROM
         crm.CRM_CUSTOM_ORDER_INFO T left join crm.CRM_USER_CUSTOMER_INFO T10 ON T.CUSTOM_ID = T10.CUSTOMER_ID,
         crm.CRM_ORDER_BUSINESS_REL T1 left join crm.CRM_ORDER_DLJZ_DETAIL T11 on T1.EVENT_ID = T11.EVENT_ID
-        left  join  crm.CRM_COMPANY_INFO T2 on T1.COMPANY_ID = T2.COMPANY_ID
-        left  join crm.CRM_COMPANY_BUSINESS T5 on T1.COMPANY_ID = T5.COMPANY_ID  AND T1.BUSINESS_ID = T5.BUSINESS_ID
+        left join crm.CRM_COMPANY_INFO T2 on T1.COMPANY_ID = T2.COMPANY_ID
+        left join crm.CRM_COMPANY_BUSINESS T5 on T1.COMPANY_ID = T5.COMPANY_ID AND T1.BUSINESS_ID = T5.BUSINESS_ID
         left join crm.CRM_CUSTOM_THIRD_PARTY_INFO T12 on T1.THIRD_PARTY_ID = T12.THIRD_PARTY_ID
-        LEFT JOIN (SELECT * from work_flow.workflow_log_message where has_refund = 1 group by event_id) t13 on T1.EVENT_ID = t13.event_id,
+        LEFT JOIN (SELECT * from work_flow.workflow_log_message where has_refund = 1 group by event_id) t13 on
+        T1.EVENT_ID = t13.event_id,
         crm.CRM_CUSTOM_BASIC_INFO T3,
         crm.CRM_BUSINESS_DICT T4,
         work_flow.workflow_def_graph_business_rel T6,
