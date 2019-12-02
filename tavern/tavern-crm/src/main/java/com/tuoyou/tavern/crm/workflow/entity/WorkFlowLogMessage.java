@@ -33,4 +33,6 @@ public class WorkFlowLogMessage extends Model<WorkFlowLogMessage> {
 
     private String nodeId;
 
+    private String refundWay;
+
 }

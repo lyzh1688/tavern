@@ -13,6 +13,7 @@
     <result column="has_refund" jdbcType="VARCHAR" property="hasRefund" />
     <result column="refund_fee" jdbcType="DECIMAL" property="refundFee" />
     <result column="node_id" jdbcType="VARCHAR" property="nodeId" />
+    <result column="refund_way" jdbcType="VARCHAR" property="refundWay" />
   </resultMap>
   <select id="selectWorkFlowLogMessagePage" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.WorkFlowLogVO">
     select

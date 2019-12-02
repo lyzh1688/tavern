@@ -28,4 +28,6 @@ public class WorkFlowLogMessageDTO {
 
     private String curNodeId;
 
+    private String refundWay;
+
 }

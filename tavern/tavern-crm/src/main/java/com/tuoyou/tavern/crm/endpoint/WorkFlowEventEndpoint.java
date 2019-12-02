@@ -110,12 +110,13 @@ public class WorkFlowEventEndpoint {
             @RequestParam(name = "employeeNum", required = false) Integer employeeNum,
             @RequestParam(name = "months", required = false) String months,
             @RequestParam(name = "beginDate", required = false) String beginDate,
-            @RequestParam(name = "endDate", required = false) String endDate
+            @RequestParam(name = "endDate", required = false) String endDate,
+            @RequestParam(name = "refundWay", required = false) String refundWay
     ) throws Exception {
         WorkFlowNextNodeDTO workFlowNextNodeDTO = new WorkFlowNextNodeDTO(eventId, preNodeId, curNodeId, curOperator, curOperatorName, operator,
                 operatorName, message, Arrays.asList(files), refundFee,thirdPartyFlag,
                 thirdPartyId,thirdPartyInfo,thirdPartyFee,
-                isDjfw,isTrust,employeeNum,months,beginDate,endDate);
+                isDjfw,isTrust,employeeNum,months,beginDate,endDate,refundWay);
         this.workFlowEventService.startNextWorkFlow(workFlowNextNodeDTO);
         return new TavernResponse();
     }

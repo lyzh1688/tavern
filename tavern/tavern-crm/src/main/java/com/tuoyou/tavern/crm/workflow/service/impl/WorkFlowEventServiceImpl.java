@@ -350,7 +350,7 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
 
         //携带备注信息
 
-        if (StringUtils.isNotEmpty(workFlowNextNodeDTO.getMessage()) || workFlowNextNodeDTO.getRefundFee() != null || workFlowNextNodeDTO.getFiles().size() != 0) {
+        if (StringUtils.isNotEmpty(workFlowNextNodeDTO.getMessage()) || workFlowNextNodeDTO.getRefundFee() != null || workFlowNextNodeDTO.getRefundWay() != null || workFlowNextNodeDTO.getFiles().size() != 0) {
             WorkFlowLogMessageDTO workFlowLogMessageDTO = new WorkFlowLogMessageDTO();
             workFlowLogMessageDTO.setOperator(workFlowNextNodeDTO.getOperator());
             workFlowLogMessageDTO.setOperatorName(workFlowNextNodeDTO.getOperatorName());
@@ -359,6 +359,7 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
             workFlowLogMessageDTO.setFiles(workFlowNextNodeDTO.getFiles());
             workFlowLogMessageDTO.setRefundFee(workFlowNextNodeDTO.getRefundFee());
             workFlowLogMessageDTO.setCurNodeId(workFlowNextNodeDTO.getPreNodeId());
+            workFlowLogMessageDTO.setRefundWay(workFlowNextNodeDTO.getRefundWay());
             this.workFlowLogMessageService.saveWorkFlowLog(workFlowLogMessageDTO);
         }
 

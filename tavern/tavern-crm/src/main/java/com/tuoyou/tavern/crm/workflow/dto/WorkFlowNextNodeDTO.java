@@ -38,6 +38,8 @@ public class WorkFlowNextNodeDTO {
     private String beginDate;
     private String endDate;
 
+    private String refundWay;
+
     public WorkFlowNextNodeDTO(String eventId, String preNodeId, String curNodeId, String curOperator, String curOperatorName, String operator, String operatorName, String message, List<MultipartFile> files, BigDecimal refundFee, String thirdPartyFlag, String thirdPartyId, String thirdPartyInfo, String thirdPartyFee) {
         this.eventId = eventId;
         this.preNodeId = preNodeId;
@@ -91,6 +93,30 @@ public class WorkFlowNextNodeDTO {
         this.endDate = endDate;
     }
 
+    public WorkFlowNextNodeDTO(String eventId, String preNodeId, String curNodeId, String curOperator, String curOperatorName, String operator, String operatorName, String message, List<MultipartFile> files, BigDecimal refundFee, String thirdPartyFlag, String thirdPartyId, String thirdPartyInfo, String thirdPartyFee, boolean isDjfw, String isTrust, Integer employeeNum, String months, String beginDate, String endDate, String refundWay) {
+        this.eventId = eventId;
+        this.preNodeId = preNodeId;
+        this.curNodeId = curNodeId;
+        this.curOperator = curOperator;
+        this.curOperatorName = curOperatorName;
+        this.operator = operator;
+        this.operatorName = operatorName;
+        this.message = message;
+        this.files = files;
+        this.refundFee = refundFee;
+        this.thirdPartyFlag = thirdPartyFlag;
+        this.thirdPartyId = thirdPartyId;
+        this.thirdPartyInfo = thirdPartyInfo;
+        this.thirdPartyFee = thirdPartyFee;
+        this.isDjfw = isDjfw;
+        this.isTrust = isTrust;
+        this.employeeNum = employeeNum;
+        this.months = months;
+        this.beginDate = beginDate;
+        this.endDate = endDate;
+        this.refundWay = refundWay;
+    }
+
     @Override
     public String toString() {
         return "WorkFlowNextNodeDTO{" +
@@ -110,10 +136,11 @@ public class WorkFlowNextNodeDTO {
                 ", thirdPartyFee='" + thirdPartyFee + '\'' +
                 ", isDjfw=" + isDjfw +
                 ", isTrust='" + isTrust + '\'' +
-                ", employeeNum='" + employeeNum + '\'' +
+                ", employeeNum=" + employeeNum +
                 ", months='" + months + '\'' +
                 ", beginDate='" + beginDate + '\'' +
                 ", endDate='" + endDate + '\'' +
+                ", refundWay='" + refundWay + '\'' +
                 '}';
     }
 }

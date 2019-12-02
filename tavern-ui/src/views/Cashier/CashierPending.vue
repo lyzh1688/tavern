@@ -270,6 +270,13 @@
                        :label="item.name"/>
           </el-select>
         </el-form-item>
+        <el-form-item label="退款途径" label-width="100px" v-if="showRefundWay">
+          <el-select v-model="nextForm.refundWay" clearable auto-complete="off" placeholder="请选择退款途径" style="float: left">
+            <el-option label="对公支付宝" value='对公支付宝'></el-option>
+            <el-option label="淘宝" value='淘宝'></el-option>
+            <el-option label="公司银行" value='公司银行'></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="合作方选项" label-width="100px" prop="thirdPartyChoose" v-if="showthirdPartyInfo">
           <el-select v-model="nextForm.thirdPartyChoose"
                      clearable auto-complete="off"
@@ -552,7 +559,8 @@
           thirdPartyChoose: '',
           thirdPartyInfo: '',
           thirdPartyFee: '',
-          thirdPartyId: ''
+          thirdPartyId: '',
+          refundWay: '',
         },
         drawBackForm: {
           orderId: '',
@@ -597,6 +605,7 @@
         thirdPartyDict: [],
         selectedPartyDict: [],
         remoteThirdPartyDictLoading: false,
+        showRefundWay:false
 
       }
     },
@@ -679,8 +688,9 @@
           handler: '',
           mountNode: '',
           curNodeId: '',
-          refundFee:''
+          refundFee:'',
         }
+
         this.drawBackDialogVisible = true
         let ele = document.getElementById('mountNode')
         if (ele != null) {
@@ -707,17 +717,22 @@
           thirdPartyChoose: '',
           thirdParty: '',
           thirdPartyFee: '',
-          thirdPartyId: ''
+          thirdPartyId: '',
+          refundWay: '',
 
         };
+        this.showRefundWay=false
         this.showNextOperator = true;
         this.showRefund = false;
         this.thirdPartyShow = true
         this.showthirdPartyInfo = false
         this.nextOperatorDict = []
-        this.nextDialogVisible = true
         this.operation = false
         this.nextForm = Object.assign({}, params)
+        if(this.nextForm.curNodeName === '退款'){
+          this.showRefundWay=true
+        }
+        this.nextDialogVisible = true
         this.initNextNodeDict(params)
       },
       handleSendUploadRequest(file) {
@@ -806,6 +821,10 @@
           this.$message({message: '请选择对接人员！', type: 'error'})
           return
         }
+        if (this.nextForm.curNodeName == '退款' && (this.nextForm.refundWay == undefined || this.nextForm.refundWay == '')) {
+          this.$message({message: '请选择退款途径！', type: 'error'})
+          return
+        }
 
         this.$refs.nextForm.validate((valid) => {
           if (valid) {
@@ -840,6 +859,9 @@
                 formData.append("thirdPartyInfo", this.chosenThirdParty.name)
                 formData.append("thirdPartyFee", this.nextForm.thirdPartyFee)
               }
+              if(this.showRefundWay){
+                formData.append('refundWay', this.nextForm.refundWay);
+              }
               this.$api.workflow.saveNextEvent(formData).then((res) => {
                 this.nextEditLoading = false
                 this.$message({message: '操作成功', type: 'success'})
@@ -852,6 +874,7 @@
                 this.nextDialogVisible = false
                 this.nextLogFiles = []
               })
+              this.showRefundWay = false
             })
           }
         })
