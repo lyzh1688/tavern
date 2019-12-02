@@ -458,7 +458,7 @@
     data() {
       return {
         pageUrl: "/outWorker/outerPending",
-        pageRole: "",
+        pageRole: "R_WQ",
         _file: null,
         size: 'small',
         uploadUrl: '',
@@ -606,7 +606,8 @@
       this.sys_outer_pending_drawback = hasPermission('sys:outer:pending:drawback')
       this.sys_outer_pending_next = hasPermission('sys:outer:pending:next')
       this.userName = sessionStorage.getItem("userName")
-      this.findPageRole();
+      // this.findPageRole();
+      this.findPage(null);
       this.initThirdPartyDict()
     },
     methods: {

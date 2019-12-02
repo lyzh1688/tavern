@@ -458,7 +458,7 @@
     data() {
       return {
         pageUrl: "/customerMananger/customerManagerPending",
-        pageRole: "",
+        pageRole: "R_KHJL",
         _file: null,
         size: 'small',
         uploadUrl: '',
@@ -604,7 +604,8 @@
       this.sys_customermanager_pending_drawback = hasPermission('sys:customermanager:pending:drawback')
       this.sys_customermanager_pending_next = hasPermission('sys:customermanager:pending:next')
       this.userName = sessionStorage.getItem("userName")
-      this.findPageRole();
+      // this.findPageRole();
+      this.findPage(null);
       this.initThirdPartyDict()
 
     },

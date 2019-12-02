@@ -500,7 +500,7 @@
     data() {
       return {
         pageUrl: "/AfterSales/afterSalesPending",
-        pageRole: "",
+        pageRole: "R_SH",
         _file: null,
         size: 'small',
         uploadUrl: '',
@@ -656,7 +656,8 @@
       this.sys_aftersales_pending_drawback = hasPermission('sys:aftersales:pending:drawback')
       this.sys_aftersales_pending_next = hasPermission('sys:aftersales:pending:next')
       this.userName = sessionStorage.getItem("userName")
-      this.findPageRole();
+      // this.findPageRole();
+      this.findPage(null);
       this.initThirdPartyDict()
 
     },
