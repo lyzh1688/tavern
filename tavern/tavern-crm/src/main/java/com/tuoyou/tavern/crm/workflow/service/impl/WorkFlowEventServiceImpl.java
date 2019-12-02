@@ -379,48 +379,6 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
 
     }
 
-    @Override
-    public void startNextWorkFlow(WorkFlowNextNodeDTO workFlowNextNodeDTO) throws Exception {
-        this.workFlowEventService.startNextWorkFlowInfo(workFlowNextNodeDTO);
-        //更新第三方消息
-        if (StringUtils.isNotEmpty(workFlowNextNodeDTO.getThirdPartyFlag())) {
-            CrmOrderBusinessRel crmOrderBusinessRel = new CrmOrderBusinessRel();
-            crmOrderBusinessRel.setEventId(workFlowNextNodeDTO.getEventId());
-            if (workFlowNextNodeDTO.getThirdPartyFlag().equals("1")) {
-                crmOrderBusinessRel.setThirdPartyFee(StringUtils.isEmpty(workFlowNextNodeDTO.getThirdPartyFee()) ? null : new BigDecimal(workFlowNextNodeDTO.getThirdPartyFee()));
-                crmOrderBusinessRel.setNeedThirdParty("1");
-                crmOrderBusinessRel.setThirdPartyId(workFlowNextNodeDTO.getThirdPartyId());
-                this.crmCustomOrderBusinessRelService.updateById(crmOrderBusinessRel);
-            }
-            if (workFlowNextNodeDTO.getThirdPartyFlag().equals("2")) {
-                crmOrderBusinessRel.setNeedThirdParty("0");
-                this.crmCustomOrderBusinessRelService.cancelThirdPartyInfo(crmOrderBusinessRel);
-            }
-        }
-
-        //更新代缴服务信息
-        if (workFlowNextNodeDTO.isDjfw()) {
-            CrmOrderGjjsbdjDetail crmOrderGjjsbdjDetail = this.crmOrderGjjsbdjDetailService.getById(workFlowNextNodeDTO.getEventId());
-            if (Objects.isNull(crmOrderGjjsbdjDetail)) {
-                return;
-            }
-            if (StringUtils.isNotEmpty(workFlowNextNodeDTO.getBeginDate())) {
-                crmOrderGjjsbdjDetail.setBeginDate(DateUtils.parseDate(workFlowNextNodeDTO.getBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
-            }
-            if (StringUtils.isNotEmpty(workFlowNextNodeDTO.getEndDate())) {
-                String endDate = org.apache.commons.lang3.StringUtils.replacePattern(workFlowNextNodeDTO.getEndDate(), "-", "");
-                endDate = org.apache.commons.lang3.StringUtils.replacePattern(endDate, "/", "");
-                crmOrderGjjsbdjDetail.setEndDate(DateUtils.parseDate(endDate, DateUtils.SIMPLE_8_FORMATTER));
-            }
-            crmOrderGjjsbdjDetail.setEmployeeNum(workFlowNextNodeDTO.getEmployeeNum() == null ? 0 : workFlowNextNodeDTO.getEmployeeNum());
-            crmOrderGjjsbdjDetail.setDiff(workFlowNextNodeDTO.getMonths());
-            crmOrderGjjsbdjDetail.setIsTrust(workFlowNextNodeDTO.getIsTrust());
-            this.crmOrderGjjsbdjDetailService.updateById(crmOrderGjjsbdjDetail);
-        }
-
-
-    }
-
     @TargetDataSource(name = "workflow")
     @Override
     public void reChooseHandler(List<WorkFlowNextNodeDTO> workFlowNextNodeDTOList) throws Exception {
@@ -460,6 +418,52 @@ public class WorkFlowEventServiceImpl extends ServiceImpl<WorkFlowEventMapper, W
             workFlowLogMessage.setCreateTime(DateUtils.formatDateTime(LocalDateTime.now(), DateUtils.DEFAULT_DATETIME_FORMATTER));
             this.workFlowLogMessageService.save(workFlowLogMessage);
         }
+    }
+
+    @Override
+    public void startNextWorkFlow(WorkFlowNextNodeDTO workFlowNextNodeDTO) throws Exception {
+        this.workFlowEventService.startNextWorkFlowInfo(workFlowNextNodeDTO);
+        //更新第三方消息
+        if (StringUtils.isNotEmpty(workFlowNextNodeDTO.getThirdPartyFlag())) {
+            CrmOrderBusinessRel crmOrderBusinessRel = new CrmOrderBusinessRel();
+            crmOrderBusinessRel.setEventId(workFlowNextNodeDTO.getEventId());
+            if (workFlowNextNodeDTO.getThirdPartyFlag().equals("1")) {
+                try {
+                    crmOrderBusinessRel.setThirdPartyFee(StringUtils.isEmpty(workFlowNextNodeDTO.getThirdPartyFee()) ? null : new BigDecimal(workFlowNextNodeDTO.getThirdPartyFee()));
+                }catch (Exception e){
+                    this.LOGGER.error("getThirdPartyFee: {},exception:{}",workFlowNextNodeDTO.getThirdPartyFee(),e);
+                }
+                crmOrderBusinessRel.setNeedThirdParty("1");
+                crmOrderBusinessRel.setThirdPartyId(workFlowNextNodeDTO.getThirdPartyId());
+                this.crmCustomOrderBusinessRelService.updateById(crmOrderBusinessRel);
+            }
+            if (workFlowNextNodeDTO.getThirdPartyFlag().equals("2")) {
+                crmOrderBusinessRel.setNeedThirdParty("0");
+                this.crmCustomOrderBusinessRelService.cancelThirdPartyInfo(crmOrderBusinessRel);
+            }
+        }
+
+        //更新代缴服务信息
+        if (workFlowNextNodeDTO.isDjfw()) {
+            CrmOrderGjjsbdjDetail crmOrderGjjsbdjDetail = this.crmOrderGjjsbdjDetailService.getById(workFlowNextNodeDTO.getEventId());
+            if (Objects.isNull(crmOrderGjjsbdjDetail)) {
+                return;
+            }
+            if (StringUtils.isNotEmpty(workFlowNextNodeDTO.getBeginDate())) {
+                crmOrderGjjsbdjDetail.setBeginDate(DateUtils.parseDate(workFlowNextNodeDTO.getBeginDate(), DateUtils.SIMPLE_8_FORMATTER));
+            }
+            if (StringUtils.isNotEmpty(workFlowNextNodeDTO.getEndDate())) {
+                String endDate = org.apache.commons.lang3.StringUtils.replacePattern(workFlowNextNodeDTO.getEndDate(), "-", "");
+                endDate = org.apache.commons.lang3.StringUtils.replacePattern(endDate, "/", "");
+                crmOrderGjjsbdjDetail.setEndDate(DateUtils.parseDate(endDate, DateUtils.SIMPLE_8_FORMATTER));
+            }
+            crmOrderGjjsbdjDetail.setEmployeeNum(workFlowNextNodeDTO.getEmployeeNum() == null ? 0 : workFlowNextNodeDTO.getEmployeeNum());
+            crmOrderGjjsbdjDetail.setDiff(workFlowNextNodeDTO.getMonths());
+            crmOrderGjjsbdjDetail.setIsTrust(workFlowNextNodeDTO.getIsTrust());
+            this.crmOrderGjjsbdjDetailService.updateById(crmOrderGjjsbdjDetail);
+        }
+
+
     }
 
     @TargetDataSource(name = "workflow")

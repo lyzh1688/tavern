@@ -467,7 +467,7 @@
     data() {
       return {
         pageUrl: "/Cashier/cashierPending",
-        pageRole: "",
+        pageRole: "R_CN",
         _file: null,
         size: 'small',
         uploadUrl: '',
@@ -616,7 +616,8 @@
       this.sys_cashier_pending_drawback = hasPermission('sys:cashier:pending:drawback')
       this.sys_cashier_pending_next = hasPermission('sys:cashier:pending:next')
       this.userName = sessionStorage.getItem("userName")
-      this.findPageRole();
+      // this.findPageRole();
+      this.findPage(null);
       this.initThirdPartyDict()
     },
     methods: {// 获取分页数据
@@ -857,7 +858,9 @@
                 formData.append("thirdPartyFlag", this.nextForm.thirdPartyChoose)
                 formData.append("thirdPartyId", this.chosenThirdParty.id)
                 formData.append("thirdPartyInfo", this.chosenThirdParty.name)
-                formData.append("thirdPartyFee", this.nextForm.thirdPartyFee)
+                if(this.nextForm.thirdPartyFee != undefined && this.nextForm.thirdPartyFee != "" && this.nextForm.thirdPartyFee != null){
+                  formData.append("thirdPartyFee", this.nextForm.thirdPartyFee)
+                }
               }
               if(this.showRefundWay){
                 formData.append('refundWay', this.nextForm.refundWay);
