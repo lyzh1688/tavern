@@ -149,7 +149,7 @@
             </if>
         </where>
         group by T7.event_id
-        ORDER BY T1.CREATE_DATE DESC
+        ORDER BY T7.begin_date DESC
 
     </select>
     <select id="selectAllWorkEvent" resultType="com.tuoyou.tavern.protocol.crm.model.workflow.MyTodoListVO">
@@ -245,13 +245,14 @@
             </if>
         </where>
         group by T7.event_id
-        ORDER BY T1.CREATE_DATE DESC
+        ORDER BY T7.begin_date DESC
     </select>
     <select id="selectPreEdge" resultType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowNodeEdge">
         SELECT t1.next_node_id preNodeId,t1.node_id curNodeId,t2.role FROM workflow_event_history t1,workflow_def_node t2
         WHERE t1.node_id = t2.node_id
         and  t1.event_id = #{eventId}
         and t1.next_node_id = #{nodeId}
+        limit 1
     </select>
     <select id="selectNextEdge" resultType="com.tuoyou.tavern.crm.workflow.entity.WorkFlowNodeEdge">
         SELECT T1.source_node preNodeId,T1.target_node curNodeId,T2.role FROM workflow_def_edge T1,workflow_def_node T2

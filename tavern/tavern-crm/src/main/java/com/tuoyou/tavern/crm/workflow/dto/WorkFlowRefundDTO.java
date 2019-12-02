@@ -2,6 +2,8 @@ package com.tuoyou.tavern.crm.workflow.dto;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * Code Monkey: 何彪 <br>
  * Dev Time: 2019/09/15 <br>
@@ -17,4 +19,5 @@ public class WorkFlowRefundDTO {
     private String handlerId;
     private String handlerName;
     private String preNodeId;
+    private BigDecimal refundFee;
 }

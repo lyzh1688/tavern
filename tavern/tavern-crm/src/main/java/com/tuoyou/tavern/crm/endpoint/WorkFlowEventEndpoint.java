@@ -150,7 +150,7 @@ public class WorkFlowEventEndpoint {
                 workFlowRefundDTO.getOperator(),
                 workFlowRefundDTO.getOperatorName(),
                 workFlowRefundDTO.getMessage(),
-                Lists.newArrayList(), null);
+                Lists.newArrayList(), workFlowRefundDTO.getRefundFee());
         this.workFlowEventService.startNextWorkFlow(workFlowNextNodeDTO);
         return new TavernResponse();
     }

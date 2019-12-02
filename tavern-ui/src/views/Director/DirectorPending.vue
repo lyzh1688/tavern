@@ -895,6 +895,7 @@
               request.handlerId = this.chosenHandler.id
               request.handlerName = this.chosenHandler.name
               request.preNodeId = this.chosenHandler.preNodeId
+              request.refundFee = this.drawBackForm.refundFee
               this.$api.workflow.drawBack(request).then((res) => {
                 this.drawBackEditLoading = false
                 this.$message({message: '操作成功', type: 'success'})
