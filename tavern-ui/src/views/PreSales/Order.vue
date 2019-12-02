@@ -262,6 +262,12 @@
           this.$message({message: '实付金额不能大于应付金额', type: 'warn'});
           return;
         }
+        if(this.dataForm.orderDate != undefined && this.dataForm.orderDate != null){
+          if (this.dataForm.orderDate > Date.now()) {
+            this.$message({message: '订单日期不能大于当前日期！', type: 'warn'});
+            return;
+          }
+        }
         this.$refs.dataForm.validate((valid) => {
           if (valid) {
             this.$confirm('确认提交吗？', '提示', {}).then(() => {
