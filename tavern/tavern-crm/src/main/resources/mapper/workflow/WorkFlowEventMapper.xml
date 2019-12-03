@@ -84,9 +84,10 @@
         left join crm.CRM_COMPANY_INFO T2 on T1.COMPANY_ID = T2.COMPANY_ID
         left join crm.CRM_COMPANY_BUSINESS T5 on T1.COMPANY_ID = T5.COMPANY_ID AND T1.BUSINESS_ID = T5.BUSINESS_ID
         left join crm.CRM_CUSTOM_THIRD_PARTY_INFO T12 on T1.THIRD_PARTY_ID = T12.THIRD_PARTY_ID
+        left join crm.CRM_ORDER_GJJSBDJ_DETAIL t14 on T1.EVENT_ID = t14.EVENT_ID
         LEFT JOIN (SELECT * from work_flow.workflow_log_message where has_refund = 1 group by event_id) t13 on
         T1.EVENT_ID = t13.event_id
-        left join crm.CRM_ORDER_GJJSBDJ_DETAIL t14 on T1.EVENT_ID = t14.EVENT_ID,
+        ,
         crm.CRM_CUSTOM_BASIC_INFO T3,
         crm.CRM_BUSINESS_DICT T4,
         work_flow.workflow_def_graph_business_rel T6,
@@ -112,7 +113,7 @@
             AND (T7.event_owner = #{query.userId} or T7.cur_operator = #{query.userId})
             AND T7.BEGIN_DATE <![CDATA[ <= ]]> now()
             <if test="query.pageRole != null and query.pageRole != ''">
-                and (T8.ROLE = #{query.pageRole} OR T8.ROLE = '')
+                and (T8.ROLE = #{query.pageRole} OR T8.ROLE = '' OR T7.event_owner = #{query.userId})
             </if>
             <if test="query.city != null and query.city != ''">
                 and T2.CITY like concat('%', #{query.city}, '%')
